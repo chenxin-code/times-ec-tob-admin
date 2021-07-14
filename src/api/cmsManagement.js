@@ -70,9 +70,13 @@ export const CashExport = data => fetchApi(URL.ADMINOPERATOR.CashExport, data, '
 export const CashOccupancy = data => fetchApi(URL.ADMINOPERATOR.CashOccupancy + '/' + data.cashRequirementNo, data, 'POST');//占用
 export const changeVerifySign = data => fetchApi(URL.ADMINOPERATOR.changeVerifySign, data, 'POST');//更改采购单商品校验状态
 
-
-
-
+//账号管理
+export const addAccount = data => fetchApi('/times-ec-tob-mall/admin/account/addAccount', data, 'POST');
+export const delAccount = data => fetchApi('/times-ec-tob-mall/admin/account/delAccount', data, 'POST');
+export const queryAccountInfo = data => fetchApi('/times-ec-tob-mall/admin/account/queryInfo', data, 'POST');
+export const queryAccountList = data => fetchApi('/times-ec-tob-mall/admin/account/queryList', data, 'POST');
+export const updateAccount = data => fetchApi('/times-ec-tob-mall/admin/account/updateAccount', data, 'POST');
+export const updatePassword = data => fetchApi('/times-ec-tob-mall/admin/account/updatePassword', data, 'POST');
 
 // 发票
 export const InvoiceList = data => fetchApi(URL.ADMINOPERATOR.InvoiceList, data, 'POST');//发票列表查询接口

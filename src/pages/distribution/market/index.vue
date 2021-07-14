@@ -13,7 +13,7 @@
 				<a-input
 					placeholder="请输入订单编号"
 					class="iw250"
-					v-model="searchData.orderNo"
+					v-model="searchData.saleOrderNo"
 				/>
 			</div>
 			<div class="search-list-item">
@@ -34,7 +34,7 @@
 
 				<a-date-picker
 					class="iw250"
-					v-model="orderTimeEnd"
+					v-model="searchData.orderTimeEnd"
 					:disabled-date="disabledEndDate"
 					show-time
 					format="YYYY-MM-DD HH:mm:ss"
@@ -62,7 +62,7 @@
 				<a-input
 					placeholder="请输入收货人"
 					class="iw250"
-					v-model="receiverName"
+					v-model="searchData.receiver"
 				/>
 			</div>
 
@@ -179,6 +179,7 @@ export default {
 				receiver: '', // 收货人 模糊查询
 				cityCompany: undefined, // 城市公司
 			},
+			orderState: 'PROCESSING',
 			pageData: {
 				pageNum: 1,
 				pageSize: 10
@@ -219,8 +220,9 @@ export default {
 	watch: {
 		Case_Access_Token(newVal, oldVal) {
 			let params = {
-				pageNum: this.pageData.pageNum,
-				pageSize:this.pageData.pageSize,
+				orderState: this.orderState, // 订单状态 进行中 已完成
+				pageNum: this.pageData.pageNum, // 第几页
+				pageSize:this.pageData.pageSize, // 每页多少条
 				saleOrderNo: this.searchData.saleOrderNo,  // 订单编号 
 				orderTimeStart: this.searchData.orderTimeStart, // 开始时间
 				orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
@@ -251,8 +253,9 @@ export default {
 	mounted() {
 		if (this.Case_Access_Token) {
 			let params = {
-				pageNum: this.pageData.pageNum,
-				pageSize:this.pageData.pageSize,
+				orderState: this.orderState, // 订单状态 进行中 已完成
+				pageNum: this.pageData.pageNum, // 第几页
+				pageSize:this.pageData.pageSize, // 每页多少条
 				saleOrderNo: this.searchData.saleOrderNo,  // 订单编号 
 				orderTimeStart: this.searchData.orderTimeStart, // 开始时间
 				orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
@@ -278,8 +281,9 @@ export default {
 			this.loading = true
 			if(!params) {
 				params = {
-					pageNum: this.pageData.pageNum,
-					pageSize:this.pageData.pageSize,
+					orderState: this.orderState, // 订单状态 进行中 已完成
+					pageNum: this.pageData.pageNum, // 第几页
+					pageSize:this.pageData.pageSize, // 每页多少条
 					saleOrderNo: this.searchData.saleOrderNo,  // 订单编号 
 					orderTimeStart: this.searchData.orderTimeStart, // 开始时间
 					orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
@@ -304,6 +308,7 @@ export default {
 				},
 			});
 		},
+		// 获取城市公司
 		async getCityCompanyList() {
 			try {
 				let res = await api.getMarketCompanyList()
@@ -311,6 +316,31 @@ export default {
 				console.log(this.cityCompanyList)
 			} finally {
 			}
+		},
+		// 选项卡切换 进行中 已完成
+		switchover(key) {
+			switch (key) {
+				case "1":
+					this.orderState = 'PROCESSING'
+					break;
+				case "2":
+					this.orderState = 'FINISHED'
+					break;
+				default:
+					break;
+			}
+			let params = {
+				orderState: this.orderState, // 订单状态 进行中 已完成
+				pageNum: this.pageData.pageNum, // 第几页
+				pageSize:this.pageData.pageSize, // 每页多少条
+				saleOrderNo: this.searchData.saleOrderNo,  // 订单编号 
+				orderTimeStart: this.searchData.orderTimeStart, // 开始时间
+				orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
+				purchaseCompany: this.searchData.purchaseCompany, // 采购公司
+				receiver: this.searchData.receiver, // 收货人 模糊查询
+				cityCompany: this.searchData.cityCompany, // 城市公司
+			}
+			this.getData(params)
 		},
 		disabledStartDate(orderTimeStart) {
 			const orderTimeEnd = this.searchData.orderTimeEnd;
@@ -349,8 +379,9 @@ export default {
 
 		handleSearch() {
 			let params = {
-				pageNum: this.pageData.pageNum,
-				pageSize:this.pageData.pageSize,
+				orderState: this.orderState, // 订单状态 进行中 已完成
+				pageNum: this.pageData.pageNum, // 第几页
+				pageSize:this.pageData.pageSize, // 每页多少条
 				saleOrderNo: this.searchData.saleOrderNo,  // 订单编号 
 				orderTimeStart: this.searchData.orderTimeStart, // 开始时间
 				orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
@@ -454,26 +485,6 @@ export default {
 					pageSize: this.pageSize,
 				});
 			}
-		},
-		switchover(key) {
-			this.clearValue();
-			this.switchoverValue = key;
-			let empArr = [];
-			switch (key) {
-				case "1":
-					empArr = [];
-					break;
-				case "2":
-					empArr = ["WAIT_DELIVERY"];
-					break;
-				default:
-					break;
-			}
-
-			this.orderStatusListSearch = empArr;
-			this.getOrderListAction({
-				orderStatusList: this.orderStatusListSearch,
-			});
 		},
 		tableChange(e) {
 			let { pageSize, current } = e;
