@@ -568,8 +568,8 @@ let router = new Router({
     // 	redirect: '/404',
     // }
   ],
-  // mode: "history",
-  mode: "hash",
+  mode: "history",
+  // mode: "hash",
 });
 
 router.beforeEach((to, from, next) => {

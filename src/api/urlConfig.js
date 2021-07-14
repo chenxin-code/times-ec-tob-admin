@@ -1,6 +1,8 @@
 // export let timesServicemall = '/times/servicemall';	//时代服务商城接口
-
-export let timesServicemall = "/times-ec-anchang"; //
+const {
+  VUE_APP_BASE_CASE_API
+} = process.env
+export let timesServicemall = VUE_APP_BASE_CASE_API + "/times-ec-anchang"; //
 export let timesServicemallErp = "/times-ec-erp"; //
 
 export let option = {

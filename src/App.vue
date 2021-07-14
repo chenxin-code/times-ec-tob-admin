@@ -40,9 +40,8 @@ export default {
 			sessionStorage.setItem("refreshflag", "1");
 			sessionStorage.setItem("store", JSON.stringify(this.$store.state));
 		});
-
 		this.$store.dispatch('EXCHANGE_TOKEN')
-		//this.loginByOriginalToken(getQueryString('token'));
+		// this.loginByOriginalToken(getQueryString('token'));
 	},
 
 	mounted(){
