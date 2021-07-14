@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ec-case-admin
+  name: ec-case-admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: ec-case-admin
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: ec-case-admin
+    spec:
+      containers:
+      - image: times-registry-vpc.cn-shenzhen.cr.aliyuncs.com:443/times-service-mall-uat/tsm-ec-case-admin:GIT_BRANCH_AS_TAG_TIMESTAMP
+        name: ec-case-admin
+        resources: {}
+        volumeMounts:
+        - mountPath: /etc/nginx/nginx.conf
+          name: nginx-conf
+          subPath: nginx.conf
+      volumes:
+      - configMap:
+          name: nginx-conf
+        name: nginx-conf

@@ -1,0 +1,121 @@
+.order-list {
+  .order-m {
+    padding: 20px;
+
+  }
+
+  .iw250 {
+    width: 250px !important;
+  }
+
+  .search-list {
+    padding: 10px 0;
+
+    .search-list-item {
+      display: inline-block;
+      margin-bottom: 10px;
+
+      .label-text {
+        display: inline-block;
+        width: 100px;
+        text-align: right;
+      }
+    }
+  }
+
+  .modal-after {
+    padding: 20px 24px;
+    min-height: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+
+    .after-item {
+      margin-bottom: 15px;
+
+      .title {
+        color: #333;
+      }
+    }
+  }
+
+  .after-tips {
+    display: flex;
+  }
+
+  .tips-text {
+    position: absolute;
+    right: 5px;
+    bottom: 3px;
+    user-select: none;
+    color: #cfcfcf;
+  }
+
+  .order-table {
+    .goods-items+.goods-items{
+			margin-top: 8px;
+		}
+    .goods-items {
+      // padding: 10px 0px;
+
+    }
+  }
+  .gi-item {
+    display: flex;
+    width: 300px;
+
+    .gi-pic {
+        height: 80px;
+        width: 80px;
+
+        >img {
+            height: 80px;
+            width: 80px;
+        }
+    }
+
+    .gi-info {
+        width: 300px;
+        margin-left: 10px;
+        padding: 0px 0 !important;
+        display: flex;
+        flex-direction: column;
+        justify-content: center !important;
+
+
+        .title {
+            color: #666;
+            font-size: 14px;
+            // margin-bottom: 5px;
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .size {
+            max-width: 300px;
+            max-height: 45px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+}
+
+  .goods-items-block {
+    // height: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    span {
+      display: block;
+      text-align: left;
+      width: 100%;
+    }
+  }
+  .goods-detail+.goods-detail{
+    margin-top: 30px;
+  }
+}

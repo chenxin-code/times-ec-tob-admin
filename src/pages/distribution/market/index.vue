@@ -1,0 +1,567 @@
+<template>
+	<div class="order-m order-list">
+		<div class="order-header">
+			<a-tabs default-active-key="1" @change="switchover">
+				<a-tab-pane key="1" tab="进行中"> </a-tab-pane>
+				<a-tab-pane key="2" tab="已完成"> </a-tab-pane>
+			</a-tabs>
+		</div>
+
+		<div class="search-list">
+      <div class="search-list-item">
+				<span class="label-text">订单编号：</span>
+				<a-input
+					placeholder="请输入订单编号"
+					class="iw250"
+					v-model="searchData.orderNo"
+				/>
+			</div>
+			<div class="search-list-item">
+				<span class="label-text">开始时间：</span>
+				<a-date-picker
+					class="iw250"
+					v-model="searchData.orderTimeStart"
+					:disabled-date="disabledStartDate"
+					show-time
+					format="YYYY-MM-DD HH:mm:ss"
+					placeholder="下单开始时间"
+					@openChange="handleStartOpenChange"
+					@change="onStartDateChange"
+				/>
+			</div>
+			<div class="search-list-item">
+				<span class="label-text">结束时间：</span>
+
+				<a-date-picker
+					class="iw250"
+					v-model="orderTimeEnd"
+					:disabled-date="disabledEndDate"
+					show-time
+					format="YYYY-MM-DD HH:mm:ss"
+					placeholder="下单结束时间"
+					:open="endOpen"
+					@openChange="handleEndOpenChange"
+					@change="onEndDateChange"
+				/>
+			</div>
+      	<div class="search-list-item">
+					<span class="label-text">采购公司：</span>
+				<a-select v-model="orderStatusValue" class="iw250">
+					<a-select-option
+						:value="item.id"
+						v-for="item in orderStatusListSelect"
+						:key="item.name"
+					>
+						{{ item.name }}
+					</a-select-option>
+				</a-select>
+			</div>
+			
+			<div class="search-list-item">
+				<span class="label-text">收货人：</span>
+				<a-input
+					placeholder="请输入收货人"
+					class="iw250"
+					v-model="receiverName"
+				/>
+			</div>
+
+			<div class="search-list-item" v-if="switchoverValue == 1">
+				<span class="label-text">城市公司：</span>
+				<a-select :placeholder="'请选择城市公司'" v-model="searchData.cityCompany" class="iw250">
+					<a-select-option
+						v-for="item in cityCompanyList"
+						:key="item.cityCompanyCode"
+						:value="item.cityCompanyCode"
+					>
+						{{ item.cityCompany }}
+					</a-select-option>
+				</a-select>
+			</div>
+
+			<div class="search-list-item" style="margin-left:30px">
+				<a-button type="primary" @click="handleSearch">查询</a-button>
+			</div>
+      <div class="search-list-item" style="margin-left:30px">
+				<a-button type="primary" @click="_toReset">重置</a-button>
+			</div>
+		</div>
+
+		<div class="order-table">
+			<a-table
+				:rowKey="(record) => record.id"
+				:columns="columns"
+				:data-source="dataList"
+				:scroll="{ x: 1300, y: scrollY }"
+				:pagination="paginationIndex"
+				:loading="loading"
+				@change="tableChange"
+			>
+				<a slot="name" slot-scope="text">{{ text }}</a>
+
+				<div slot="addressDto" slot-scope="text, record">
+					<div>
+						<!-- <p>姓名：{{record.addressDto.receiverName}}</p>
+						<p>电话：{{record.addressDto.receiverPhone}}}</p>
+						<p>地址：{{record.addressDto.detailAddress}}}</p> -->
+					</div>
+				</div>
+
+				<div slot="amount" slot-scope="text, record">
+					<div
+						class="goods-detail goods-items-block"
+						v-for="(item, index) in record.orderItemList"
+						:key="index"
+					>
+						<span>{{ item.buyNum }}</span>
+					</div>
+				</div>
+				<span slot="deliveryStatus" slot-scope="text, record">
+					<div
+						class="goods-detail goods-items-block"
+						v-for="(item, index) in record.orderItemList"
+						:key="index"
+					>
+						<span>{{
+							item.deliveryStatus == "0"
+								? "未发货"
+								: item.deliveryStatus == "1"
+								? "部分发货"
+								: "全部发货"
+						}}</span>
+					</div>
+				</span>
+                      <!-- 操作 -->
+				<span slot="action" slot-scope="text, record">
+					<a	@click="applyAfterSale(record)"	>修改城市公司</a>
+					<a-divider	type="vertical"/>
+					<a @click="checkDetails(record)">查看</a> 
+				</span>
+			</a-table>
+		</div>
+
+		<AfterSaleApproveModal
+			:supplierOrderNo="afterOrderNo"
+			:supplierCode="supplierCode"
+			:visible="afterVisible"
+			@changeHandle="changeHandle"
+		></AfterSaleApproveModal>
+	</div>
+</template>
+
+<script>
+import {
+	orderStatusListSelect,
+	columns,
+	rowSelection,
+	pagination,
+	afterSaleType,
+} from "./defaultConfig";
+
+import AfterSaleApproveModal from "./afterSaleApproveModal";
+import api from "@/api";
+import { mapState } from "vuex";
+const paginationIndex = { ...pagination };
+export default {
+	name: "market",
+	components: {
+		AfterSaleApproveModal,
+	},
+	data() {
+		return {
+			columns,
+			paginationIndex,
+			searchData: {
+				saleOrderNo: '',  // 订单编号 
+				orderTimeStart: '', // 开始时间
+				orderTimeEnd: '', // 结束时间
+				purchaseCompany: '', // 采购公司
+				receiver: '', // 收货人 模糊查询
+				cityCompany: undefined, // 城市公司
+			},
+			pageData: {
+				pageNum: 1,
+				pageSize: 10
+			},
+			loading: false,
+			cityCompanyList: [],
+			orderStatusValue: "0",  // 采购公司 城市公司
+			orderStatusListSelect,
+
+			endOpen: false,
+
+			afterSaleType,
+			rowSelection,
+			expandedRowKeys: [],
+			selectedRowKeys: [],
+			afterVisible: false,
+			refundReason: "",
+			dataList: [],
+			current: 1,
+			pageSize: 10,
+			orderNo: "",
+			purchaseCode: "",
+			receiverName: "",
+			orderStatusListSearch: [],
+			switchoverValue: "1",
+			orderTimeStart: null,
+			orderTimeEnd: null,
+			supplierName: "",
+			receiverPhone: "",
+			orderItemsData: [],
+			afterOrderNo: "",
+			supplierCode: "",
+      //表格高度
+      scrollY: 100,
+		};
+	},
+	computed: mapState(["Case_Access_Token"]),
+	watch: {
+		Case_Access_Token(newVal, oldVal) {
+			let params = {
+				pageNum: this.pageData.pageNum,
+				pageSize:this.pageData.pageSize,
+				saleOrderNo: this.searchData.saleOrderNo,  // 订单编号 
+				orderTimeStart: this.searchData.orderTimeStart, // 开始时间
+				orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
+				purchaseCompany: this.searchData.purchaseCompany, // 采购公司
+				receiver: this.searchData.receiver, // 收货人 模糊查询
+				cityCompany: this.searchData.cityCompany, // 城市公司
+			}
+			this.getData(params);
+		},
+		orderStatusValue(val) {
+			let emptyArr = [];
+			switch (val) {
+				case "0":
+					emptyArr = [];
+					break;
+				case "1":
+					emptyArr = ["WAIT_DELIVERY"];
+					break;
+				case "2":
+					emptyArr = ["DELIVERING", "WAIT_RECEIVE"];
+					break;
+				default:
+					break;
+			}
+			this.orderStatusListSearch = emptyArr;
+		},
+	},
+	mounted() {
+		if (this.Case_Access_Token) {
+			let params = {
+				pageNum: this.pageData.pageNum,
+				pageSize:this.pageData.pageSize,
+				saleOrderNo: this.searchData.saleOrderNo,  // 订单编号 
+				orderTimeStart: this.searchData.orderTimeStart, // 开始时间
+				orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
+				purchaseCompany: this.searchData.purchaseCompany, // 采购公司
+				receiver: this.searchData.receiver, // 收货人 模糊查询
+				cityCompany: this.searchData.cityCompany, // 城市公司
+			}
+			this.getData(params);
+			this.getCityCompanyList()
+		}
+	},
+  created() {
+    const timer1 = setTimeout(() => {
+      this.scrollY = document.body.clientHeight - 370 + 'px';
+    }, 0);
+    this.$once('hook:beforeDestroy', () => {
+      clearTimeout(timer1);
+    });
+  },
+	methods: {
+		// 获取列表数据
+		async getData(params) {
+			this.loading = true
+			if(!params) {
+				params = {
+					pageNum: this.pageData.pageNum,
+					pageSize:this.pageData.pageSize,
+					saleOrderNo: this.searchData.saleOrderNo,  // 订单编号 
+					orderTimeStart: this.searchData.orderTimeStart, // 开始时间
+					orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
+					purchaseCompany: this.searchData.purchaseCompany, // 采购公司
+					receiver: this.searchData.receiver, // 收货人 模糊查询
+					cityCompany: this.searchData.cityCompany, // 城市公司
+				}
+			}
+			try {
+				let res = await api.getMarketOrderList(params)
+				this.dataList = res.data.records;
+			} finally {
+				this.loading = false
+			}
+		},
+		// 查看详情
+		checkDetails(record) {
+			this.$router.push({
+				name: "marketdetail",
+				params: {
+					saleOrderNo: record.saleOrderNo,
+				},
+			});
+		},
+		async getCityCompanyList() {
+			try {
+				let res = await api.getMarketCompanyList()
+				this.cityCompanyList = res.data;
+				console.log(this.cityCompanyList)
+			} finally {
+			}
+		},
+		disabledStartDate(orderTimeStart) {
+			const orderTimeEnd = this.searchData.orderTimeEnd;
+			if (!orderTimeStart || !orderTimeEnd) {
+				return false;
+			}
+			return orderTimeStart.valueOf() > orderTimeEnd.valueOf();
+		},
+		disabledEndDate(orderTimeEnd) {
+			const orderTimeStart = this.searchData.orderTimeStart;
+			if (!orderTimeEnd || !orderTimeStart) {
+				return false;
+			}
+			return orderTimeStart.valueOf() >= orderTimeEnd.valueOf();
+		},
+		handleStartOpenChange(open) {
+			if (!open) {
+				this.endOpen = true;
+			}
+		},
+		handleEndOpenChange(open) {
+			this.endOpen = open;
+		},
+
+
+
+
+
+
+		init() {
+			let lastPage = sessionStorage.getItem("listPageParams");
+			let lastPost = {};
+			lastPost = { ...lastPost, ...JSON.parse(lastPage) };
+			this.getOrderListAction(lastPost);
+		},
+
+		handleSearch() {
+			let params = {
+				pageNum: this.pageData.pageNum,
+				pageSize:this.pageData.pageSize,
+				saleOrderNo: this.searchData.saleOrderNo,  // 订单编号 
+				orderTimeStart: this.searchData.orderTimeStart, // 开始时间
+				orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
+				purchaseCompany: this.searchData.purchaseCompany, // 采购公司
+				receiver: this.searchData.receiver, // 收货人 模糊查询
+				cityCompany: this.searchData.cityCompany, // 城市公司
+			}
+			this.getData(params)
+		},
+		_toReset() {
+			this.orderNo = ''
+			this.purchaseCode = ''
+			this.receiverName = ''
+			this.orderStatusListSearch = ''
+			this.orderTimeStart = ''
+			this.orderTimeEnd = ''
+			this.supplierName = ''
+			this.receiverPhone = ''
+
+			let searchKeyword = {
+				orderNo: this.orderNo,
+				purchaseCode: this.purchaseCode,
+				receiverName: this.receiverName,
+				orderStatusList: this.orderStatusListSearch,
+				orderTimeStart: this.orderTimeStart ? this.orderTimeStart : "",
+				orderTimeEnd: this.orderTimeEnd ? this.orderTimeEnd : "",
+				supplierName: this.supplierName,
+				receiverPhone: this.receiverPhone
+			};
+			this.getOrderListAction(searchKeyword);
+		},
+		async getOrderListAction(opt) {
+			let getConfig = { pageNum: 1, pageSize: 10 };
+			getConfig = { ...getConfig, ...opt };
+			sessionStorage.setItem(
+				"listPageParams",
+				JSON.stringify({
+					pageSize: getConfig.pageSize,
+					pageNum: getConfig.pageNum,
+				})
+			);
+			this.loading = true;
+			try {
+				let { data, code } = await api.getOrderList(getConfig);
+				if (code !== 200) return;
+				this.dataList = data.records;
+				this.current = data.current;
+				this.pageSize = data.size;
+				this.paginationIndex.current = data.current * 1;
+				this.paginationIndex.total = data.total * 1;
+			} finally {
+				this.loading = false;
+			}
+		},
+		titleFn(v) {
+			let str = "";
+			v.forEach((ele) => {
+				str += ele.featureName + " - " + ele.featureValue;
+			});
+			return str;
+		},
+		clearValue() {
+			this.orderNo = "";
+			this.purchaseCode = "";
+			this.receiverName = "";
+			this.orderStatusListSearch = [];
+			this.orderTimeStart = null;
+			this.orderTimeEnd = null;
+			this.supplierName = "";
+			this.receiverPhone = "";
+		},
+		handleOk(e) {
+			this.visible = false;
+		},
+		async getOrderItemsAction(No) {
+			let { data, code } = await api.getOrderItems(No);
+			this.orderItemsData = data;
+		},
+		applyAfterSale(record) {
+			this.afterOrderNo = record.supplierOrderNo;
+			this.supplierCode = record.supplierCode;
+			this.afterVisible = true;
+		},
+		handleCancelOrder(record) {
+			let that = this;
+			that.$confirm({
+				title: "确定取消订单？",
+				content: "",
+				onOk() {
+					that.cancelOrderAction(record.supplierOrderNo);
+				},
+				onCancel() {},
+			});
+		},
+		async cancelOrderAction(id) {
+			let { code } = await api.cancelOrder(id);
+			if (code == 200) {
+				this.$message.success("取消成功");
+				this.getOrderListAction({
+					pageNum: this.current,
+					pageSize: this.pageSize,
+				});
+			}
+		},
+		switchover(key) {
+			this.clearValue();
+			this.switchoverValue = key;
+			let empArr = [];
+			switch (key) {
+				case "1":
+					empArr = [];
+					break;
+				case "2":
+					empArr = ["WAIT_DELIVERY"];
+					break;
+				default:
+					break;
+			}
+
+			this.orderStatusListSearch = empArr;
+			this.getOrderListAction({
+				orderStatusList: this.orderStatusListSearch,
+			});
+		},
+		tableChange(e) {
+			let { pageSize, current } = e;
+			this.current = current;
+			this.pageSize = pageSize;
+			this.paginationIndex.current = e.current * 1;
+			this.paginationIndex.total = e.total * 1;
+			this.getOrderListAction({
+				pageNum: this.current,
+				pageSize: this.pageSize,
+			});
+		},
+		changeHandle() {
+			this.afterVisible = false;
+		},
+		onSelectChange(selectedRowKeys) {
+			this.selectedRowKeys = selectedRowKeys;
+		},
+		onStartDateChange(date, dateString) {
+			this.orderTimeStart = dateString;
+		},
+		onEndDateChange(date, dateString) {
+			this.orderTimeEnd = dateString;
+		},
+	},
+};
+</script>
+
+<style lang="less" scoped>
+@import url("./index.less");
+.order-m {
+	padding: 20px;
+}
+/deep/ .ant-modal-body {
+	padding: 0px;
+}
+/deep/ .order-table .ant-table-tbody > tr > td {
+	&:nth-child(1) {
+		padding: 16px !important;
+	}
+	// &:nth-child(2) {
+	// 	padding: 0;
+	// }
+	// &:nth-child(3) {
+	// 	padding: 0;
+	// }
+	&:nth-child(4) {
+		padding: 0;
+	}
+	&:nth-last-child(1) {
+		padding: 16px;
+	}
+}
+.goods-items {
+
+	width: 100%;
+
+	.gi-item {
+		display: flex;
+		.gi-pic {
+			height: 80px;
+			width: 80px;
+			> img {
+				height: 80px;
+				width: 80px;
+			}
+		}
+		.gi-info {
+			margin-left: 10px;
+			// padding: 15px 0;
+			flex: 1;
+			// display: flex;
+			// flex-direction: column;
+			// justify-content: space-between;
+			// > p {
+				// overflow: hidden;
+				// text-overflow:ellipsis;
+				// white-space: nowrap;
+			// }
+			.title {
+				color: #666;
+				font-size: 14px;
+			}
+			.size {
+				color: rgb(143, 139, 139);
+				font-size: 12px;
+			}
+		}
+	}
+}
+</style>
