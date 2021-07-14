@@ -581,7 +581,9 @@ router.beforeEach((to, from, next) => {
   if (to.matched.length === 0) {
     from.name
       ? next({
+        ...from,
           name: from.name,
+          query:from.query
         })
       : next("/404");
   } else {
