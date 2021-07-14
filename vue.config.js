@@ -208,16 +208,16 @@ const vueConfig = {
         target: "https://times-oss-dev.oss-cn-shenzhen.aliyuncs.com/",
         changeOrigin: true,
       },
-      // "/times-ec-anchang": {
-      //   // target: 'https://times-uat-backend.oss-cn-shenzhen.aliyuncs.com',
-      //   target: "http://10.2.219.213:9527", // "https://mall-uat-api-linli.timesgroup.cn:9526"
-      //   changeOrigin: true,
-      //   pathRewrite: {
-      //     '^/times-ec-anchang': '/haha'
-      //     //pathRewrite: {'^/api': '/'} 重写之后url为 http://192.168.1.16:8085/xxxx
-      //     //pathRewrite: {'^/api': '/api'} 重写之后url为 http://192.168.1.16:8085/api/xxxx
-      //   }
-      // },
+      "/times-ec-anchang": {
+        // target: 'https://times-uat-backend.oss-cn-shenzhen.aliyuncs.com',
+        target: process.env.VUE_APP_BASE_CASE_API, // "https://mall-uat-api-linli.timesgroup.cn:9526"
+        changeOrigin: true,
+        pathRewrite: {
+          '^/times-ec-anchang': '/haha'
+          //pathRewrite: {'^/api': '/'} 重写之后url为 http://192.168.1.16:8085/xxxx
+          //pathRewrite: {'^/api': '/api'} 重写之后url为 http://192.168.1.16:8085/api/xxxx
+        }
+      },
     },
   },
 
