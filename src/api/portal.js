@@ -1,5 +1,5 @@
-import { fetchApi } from '@/utils/ajax'
-import URL from './urlConfig'
+import { fetchApi } from "@/utils/ajax";
+import URL from "./urlConfig";
 
 //获取权限
-export const getPermission = data => fetchApi(URL.PERMISSION, data, "GET");
+export const getPermission = (data) => fetchApi(URL.PERMISSION, data, "GET");
