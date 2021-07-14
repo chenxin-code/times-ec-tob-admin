@@ -147,6 +147,7 @@
 
     .container {
       height: 100%;
+      min-height:100vh;
 
       aside.ant-layout-sider {
         z-index: 2;

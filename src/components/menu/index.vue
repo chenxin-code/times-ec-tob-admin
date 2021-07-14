@@ -96,6 +96,7 @@ export default {
           }
         }
       }
+      debugger
       this.rootPath = pathname;
       this.menus = filteredMenus;
     }
