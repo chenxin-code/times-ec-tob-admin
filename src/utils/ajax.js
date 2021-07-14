@@ -7,8 +7,7 @@ import message from "ant-design-vue/es/message";
 
 import * as api from "@/api/login";
 import QS from "qs";
-import store from '../store'
-
+import store from "../store";
 
 // 一体化线上域名-返回登陆
 const baseCmsWebsite =
@@ -26,7 +25,6 @@ const VUE_APP_BASE_API = process.env.VUE_APP_BASE_API;
 BASEURL = VUE_APP_BASE_API;
 CENTERBASEURL = VUE_APP_BASE_API;
 console.log("BASEURL:" + BASEURL);
-
 
 const JSONBigString = JSONbig({ storeAsString: true });
 export const HTTP = axios.create({
@@ -188,7 +186,6 @@ export const fetchApi = (
   url = CENTERBASEURL,
   ifplaceholder = false
 ) => {
-
   let Access_Token = store.state.Case_Access_Token;
 
   return handleParams(api, rawData, method, headers, responseType).then(
