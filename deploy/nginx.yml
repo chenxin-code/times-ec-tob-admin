@@ -3,23 +3,23 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    run: ec-tob-admin
-  name: ec-tob-admin
+    run: tsm-ec-tob-admin
+  name: tsm-ec-tob-admin
 spec:
   replicas: 1
   selector:
     matchLabels:
-      run: ec-tob--admin
+      run: tsm-ec-tob-admin
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        run: ec-tob--admin
+        run: tsm-ec-tob-admin
     spec:
       containers:
       - image: times-registry-vpc.cn-shenzhen.cr.aliyuncs.com:443/times-service-mall-uat/tsm-ec-tob-admin:GIT_BRANCH_AS_TAG_TIMESTAMP
-        name: ec-tob-admin
+        name: tsm-ec-tob-admin
         resources: {}
         volumeMounts:
         - mountPath: /etc/nginx/nginx.conf
