@@ -549,7 +549,69 @@ let router = new Router({
           },
           component: () => import("@/pages/account/add-edit"),
         },
-      ],
+        {
+          path: "/market",
+          name: "market",
+          menuKey: "market",
+          meta: {
+            menu: "/market",
+            authKeys: [""],
+            bread: [
+              {
+                path: "/market",
+                name: "销售单管理",
+              },
+            ],
+            // keepAlive: true
+          },
+          component: () => import("../pages/distribution/market/index"),
+        },
+        {
+          path: "/market/marketdetail",
+          name: "marketdetail",
+          menuKey: "marketdetail",
+          meta: {
+            menu: "/marketdetail",
+            authKeys: [""],
+            bread: [{ path: "/market/marketdetail", name: "销售单详情" }],
+            // keepAlive: true
+          },
+          component: () => import("../pages/distribution/market/detail"),
+        },
+        {
+          path: "/supplier",
+          name: "supplier",
+          menuKey: "supplier",
+          meta: {
+            menu: "/supplier",
+            authKeys: [""],
+            bread: [
+              {
+                path: "/supplier",
+                name: "供应商",
+              },
+            ],
+            // keepAlive: true
+          },
+          component: () => import("../pages/distribution/supplier/index"),
+        },
+        {
+          path: "/supplier/supplierdetail",
+          name: "detail",
+          menuKey: "supplier",
+          meta: {
+            menu: "/supplier",
+            authKeys: [""],
+            bread: [
+              { path: "/supplier", name: "供应商" },
+              { path: "supplier/supplierdetail", name: "供应商详情" },
+            ],
+            isUseCache: false,
+            keepAlive: false,
+          },
+          component: () => import("../pages/distribution/supplier/detail"),
+        }
+      ]
     },
     {
       path: "/404",
