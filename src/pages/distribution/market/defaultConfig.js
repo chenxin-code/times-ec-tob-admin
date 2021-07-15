@@ -135,7 +135,3 @@ export const rowSelection = {
 	onSelectAll: (selected, selectedRows, changeRows) => {},
 };
 
-export const afterSaleType = [
-	{ id: "REFUND_RETURN", name: "退款退货" },
-	{ id: "EXCHANGE", name: "换货" },
-];

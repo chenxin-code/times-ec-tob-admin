@@ -66,7 +66,7 @@
 				/>
 			</div>
 
-			<div class="search-list-item" v-if="switchoverValue == 1">
+			<div class="search-list-item">
 				<span class="label-text">城市公司：</span>
 				<a-select :placeholder="'请选择城市公司'" v-model="searchData.cityCompany" class="iw250">
 					<a-select-option
@@ -141,8 +141,7 @@
 		</div>
 
 		<AfterSaleApproveModal
-			:supplierOrderNo="afterOrderNo"
-			:supplierCode="supplierCode"
+			:row="rowData"
 			:visible="afterVisible"
 			@changeHandle="changeHandle"
 		></AfterSaleApproveModal>
@@ -185,33 +184,13 @@ export default {
 				pageSize: 10
 			},
 			loading: false,
+			dataList: [],
 			cityCompanyList: [],
 			orderStatusValue: "0",  // 采购公司 城市公司
 			orderStatusListSelect,
-
-			endOpen: false,
-
-			afterSaleType,
-			rowSelection,
-			expandedRowKeys: [],
-			selectedRowKeys: [],
 			afterVisible: false,
-			refundReason: "",
-			dataList: [],
-			current: 1,
-			pageSize: 10,
-			orderNo: "",
-			purchaseCode: "",
-			receiverName: "",
-			orderStatusListSearch: [],
-			switchoverValue: "1",
-			orderTimeStart: null,
-			orderTimeEnd: null,
-			supplierName: "",
-			receiverPhone: "",
-			orderItemsData: [],
-			afterOrderNo: "",
-			supplierCode: "",
+			endOpen: false,
+			rowData: {},
       //表格高度
       scrollY: 100,
 		};
@@ -299,6 +278,45 @@ export default {
 				this.loading = false
 			}
 		},
+		handleSearch() {
+			let params = {
+				orderState: this.orderState, // 订单状态 进行中 已完成
+				pageNum: this.pageData.pageNum, // 第几页
+				pageSize:this.pageData.pageSize, // 每页多少条
+				saleOrderNo: this.searchData.saleOrderNo,  // 订单编号 
+				orderTimeStart: this.searchData.orderTimeStart, // 开始时间
+				orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
+				purchaseCompany: this.searchData.purchaseCompany, // 采购公司
+				receiver: this.searchData.receiver, // 收货人 模糊查询
+				cityCompany: this.searchData.cityCompany, // 城市公司
+			}
+			this.getData(params)
+		},
+		tableChange(e) {
+			let { pageSize, current } = e;
+			this.current = current;
+			this.pageSize = pageSize;
+			this.paginationIndex.current = e.current * 1;
+			this.paginationIndex.total = e.total * 1;
+			this.getData({
+				pageNum: this.current,
+				pageSize: this.pageSize,
+			});
+		},
+		_toReset() {
+			let params = {
+				orderState: '', // 订单状态 进行中 已完成
+				pageNum: this.pageData.pageNum, // 第几页
+				pageSize:this.pageData.pageSize, // 每页多少条
+				saleOrderNo: '',  // 订单编号 
+				orderTimeStart: '', // 开始时间
+				orderTimeEnd: '', // 结束时间
+				purchaseCompany: '', // 采购公司
+				receiver: '', // 收货人 模糊查询
+				cityCompany: undefined, // 城市公司
+			}
+			this.getData(params)
+		},
 		// 查看详情
 		checkDetails(record) {
 			this.$router.push({
@@ -313,9 +331,12 @@ export default {
 			try {
 				let res = await api.getMarketCompanyList()
 				this.cityCompanyList = res.data;
-				console.log(this.cityCompanyList)
 			} finally {
 			}
+		},
+		applyAfterSale(record) {
+			this.rowData = record
+			this.afterVisible = true;
 		},
 		// 选项卡切换 进行中 已完成
 		switchover(key) {
@@ -342,6 +363,9 @@ export default {
 			}
 			this.getData(params)
 		},
+		changeHandle() {
+			this.afterVisible = false;
+		},
 		disabledStartDate(orderTimeStart) {
 			const orderTimeEnd = this.searchData.orderTimeEnd;
 			if (!orderTimeStart || !orderTimeEnd) {
@@ -363,145 +387,6 @@ export default {
 		},
 		handleEndOpenChange(open) {
 			this.endOpen = open;
-		},
-
-
-
-
-
-
-		init() {
-			let lastPage = sessionStorage.getItem("listPageParams");
-			let lastPost = {};
-			lastPost = { ...lastPost, ...JSON.parse(lastPage) };
-			this.getOrderListAction(lastPost);
-		},
-
-		handleSearch() {
-			let params = {
-				orderState: this.orderState, // 订单状态 进行中 已完成
-				pageNum: this.pageData.pageNum, // 第几页
-				pageSize:this.pageData.pageSize, // 每页多少条
-				saleOrderNo: this.searchData.saleOrderNo,  // 订单编号 
-				orderTimeStart: this.searchData.orderTimeStart, // 开始时间
-				orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
-				purchaseCompany: this.searchData.purchaseCompany, // 采购公司
-				receiver: this.searchData.receiver, // 收货人 模糊查询
-				cityCompany: this.searchData.cityCompany, // 城市公司
-			}
-			this.getData(params)
-		},
-		_toReset() {
-			this.orderNo = ''
-			this.purchaseCode = ''
-			this.receiverName = ''
-			this.orderStatusListSearch = ''
-			this.orderTimeStart = ''
-			this.orderTimeEnd = ''
-			this.supplierName = ''
-			this.receiverPhone = ''
-
-			let searchKeyword = {
-				orderNo: this.orderNo,
-				purchaseCode: this.purchaseCode,
-				receiverName: this.receiverName,
-				orderStatusList: this.orderStatusListSearch,
-				orderTimeStart: this.orderTimeStart ? this.orderTimeStart : "",
-				orderTimeEnd: this.orderTimeEnd ? this.orderTimeEnd : "",
-				supplierName: this.supplierName,
-				receiverPhone: this.receiverPhone
-			};
-			this.getOrderListAction(searchKeyword);
-		},
-		async getOrderListAction(opt) {
-			let getConfig = { pageNum: 1, pageSize: 10 };
-			getConfig = { ...getConfig, ...opt };
-			sessionStorage.setItem(
-				"listPageParams",
-				JSON.stringify({
-					pageSize: getConfig.pageSize,
-					pageNum: getConfig.pageNum,
-				})
-			);
-			this.loading = true;
-			try {
-				let { data, code } = await api.getOrderList(getConfig);
-				if (code !== 200) return;
-				this.dataList = data.records;
-				this.current = data.current;
-				this.pageSize = data.size;
-				this.paginationIndex.current = data.current * 1;
-				this.paginationIndex.total = data.total * 1;
-			} finally {
-				this.loading = false;
-			}
-		},
-		titleFn(v) {
-			let str = "";
-			v.forEach((ele) => {
-				str += ele.featureName + " - " + ele.featureValue;
-			});
-			return str;
-		},
-		clearValue() {
-			this.orderNo = "";
-			this.purchaseCode = "";
-			this.receiverName = "";
-			this.orderStatusListSearch = [];
-			this.orderTimeStart = null;
-			this.orderTimeEnd = null;
-			this.supplierName = "";
-			this.receiverPhone = "";
-		},
-		handleOk(e) {
-			this.visible = false;
-		},
-		async getOrderItemsAction(No) {
-			let { data, code } = await api.getOrderItems(No);
-			this.orderItemsData = data;
-		},
-		applyAfterSale(record) {
-			this.afterOrderNo = record.supplierOrderNo;
-			this.supplierCode = record.supplierCode;
-			this.afterVisible = true;
-		},
-		handleCancelOrder(record) {
-			let that = this;
-			that.$confirm({
-				title: "确定取消订单？",
-				content: "",
-				onOk() {
-					that.cancelOrderAction(record.supplierOrderNo);
-				},
-				onCancel() {},
-			});
-		},
-		async cancelOrderAction(id) {
-			let { code } = await api.cancelOrder(id);
-			if (code == 200) {
-				this.$message.success("取消成功");
-				this.getOrderListAction({
-					pageNum: this.current,
-					pageSize: this.pageSize,
-				});
-			}
-		},
-		tableChange(e) {
-			let { pageSize, current } = e;
-			this.current = current;
-			this.pageSize = pageSize;
-			this.paginationIndex.current = e.current * 1;
-			this.paginationIndex.total = e.total * 1;
-			this.getOrderListAction({
-				pageNum: this.current,
-				pageSize: this.pageSize,
-			});
-		},
-		changeHandle() {
-			this.afterVisible = false;
-		},
-		onSelectChange(selectedRowKeys) {
-			this.selectedRowKeys = selectedRowKeys;
 		},
 		onStartDateChange(date, dateString) {
 			this.orderTimeStart = dateString;
