@@ -83,7 +83,7 @@
 				<a-button type="primary" @click="handleSearch">查询</a-button>
 			</div>
       <div class="search-list-item" style="margin-left:30px">
-				<a-button type="primary" @click="_toReset">重置</a-button>
+				<a-button type="primary" @click="toReset">重置</a-button>
 			</div>
 		</div>
 
@@ -93,7 +93,7 @@
 				:columns="columns"
 				:data-source="dataList"
 				:scroll="{ x: 1300, y: scrollY }"
-				:pagination="paginationIndex"
+				:pagination="pageData"
 				:loading="loading"
 				@change="tableChange"
 			>
@@ -149,27 +149,146 @@
 </template>
 
 <script>
-import {
-	orderStatusListSelect,
-	columns,
-	rowSelection,
-	pagination,
-	afterSaleType,
-} from "./defaultConfig";
-
 import AfterSaleApproveModal from "./afterSaleApproveModal";
 import api from "@/api";
 import { mapState } from "vuex";
-const paginationIndex = { ...pagination };
 export default {
 	name: "market",
 	components: {
 		AfterSaleApproveModal,
 	},
 	data() {
+		let orderStatusListSelect =[
+			{
+				id: "0",
+				name: "全部",
+			},
+			{
+				id: "1",
+				name: "待发货",
+			},
+			{
+				id: "2",
+				name: "已发货",
+			},
+			{
+				id: "3",
+				name: "已完成",
+			},
+			{
+				id: "4",
+				name: "已关闭",
+			},
+		]
+		let columns = [
+			{
+				title: "订单编号",
+				dataIndex: "saleOrderNo",
+				key: "saleOrderNo",
+				width: 250
+			},
+			{
+				title: "采购公司(出账公司)",
+				width: 250,
+				key: "purchaseCompany",
+				dataIndex: "purchaseCompany"
+			},
+			{
+				title: "收货信息",
+				width: 250,
+				scopedSlots: { customRender: "addressDto" }
+			},
+			{
+				title: "支付方式",
+				width: 100,
+				key: "payWay",
+				customRender: (text, record, index) => {
+					let str = "";
+					switch (text) {
+						case "ONLINE":
+							str = "线上";
+							break;
+						case "OFFLINE":
+							str = "线下";
+							break;
+						default:
+							'22'
+							break;
+					}
+					return str;
+				}
+			},
+			{
+				title: "税前订单总额（元）",
+				dataIndex: "totalPretaxAmount",
+				key: "totalPretaxAmount",
+				width: 200
+			},
+			{
+				title: "税后订单总额（元）",
+				dataIndex: "totalAmount",
+				key: "totalAmount",
+				width: 200
+			},
+			{
+				title: "税前优惠总额（元）",
+				dataIndex: "totalPretaxReducedAmount",
+				key: "totalPretaxReducedAmount",
+				width: 200
+			},
+			{
+				title: "税后优惠总额（元）",
+				dataIndex: "totalReducedAmount",
+				key: "totalReducedAmount",
+				width: 200
+			},
+			{
+				title: "下单时间",
+				dataIndex: "orderTime",
+				key: "orderTime",
+				width: 200
+			},
+			{
+				title: "账套名称",
+				dataIndex: "financialAccounting",
+				key: "financialAccounting",
+				width: 200
+			},
+			{
+				title: "城市公司",
+				dataIndex: "cityCompany",
+				key: "cityCompany",
+				width: 150
+				
+			},
+			{
+				title: "项目名称",
+				dataIndex: "projectName",
+				key: "projectName",
+				width: 200
+			},
+			{
+				title: "操作",
+				key: "operation",
+				fixed: "right",
+				width: 200,
+				scopedSlots: { customRender: "action" },
+			},
+		]
+		let pageData = {
+			pageNum: 1,
+			pageSize: 10,
+			total: 0,
+			current: 1,
+			showSizeChanger: true,
+			showTotal: (total) => `共有${total}条`,
+			showSizeChange: (current, pageSize) => (this.pageSize = pageSize),
+			showQuickJumper: true,
+			onChange: (pageNumber) => {},
+		}
 		return {
 			columns,
-			paginationIndex,
+			pageData,
 			searchData: {
 				saleOrderNo: '',  // 订单编号 
 				orderTimeStart: '', // 开始时间
@@ -179,10 +298,6 @@ export default {
 				cityCompany: undefined, // 城市公司
 			},
 			orderState: 'PROCESSING',
-			pageData: {
-				pageNum: 1,
-				pageSize: 10
-			},
 			loading: false,
 			dataList: [],
 			cityCompanyList: [],
@@ -294,26 +409,34 @@ export default {
 		},
 		tableChange(e) {
 			let { pageSize, current } = e;
-			this.current = current;
-			this.pageSize = pageSize;
-			this.paginationIndex.current = e.current * 1;
-			this.paginationIndex.total = e.total * 1;
+			this.pageData.current = current;
+			this.pageData.pageSize = pageSize;
+			this.pageData.current = e.current * 1;
+			this.pageData.total = e.total * 1;
 			this.getData({
 				pageNum: this.current,
 				pageSize: this.pageSize,
 			});
 		},
-		_toReset() {
-			let params = {
-				orderState: '', // 订单状态 进行中 已完成
-				pageNum: this.pageData.pageNum, // 第几页
-				pageSize:this.pageData.pageSize, // 每页多少条
+		toReset() {
+			this.searchData = {
 				saleOrderNo: '',  // 订单编号 
 				orderTimeStart: '', // 开始时间
 				orderTimeEnd: '', // 结束时间
 				purchaseCompany: '', // 采购公司
 				receiver: '', // 收货人 模糊查询
 				cityCompany: undefined, // 城市公司
+			}
+			let params = {
+				orderState: this.orderState, // 订单状态 进行中 已完成
+				pageNum: this.pageData.pageNum, // 第几页
+				pageSize:this.pageData.pageSize, // 每页多少条
+				saleOrderNo: this.searchData.saleOrderNo,  // 订单编号 
+				orderTimeStart: this.searchData.orderTimeStart, // 开始时间
+				orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
+				purchaseCompany: this.searchData.purchaseCompany, // 采购公司
+				receiver: this.searchData.receiver, // 收货人 模糊查询
+				cityCompany: this.searchData.cityCompany, // 城市公司
 			}
 			this.getData(params)
 		},
