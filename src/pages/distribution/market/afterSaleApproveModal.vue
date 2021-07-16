@@ -87,13 +87,22 @@ export default {
 			set (value) {
 				this.$emit('changeHandle', value);
 			}
+		},
+		saleOrderNo() {
+			return this.row.saleOrderNo
+		},
+		projectName() {
+			return this.row.projectName
+		},
+		purchaseCompany() {
+			return  this.row.purchaseCompany
 		}
 	},
 	data() {
 		return {
-			saleOrderNo: this.row.saleOrderNo, // 订单编号
-			projectName: this.row.projectName, // 项目名称
-			purchaseCompany: this.row.purchaseCompany, // 采购公司
+			// saleOrderNo: this.row.saleOrderNo, // 订单编号
+			// projectName: this.row.projectName, // 项目名称
+			// npurchaseCompany: this.row.purchaseCompany, // 采购公司
 			cityCompany: undefined, // 城市公司
 			cityCompanyList: [], // 城市公司列表
 
