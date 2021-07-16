@@ -597,7 +597,7 @@ let router = new Router({
         },
         {
           path: "/supplier/supplierdetail",
-          name: "detail",
+          name: "supplierdetail",
           menuKey: "supplier",
           meta: {
             menu: "/supplier",

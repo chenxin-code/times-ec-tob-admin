@@ -121,67 +121,67 @@
 </template>
 
 <script>
-import AfterSaleApproveModal from "./afterSaleApproveModal";
-import api from "@/api";
-import { mapState } from "vuex";
+import AfterSaleApproveModal from './afterSaleApproveModal';
+import api from '@/api';
+import { mapState } from 'vuex';
 export default {
-	name: "market",
+	name: 'market',
 	components: {
 		AfterSaleApproveModal,
 	},
 	data() {
 		let orderStatusListSelect =[
 			{
-				id: "0",
-				name: "全部",
+				id: '0',
+				name: '全部',
 			},
 			{
-				id: "1",
-				name: "待发货",
+				id: '1',
+				name: '待发货',
 			},
 			{
-				id: "2",
-				name: "已发货",
+				id: '2',
+				name: '已发货',
 			},
 			{
-				id: "3",
-				name: "已完成",
+				id: '3',
+				name: '已完成',
 			},
 			{
-				id: "4",
-				name: "已关闭",
+				id: '4',
+				name: '已关闭',
 			},
 		]
 		let columns = [
 			{
-				title: "订单编号",
-				dataIndex: "saleOrderNo",
-				key: "saleOrderNo",
+				title: '订单编号',
+				dataIndex: 'saleOrderNo',
+				key: 'saleOrderNo',
 				width: 250
 			},
 			{
-				title: "采购公司(出账公司)",
+				title: '采购公司(出账公司)',
 				width: 250,
-				key: "purchaseCompany",
-				dataIndex: "purchaseCompany"
+				key: 'purchaseCompany',
+				dataIndex: 'purchaseCompany'
 			},
 			{
-				title: "收货信息",
+				title: '收货信息',
 				width: 250,
-				scopedSlots: { customRender: "addressDto" }
+				scopedSlots: { customRender: 'addressDto' }
 			},
 			{
-				title: "支付方式",
+				title: '支付方式',
 				width: 100,
-				key: "payWay",
+				key: 'payWay',
 				customRender: (text, record, index) => {
-					let str = "";
+					let str = '';
 					switch (text) {
-						case "ONLINE":
-							str = "线上";
+						case 'ONLINE':
+							str = '线上';
 							break;
-						case "OFFLINE":
-							str = "线下";
+						case 'OFFLINE':
+							str = '线下';
 							break;
 						default:
 							'22'
@@ -191,60 +191,60 @@ export default {
 				}
 			},
 			{
-				title: "税前订单总额（元）",
-				dataIndex: "totalPretaxAmount",
-				key: "totalPretaxAmount",
+				title: '税前订单总额（元）',
+				dataIndex: 'totalPretaxAmount',
+				key: 'totalPretaxAmount',
 				width: 200
 			},
 			{
-				title: "税后订单总额（元）",
-				dataIndex: "totalAmount",
-				key: "totalAmount",
+				title: '税后订单总额（元）',
+				dataIndex: 'totalAmount',
+				key: 'totalAmount',
 				width: 200
 			},
 			{
-				title: "税前优惠总额（元）",
-				dataIndex: "totalPretaxReducedAmount",
-				key: "totalPretaxReducedAmount",
+				title: '税前优惠总额（元）',
+				dataIndex: 'totalPretaxReducedAmount',
+				key: 'totalPretaxReducedAmount',
 				width: 200
 			},
 			{
-				title: "税后优惠总额（元）",
-				dataIndex: "totalReducedAmount",
-				key: "totalReducedAmount",
+				title: '税后优惠总额（元）',
+				dataIndex: 'totalReducedAmount',
+				key: 'totalReducedAmount',
 				width: 200
 			},
 			{
-				title: "下单时间",
-				dataIndex: "orderTime",
-				key: "orderTime",
+				title: '下单时间',
+				dataIndex: 'orderTime',
+				key: 'orderTime',
 				width: 200
 			},
 			{
-				title: "账套名称",
-				dataIndex: "financialAccounting",
-				key: "financialAccounting",
+				title: '账套名称',
+				dataIndex: 'financialAccounting',
+				key: 'financialAccounting',
 				width: 200
 			},
 			{
-				title: "城市公司",
-				dataIndex: "cityCompany",
-				key: "cityCompany",
+				title: '城市公司',
+				dataIndex: 'cityCompany',
+				key: 'cityCompany',
 				width: 150
 				
 			},
 			{
-				title: "项目名称",
-				dataIndex: "projectName",
-				key: "projectName",
+				title: '项目名称',
+				dataIndex: 'projectName',
+				key: 'projectName',
 				width: 200
 			},
 			{
-				title: "操作",
-				key: "operation",
-				fixed: "right",
+				title: '操作',
+				key: 'operation',
+				fixed: 'right',
 				width: 200,
-				scopedSlots: { customRender: "action" },
+				scopedSlots: { customRender: 'action' },
 			},
 		]
 		let pageData = {
@@ -274,7 +274,7 @@ export default {
 			loading: false,
 			dataList: [],
 			cityCompanyList: [],
-			orderStatusValue: "0",  // 采购公司 城市公司
+			orderStatusValue: '0',  // 采购公司 城市公司
 			orderStatusListSelect,
 			afterVisible: false,
 			endOpen: false,
@@ -283,7 +283,7 @@ export default {
       scrollY: 100,
 		};
 	},
-	computed: mapState(["Case_Access_Token"]),
+	computed: mapState(['Case_Access_Token']),
 	watch: {
 		Case_Access_Token(newVal, oldVal) {
 			let params = {
@@ -302,14 +302,14 @@ export default {
 		orderStatusValue(val) {
 			let emptyArr = [];
 			switch (val) {
-				case "0":
+				case '0':
 					emptyArr = [];
 					break;
-				case "1":
-					emptyArr = ["WAIT_DELIVERY"];
+				case '1':
+					emptyArr = ['WAIT_DELIVERY'];
 					break;
-				case "2":
-					emptyArr = ["DELIVERING", "WAIT_RECEIVE"];
+				case '2':
+					emptyArr = ['DELIVERING', 'WAIT_RECEIVE'];
 					break;
 				default:
 					break;
@@ -382,7 +382,6 @@ export default {
 			this.getData(params)
 		},
 		tableChange(e) {
-			console.log(e)
 			let { pageSize, current } = e
 			this.pageData.current = current
 			this.pageData.pageSize = pageSize
@@ -420,7 +419,7 @@ export default {
 		// 查看详情
 		checkDetails(record) {
 			this.$router.push({
-				name: "marketdetail",
+				name: 'marketdetail',
 				params: {
 					saleOrderNo: record.saleOrderNo,
 				},
@@ -441,10 +440,10 @@ export default {
 		// 选项卡切换 进行中 已完成
 		switchover(key) {
 			switch (key) {
-				case "1":
+				case '1':
 					this.orderState = 'PROCESSING'
 					break;
-				case "2":
+				case '2':
 					this.orderState = 'FINISHED'
 					break;
 				default:
@@ -499,5 +498,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import url("./index.less");
+@import url('./index.less');
 </style>

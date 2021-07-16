@@ -6,7 +6,7 @@
 				<a-input
 					placeholder="请输入供应商名称"
 					class="iw250"
-					v-model="searchData.saleOrderNo"
+					v-model="searchData.supplierName"
 				/>
 			</div>	
 			<div class="search-list-item">
@@ -14,7 +14,7 @@
 				<a-input
 					placeholder="请输入供应商编码"
 					class="iw250"
-					v-model="searchData.receiver"
+					v-model="searchData.insideCode"
 				/>
 			</div>
 			<div class="search-list-item" style="margin-left:30px">
@@ -52,97 +52,29 @@ export default {
 	data() {
 		let columns = [
 			{
-				title: "订单编号",
-				dataIndex: "saleOrderNo",
-				key: "saleOrderNo",
+				title: '供应商名称',
+				dataIndex: 'supplierName',
+				key: 'supplierName',
 				width: 250
 			},
 			{
-				title: "采购公司(出账公司)",
+				title: '供应商编码',
 				width: 250,
-				key: "purchaseCompany",
-				dataIndex: "purchaseCompany"
+				key: 'insideCode',
+				dataIndex: 'insideCode'
 			},
 			{
-				title: "收货信息",
+				title: '创建时间',
 				width: 250,
-				scopedSlots: { customRender: "addressDto" }
+        key: 'createTime',
+        dataIndex: 'createTime'
 			},
 			{
-				title: "支付方式",
+				title: '操作',
+				key: 'operation',
+				fixed: 'right',
 				width: 100,
-				key: "payWay",
-				customRender: (text, record, index) => {
-					let str = "";
-					switch (text) {
-						case "ONLINE":
-							str = "线上";
-							break;
-						case "OFFLINE":
-							str = "线下";
-							break;
-						default:
-							'22'
-							break;
-					}
-					return str;
-				}
-			},
-			{
-				title: "税前订单总额（元）",
-				dataIndex: "totalPretaxAmount",
-				key: "totalPretaxAmount",
-				width: 200
-			},
-			{
-				title: "税后订单总额（元）",
-				dataIndex: "totalAmount",
-				key: "totalAmount",
-				width: 200
-			},
-			{
-				title: "税前优惠总额（元）",
-				dataIndex: "totalPretaxReducedAmount",
-				key: "totalPretaxReducedAmount",
-				width: 200
-			},
-			{
-				title: "税后优惠总额（元）",
-				dataIndex: "totalReducedAmount",
-				key: "totalReducedAmount",
-				width: 200
-			},
-			{
-				title: "下单时间",
-				dataIndex: "orderTime",
-				key: "orderTime",
-				width: 200
-			},
-			{
-				title: "账套名称",
-				dataIndex: "financialAccounting",
-				key: "financialAccounting",
-				width: 200
-			},
-			{
-				title: "城市公司",
-				dataIndex: "cityCompany",
-				key: "cityCompany",
-				width: 150
-				
-			},
-			{
-				title: "项目名称",
-				dataIndex: "projectName",
-				key: "projectName",
-				width: 200
-			},
-			{
-				title: "操作",
-				key: "operation",
-				fixed: "right",
-				width: 200,
-				scopedSlots: { customRender: "action" },
+				scopedSlots: { customRender: 'action' },
 			},
 		]
 		let pageData = {
@@ -170,7 +102,7 @@ export default {
       scrollY: 100,
 		};
 	},
-	computed: mapState(["Case_Access_Token"]),
+	computed: mapState(['Case_Access_Token']),
 	watch: {
 		Case_Access_Token(newVal, oldVal) {
 			let params = {
@@ -214,7 +146,7 @@ export default {
         }
 			}
 			try {
-				let res = await api.getMarketOrderList(params)
+				let res = await api.getSupplierListByPager(params)
 				this.dataList = res.data.records;
 				this.pageData.total = Number(res.data.total)
 			} finally {
@@ -231,7 +163,6 @@ export default {
 			this.getData(params)
 		},
 		tableChange(e) {
-			console.log(e)
 			let { pageSize, current } = e
 			this.pageData.current = current
 			this.pageData.pageSize = pageSize
@@ -260,9 +191,9 @@ export default {
     // 查看详情
 		checkDetails(record) {
 			this.$router.push({
-				name: "marketdetail",
+				name: 'supplierdetail',
 				params: {
-					saleOrderNo: record.saleOrderNo,
+					id: record.id,
 				},
 			})
 		}
@@ -271,6 +202,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import url("./index.less");
+@import url('./index.less');
 </style>
 
