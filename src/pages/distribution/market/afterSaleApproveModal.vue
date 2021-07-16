@@ -120,10 +120,10 @@ export default {
 					projectName: this.projectName, // 项目名称
 					purchaseCompany: this.purchaseCompany, // 采购公司
 					cityCompany: this.cityCompany, // 城市公司
-					financialAccounting: "string",
+					financialAccounting: '',
 				}
 				let res = await api.marketUpdateCityCompany(params)
-				this.afterVisible = false
+				// this.afterVisible = false
 			} finally {
 			}
 		},

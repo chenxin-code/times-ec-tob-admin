@@ -281,10 +281,11 @@ export default {
 			total: 0,
 			current: 1,
 			showSizeChanger: true,
+			pageSizeOptions: ['10', '20', '30', '40'],
 			showTotal: (total) => `共有${total}条`,
 			showSizeChange: (current, pageSize) => (this.pageSize = pageSize),
 			showQuickJumper: true,
-			onChange: (pageNumber) => {},
+			onChange: (pageNum) => this.pageNum = pageNum
 		}
 		return {
 			columns,
@@ -389,6 +390,7 @@ export default {
 			try {
 				let res = await api.getMarketOrderList(params)
 				this.dataList = res.data.records;
+				this.pageData.total = Number(res.data.total)
 			} finally {
 				this.loading = false
 			}
@@ -408,15 +410,18 @@ export default {
 			this.getData(params)
 		},
 		tableChange(e) {
-			let { pageSize, current } = e;
-			this.pageData.current = current;
-			this.pageData.pageSize = pageSize;
-			this.pageData.current = e.current * 1;
-			this.pageData.total = e.total * 1;
-			this.getData({
-				pageNum: this.current,
-				pageSize: this.pageSize,
-			});
+			console.log(e)
+			let { pageSize, current } = e
+			this.pageData.current = current
+			this.pageData.pageSize = pageSize
+			this.pageData.current = e.current * 1
+			this.pageData.total = e.total * 1
+
+			let params = {
+				pageNum: this.pageData.current,
+				pageSize: this.pageData.pageSize
+			}
+			this.getData(params)
 		},
 		toReset() {
 			this.searchData = {
