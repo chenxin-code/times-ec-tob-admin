@@ -2,7 +2,7 @@
 	<div>
 		<a-modal
 			v-model="afterVisible"
-			title="修改城市公式"
+			title="修改城市公司"
 			okText="保存"
 			:width="600"
 			@ok="handleOk"
@@ -13,51 +13,42 @@
 					:form="form"
 					:label-col="{ span: 8 }"
 					:wrapper-col="{ span: 12 }"
-					@submit="handleSubmit"
 				>
 					<a-form-item label="订单编号">
 						<a-input
-							type="number"
-							v-model="userPhone"
+							type="text"
+							v-model="saleOrderNo"
 							placeholder="输入订单编号"
+							disabled
 						/>
 					</a-form-item>
 					<a-form-item label="项目名称">
 						<a-input
-							type="number"
-							v-model="userPhone"
+							type="text"
+							v-model="projectName"
 							placeholder="输入项目名称"
+							disabled
 						/>
 					</a-form-item>
 					<a-form-item label="采购公司（出账公司）">
-						<a-select
-							v-model="rolevalue"
-							placeholder="请选择"
-							@change="handleChange"
-						>
-
-							<a-select-option
-								v-for="item in roleList"
-								:key="item.id"
-								:value="item.id"
-							>
-								{{ item.roleName }}
-							</a-select-option>
-						</a-select>
+						<a-input
+							type="text"
+							v-model="purchaseCompany"
+							placeholder="采购公司（出账公司）"
+							disabled
+						/>
 					</a-form-item>
 					<a-form-item label="城市公司">
 						<a-select
-							v-model="rolevalue"
+							v-model="cityCompany"
 							placeholder="请选择"
-							@change="handleChange"
 						>
-
 							<a-select-option
-								v-for="item in roleList"
-								:key="item.id"
-								:value="item.id"
+								v-for="item in cityCompanyList"
+								:key="item.cityCompanyCode"
+								:value="item.cityCompanyCode"
 							>
-								{{ item.roleName }}
+								{{ item.cityCompany }}
 							</a-select-option>
 						</a-select>
 					</a-form-item>
@@ -65,9 +56,7 @@
 						<a-select
 							v-model="rolevalue"
 							placeholder="请选择"
-							@change="handleChange"
 						>
-
 							<a-select-option
 								v-for="item in roleList"
 								:key="item.id"
@@ -87,7 +76,8 @@
 import api from "@/api";
 export default {
 	props: [
-		'visible'
+		'visible',
+		'row'
 	],
 	computed: {
 		afterVisible: {
@@ -97,11 +87,25 @@ export default {
 			set (value) {
 				this.$emit('changeHandle', value);
 			}
+		},
+		saleOrderNo() {
+			return this.row.saleOrderNo
+		},
+		projectName() {
+			return this.row.projectName
+		},
+		purchaseCompany() {
+			return  this.row.purchaseCompany
 		}
 	},
 	data() {
 		return {
-			userPhone: '',
+			// saleOrderNo: this.row.saleOrderNo, // 订单编号
+			// projectName: this.row.projectName, // 项目名称
+			// npurchaseCompany: this.row.purchaseCompany, // 采购公司
+			cityCompany: undefined, // 城市公司
+			cityCompanyList: [], // 城市公司列表
+
 			rolevalue: '',
 			roleList: [
 				{id: 1, roleName: 'test'}
@@ -110,17 +114,36 @@ export default {
 		}
 	},
 	methods: {
-		handleSubmit() {
+		// 获取城市公司
+		async getCityCompanyList() {
+			try {
+				let res = await api.getMarketCompanyList()
+				this.cityCompanyList = res.data;
+			} finally {
+			}
 		},
-		handleOk(e) {
+		async handleOk(e) {
+			try {
+				let params = {
+					saleOrderNo: this.saleOrderNo, // 订单编号
+					projectName: this.projectName, // 项目名称
+					purchaseCompany: this.purchaseCompany, // 采购公司
+					cityCompany: this.cityCompany, // 城市公司
+					financialAccounting: '',
+				}
+				let res = await api.marketUpdateCityCompany(params)
+				// this.afterVisible = false
+			} finally {
+			}
 		},
 		handleCancel() {
 			this.$emit('changeHandle')
-		},
-		handleChange() {
-			
 		}
 	},
+	mounted() {
+		// 获取城市公司
+		this.getCityCompanyList()
+	}
 };
 </script>
 

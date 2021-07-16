@@ -1,6 +1,6 @@
 <template>
-	<div class="order-m order-list">
-		<div class="order-header">
+	<div class="list-box">
+		<div class="tab">
 			<a-tabs default-active-key="1" @change="switchover">
 				<a-tab-pane key="1" tab="进行中"> </a-tab-pane>
 				<a-tab-pane key="2" tab="已完成"> </a-tab-pane>
@@ -45,7 +45,7 @@
 				/>
 			</div>
       	<div class="search-list-item">
-					<span class="label-text">采购公司：</span>
+				<span class="label-text">采购公司：</span>
 				<a-select v-model="orderStatusValue" class="iw250">
 					<a-select-option
 						:value="item.id"
@@ -66,7 +66,7 @@
 				/>
 			</div>
 
-			<div class="search-list-item" v-if="switchoverValue == 1">
+			<div class="search-list-item">
 				<span class="label-text">城市公司：</span>
 				<a-select :placeholder="'请选择城市公司'" v-model="searchData.cityCompany" class="iw250">
 					<a-select-option
@@ -83,7 +83,7 @@
 				<a-button type="primary" @click="handleSearch">查询</a-button>
 			</div>
       <div class="search-list-item" style="margin-left:30px">
-				<a-button type="primary" @click="_toReset">重置</a-button>
+				<a-button type="primary" @click="toReset">重置</a-button>
 			</div>
 		</div>
 
@@ -93,12 +93,10 @@
 				:columns="columns"
 				:data-source="dataList"
 				:scroll="{ x: 1300, y: scrollY }"
-				:pagination="paginationIndex"
+				:pagination="pageData"
 				:loading="loading"
 				@change="tableChange"
 			>
-				<a slot="name" slot-scope="text">{{ text }}</a>
-
 				<div slot="addressDto" slot-scope="text, record">
 					<div>
 						<!-- <p>姓名：{{record.addressDto.receiverName}}</p>
@@ -106,32 +104,7 @@
 						<p>地址：{{record.addressDto.detailAddress}}}</p> -->
 					</div>
 				</div>
-
-				<div slot="amount" slot-scope="text, record">
-					<div
-						class="goods-detail goods-items-block"
-						v-for="(item, index) in record.orderItemList"
-						:key="index"
-					>
-						<span>{{ item.buyNum }}</span>
-					</div>
-				</div>
-				<span slot="deliveryStatus" slot-scope="text, record">
-					<div
-						class="goods-detail goods-items-block"
-						v-for="(item, index) in record.orderItemList"
-						:key="index"
-					>
-						<span>{{
-							item.deliveryStatus == "0"
-								? "未发货"
-								: item.deliveryStatus == "1"
-								? "部分发货"
-								: "全部发货"
-						}}</span>
-					</div>
-				</span>
-                      <!-- 操作 -->
+        <!-- 操作 -->
 				<span slot="action" slot-scope="text, record">
 					<a	@click="applyAfterSale(record)"	>修改城市公司</a>
 					<a-divider	type="vertical"/>
@@ -139,10 +112,8 @@
 				</span>
 			</a-table>
 		</div>
-
 		<AfterSaleApproveModal
-			:supplierOrderNo="afterOrderNo"
-			:supplierCode="supplierCode"
+			:row="rowData"
 			:visible="afterVisible"
 			@changeHandle="changeHandle"
 		></AfterSaleApproveModal>
@@ -150,27 +121,147 @@
 </template>
 
 <script>
-import {
-	orderStatusListSelect,
-	columns,
-	rowSelection,
-	pagination,
-	afterSaleType,
-} from "./defaultConfig";
-
-import AfterSaleApproveModal from "./afterSaleApproveModal";
-import api from "@/api";
-import { mapState } from "vuex";
-const paginationIndex = { ...pagination };
+import AfterSaleApproveModal from './afterSaleApproveModal';
+import api from '@/api';
+import { mapState } from 'vuex';
 export default {
-	name: "market",
+	name: 'market',
 	components: {
 		AfterSaleApproveModal,
 	},
 	data() {
+		let orderStatusListSelect =[
+			{
+				id: '0',
+				name: '全部',
+			},
+			{
+				id: '1',
+				name: '待发货',
+			},
+			{
+				id: '2',
+				name: '已发货',
+			},
+			{
+				id: '3',
+				name: '已完成',
+			},
+			{
+				id: '4',
+				name: '已关闭',
+			},
+		]
+		let columns = [
+			{
+				title: '订单编号',
+				dataIndex: 'saleOrderNo',
+				key: 'saleOrderNo',
+				width: 250
+			},
+			{
+				title: '采购公司(出账公司)',
+				width: 250,
+				key: 'purchaseCompany',
+				dataIndex: 'purchaseCompany'
+			},
+			{
+				title: '收货信息',
+				width: 250,
+				scopedSlots: { customRender: 'addressDto' }
+			},
+			{
+				title: '支付方式',
+				width: 100,
+				key: 'payWay',
+				customRender: (text, record, index) => {
+					let str = '';
+					switch (text) {
+						case 'ONLINE':
+							str = '线上';
+							break;
+						case 'OFFLINE':
+							str = '线下';
+							break;
+						default:
+							'22'
+							break;
+					}
+					return str;
+				}
+			},
+			{
+				title: '税前订单总额（元）',
+				dataIndex: 'totalPretaxAmount',
+				key: 'totalPretaxAmount',
+				width: 200
+			},
+			{
+				title: '税后订单总额（元）',
+				dataIndex: 'totalAmount',
+				key: 'totalAmount',
+				width: 200
+			},
+			{
+				title: '税前优惠总额（元）',
+				dataIndex: 'totalPretaxReducedAmount',
+				key: 'totalPretaxReducedAmount',
+				width: 200
+			},
+			{
+				title: '税后优惠总额（元）',
+				dataIndex: 'totalReducedAmount',
+				key: 'totalReducedAmount',
+				width: 200
+			},
+			{
+				title: '下单时间',
+				dataIndex: 'orderTime',
+				key: 'orderTime',
+				width: 200
+			},
+			{
+				title: '账套名称',
+				dataIndex: 'financialAccounting',
+				key: 'financialAccounting',
+				width: 200
+			},
+			{
+				title: '城市公司',
+				dataIndex: 'cityCompany',
+				key: 'cityCompany',
+				width: 150
+				
+			},
+			{
+				title: '项目名称',
+				dataIndex: 'projectName',
+				key: 'projectName',
+				width: 200
+			},
+			{
+				title: '操作',
+				key: 'operation',
+				fixed: 'right',
+				width: 200,
+				scopedSlots: { customRender: 'action' },
+			},
+		]
+		let pageData = {
+			pageNum: 1,
+			pageSize: 10,
+			total: 0,
+			current: 1,
+			showSizeChanger: true,
+			pageSizeOptions: ['10', '20', '30', '40'],
+			showTotal: (total) => `共有${total}条`,
+			showSizeChange: (current, pageSize) => (this.pageSize = pageSize),
+			showQuickJumper: true,
+			onChange: (pageNum) => this.pageNum = pageNum
+		}
 		return {
 			columns,
-			paginationIndex,
+			pageData,
 			searchData: {
 				saleOrderNo: '',  // 订单编号 
 				orderTimeStart: '', // 开始时间
@@ -180,49 +271,25 @@ export default {
 				cityCompany: undefined, // 城市公司
 			},
 			orderState: 'PROCESSING',
-			pageData: {
-				pageNum: 1,
-				pageSize: 10
-			},
 			loading: false,
-			cityCompanyList: [],
-			orderStatusValue: "0",  // 采购公司 城市公司
-			orderStatusListSelect,
-
-			endOpen: false,
-
-			afterSaleType,
-			rowSelection,
-			expandedRowKeys: [],
-			selectedRowKeys: [],
-			afterVisible: false,
-			refundReason: "",
 			dataList: [],
-			current: 1,
-			pageSize: 10,
-			orderNo: "",
-			purchaseCode: "",
-			receiverName: "",
-			orderStatusListSearch: [],
-			switchoverValue: "1",
-			orderTimeStart: null,
-			orderTimeEnd: null,
-			supplierName: "",
-			receiverPhone: "",
-			orderItemsData: [],
-			afterOrderNo: "",
-			supplierCode: "",
+			cityCompanyList: [],
+			orderStatusValue: '0',  // 采购公司 城市公司
+			orderStatusListSelect,
+			afterVisible: false,
+			endOpen: false,
+			rowData: {},
       //表格高度
       scrollY: 100,
 		};
 	},
-	computed: mapState(["Case_Access_Token"]),
+	computed: mapState(['Case_Access_Token']),
 	watch: {
 		Case_Access_Token(newVal, oldVal) {
 			let params = {
 				orderState: this.orderState, // 订单状态 进行中 已完成
 				pageNum: this.pageData.pageNum, // 第几页
-				pageSize:this.pageData.pageSize, // 每页多少条
+				pageSize: this.pageData.pageSize, // 每页多少条
 				saleOrderNo: this.searchData.saleOrderNo,  // 订单编号 
 				orderTimeStart: this.searchData.orderTimeStart, // 开始时间
 				orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
@@ -235,14 +302,14 @@ export default {
 		orderStatusValue(val) {
 			let emptyArr = [];
 			switch (val) {
-				case "0":
+				case '0':
 					emptyArr = [];
 					break;
-				case "1":
-					emptyArr = ["WAIT_DELIVERY"];
+				case '1':
+					emptyArr = ['WAIT_DELIVERY'];
 					break;
-				case "2":
-					emptyArr = ["DELIVERING", "WAIT_RECEIVE"];
+				case '2':
+					emptyArr = ['DELIVERING', 'WAIT_RECEIVE'];
 					break;
 				default:
 					break;
@@ -255,7 +322,7 @@ export default {
 			let params = {
 				orderState: this.orderState, // 订单状态 进行中 已完成
 				pageNum: this.pageData.pageNum, // 第几页
-				pageSize:this.pageData.pageSize, // 每页多少条
+				pageSize: this.pageData.pageSize, // 每页多少条
 				saleOrderNo: this.searchData.saleOrderNo,  // 订单编号 
 				orderTimeStart: this.searchData.orderTimeStart, // 开始时间
 				orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
@@ -283,7 +350,7 @@ export default {
 				params = {
 					orderState: this.orderState, // 订单状态 进行中 已完成
 					pageNum: this.pageData.pageNum, // 第几页
-					pageSize:this.pageData.pageSize, // 每页多少条
+					pageSize: this.pageData.pageSize, // 每页多少条
 					saleOrderNo: this.searchData.saleOrderNo,  // 订单编号 
 					orderTimeStart: this.searchData.orderTimeStart, // 开始时间
 					orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
@@ -295,14 +362,64 @@ export default {
 			try {
 				let res = await api.getMarketOrderList(params)
 				this.dataList = res.data.records;
+				this.pageData.total = Number(res.data.total)
 			} finally {
 				this.loading = false
 			}
 		},
+		handleSearch() {
+			let params = {
+				orderState: this.orderState, // 订单状态 进行中 已完成
+				pageNum: this.pageData.pageNum, // 第几页
+				pageSize: this.pageData.pageSize, // 每页多少条
+				saleOrderNo: this.searchData.saleOrderNo,  // 订单编号 
+				orderTimeStart: this.searchData.orderTimeStart, // 开始时间
+				orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
+				purchaseCompany: this.searchData.purchaseCompany, // 采购公司
+				receiver: this.searchData.receiver, // 收货人 模糊查询
+				cityCompany: this.searchData.cityCompany, // 城市公司
+			}
+			this.getData(params)
+		},
+		tableChange(e) {
+			let { pageSize, current } = e
+			this.pageData.current = current
+			this.pageData.pageSize = pageSize
+			this.pageData.current = e.current * 1
+			this.pageData.total = e.total * 1
+
+			let params = {
+				pageNum: this.pageData.current,
+				pageSize: this.pageData.pageSize
+			}
+			this.getData(params)
+		},
+		toReset() {
+			this.searchData = {
+				saleOrderNo: '',  // 订单编号 
+				orderTimeStart: '', // 开始时间
+				orderTimeEnd: '', // 结束时间
+				purchaseCompany: '', // 采购公司
+				receiver: '', // 收货人 模糊查询
+				cityCompany: undefined, // 城市公司
+			}
+			let params = {
+				orderState: this.orderState, // 订单状态 进行中 已完成
+				pageNum: this.pageData.pageNum, // 第几页
+				pageSize:this.pageData.pageSize, // 每页多少条
+				saleOrderNo: this.searchData.saleOrderNo,  // 订单编号 
+				orderTimeStart: this.searchData.orderTimeStart, // 开始时间
+				orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
+				purchaseCompany: this.searchData.purchaseCompany, // 采购公司
+				receiver: this.searchData.receiver, // 收货人 模糊查询
+				cityCompany: this.searchData.cityCompany, // 城市公司
+			}
+			this.getData(params)
+		},
 		// 查看详情
 		checkDetails(record) {
 			this.$router.push({
-				name: "marketdetail",
+				name: 'marketdetail',
 				params: {
 					saleOrderNo: record.saleOrderNo,
 				},
@@ -313,17 +430,20 @@ export default {
 			try {
 				let res = await api.getMarketCompanyList()
 				this.cityCompanyList = res.data;
-				console.log(this.cityCompanyList)
 			} finally {
 			}
+		},
+		applyAfterSale(record) {
+			this.rowData = record
+			this.afterVisible = true;
 		},
 		// 选项卡切换 进行中 已完成
 		switchover(key) {
 			switch (key) {
-				case "1":
+				case '1':
 					this.orderState = 'PROCESSING'
 					break;
-				case "2":
+				case '2':
 					this.orderState = 'FINISHED'
 					break;
 				default:
@@ -341,6 +461,9 @@ export default {
 				cityCompany: this.searchData.cityCompany, // 城市公司
 			}
 			this.getData(params)
+		},
+		changeHandle() {
+			this.afterVisible = false;
 		},
 		disabledStartDate(orderTimeStart) {
 			const orderTimeEnd = this.searchData.orderTimeEnd;
@@ -364,145 +487,6 @@ export default {
 		handleEndOpenChange(open) {
 			this.endOpen = open;
 		},
-
-
-
-
-
-
-		init() {
-			let lastPage = sessionStorage.getItem("listPageParams");
-			let lastPost = {};
-			lastPost = { ...lastPost, ...JSON.parse(lastPage) };
-			this.getOrderListAction(lastPost);
-		},
-
-		handleSearch() {
-			let params = {
-				orderState: this.orderState, // 订单状态 进行中 已完成
-				pageNum: this.pageData.pageNum, // 第几页
-				pageSize:this.pageData.pageSize, // 每页多少条
-				saleOrderNo: this.searchData.saleOrderNo,  // 订单编号 
-				orderTimeStart: this.searchData.orderTimeStart, // 开始时间
-				orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
-				purchaseCompany: this.searchData.purchaseCompany, // 采购公司
-				receiver: this.searchData.receiver, // 收货人 模糊查询
-				cityCompany: this.searchData.cityCompany, // 城市公司
-			}
-			this.getData(params)
-		},
-		_toReset() {
-			this.orderNo = ''
-			this.purchaseCode = ''
-			this.receiverName = ''
-			this.orderStatusListSearch = ''
-			this.orderTimeStart = ''
-			this.orderTimeEnd = ''
-			this.supplierName = ''
-			this.receiverPhone = ''
-
-			let searchKeyword = {
-				orderNo: this.orderNo,
-				purchaseCode: this.purchaseCode,
-				receiverName: this.receiverName,
-				orderStatusList: this.orderStatusListSearch,
-				orderTimeStart: this.orderTimeStart ? this.orderTimeStart : "",
-				orderTimeEnd: this.orderTimeEnd ? this.orderTimeEnd : "",
-				supplierName: this.supplierName,
-				receiverPhone: this.receiverPhone
-			};
-			this.getOrderListAction(searchKeyword);
-		},
-		async getOrderListAction(opt) {
-			let getConfig = { pageNum: 1, pageSize: 10 };
-			getConfig = { ...getConfig, ...opt };
-			sessionStorage.setItem(
-				"listPageParams",
-				JSON.stringify({
-					pageSize: getConfig.pageSize,
-					pageNum: getConfig.pageNum,
-				})
-			);
-			this.loading = true;
-			try {
-				let { data, code } = await api.getOrderList(getConfig);
-				if (code !== 200) return;
-				this.dataList = data.records;
-				this.current = data.current;
-				this.pageSize = data.size;
-				this.paginationIndex.current = data.current * 1;
-				this.paginationIndex.total = data.total * 1;
-			} finally {
-				this.loading = false;
-			}
-		},
-		titleFn(v) {
-			let str = "";
-			v.forEach((ele) => {
-				str += ele.featureName + " - " + ele.featureValue;
-			});
-			return str;
-		},
-		clearValue() {
-			this.orderNo = "";
-			this.purchaseCode = "";
-			this.receiverName = "";
-			this.orderStatusListSearch = [];
-			this.orderTimeStart = null;
-			this.orderTimeEnd = null;
-			this.supplierName = "";
-			this.receiverPhone = "";
-		},
-		handleOk(e) {
-			this.visible = false;
-		},
-		async getOrderItemsAction(No) {
-			let { data, code } = await api.getOrderItems(No);
-			this.orderItemsData = data;
-		},
-		applyAfterSale(record) {
-			this.afterOrderNo = record.supplierOrderNo;
-			this.supplierCode = record.supplierCode;
-			this.afterVisible = true;
-		},
-		handleCancelOrder(record) {
-			let that = this;
-			that.$confirm({
-				title: "确定取消订单？",
-				content: "",
-				onOk() {
-					that.cancelOrderAction(record.supplierOrderNo);
-				},
-				onCancel() {},
-			});
-		},
-		async cancelOrderAction(id) {
-			let { code } = await api.cancelOrder(id);
-			if (code == 200) {
-				this.$message.success("取消成功");
-				this.getOrderListAction({
-					pageNum: this.current,
-					pageSize: this.pageSize,
-				});
-			}
-		},
-		tableChange(e) {
-			let { pageSize, current } = e;
-			this.current = current;
-			this.pageSize = pageSize;
-			this.paginationIndex.current = e.current * 1;
-			this.paginationIndex.total = e.total * 1;
-			this.getOrderListAction({
-				pageNum: this.current,
-				pageSize: this.pageSize,
-			});
-		},
-		changeHandle() {
-			this.afterVisible = false;
-		},
-		onSelectChange(selectedRowKeys) {
-			this.selectedRowKeys = selectedRowKeys;
-		},
 		onStartDateChange(date, dateString) {
 			this.orderTimeStart = dateString;
 		},
@@ -514,65 +498,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import url("./index.less");
-.order-m {
-	padding: 20px;
-}
-/deep/ .ant-modal-body {
-	padding: 0px;
-}
-/deep/ .order-table .ant-table-tbody > tr > td {
-	&:nth-child(1) {
-		padding: 16px !important;
-	}
-	// &:nth-child(2) {
-	// 	padding: 0;
-	// }
-	// &:nth-child(3) {
-	// 	padding: 0;
-	// }
-	&:nth-child(4) {
-		padding: 0;
-	}
-	&:nth-last-child(1) {
-		padding: 16px;
-	}
-}
-.goods-items {
-
-	width: 100%;
-
-	.gi-item {
-		display: flex;
-		.gi-pic {
-			height: 80px;
-			width: 80px;
-			> img {
-				height: 80px;
-				width: 80px;
-			}
-		}
-		.gi-info {
-			margin-left: 10px;
-			// padding: 15px 0;
-			flex: 1;
-			// display: flex;
-			// flex-direction: column;
-			// justify-content: space-between;
-			// > p {
-				// overflow: hidden;
-				// text-overflow:ellipsis;
-				// white-space: nowrap;
-			// }
-			.title {
-				color: #666;
-				font-size: 14px;
-			}
-			.size {
-				color: rgb(143, 139, 139);
-				font-size: 12px;
-			}
-		}
-	}
-}
+@import url('./index.less');
 </style>
