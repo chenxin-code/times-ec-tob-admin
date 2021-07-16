@@ -40,8 +40,9 @@
 					</a-form-item>
 					<a-form-item label="城市公司">
 						<a-select
-							v-model="cityCompany"
-							placeholder="请选择"
+							v-model="cityCompanyCode"
+							placeholder="请选择城市公司"
+							@change="selectChange"
 						>
 							<a-select-option
 								v-for="item in cityCompanyList"
@@ -55,7 +56,7 @@
 					<a-form-item label="财务账套">
 						<a-select
 							v-model="rolevalue"
-							placeholder="请选择"
+							placeholder="请选择财务账套"
 						>
 							<a-select-option
 								v-for="item in roleList"
@@ -73,6 +74,7 @@
 </template>
 
 <script>
+import message from 'ant-design-vue/es/message'
 import api from "@/api";
 export default {
 	props: [
@@ -88,21 +90,22 @@ export default {
 				this.$emit('changeHandle', value);
 			}
 		},
+		// 订单编号
 		saleOrderNo() {
 			return this.row.saleOrderNo
 		},
+		// 项目名称
 		projectName() {
 			return this.row.projectName
 		},
+		// 采购公司
 		purchaseCompany() {
 			return  this.row.purchaseCompany
 		}
 	},
 	data() {
 		return {
-			// saleOrderNo: this.row.saleOrderNo, // 订单编号
-			// projectName: this.row.projectName, // 项目名称
-			// npurchaseCompany: this.row.purchaseCompany, // 采购公司
+			cityCompanyCode: undefined, // 城市公司code
 			cityCompany: undefined, // 城市公司
 			cityCompanyList: [], // 城市公司列表
 
@@ -128,16 +131,26 @@ export default {
 					saleOrderNo: this.saleOrderNo, // 订单编号
 					projectName: this.projectName, // 项目名称
 					purchaseCompany: this.purchaseCompany, // 采购公司
+					cityCompanyCode: this.cityCompanyCode, // 城市公司code
 					cityCompany: this.cityCompany, // 城市公司
 					financialAccounting: '',
 				}
 				let res = await api.marketUpdateCityCompany(params)
-				// this.afterVisible = false
+				message.success('修改成功！')
+				this.afterVisible = false
 			} finally {
 			}
 		},
 		handleCancel() {
 			this.$emit('changeHandle')
+		},
+		selectChange(cityCompanyCode){
+			this.cityCompanyList.forEach(item => {
+				if(item.cityCompanyCode == cityCompanyCode) {
+					this.cityCompany = item.cityCompany
+				}
+			});
+			
 		}
 	},
 	mounted() {
