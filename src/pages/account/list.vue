@@ -1,16 +1,19 @@
 <template>
-  <div style="height: 100%;">
-    <a-form-model :model="form" layout="inline" ref="thisForm" labelAlign='left'>
-      <a-form-model-item label="账号名称" prop="a">
-        <a-input v-model="form.a" placeholder="请输入账号名称" :maxLength='30'/>
-      </a-form-model-item>
-      <a-form-model-item class="item-btns">
-        <a-button class="item-btn" type="primary" @click="getList()">查询</a-button>
-        <a-button class="item-btn" @click="_toReset()">重置</a-button>
-        <a-button class="item-btn" @click="newOrder()" type="primary">新增</a-button>
-      </a-form-model-item>
-    </a-form-model>
-    <div id="neighborhoodLife">
+  <div style="height: 100%;display: flex;">
+    <div style="width: 20%;overflow: auto;">
+      <companyTree @onSelect="onSelect" />
+    </div>
+    <div style="width: 80%;">
+      <a-form-model :model="form" layout="inline" ref="thisForm" labelAlign='left'>
+        <a-form-model-item label="账号名称" prop="a">
+          <a-input v-model="form.a" placeholder="请输入账号名称" :maxLength='30'/>
+        </a-form-model-item>
+        <a-form-model-item class="item-btns">
+          <a-button class="item-btn" type="primary" @click="getList()">查询</a-button>
+          <a-button class="item-btn" @click="_toReset()">重置</a-button>
+          <a-button class="item-btn" @click="newOrder()" type="primary">新增</a-button>
+        </a-form-model-item>
+      </a-form-model>
       <div class="content-main" ref="content_main">
         <a-row style="padding: 20px;height: 100%;">
           <a-col>
@@ -48,8 +51,9 @@
 
 <script>
 import api from "./../../api";
+import companyTree from './../../components/companyTree';
 export default {
-  components: {},
+  components: {companyTree},
   data() {
     return {
       form: {
@@ -58,32 +62,32 @@ export default {
       tableColumns: [
         {
           title: "姓名",
-          dataIndex: "a",
+          dataIndex: "accountName",
           width: 200,
         },
         {
           title: "登录名",
-          dataIndex: "b",
+          dataIndex: "loginName",
           width: 200,
         },
         {
           title: "所属机构",
-          dataIndex: "c",
+          dataIndex: "enterpriseName",
           width: 200,
         },
         {
           title: "手机号码",
-          dataIndex: "d",
+          dataIndex: "accountPhone",
           width: 200,
         },
         {
           title: "电子邮箱",
-          dataIndex: "e",
+          dataIndex: "email",
           width: 200,
         },
         {
           title: "用户状态",
-          dataIndex: "f",
+          dataIndex: "accountState",
           width: 200,
         },
         {
@@ -105,6 +109,9 @@ export default {
     this.getList();
   },
   methods: {
+    onSelect(selectedKeys){
+      console.log('选中了', selectedKeys);
+    },
     newOrder() {
       this.$router.push({path: '/account/add'});
     },
@@ -126,7 +133,7 @@ export default {
       }).then(resp => {
         if (resp.code === 200) {
           this.tableData = resp.data.records;
-          this.total = resp.data.total * 1;
+          this.total = Number(resp.data.total);
         }
       }).finally(() => {
         this.tableLoading = false;
