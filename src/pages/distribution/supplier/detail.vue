@@ -17,7 +17,7 @@
           <span class="info">{{dataList.insideCode}}</span>
         </a-form-model-item>
         <a-form-model-item label="创建人">
-          <span class="info">{{dataList.name}}</span>
+          <span class="info">{{dataList.createUser}}</span>
         </a-form-model-item>
         <a-form-model-item label="创建时间">
           <span class="info">{{dataList.createTime}}</span>
