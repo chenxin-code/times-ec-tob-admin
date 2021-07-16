@@ -1,6 +1,6 @@
 <template>
-	<div class="order-m order-list">
-		<div class="order-header">
+	<div class="list-box">
+		<div class="tab">
 			<a-tabs default-active-key="1" @change="switchover">
 				<a-tab-pane key="1" tab="进行中"> </a-tab-pane>
 				<a-tab-pane key="2" tab="已完成"> </a-tab-pane>
@@ -45,7 +45,7 @@
 				/>
 			</div>
       	<div class="search-list-item">
-					<span class="label-text">采购公司：</span>
+				<span class="label-text">采购公司：</span>
 				<a-select v-model="orderStatusValue" class="iw250">
 					<a-select-option
 						:value="item.id"
@@ -97,8 +97,6 @@
 				:loading="loading"
 				@change="tableChange"
 			>
-				<a slot="name" slot-scope="text">{{ text }}</a>
-
 				<div slot="addressDto" slot-scope="text, record">
 					<div>
 						<!-- <p>姓名：{{record.addressDto.receiverName}}</p>
@@ -106,32 +104,7 @@
 						<p>地址：{{record.addressDto.detailAddress}}}</p> -->
 					</div>
 				</div>
-
-				<div slot="amount" slot-scope="text, record">
-					<div
-						class="goods-detail goods-items-block"
-						v-for="(item, index) in record.orderItemList"
-						:key="index"
-					>
-						<span>{{ item.buyNum }}</span>
-					</div>
-				</div>
-				<span slot="deliveryStatus" slot-scope="text, record">
-					<div
-						class="goods-detail goods-items-block"
-						v-for="(item, index) in record.orderItemList"
-						:key="index"
-					>
-						<span>{{
-							item.deliveryStatus == "0"
-								? "未发货"
-								: item.deliveryStatus == "1"
-								? "部分发货"
-								: "全部发货"
-						}}</span>
-					</div>
-				</span>
-                      <!-- 操作 -->
+        <!-- 操作 -->
 				<span slot="action" slot-scope="text, record">
 					<a	@click="applyAfterSale(record)"	>修改城市公司</a>
 					<a-divider	type="vertical"/>
@@ -139,7 +112,6 @@
 				</span>
 			</a-table>
 		</div>
-
 		<AfterSaleApproveModal
 			:row="rowData"
 			:visible="afterVisible"
@@ -317,7 +289,7 @@ export default {
 			let params = {
 				orderState: this.orderState, // 订单状态 进行中 已完成
 				pageNum: this.pageData.pageNum, // 第几页
-				pageSize:this.pageData.pageSize, // 每页多少条
+				pageSize: this.pageData.pageSize, // 每页多少条
 				saleOrderNo: this.searchData.saleOrderNo,  // 订单编号 
 				orderTimeStart: this.searchData.orderTimeStart, // 开始时间
 				orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
@@ -350,7 +322,7 @@ export default {
 			let params = {
 				orderState: this.orderState, // 订单状态 进行中 已完成
 				pageNum: this.pageData.pageNum, // 第几页
-				pageSize:this.pageData.pageSize, // 每页多少条
+				pageSize: this.pageData.pageSize, // 每页多少条
 				saleOrderNo: this.searchData.saleOrderNo,  // 订单编号 
 				orderTimeStart: this.searchData.orderTimeStart, // 开始时间
 				orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
@@ -378,7 +350,7 @@ export default {
 				params = {
 					orderState: this.orderState, // 订单状态 进行中 已完成
 					pageNum: this.pageData.pageNum, // 第几页
-					pageSize:this.pageData.pageSize, // 每页多少条
+					pageSize: this.pageData.pageSize, // 每页多少条
 					saleOrderNo: this.searchData.saleOrderNo,  // 订单编号 
 					orderTimeStart: this.searchData.orderTimeStart, // 开始时间
 					orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
@@ -399,7 +371,7 @@ export default {
 			let params = {
 				orderState: this.orderState, // 订单状态 进行中 已完成
 				pageNum: this.pageData.pageNum, // 第几页
-				pageSize:this.pageData.pageSize, // 每页多少条
+				pageSize: this.pageData.pageSize, // 每页多少条
 				saleOrderNo: this.searchData.saleOrderNo,  // 订单编号 
 				orderTimeStart: this.searchData.orderTimeStart, // 开始时间
 				orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
@@ -528,64 +500,4 @@ export default {
 
 <style lang="less" scoped>
 @import url("./index.less");
-.order-m {
-	padding: 20px;
-}
-/deep/ .ant-modal-body {
-	padding: 0px;
-}
-/deep/ .order-table .ant-table-tbody > tr > td {
-	&:nth-child(1) {
-		padding: 16px !important;
-	}
-	// &:nth-child(2) {
-	// 	padding: 0;
-	// }
-	// &:nth-child(3) {
-	// 	padding: 0;
-	// }
-	&:nth-child(4) {
-		padding: 0;
-	}
-	&:nth-last-child(1) {
-		padding: 16px;
-	}
-}
-.goods-items {
-
-	width: 100%;
-
-	.gi-item {
-		display: flex;
-		.gi-pic {
-			height: 80px;
-			width: 80px;
-			> img {
-				height: 80px;
-				width: 80px;
-			}
-		}
-		.gi-info {
-			margin-left: 10px;
-			// padding: 15px 0;
-			flex: 1;
-			// display: flex;
-			// flex-direction: column;
-			// justify-content: space-between;
-			// > p {
-				// overflow: hidden;
-				// text-overflow:ellipsis;
-				// white-space: nowrap;
-			// }
-			.title {
-				color: #666;
-				font-size: 14px;
-			}
-			.size {
-				color: rgb(143, 139, 139);
-				font-size: 12px;
-			}
-		}
-	}
-}
 </style>
