@@ -10,35 +10,36 @@ const Login = () => import("../pages/login/login");
 const Token = () => import("../pages/login/index");
 
 const Home = () => import("../components/home");
-// 应收单管理
-const CollectionList = () =>
-  import("../pages/distribution/collectionList/index");
-const CollectionInfo = () =>
-  import("../pages/distribution/collectionInfo/index");
 
-const PaymentList = () => import("../pages/distribution/paymentList/index");
-const PaymentInfo = () => import("../pages/distribution/paymentInfo/index");
+// // 应收单管理
+// const CollectionList = () =>
+//   import("../pages/distribution/collectionList/index");
+// const CollectionInfo = () =>
+//   import("../pages/distribution/collectionInfo/index");
 
-// 账号管理、账号角色
-const AccountList = () => import("../pages/distribution/accountList/index");
-const AccountRole = () => import("../pages/distribution/accountRole/index");
+// const PaymentList = () => import("../pages/distribution/paymentList/index");
+// const PaymentInfo = () => import("../pages/distribution/paymentInfo/index");
 
-// 请款单
-const cashRequirement = () =>
-  import("../pages/distribution/cashRequirement/index");
-// 发票管理
-const invoice = () => import("../pages/distribution/invoice/index");
-// 新增发票
-const addInvoice = () => import("../pages/distribution/invoice/addInvoice");
-const MarketList = () => import("../pages/distribution/marketList/index");
-const MarketInfo = () => import("../pages/distribution/marketInfo/index");
+// // 账号管理、账号角色
+// const AccountList = () => import("../pages/distribution/accountList/index");
+// const AccountRole = () => import("../pages/distribution/accountRole/index");
 
-const OrderManagement = () => import("../pages/orderList/index");
-const OrderDetails = () => import("../pages/orderList/orderDetails");
-const OrderAfterSaleList = () => import("../pages/orderAfterSaleList/index");
+// // 请款单
+// const cashRequirement = () =>
+//   import("../pages/distribution/cashRequirement/index");
+// // 发票管理
+// const invoice = () => import("../pages/distribution/invoice/index");
+// // 新增发票
+// const addInvoice = () => import("../pages/distribution/invoice/addInvoice");
+// const MarketList = () => import("../pages/distribution/marketList/index");
+// const MarketInfo = () => import("../pages/distribution/marketInfo/index");
 
-// 案场采购-售后申请
-const afterSale = () => import("../pages/distribution/afterSale");
+// const OrderManagement = () => import("../pages/orderList/index");
+// const OrderDetails = () => import("../pages/orderList/orderDetails");
+// const OrderAfterSaleList = () => import("../pages/orderAfterSaleList/index");
+
+// // 案场采购-售后申请
+// const afterSale = () => import("../pages/distribution/afterSale");
 
 let router = new Router({
   base: "/",
