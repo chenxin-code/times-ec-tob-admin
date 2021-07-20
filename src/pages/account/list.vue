@@ -5,13 +5,12 @@
     </div>
     <div style="width: 80%;">
       <a-form-model :model="form" layout="inline" ref="thisForm" labelAlign='left'>
-        <a-form-model-item label="账号名称" prop="a">
-          <a-input v-model="form.a" placeholder="请输入账号名称" :maxLength='30'/>
+        <a-form-model-item label="姓名" prop="accountName">
+          <a-input v-model="form.accountName" placeholder="请输入姓名" :maxLength='30'/>
         </a-form-model-item>
         <a-form-model-item class="item-btns">
           <a-button class="item-btn" type="primary" @click="getList()">查询</a-button>
-          <a-button class="item-btn" @click="_toReset()">重置</a-button>
-          <a-button class="item-btn" @click="newOrder()" type="primary">新增</a-button>
+          <a-button class="item-btn" @click="$router.push({path: '/account/add'})" type="primary">新增</a-button>
         </a-form-model-item>
       </a-form-model>
       <div class="content-main" ref="content_main">
@@ -25,9 +24,15 @@
                 :pagination="false"
                 :loading="tableLoading"
                 style="margin-top: 8px;">
-              <span slot="action" slot-scope="text, record">
-                <a-button type="link">编辑</a-button>
-                <a-button type="link">删除</a-button>
+              <template slot="accountState" slot-scope="scope">
+                <div class="editable-row-operations">
+                  <span v-html="accountStateParse(scope.accountState)"></span>
+                </div>
+              </template>
+              <span slot="action" slot-scope="scope">
+                <a-button type="link" @click="$router.push({path: '/account/edit', query: {id: scope.id,loginName: scope.loginName}})">编辑</a-button>
+                <a-button type="link" @click="renewPwd(scope.loginName)">修改密码</a-button>
+                <a-button type="link" @click="goDel(scope.loginName)">删除</a-button>
               </span>
             </a-table>
             <a-pagination
@@ -46,6 +51,30 @@
         </a-row>
       </div>
     </div>
+    <a-modal :centered="true" v-model="showPwdModal" title="修改密码" :maskClosable="false" on-ok="handlePhoneOk()">
+      <template slot="footer">
+        <a-button :disabled="modalLoading" key="back" @click="showPwdModal = false">取消</a-button>
+        <a-button :disabled="modalLoading" key="submit" type="primary" :loading="modalLoading" @click="handlePhoneOk()">确定</a-button>
+      </template>
+      <a-form layout="inline">
+        <a-form-item>
+          <div style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
+            <div style="width: 80px;margin-right: 10px;display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
+              <span>登录名</span>
+            </div>
+            <span style="width: 267px;color: #a1a1a1;">{{loginName}}</span>
+          </div>
+          <div style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
+            <div style="width: 80px;margin-right: 10px;display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
+              <span style="color: red;">*</span>
+              <span>密码</span>
+            </div>
+            <a-input v-model="newPwd" style="width: 267px;" :style="pwdNull ? bangdouAddNullStyle1 : ''" placeholder="请输入密码"/>
+          </div>
+          <div v-if="pwdNull" style="color: red;border-color: red;padding: 5px 0 5px 77px;font-size: 14px;line-height: 14px;">请输入密码</div>
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </div>
 </template>
 
@@ -56,8 +85,18 @@ export default {
   components: {companyTree},
   data() {
     return {
+      loginName: null,
+      showPwdModal: false,
+      modalLoading: false,
+      pwdNull: false,
+      newPwd: null,
+      bangdouAddNullStyle1: {
+        color: 'red',
+        borderColor: 'red'
+      },
+      enterpriseId: null,
       form: {
-        a: null
+        accountName: null
       },
       tableColumns: [
         {
@@ -71,7 +110,7 @@ export default {
           width: 200,
         },
         {
-          title: "所属机构",
+          title: "所属企业",
           dataIndex: "enterpriseName",
           width: 200,
         },
@@ -87,14 +126,15 @@ export default {
         },
         {
           title: "用户状态",
-          dataIndex: "accountState",
+          key: 'accountState',
+          scopedSlots: { customRender: 'accountState' },
           width: 200,
         },
         {
           title: "操作",
           key: "operation",
           fixed: "right",
-          width: 200,
+          width: 250,
           scopedSlots: {customRender: "action"},
         },
       ],
@@ -105,19 +145,52 @@ export default {
       current: 1,
     }
   },
+  computed: {
+    accountStateParse() {
+      return param => {
+        if (param === 'NORMAL') {
+          return '正常';
+        } else if (param === 'DISABLED') {
+          return '禁用';
+        } else {
+          return '';
+        }
+      }
+    },
+  },
   mounted() {
     this.getList();
   },
   methods: {
-    onSelect(selectedKeys){
-      console.log('选中了', selectedKeys);
-    },
-    newOrder() {
-      this.$router.push({path: '/account/add'});
-    },
-    _toReset() {
-      this.$refs.thisForm.resetFields();
+    onSelect(id, enterpriseName){
+      console.log(id, enterpriseName);
+      this.enterpriseId = id;
+      this.current = 1;
+      this.pageSize = 10;
       this.getList();
+    },
+    renewPwd(loginName){
+      this.loginName = loginName;
+      this.showPwdModal = true;
+    },
+    goDel(loginName){
+      this.$confirm({
+        title: `删除账号`,
+        content: `您确定要删除该账号吗？`,
+        centered: true,
+        okText: '确定',
+        cancelText: '取消',
+        onOk: () => {
+          this.tableLoading = true;
+          api.delAccount({loginName: loginName}).then(resp => {
+            if (resp.code === 200) {
+              this.getList();
+            }
+          }).finally(() => {
+            this.tableLoading = false;
+          });
+        }
+      });
     },
     onShowSizeChange(current, pageSize) {
       this.current = current;
@@ -128,6 +201,7 @@ export default {
       this.tableLoading = true;
       api.queryAccountList({
         ...this.form,
+        enterpriseId: this.enterpriseId,
         pageNum: this.current,
         pageSize: this.pageSize,
       }).then(resp => {
@@ -139,6 +213,33 @@ export default {
         this.tableLoading = false;
       });
     },
+    handlePhoneOk() {
+      if (!this.newPwd) {
+        this.pwdNull = true;
+        return
+      }
+      this.modalLoading = true;
+      api.updatePassword({
+        loginName: this.loginName,
+        newPwd: this.newPwd,
+      }).then(resp => {
+        if (resp.code === 200) {
+          this.showPwdModal = false;
+        }
+      }).finally(() => {
+        this.modalLoading = false;
+      });
+    },
+  },
+  watch: {
+    newPwd: {
+      handler(newVal) {
+        if (newVal) {
+          this.pwdNull = false;
+        }
+      },
+      immediate: true,
+    }
   }
 }
 </script>
@@ -148,7 +249,7 @@ export default {
   padding: 20px;
 
   > div {
-    width: 350px;
+    width: 300px;
   }
 
   /deep/ .ant-form-item-control-wrapper {
@@ -160,7 +261,7 @@ export default {
   }
 
   /deep/ .ant-form-item-label {
-    width: 100px;
+    width: 50px;
   }
 
   /deep/ .item-btns {

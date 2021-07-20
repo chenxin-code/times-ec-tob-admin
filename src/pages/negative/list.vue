@@ -6,8 +6,7 @@
       </a-form-model-item>
       <a-form-model-item class="item-btns">
         <a-button class="item-btn" type="primary" @click="getList()">查询</a-button>
-        <a-button class="item-btn" @click="_toReset()">重置</a-button>
-        <a-button class="item-btn" @click="newOrder()" type="primary">新增</a-button>
+        <a-button class="item-btn" @click="$router.push({path: '/negative/add'})" type="primary">新增</a-button>
       </a-form-model-item>
     </a-form-model>
     <div id="neighborhoodLife">
@@ -102,13 +101,6 @@ export default {
     this.getList();
   },
   methods: {
-    newOrder() {
-      this.$router.push({path: '/negative/add'});
-    },
-    _toReset() {
-      this.$refs.thisForm.resetFields();
-      this.getList();
-    },
     onShowSizeChange(current, pageSize) {
       this.current = current;
       this.pageSize = pageSize;

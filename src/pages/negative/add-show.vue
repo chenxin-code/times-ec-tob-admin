@@ -277,7 +277,7 @@ export default {
 }
 .common-title {
   color: #666;
-  padding: 20px 0 0 30px;
+  padding: 20px 0 20px 30px;
   .common-title-content {
     font-size: 16px;
     height: 16px;

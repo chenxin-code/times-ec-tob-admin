@@ -25,8 +25,8 @@
               </div>
             </template>
               <span slot="action" slot-scope="scope">
-                <a-button type="link">编辑</a-button>
-                <a-button type="link">查看token</a-button>
+                <a-button type="link" @click="$router.push({path: '/company/edit', query: {id: scope.id}})">编辑</a-button>
+                <a-button type="link" @click="showToken(scope.accountNumber,scope.password)">查看token</a-button>
               </span>
           </a-table>
           <a-pagination
@@ -45,6 +45,27 @@
         </a-col>
       </a-row>
     </div>
+    <a-modal :centered="true" v-model="showTokenModal" title="查看token" :maskClosable="false">
+      <template slot="footer">
+        <a-button key="back" @click="showTokenModal = false">关闭</a-button>
+      </template>
+      <a-form layout="inline">
+        <a-form-item style="font-size: 18px;">
+          <div style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
+            <div style="width: 100px;margin-right: 10px;display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
+              <span>账号：</span>
+            </div>
+            <span style="width: 267px;color: #a1a1a1;">{{accountNumber}}</span>
+          </div>
+          <div style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
+            <div style="width: 100px;margin-right: 10px;display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
+              <span>密钥：</span>
+            </div>
+            <span style="width: 267px;color: #a1a1a1;">{{password}}</span>
+          </div>
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </div>
 </template>
 
@@ -55,6 +76,10 @@ export default {
   components: {companyTree},
   data() {
     return {
+      accountNumber: null,
+      password: null,
+      showTokenModal: false,
+      parentId: null,
       tableColumns: [
         {
           title: "企业名称",
@@ -114,8 +139,18 @@ export default {
     this.getList();
   },
   methods: {
-    onSelect(selectedKeys){
-      console.log('选中了', selectedKeys);
+    showToken(accountNumber,password){
+      console.log(accountNumber,password);
+      this.accountNumber = accountNumber;
+      this.password = password;
+      this.showTokenModal = true;
+    },
+    onSelect(id, enterpriseName){
+      console.log(id, enterpriseName);
+      this.parentId = id;
+      this.current = 1;
+      this.pageSize = 10;
+      this.getList();
     },
     onShowSizeChange(current, pageSize) {
       this.current = current;
@@ -127,6 +162,8 @@ export default {
       api.getProjectList({
         pageNum: this.current,
         pageSize: this.pageSize,
+        parentId: this.parentId,
+        queryType: 1,
       }).then(resp => {
         if (resp.code === 200) {
           this.tableData = resp.data.records;

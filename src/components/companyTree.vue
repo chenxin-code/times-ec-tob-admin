@@ -57,7 +57,7 @@ export default {
       for (let i = 0; i < data.length; i++) {
         const node = data[i];
         const key = node.key;
-        this.dataList.push({key, title: key});
+        this.dataList.push({key: node.key, title: node.title});
         if (node.children) {
           this.generateList(node.children);
         }
@@ -77,60 +77,28 @@ export default {
       }
       return parentKey;
     },
-    onSelect(selectedKeys) {
-      this.$emit('onSelect', selectedKeys);
+    onSelect(selectedKeys, info) {
+      this.$emit('onSelect', info.node.dataRef.id, info.node.dataRef.enterpriseName);
     },
   },
   mounted() {
     api.getCompanyTree().then(resp => {
       if (resp.code === 200) {
-        //this.treeData = resp.data;
-        this.treeData = [
-          {
-            title: '广州65464',
-            key: '广州534',
-            scopedSlots: {title: 'title'},
-            children: [
-              {
-                title: '南沙534',
-                key: '南沙534',
-                scopedSlots: {title: 'title'},
-                children: [
-                  {
-                    title: '金洲534',
-                    key: '金洲543',
-                    scopedSlots: {title: 'title'},
-                    children: [
-                      {
-                        title: '御城11111111',
-                        key: '御城11111111',
-                        scopedSlots: {title: 'title'},
-                      },
-                      {title: '隽城543', key: '隽城534', scopedSlots: {title: 'title'},},
-                    ]
-                  },
-                  {title: '蕉门534', key: '蕉门534', scopedSlots: {title: 'title'},},
-                  {title: '黄阁543', key: '黄阁543', scopedSlots: {title: 'title'},},
-                ],
-              },
-              {
-                title: '天河534',
-                key: '天河534',
-                scopedSlots: {title: 'title'},
-              },
-            ],
-          },
-          {
-            title: '深圳534',
-            key: '深圳345',
-            scopedSlots: {title: 'title'},
-            children: [
-              {title: '南山645', key: '南山543', scopedSlots: {title: 'title'},},
-              {title: '龙华654', key: '龙华543', scopedSlots: {title: 'title'},},
-              {title: '龙岗534', key: '龙岗543', scopedSlots: {title: 'title'},},
-            ],
+        let respData = JSON.parse(JSON.stringify(resp.data));
+        respData.forEach((item, index) => {
+          respData[index].key = item.id;
+          respData[index].title = item.enterpriseName;
+          respData[index].scopedSlots = {title: 'title'};
+        });
+        this.treeData = respData.filter((parent) => {
+          let item = respData.filter((child) => {
+            return parent['id'] === child['parentId'];
+          });
+          if (item.length > 0) {
+            parent['children'] = item;
           }
-        ];
+          return parent['parentId'] === '-1';
+        });
         this.generateList(this.treeData);
       }
     });
