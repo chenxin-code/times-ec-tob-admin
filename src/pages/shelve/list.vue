@@ -11,9 +11,6 @@
           </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item class="item-btns">
-        <a-button class="item-btn" type="primary" @click="getList()">查询</a-button>
-      </a-form-model-item>
       <a-form-model-item label="商品品类" prop="c">
         <a-select v-model="thisForm.c" placeholder="请选择">
           <a-select-option :value="v.v" :label="v.n" v-for="(v,i) in selectArr" :key="i">
@@ -29,6 +26,7 @@
         </a-select>
       </a-form-model-item>
       <a-form-model-item class="item-btns">
+        <a-button class="item-btn" type="primary" @click="getList()">查询</a-button>
         <a-button class="item-btn" :disabled="disBtn" @click="piliang('on')" :loading="piliangLoading" type="primary">批量上架</a-button>
         <a-button class="item-btn" :disabled="disBtn" @click="piliang('off')" :loading="piliangLoading" type="primary">批量下架</a-button>
       </a-form-model-item>
