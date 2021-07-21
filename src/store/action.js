@@ -21,7 +21,7 @@ export default {
       'SD_ACCESS_TOKEN',
       getQueryString('token') || SD_ACCESS_TOKEN
     )
-	
+
     const para = {
       originalToken: getQueryString('token'),
     }
@@ -29,7 +29,6 @@ export default {
       if (res.code === 200) {
         let Access_Token = 'Bearer ' + res.data.newToken
         window.localStorage.setItem('Case_Access_Token', Access_Token)
-
         context.commit('SET_CASE_TOKEN', Access_Token)
       }
     })
