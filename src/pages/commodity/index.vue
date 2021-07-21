@@ -26,10 +26,6 @@
           </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item class="item-btns">
-        <a-button class="item-btn" type="primary" @click="quitList()">查询</a-button>
-        <a-button class="item-btn" @click="_toReset()">重置</a-button>
-      </a-form-model-item>
        <a-form-model-item class="item-btns">
         <a-button class="item-btn" type="primary" @click="quitList()">查询</a-button>
         <a-button class="item-btn" @click="_toReset()">重置</a-button>
