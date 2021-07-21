@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100%;">
-    <a-form-model :model="thisForm" layout="inline" ref="thisForm" labelAlign='left'>
+    <a-form-model :model="thisForm" layout="inline" ref="thisForm" labelAlign="left">
       <a-form-model-item label="SKU名称/SKU编码" prop="a">
         <a-input v-model="thisForm.a" placeholder="请输入SKU名称或SKU编码" :maxLength='30'/>
       </a-form-model-item>

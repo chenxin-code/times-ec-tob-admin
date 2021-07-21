@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="btns">
-      <a-button class="item-btn" :loading='btnloading' type="primary" @click="addEdit()" v-if="$route.path === '/negative/add'">保存</a-button>
+      <a-button class="item-btn" :loading="btnloading" type="primary" @click="addEdit()" v-if="$route.path === '/negative/add'">保存</a-button>
       <a-button class="item-btn"  @click="$router.back()">返回</a-button>
     </div>
-    <a-form-model :model="thisForm" layout="inline" :rules="rules" ref="thisForm" labelAlign='left'>
+    <a-form-model :model="thisForm" layout="inline" :rules="rules" ref="thisForm" labelAlign="left">
       <div class="common-title">
         <div class="common-title-content">xxxxx新增</div>
       </div>
@@ -253,7 +253,7 @@ export default {
     min-width: 200px;
   }
   /deep/.ant-form-item-control-wrapper{
-    min-width: 200px;
+    width: 250px;
   }
   /deep/.ant-form-item-label{
     //width: 110px;

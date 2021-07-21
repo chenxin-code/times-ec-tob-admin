@@ -1,7 +1,7 @@
 <template>
   <div style="height: 100%;">
     <div class="btns">
-      <a-button class="item-btn" :loading='btnloading' type="primary" @click="addEdit()">保存</a-button>
+      <a-button class="item-btn" :loading="btnloading" type="primary" @click="addEdit()">保存</a-button>
       <a-button class="item-btn" @click="$router.back()">返回</a-button>
     </div>
     <a-form-model :model="thisForm" layout="inline" :rules="rules" ref="thisForm" labelAlign="left">

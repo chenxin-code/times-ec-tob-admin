@@ -4,7 +4,7 @@
       <companyTree @onSelect="onSelect"/>
     </div>
     <div style="width: 80%;">
-      <a-form-model :model="thisForm" layout="inline" ref="thisForm" labelAlign='left'>
+      <a-form-model :model="thisForm" layout="inline" ref="thisForm" labelAlign="left">
         <a-form-model-item label="姓名" prop="accountName">
           <a-input v-model="thisForm.accountName" placeholder="请输入姓名" :maxLength='30'/>
         </a-form-model-item>
