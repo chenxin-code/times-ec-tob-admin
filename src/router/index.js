@@ -610,7 +610,40 @@ let router = new Router({
             keepAlive: false,
           },
           component: () => import("../pages/distribution/supplier/detail"),
-        }
+        },
+        {
+          path: "/commodity",
+          name: "commodity",
+          menuKey: "commodity",
+          meta: {
+            menu: "/commodity",
+            authKeys: [""],
+            bread: [
+              {
+                path: "/commodity",
+                name: "商品管理",
+              },
+            ],
+            // keepAlive: true
+          },
+          component: () => import("../pages/commodity/index"),
+        },
+        {
+          path: "/commodity/edit",
+          name: "commodityEdit",
+          menuKey: "commodity",
+          meta: {
+            menu: "/commodity",
+            authKeys: [""],
+            bread: [
+              { path: "/commodity", name: "供应商" },
+              { path: "commodity/edit", name: "供应商详情" },
+            ],
+            isUseCache: false,
+            keepAlive: false,
+          },
+          component: () => import("../pages/commodity/edit"),
+        },
       ]
     },
     {
