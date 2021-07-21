@@ -23,6 +23,24 @@ let router = new Router({
       menuKey: "home",
       component: Home,
       children: [
+        //商品品类管理
+        {
+          path: "/category",
+          name: "category",
+          menuKey: "category",
+          meta: {
+            menu: "/category",
+            authKeys: [""],
+            bread: [
+              {
+                path: "/category",
+                name: "商品品类管理",
+              },
+            ],
+            // keepAlive: true
+          },
+          component: () => import("../pages/category/list"),
+        },
         //商品上下架
         {
           path: "/shelve",

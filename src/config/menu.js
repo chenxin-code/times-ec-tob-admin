@@ -1,16 +1,8 @@
 export default [
   {
-    title: '商品上下架',
-    authKeys: [''],
-    icon: require('@/assets/img/menu/newflag.png'),
-    menuKey: 'shelve',
-    group: 'distribution',
-    path: '/shelve',
-  },
-  {
     title: '负数单管理',
     authKeys: [''],
-    icon: require('@/assets/img/menu/newflag.png'),
+    icon: require('@/assets/img/menu/icon_afterSales.png'),
     menuKey: 'negative',
     group: 'distribution',
     path: '/negative',
@@ -18,7 +10,7 @@ export default [
   {
     title: '企业管理',
     authKeys: [''],
-    icon: require('@/assets/img/menu/newflag.png'),
+    icon: require('@/assets/img/menu/icon_afterSales.png'),
     menuKey: 'company',
     group: 'distribution',
     path: '/company',
@@ -26,7 +18,7 @@ export default [
   {
     title: '账号管理',
     authKeys: [''],
-    icon: require('@/assets/img/menu/newflag.png'),
+    icon: require('@/assets/img/menu/icon_afterSales.png'),
     menuKey: 'account',
     group: 'distribution',
     path: '/account',
@@ -46,10 +38,25 @@ export default [
     path: '/market',
   },
   {
+    title: "商品品类管理",
+    icon: require("@/assets/img/menu/icon_afterSales.png"),
+    menuKey: "category",
+    group: "distribution",
+    path: "/category",
+  },
+  {
     title: "商品管理",
     icon: require("@/assets/img/menu/icon_afterSales.png"),
     menuKey: "market",
     group: "distribution",
     path: "/commodity",
+  },
+  {
+    title: '商品上下架',
+    authKeys: [''],
+    icon: require('@/assets/img/menu/icon_afterSales.png'),
+    menuKey: 'shelve',
+    group: 'distribution',
+    path: '/shelve',
   },
 ];

@@ -37,3 +37,6 @@ export const getProductListByPager = data => fetchApi('/times-ec-tob-mall/admin/
 //上下架操作
 export const updateSelling = data => fetchApi('/times-ec-tob-mall/admin/product/updateSelling', data, 'POST');
 export const updateSellingById = data => fetchApi('/times-ec-tob-mall/admin/product/updateSellingById/' + data.id, {}, 'GET');
+
+//商品品类管理
+export const getCategoryTree = data => fetchApi('/times-ec-tob-mall/admin/product/getCategoryTree', data, 'GET');
