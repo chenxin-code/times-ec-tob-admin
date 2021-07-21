@@ -218,6 +218,11 @@ const vueConfig = {
           //pathRewrite: {'^/api': '/api'} 重写之后url为 http://192.168.1.16:8085/api/xxxx
         }
       },
+      "/api/areas": {
+        // target: 'https://times-uat-backend.oss-cn-shenzhen.aliyuncs.com',
+        target: process.env.VUE_APP_BASE_APPC_API, 
+        changeOrigin: true,
+      },
     },
   },
 
