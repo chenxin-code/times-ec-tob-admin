@@ -4,21 +4,21 @@
       <a-button class="item-btn" :loading='btnloading' type="primary" @click="addEdit()" v-if="$route.path === '/negative/add'">保存</a-button>
       <a-button class="item-btn"  @click="$router.back()">返回</a-button>
     </div>
-    <a-form-model :model="form" layout="inline" :rules="rules" ref="thisForm" labelAlign='left'>
+    <a-form-model :model="thisForm" layout="inline" :rules="rules" ref="thisForm" labelAlign='left'>
       <div class="common-title">
         <div class="common-title-content">xxxxx新增</div>
       </div>
       <a-form-model-item label="负数单号" prop="a">
-        <a-input v-model="form.a" :disabled="isDisable" />
+        <a-input v-model="thisForm.a" :disabled="isDisable" />
       </a-form-model-item>
       <a-form-model-item label="选择订单" prop="a">
-        <a-input v-model="form.a" :disabled="isDisable" />
+        <a-input v-model="thisForm.a" :disabled="isDisable" />
       </a-form-model-item>
       <a-form-model-item label="创建人" prop="a">
-        <a-input v-model="form.a" :disabled="isDisable" />
+        <a-input v-model="thisForm.a" :disabled="isDisable" />
       </a-form-model-item>
       <a-form-model-item label="创建时间" prop="a">
-        <a-input v-model="form.a" :disabled="isDisable" />
+        <a-input v-model="thisForm.a" :disabled="isDisable" />
       </a-form-model-item>
       <div class="common-title">
         <div class="common-title-content">选择商品</div>
@@ -73,16 +73,16 @@
       <a-form-model-item label="已扣税前优惠总价">0.00</a-form-model-item>
       <a-form-model-item label="已扣税后优惠总价">0.00</a-form-model-item>
       <a-form-model-item label="税前扣减销售总价" prop="a">
-        <a-input v-model="form.a" :disabled="isDisable" />
+        <a-input v-model="thisForm.a" :disabled="isDisable" />
       </a-form-model-item>
       <a-form-model-item label="税后扣减销售总价" prop="a">
-        <a-input v-model="form.a" :disabled="isDisable" />
+        <a-input v-model="thisForm.a" :disabled="isDisable" />
       </a-form-model-item>
       <a-form-model-item label="税前扣减优惠总价" prop="a">
-        <a-input v-model="form.a" :disabled="isDisable" />
+        <a-input v-model="thisForm.a" :disabled="isDisable" />
       </a-form-model-item>
       <a-form-model-item label="税后扣减优惠总价" prop="a">
-        <a-input v-model="form.a" :disabled="isDisable" />
+        <a-input v-model="thisForm.a" :disabled="isDisable" />
       </a-form-model-item>
     </a-form-model>
   </div>
@@ -92,7 +92,7 @@
 export default {
   data() {
     return {
-      form: {
+      thisForm: {
         a: null,
         b: null,
       },

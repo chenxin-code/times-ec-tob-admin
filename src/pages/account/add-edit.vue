@@ -4,7 +4,7 @@
       <a-button class="item-btn" :loading='btnloading' type="primary" @click="addEdit()">保存</a-button>
       <a-button class="item-btn" @click="$router.back()">返回</a-button>
     </div>
-    <a-form-model :model="form" layout="inline" :rules="rules" ref="thisForm" labelAlign='left'>
+    <a-form-model :model="thisForm" layout="inline" :rules="rules" ref="thisForm" labelAlign="left">
       <div class="common-title">
         <div class="common-title-content">账号信息</div>
       </div>
@@ -15,28 +15,28 @@
         <p v-show="showRedBorder" class="companySelectTip">请选择所属企业</p>
       </a-form-model-item>
       <a-form-model-item label="姓名" prop="accountName">
-        <a-input v-model="form.accountName"/>
+        <a-input v-model="thisForm.accountName" maxLength="10"/>
       </a-form-model-item>
       <a-form-model-item label="登录名" prop="loginName">
-        <a-input v-model="form.loginName" :disabled="isDisable"/>
+        <a-input v-model="thisForm.loginName" maxLength="50" :disabled="isDisable"/>
       </a-form-model-item>
       <a-form-model-item label="状态">
-        <a-select v-model="form.accountState">
+        <a-select v-model="thisForm.accountState">
           <a-select-option value="NORMAL">正常</a-select-option>
           <a-select-option value="DISABLED">禁用</a-select-option>
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="密码" prop="password" v-if="!isDisable">
-        <a-input v-model="form.password"/>
+        <a-input-password v-model="thisForm.password"/>
       </a-form-model-item>
       <a-form-model-item label="确认密码" prop="confirmPassword" v-if="!isDisable">
-        <a-input v-model="form.confirmPassword"/>
+        <a-input-password v-model="thisForm.confirmPassword"/>
       </a-form-model-item>
       <a-form-model-item label="电子邮箱" prop="email">
-        <a-input v-model="form.email"/>
+        <a-input v-model="thisForm.email"/>
       </a-form-model-item>
       <a-form-model-item label="手机号码" prop="accountPhone">
-        <a-input v-model="form.accountPhone"/>
+        <a-input v-model="thisForm.accountPhone"/>
       </a-form-model-item>
     </a-form-model>
     <a-modal title="选择所属企业" :visible="visible" @ok="handleOk" @cancel="visible = false" width="500px">
@@ -52,6 +52,30 @@ import companyTree from './../../components/companyTree';
 export default {
   components: {companyTree},
   data() {
+    let passwordValidator = (rule, value, callback) => {
+      if (this.thisForm.confirmPassword !== '') {
+        this.$refs.thisForm.validateField('confirmPassword')
+      }
+      callback()
+    }, confirmPasswordValidator = (rule, value, callback) => {
+      if (value !== this.thisForm.password) {
+        callback(new Error('两次输入密码不一致'))
+      } else {
+        callback()
+      }
+    }, checkEmailFormat = (rule, value, callback) => {
+      if (value && !/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(value)) {
+        callback(new Error('电子邮箱格式不正确'))
+      } else {
+        callback()
+      }
+    }, checkMobileFormat = (rule, value, callback) => {
+      if (value && !/^1[3456789]\d{9}$/.test(value)) {
+        callback(new Error('手机号码格式不正确'))
+      } else {
+        callback()
+      }
+    };
     return {
       showRedBorder: false,
       selectEnterpriseId: null,
@@ -59,7 +83,7 @@ export default {
       enterpriseId: null,
       enterpriseName: null,
       visible: false,
-      form: {
+      thisForm: {
         accountName: null,
         loginName: null,
         accountState: 'NORMAL',
@@ -77,15 +101,18 @@ export default {
         ],
         password: [
           {required: true, message: '请输入密码', trigger: 'blur'},
+          {validator: passwordValidator, trigger: 'blur'},
         ],
         confirmPassword: [
           {required: true, message: '请输入确认密码', trigger: 'blur'},
+          {validator: confirmPasswordValidator, trigger: 'blur'},
         ],
         email: [
           {required: true, message: '请输入电子邮箱', trigger: 'blur'},
+          {validator: checkEmailFormat, trigger: 'blur'},
         ],
         accountPhone: [
-          {required: true, message: '请输入手机号码', trigger: 'blur'},
+          {validator: checkMobileFormat, trigger: 'blur'},
         ],
       },
       btnloading: false,
@@ -99,12 +126,12 @@ export default {
         if (resp.code === 200) {
           this.enterpriseId = resp.data.enterpriseId;
           this.enterpriseName = resp.data.enterpriseName;
-          this.form.accountName = resp.data.accountName;
-          this.form.loginName = resp.data.loginName;
-          this.form.accountState = resp.data.accountState;
-          this.form.password = resp.data.password;
-          this.form.email = resp.data.email;
-          this.form.accountPhone = resp.data.accountPhone;
+          this.thisForm.accountName = resp.data.accountName;
+          this.thisForm.loginName = resp.data.loginName;
+          this.thisForm.accountState = resp.data.accountState;
+          this.thisForm.password = resp.data.password;
+          this.thisForm.email = resp.data.email;
+          this.thisForm.accountPhone = resp.data.accountPhone;
         }
       });
     }
@@ -137,12 +164,12 @@ export default {
         }
         this.$refs.thisForm.validate(valid => {
           if (valid && !this.showRedBorder) {
-            this.form = Object.assign(this.form, {
+            this.thisForm = Object.assign(this.thisForm, {
               enterpriseId: this.enterpriseId,
               enterpriseName: this.enterpriseName
             });
             this.btnloading = true;
-            api.addAccount(this.form).then(resp => {
+            api.addAccount(this.thisForm).then(resp => {
               if (resp.code === 200) {
                 this.$message.success('操作成功');
                 this.$router.back();
@@ -159,13 +186,13 @@ export default {
         }
         this.$refs.thisForm.validate(valid => {
           if (valid && !this.showRedBorder) {
-            this.form = Object.assign(this.form, {
+            this.thisForm = Object.assign(this.thisForm, {
               id: this.$route.query.id,
               enterpriseId: this.enterpriseId,
               enterpriseName: this.enterpriseName
             });
             this.btnloading = true;
-            api.updateAccount(this.form).then(resp => {
+            api.updateAccount(this.thisForm).then(resp => {
               if (resp.code === 200) {
                 this.$message.success('操作成功');
                 this.$router.back();
@@ -187,7 +214,7 @@ export default {
   padding: 20px;
 
   .ant-form-item {
-    width: 600px;
+    width: 700px;
     margin: 10px 0 10px 50px;
   }
 
@@ -196,11 +223,11 @@ export default {
   }
 
   /deep/ .ant-form-item-control-wrapper {
-    min-width: 200px;
+    width: 300px;
   }
 
   /deep/ .ant-form-item-label {
-    width: 110px;
+    width: 90px;
   }
 
   /deep/ .item-btns {
