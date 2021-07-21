@@ -1,13 +1,12 @@
 <template>
   <div style="height: 100%;">
-    <a-form-model :model="form" layout="inline" ref="thisForm" labelAlign='left'>
-      <a-form-model-item label="订单编号" prop="a">
-        <a-input v-model="form.a" placeholder="请输入订单编号" :maxLength='30'/>
+    <a-form-model :model="thisForm" layout="inline" ref="thisForm" labelAlign="left">
+      <a-form-model-item label="订单编号" prop="orderNo">
+        <a-input v-model="thisForm.orderNo" placeholder="请输入订单编号"/>
       </a-form-model-item>
       <a-form-model-item class="item-btns">
         <a-button class="item-btn" type="primary" @click="getList()">查询</a-button>
-        <a-button class="item-btn" @click="_toReset()">重置</a-button>
-        <a-button class="item-btn" @click="newOrder()" type="primary">新增</a-button>
+        <a-button class="item-btn" @click="$router.push({path: '/negative/add'})" type="primary">新增</a-button>
       </a-form-model-item>
     </a-form-model>
     <div id="neighborhoodLife">
@@ -22,8 +21,9 @@
                 :pagination="false"
                 :loading="tableLoading"
                 style="margin-top: 8px;">
-              <span slot="action" slot-scope="text, record">
-                <a-button type="link">查看详情</a-button>
+              <span slot="action" slot-scope="scope">
+                <a-button type="link"
+                          @click="$router.push({path: '/negative/show', query: {id: scope.id}})">查看详情</a-button>
                 <a-button type="link">删除</a-button>
               </span>
             </a-table>
@@ -54,33 +54,33 @@ export default {
   components: {},
   data() {
     return {
-      form: {
-        a: null
+      thisForm: {
+        orderNo: null
       },
       tableColumns: [
         {
           title: "负数单编号",
-          dataIndex: "a",
-          width: 200,
+          dataIndex: "negativeNo",
+          width: 300,
         },
         {
           title: "订单编号",
-          dataIndex: "b",
-          width: 200,
+          dataIndex: "saleOrderNo",
+          width: 300,
         },
         {
           title: "备注",
-          dataIndex: "c",
-          width: 200,
+          dataIndex: "remark",
+          width: 250,
         },
         {
           title: "创建人",
-          dataIndex: "d",
+          dataIndex: "createUser",
           width: 200,
         },
         {
           title: "创建时间",
-          dataIndex: "e",
+          dataIndex: "createTime",
           width: 200,
         },
         {
@@ -102,36 +102,21 @@ export default {
     this.getList();
   },
   methods: {
-    newOrder() {
-      this.$router.push({path: '/negative/add'});
-    },
-    _toReset() {
-      this.$refs.thisForm.resetFields();
-      this.getList();
-    },
     onShowSizeChange(current, pageSize) {
       this.current = current;
       this.pageSize = pageSize;
       this.getList();
     },
     getList() {
-      this.tableData = [{
-        a: 1,
-        b: 1,
-        c: 1,
-        d: 1,
-        e: 1
-      }];
-      return
       this.tableLoading = true;
-      api.接口({
-        ...this.form,
+      api.queryNegativeList({
+        ...this.thisForm,
         pageNum: this.current,
         pageSize: this.pageSize,
       }).then(resp => {
         if (resp.code === 200) {
           this.tableData = resp.data.records;
-          this.total = resp.data.total * 1;
+          this.total = Number(resp.data.total);
         }
       }).finally(() => {
         this.tableLoading = false;
@@ -146,19 +131,19 @@ export default {
   padding: 20px;
 
   > div {
-    width: 350px;
+    width: 330px;
   }
 
   /deep/ .ant-form-item-control-wrapper {
-    width: 250px;
+    width: 230px;
   }
 
   /deep/ .ant-calendar-picker-input {
-    width: 250px;
+    width: 230px;
   }
 
   /deep/ .ant-form-item-label {
-    width: 100px;
+    width: 80px;
   }
 
   /deep/ .item-btns {

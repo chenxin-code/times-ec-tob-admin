@@ -9,6 +9,15 @@ import router from './router'
 import store from './store'
 import Vuex from "vuex"
 
+import VueQuillEditor from 'vue-quill-editor'
+
+// require styles
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+Vue.use(VueQuillEditor)
+
 import * as filters from "./utils/filters"; // global filters
 //注册全局过滤器方法
 Object.keys(filters).forEach((key) => {
