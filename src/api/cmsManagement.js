@@ -31,3 +31,9 @@ export const updateNegative = data => fetchApi('/times-ec-tob-mall/admin/negativ
 
 //省 市 区 街道
 export const getAreaData = data => fetchApi('/times-ec-tob-mall/general/area/list', data, 'GET');
+
+//商品上下架列表
+export const getProductListByPager = data => fetchApi('/times-ec-tob-mall/admin/product/getProductListByPager', data, 'POST');
+//上下架操作
+export const updateSelling = data => fetchApi('/times-ec-tob-mall/admin/product/updateSelling', data, 'POST');
+export const updateSellingById = data => fetchApi('/times-ec-tob-mall/admin/product/updateSellingById/' + data.id, {}, 'GET');
