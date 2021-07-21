@@ -45,4 +45,11 @@ export default [
     group: 'distribution',
     path: '/market',
   },
-]
+  {
+    title: "商品管理",
+    icon: require("@/assets/img/menu/icon_afterSales.png"),
+    menuKey: "market",
+    group: "distribution",
+    path: "/commodity",
+  },
+];
