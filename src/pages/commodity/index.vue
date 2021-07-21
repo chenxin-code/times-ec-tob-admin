@@ -2,7 +2,7 @@
   <div style="height: 100%;">
     <a-form-model :model="form" layout="inline" ref="thisForm" labelAlign='left'>
       <a-form-model-item label="SKU名称/SKU编码" prop="a">
-        <a-input v-model="form.a" placeholder="请输入SKU名称或SKU编码" :maxLength='30'/>
+        <a-input v-model="form.sku" placeholder="请输入SKU名称或SKU编码" :maxLength='30'/>
       </a-form-model-item>
       <a-form-model-item label="商品状态" prop="b">
         <a-select v-model="form.b" placeholder="请选择">
@@ -12,11 +12,11 @@
         </a-select>
       </a-form-model-item>
       <a-form-model-item class="item-btns">
-        <a-button class="item-btn" type="primary" @click="getList()">查询</a-button>
+        <a-button class="item-btn" type="primary" @click="quitList()">查询</a-button>
         <a-button class="item-btn" @click="_toReset()">重置</a-button>
       </a-form-model-item>
-      <a-form-model-item label="商品品类" prop="c">
-        <a-select v-model="form.c" placeholder="请选择">
+       <a-form-model-item label="商品品类" prop="d">
+        <a-select v-model="form.d" placeholder="请选择">
           <a-select-option :value="v.v" :label="v.n" v-for="(v,i) in selectArr" :key="i">
             {{ v.name }}
           </a-select-option>
@@ -39,7 +39,7 @@
                 :columns="tableColumns"
                 :row-key="(r,i) => i"
                 :data-source="tableData"
-                :scroll="{ x: 1300 }"
+                :scroll="{ x: 1300 ,y:scrollY}"
                 :pagination="false"
                 :loading="tableLoading"
                 style="margin-top: 8px;">
@@ -75,6 +75,7 @@ export default {
   components: {},
   data() {
     return {
+      scrollY:100,
       selectArr: [
         {id: '一', name: '1'},
         {id: '二', name: '2'},
@@ -89,53 +90,63 @@ export default {
       tableColumns: [
         {
           title: "商品名称",
-          dataIndex: "a",
+          dataIndex: "brandName",
+          key:"brandName",
           width: 200,
         },
         {
           title: "SPU编码",
-          dataIndex: "b",
+          dataIndex: "itemName",
+          key:"itemName",
           width: 200,
         },
         {
           title: "SKU名称",
-          dataIndex: "c",
+          dataIndex: "skuName",
+          key:"skuName",
           width: 200,
         },
         {
           title: "SKU编码",
-          dataIndex: "d",
+          dataIndex: "skuCode",
+          key:"skuCode",
           width: 200,
         },
         {
           title: "商品品类",
-          dataIndex: "e",
+          dataIndex: "categoryName",
+          key:"categoryName",
           width: 200,
         },
         {
           title: "单位",
+          dataIndex: "unit",
+          key:"unit",
           width: 200,
-          dataIndex: "f",
         },
         {
           title: "供应商",
           width: 200,
-          dataIndex: "g",
+          dataIndex: "supplierName",
+          key:"supplierName",
         },
         {
           title: "品牌",
           width: 200,
-          dataIndex: "",
+          dataIndex: "brandName",
+          key:"brandName",
         },
         {
           title: "税率",
           width: 200,
-          dataIndex: "",
+          dataIndex: "taxRate",
+          key:"taxRate",
         },
         {
           title: "库存",
           width: 200,
-          dataIndex: "h",
+          dataIndex: "stock",
+          key:"stock",
         },
         {
           title: "是否阶梯价",
@@ -145,17 +156,20 @@ export default {
         {
           title: "成本价（数量=元）",
           width: 200,
-          dataIndex: "i",
+          key:"costPrice",
+          dataIndex: "costPrice",
         },
         {
           title: "税前销售价（数量=元）",
           width: 200,
-          dataIndex: "j",
+          key:"beforeTaxSellingPrice",
+          dataIndex: "beforeTaxSellingPrice",
         },
         {
           title: "税后销售价（数量=元）",
           width: 200,
-          dataIndex: "k",
+          key:"afterTaxSellingPrice",
+          dataIndex: "afterTaxSellingPrice",
         },
         {
           title: "商品状态",
@@ -180,7 +194,7 @@ export default {
   },
    created() {
     const timer1 = setTimeout(() => {
-      this.scrollY = document.body.clientHeight - 370 + 'px';
+      this.scrollY = document.body.clientHeight - 390 + 'px';
     }, 0);
     this.$once('hook:beforeDestroy', () => {
       clearTimeout(timer1);
@@ -193,36 +207,34 @@ export default {
       edit(){
           this.$router.push({ name: 'commodityEdit', params: { userId: 1 }})
       },
+      //重置
     _toReset() {
       this.$refs.thisForm.resetFields();
       this.getList();
     },
+    //分页
     onShowSizeChange(current, pageSize) {
       this.current = current;
       this.pageSize = pageSize;
       this.getList();
     },
+    //查询
+    quitList(){
+      this.current = 1;
+      this.getList()
+    },
+    //获取列表
     getList() {
-      this.tableData = [{
-        a: 1,
-        b: 1,
-        c: 1,
-        d: 1,
-        e: 1,
-        f: 1,
-        g: 1,
-        h: 1,
-        i: 1,
-        j: 1,
-        k: 1
-      }];
-      return
       this.tableLoading = true;
-      api.接口({
-        ...this.form,
+      let params = {
+        categoryId: this.form.sku,
+        // keyword: "",
+        // selling: 0,
+        // supplierId: 0
         pageNum: this.current,
         pageSize: this.pageSize,
-      }).then(resp => {
+      }
+      api.getProductListByPager(params).then(resp => {
         if (resp.code === 200) {
           this.tableData = resp.data.records;
           this.total = resp.data.total * 1;
