@@ -36,8 +36,15 @@
         <a-input v-model="thisForm.creditLevel"/>
       </a-form-model-item>
       <a-form-model-item label="所在地区">
-        <a-cascader :options="options" :default-value="defaultValue" placeholder="选择省市区" @change="onChange"
-                    style="width: 500px;" v-if="showCascader"/>
+        <a-cascader
+            :options="areaData"
+            :show-search="{ filter }"
+            :default-value="defaultValue"
+            placeholder="选择省市区"
+            :fieldNames="{ label: 'cityName', value: 'cityCode', children: 'list' }"
+            @change="onChange"
+            style="width: 500px;"
+            v-if="showCascader"/>
       </a-form-model-item>
       <a-form-model-item label="通讯地址" prop="mailAddress">
         <a-textarea v-model="thisForm.mailAddress"/>
@@ -127,76 +134,53 @@ export default {
         ],
       },
       btnloading: false,
-      options: [
-        {
-          value: '12321',
-          label: '浙江',
-          children: [
-            {
-              value: '5435',
-              label: '杭州',
-              children: [
-                {
-                  value: '76575',
-                  label: '西湖',
-                },
-                {
-                  value: '4353',
-                  label: '下沙',
-                },
-              ],
-            },
-          ],
-        },
-        {
-          value: '765867',
-          label: '江苏',
-          children: [
-            {
-              value: '5435',
-              label: '南京',
-            },
-          ],
-        },
-      ],
+      areaData: [],
       defaultValue: [],
       showCascader: false,
     }
   },
   mounted() {
-    if (this.$route.path === '/company/edit') {
-      api.getProjectDetail({
-        id: this.$route.query.id
-      }).then(resp => {
-        if (resp.code === 200) {
-          this.isTop = resp.data.parentId === '-1';
-          this.parentId = resp.data.parentId;
-          this.parentName = resp.data.parentName;
-          this.thisForm.enterpriseName = resp.data.enterpriseName;
-          this.thisForm.enterpriseCode = resp.data.enterpriseCode;
-          this.thisForm.employeeNum = resp.data.employeeNum;
-          this.thisForm.businessScope = resp.data.businessScope;
-          this.thisForm.creditLevel = resp.data.creditLevel;
-          this.thisForm.mailAddress = resp.data.mailAddress;
-          this.thisForm.detailAddress = resp.data.detailAddress;
-          this.thisForm.remark = resp.data.remark;
-          this.thisForm.enterprisePhone = resp.data.enterprisePhone;
-          this.thisForm.email = resp.data.email;
-          this.thisForm.concatPerson = resp.data.concatPerson;
-          this.thisForm.concatPhone = resp.data.concatPhone;
-          this.thisForm.provinceCode = resp.data.provinceCode;//省
-          this.thisForm.cityCode = resp.data.cityCode;//市
-          this.thisForm.districtCode = resp.data.districtCode;//区
-          this.defaultValue = [resp.data.provinceCode, resp.data.cityCode, resp.data.districtCode];
-          this.showCascader = true;//取到defaultValue再加载组件
+    api.getAreaData({level: 3}).then(response => {
+      if (response.code === 200) {
+        this.areaData = response.data[0].list;//去掉中国
+        if (this.$route.path === '/company/edit') {
+          api.getProjectDetail({
+            id: this.$route.query.id
+          }).then(resp => {
+            if (resp.code === 200) {
+              this.isTop = resp.data.parentId === '-1';
+              this.parentId = resp.data.parentId;
+              this.parentName = resp.data.parentName;
+              this.thisForm.enterpriseName = resp.data.enterpriseName;
+              this.thisForm.enterpriseCode = resp.data.enterpriseCode;
+              this.thisForm.employeeNum = resp.data.employeeNum;
+              this.thisForm.businessScope = resp.data.businessScope;
+              this.thisForm.creditLevel = resp.data.creditLevel;
+              this.thisForm.mailAddress = resp.data.mailAddress;
+              this.thisForm.detailAddress = resp.data.detailAddress;
+              this.thisForm.remark = resp.data.remark;
+              this.thisForm.enterprisePhone = resp.data.enterprisePhone;
+              this.thisForm.email = resp.data.email;
+              this.thisForm.concatPerson = resp.data.concatPerson;
+              this.thisForm.concatPhone = resp.data.concatPhone;
+              this.thisForm.provinceCode = resp.data.provinceCode;//省
+              this.thisForm.cityCode = resp.data.cityCode;//市
+              this.thisForm.districtCode = resp.data.districtCode;//区
+              this.defaultValue = [resp.data.provinceCode, resp.data.cityCode, resp.data.districtCode];
+              this.showCascader = true;//取到defaultValue再加载组件
+            }
+          });
+        } else if (this.$route.path === '/company/add') {
+          this.showCascader = true;
         }
-      });
-    } else if (this.$route.path === '/company/add') {
-      this.showCascader = true;
-    }
+      }
+    });
   },
   computed: {},
   methods: {
+    filter(inputValue, path) {
+      return path.some(option => option.cityName.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
+    },
     onChange(value, selectedOptions) {
       console.log(value, selectedOptions);
       this.thisForm.provinceCode = value[0];//省

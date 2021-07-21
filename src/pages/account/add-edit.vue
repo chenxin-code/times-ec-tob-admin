@@ -179,7 +179,6 @@ export default {
             });
           }
         });
-
       } else if (this.$route.path === '/account/edit') {
         if (!this.enterpriseId) {
           this.showRedBorder = true;
@@ -203,7 +202,6 @@ export default {
           }
         });
       }
-
     },
   }
 }
