@@ -13,3 +13,5 @@ export const getSupplierDetail = (data) => {
 
 // 分页查询商品列表数据集
 export const getProductListByPager =(data)=>fetchApi('/times-ec-tob-mall/admin/product/getProductListByPager', data, 'POST')
+// 分页查询商品列表数据集
+export const updateProduct =(data)=>fetchApi('/times-ec-tob-mall/admin/product/updateProduct', data, 'POST')

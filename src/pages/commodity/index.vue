@@ -2,33 +2,33 @@
   <div style="height: 100%;">
     <a-form-model :model="form" layout="inline" ref="thisForm" labelAlign='left'>
       <a-form-model-item label="SKU名称/SKU编码" prop="a">
-        <a-input v-model="form.sku" placeholder="请输入SKU名称或SKU编码" :maxLength='30'/>
+        <a-input v-model="sku" placeholder="请输入SKU名称或SKU编码" :maxLength='30'/>
       </a-form-model-item>
-      <a-form-model-item label="商品状态" prop="b">
-        <a-select v-model="form.b" placeholder="请选择">
-          <a-select-option :value="v.v" :label="v.n" v-for="(v,i) in selectArr" :key="i">
-            {{ v.name }}
-          </a-select-option>
+      <a-form-model-item label="状态" prop="b">
+        <a-select default-value="全部" @change="handleChangesataus">
+            <a-select-option :value="v.id" v-for="(v,i) in selectArrstrain" :key="i">
+              {{v.name}}
+            </a-select-option>
         </a-select>
       </a-form-model-item>
 
        <a-form-model-item label="商品品类" prop="d">
-        <a-select v-model="form.d" placeholder="请选择">
-          <a-select-option :value="v.v" :label="v.n" v-for="(v,i) in selectArr" :key="i">
+        <a-select default-value='全部' @change="handleChangeing">
+          <a-select-option :value="v.id" v-for="(v,i) in selectArr" :key="i">
             {{ v.name }}
           </a-select-option>
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="所属供应商" prop="d">
-        <a-select v-model="form.d" placeholder="请选择">
-          <a-select-option :value="v.v" :label="v.n" v-for="(v,i) in selectArr" :key="i">
+        <a-select default-value='全部' @change="handleChange">
+          <a-select-option :value="v.id"  v-for="(v,i) in selectArr" :key="i">
             {{ v.name }}
           </a-select-option>
         </a-select>
       </a-form-model-item>
        <a-form-model-item class="item-btns">
         <a-button class="item-btn" type="primary" @click="quitList()">查询</a-button>
-        <a-button class="item-btn" @click="_toReset()">重置</a-button>
+        <!-- <a-button class="item-btn" @click="_toReset()">重置</a-button> -->
       </a-form-model-item>
 
     </a-form-model>
@@ -40,13 +40,13 @@
                 :columns="tableColumns"
                 :row-key="(r,i) => i"
                 :data-source="tableData"
-                :scroll="{ x: 1300 ,y:scrollY}"
+                :scroll="{ x: 1300 ,y: scrollY}"
                 :pagination="false"
                 :loading="tableLoading"
                 style="margin-top: 8px;">
               <span slot="action" slot-scope="scope">
-                <a-button type="link"  @click="edit(scope)">查看</a-button>
-                <a-button type="link" @click="edit(scope)">编辑</a-button>
+                <a-button type="link"  @click="edit(scope,'1')">查看</a-button>
+                <a-button type="link" @click="edit(scope,'2')">编辑</a-button>
               </span>
             </a-table>
             <a-pagination
@@ -77,17 +77,20 @@ export default {
   data() {
     return {
       scrollY:100,
+      selectArrstrain:[
+        {id: '', name: '全部'},
+        {id: '1', name: '上架'},
+        {id: '2', name: '下架'},
+      ],
       selectArr: [
-        {id: '一', name: '1'},
+        {id: '', name: '全部'},
         {id: '二', name: '2'},
         {id: '三', name: '3'},
       ],
-      form: {
-        a: null,
-        b: null,
-        c: null,
-        d: null,
-      },
+        sku: '',
+        status: '',
+        strain: '',
+        supplier: '',
       tableColumns: [
         {
           title: "商品名称",
@@ -97,8 +100,8 @@ export default {
         },
         {
           title: "SPU编码",
-          dataIndex: "itemName",
-          key:"itemName",
+          dataIndex: "",
+          key:"",
           width: 200,
         },
         {
@@ -195,7 +198,7 @@ export default {
   },
    created() {
     const timer1 = setTimeout(() => {
-      this.scrollY = document.body.clientHeight - 390 + 'px';
+      this.scrollY = document.body.clientHeight - 420 + 'px';
     }, 0);
     this.$once('hook:beforeDestroy', () => {
       clearTimeout(timer1);
@@ -205,14 +208,19 @@ export default {
     this.getList();
   },
   methods: {
-      edit(){
-          this.$router.push({ name: 'commodityEdit', params: { userId: 1 }})
-      },
-      //重置
-    _toReset() {
-      this.$refs.thisForm.resetFields();
-      this.getList();
+    handleChange(value){
+      this.status = value;
     },
+    handleChangesataus(value){
+      this.strain = value;
+    },
+    handleChangeing(value){
+      this.supplier = value;
+    },
+      edit(scope,typ){
+        console.log(scope.id);
+          this.$router.push({ name: 'commodityEdit', params: { userId: scope.id ,typ:typ}})
+      },
     //分页
     onShowSizeChange(current, pageSize) {
       this.current = current;
@@ -228,13 +236,14 @@ export default {
     getList() {
       this.tableLoading = true;
       let params = {
-        categoryId: this.form.sku,
-        // keyword: "",
-        // selling: 0,
-        // supplierId: 0
+        categoryId: this.supplier, //商品id
+        keyword: this.sku,
+        selling: this.strain,//上下架
+        supplierId: this.status,//供应商id
         pageNum: this.current,
         pageSize: this.pageSize,
       }
+      JSON.stringify(params)
       api.getProductListByPager(params).then(resp => {
         if (resp.code === 200) {
           this.tableData = resp.data.records;

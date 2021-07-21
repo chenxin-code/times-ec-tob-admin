@@ -185,7 +185,7 @@ export default {
   created() {
     this.initData(); //表
     if(this.id.id){
-        api. statusrelation({supplierId: this.id.id}).then(res => {
+        api. updateProduct({supplierId: this.id.id}).then(res => {
         })
       }
   },
