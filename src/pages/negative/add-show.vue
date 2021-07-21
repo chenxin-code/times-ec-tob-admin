@@ -6,19 +6,34 @@
     </div>
     <a-form-model :model="thisForm" layout="inline" :rules="rules" ref="thisForm" labelAlign="left">
       <div class="common-title">
-        <div class="common-title-content">xxxxx新增</div>
+        <div class="common-title-content">新增负数单</div>
       </div>
-      <a-form-model-item label="负数单号" prop="a">
-        <a-input v-model="thisForm.a" :disabled="isDisable" />
+      <a-form-model-item label="选择订单" prop="saleOrderNo">
+        <a-select
+            show-search
+            :value="thisForm.saleOrderNo"
+            placeholder="搜索订单编号"
+            style="width: 200px"
+            :default-active-first-option="false"
+            :show-arrow="false"
+            :filter-option="false"
+            :not-found-content="null"
+            @search="handleSearch"
+            @change="handleChange"
+            :disabled="isDisable">
+          <a-select-option v-for="item in orderNoList" :key="item.value">
+            {{ item.text }}
+          </a-select-option>
+        </a-select>
       </a-form-model-item>
-      <a-form-model-item label="选择订单" prop="a">
-        <a-input v-model="thisForm.a" :disabled="isDisable" />
+      <a-form-model-item label="负数单号" v-if="isDisable">
+
       </a-form-model-item>
-      <a-form-model-item label="创建人" prop="a">
-        <a-input v-model="thisForm.a" :disabled="isDisable" />
+      <a-form-model-item label="创建人" v-if="isDisable">
+
       </a-form-model-item>
-      <a-form-model-item label="创建时间" prop="a">
-        <a-input v-model="thisForm.a" :disabled="isDisable" />
+      <a-form-model-item label="创建时间" v-if="isDisable">
+
       </a-form-model-item>
       <div class="common-title">
         <div class="common-title-content">选择商品</div>
@@ -92,13 +107,13 @@
 export default {
   data() {
     return {
+      orderNoList: [],
       thisForm: {
         a: null,
-        b: null,
       },
       rules: {
-        a: [
-          { required: true, message: '请输入内容', trigger: 'blur' },
+        saleOrderNo: [
+          { required: true, message: '请选择订单', trigger: 'blur' },
         ],
       },
       btnloading: false,
@@ -237,6 +252,16 @@ export default {
   computed: {
     isDisable() {
       return this.$route.path === '/negative/show'
+    },
+  },
+  methods: {
+    handleSearch(value) {
+      fetch(value, data => (this.orderNoList = data));
+    },
+    handleChange(value) {
+      console.log(value);
+      this.thisForm.saleOrderNo = value;
+      fetch(value, data => (this.orderNoList = data));
     },
   },
 }
