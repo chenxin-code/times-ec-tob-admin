@@ -19,14 +19,5 @@ export default {
   /** 运营用户管理接口 **/
   ADMINOPERATOR: {
     loginByOriginalToken: '/times-ec-tob-mall/admin/auth/loginByOriginalToken', //与一体化换token
-    // GETUSERLIST: timesServicemall + "/admin/operator/getUserList", //分页查询用户列表
-    // getUnifyEmployeeInfoByPhone:
-    // 	timesServicemall + "/admin/operator/getUnifyEmployeeInfoByPhone", //根据手机号查一体化员工信息
-    // GETENABLEUSERLIST:
-    // 	timesServicemall + "/admin/operator/getEnableUserList", //查询启用中用户列表
-    // getRoleList: timesServicemall + "/admin/role/getRoleList", //账号-分页查询角色列表
-    // updateUserInfo: timesServicemall + "/admin/operator/updateUserInfo", //更改用户信息
-    // updateUserState: timesServicemall + "/admin/operator/updateUserState", //更改用户状态
-    // syncUserInfo: timesServicemall + "/admin/operator/syncUserInfo", //同步一体化用户数据
   },
 }
