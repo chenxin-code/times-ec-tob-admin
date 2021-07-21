@@ -1,12 +1,12 @@
 <template>
   <div style="height: 100%;display: flex;">
     <div style="width: 20%;overflow: auto;">
-      <companyTree @onSelect="onSelect" />
+      <companyTree @onSelect="onSelect"/>
     </div>
     <div style="width: 80%;">
-      <a-form-model :model="form" layout="inline" ref="thisForm" labelAlign='left'>
+      <a-form-model :model="thisForm" layout="inline" ref="thisForm" labelAlign='left'>
         <a-form-model-item label="姓名" prop="accountName">
-          <a-input v-model="form.accountName" placeholder="请输入姓名" :maxLength='30'/>
+          <a-input v-model="thisForm.accountName" placeholder="请输入姓名" :maxLength='30'/>
         </a-form-model-item>
         <a-form-model-item class="item-btns">
           <a-button class="item-btn" type="primary" @click="getList()">查询</a-button>
@@ -30,8 +30,9 @@
                 </div>
               </template>
               <span slot="action" slot-scope="scope">
-                <a-button type="link" @click="$router.push({path: '/account/edit', query: {id: scope.id,loginName: scope.loginName}})">编辑</a-button>
-                <a-button type="link" @click="renewPwd(scope.loginName)">修改密码</a-button>
+                <a-button type="link"
+                          @click="$router.push({path: '/account/edit', query: {id: scope.id,loginName: scope.loginName}})">编辑</a-button>
+                <a-button type="link" @click="updatePwd(scope.loginName)">修改密码</a-button>
                 <a-button type="link" @click="goDel(scope.loginName)">删除</a-button>
               </span>
             </a-table>
@@ -46,7 +47,7 @@
                 :pageSizeOptions="['1','10','20','50','100']"
                 @change="onShowSizeChange"
                 @showSizeChange="onShowSizeChange"
-                style="margin-top: 30px;width: 100%;text-align: right;" />
+                style="margin-top: 30px;width: 100%;text-align: right;"/>
           </a-col>
         </a-row>
       </div>
@@ -54,24 +55,46 @@
     <a-modal :centered="true" v-model="showPwdModal" title="修改密码" :maskClosable="false" on-ok="handlePhoneOk()">
       <template slot="footer">
         <a-button :disabled="modalLoading" key="back" @click="showPwdModal = false">取消</a-button>
-        <a-button :disabled="modalLoading" key="submit" type="primary" :loading="modalLoading" @click="handlePhoneOk()">确定</a-button>
+        <a-button :disabled="modalLoading" key="submit" type="primary" :loading="modalLoading" @click="handlePhoneOk()">
+          确定
+        </a-button>
       </template>
       <a-form layout="inline">
         <a-form-item>
           <div style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
-            <div style="width: 80px;margin-right: 10px;display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
+            <div
+                style="width: 150px;margin-right: 10px;display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
               <span>登录名</span>
             </div>
-            <span style="width: 267px;color: #a1a1a1;">{{loginName}}</span>
+            <span style="width: 350px;color: #a1a1a1;">{{ loginName }}</span>
           </div>
           <div style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
-            <div style="width: 80px;margin-right: 10px;display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
+            <div
+                style="width: 150px;margin-right: 10px;display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
               <span style="color: red;">*</span>
               <span>密码</span>
             </div>
-            <a-input v-model="newPwd" style="width: 267px;" :style="pwdNull ? bangdouAddNullStyle1 : ''" placeholder="请输入密码"/>
+            <a-input-password v-model="newPwd" style="width: 350px;" :class="{ redBorder: pwdNull }"
+                              placeholder="请输入密码"/>
           </div>
-          <div v-if="pwdNull" style="color: red;border-color: red;padding: 5px 0 5px 77px;font-size: 14px;line-height: 14px;">请输入密码</div>
+          <div v-if="pwdNull"
+               style="color: red;border-color: red;padding: 5px 0 5px 77px;font-size: 14px;line-height: 14px;">请输入密码
+          </div>
+          <div style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
+            <div
+                style="width: 150px;margin-right: 10px;display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
+              <span style="color: red;">*</span>
+              <span>确认密码</span>
+            </div>
+            <a-input-password v-model="newPwd2" style="width: 350px;" :class="{ redBorder: pwd2Null }"
+                              placeholder="请输入确认密码"/>
+          </div>
+          <div v-if="pwd2Null"
+               style="color: red;border-color: red;padding: 5px 0 5px 77px;font-size: 14px;line-height: 14px;">请输入确认密码
+          </div>
+          <div v-if="pwdDiff"
+               style="color: red;border-color: red;padding: 5px 0 5px 77px;font-size: 14px;line-height: 14px;">两次输入密码不一致
+          </div>
         </a-form-item>
       </a-form>
     </a-modal>
@@ -81,6 +104,7 @@
 <script>
 import api from "./../../api";
 import companyTree from './../../components/companyTree';
+
 export default {
   components: {companyTree},
   data() {
@@ -89,13 +113,12 @@ export default {
       showPwdModal: false,
       modalLoading: false,
       pwdNull: false,
+      pwd2Null: false,
+      pwdDiff: false,
       newPwd: null,
-      bangdouAddNullStyle1: {
-        color: 'red',
-        borderColor: 'red'
-      },
+      newPwd2: null,
       enterpriseId: null,
-      form: {
+      thisForm: {
         accountName: null
       },
       tableColumns: [
@@ -127,7 +150,7 @@ export default {
         {
           title: "用户状态",
           key: 'accountState',
-          scopedSlots: { customRender: 'accountState' },
+          scopedSlots: {customRender: 'accountState'},
           width: 200,
         },
         {
@@ -162,18 +185,18 @@ export default {
     this.getList();
   },
   methods: {
-    onSelect(id, enterpriseName){
+    onSelect(id, enterpriseName) {
       console.log(id, enterpriseName);
       this.enterpriseId = id;
       this.current = 1;
       this.pageSize = 10;
       this.getList();
     },
-    renewPwd(loginName){
+    updatePwd(loginName) {
       this.loginName = loginName;
       this.showPwdModal = true;
     },
-    goDel(loginName){
+    goDel(loginName) {
       this.$confirm({
         title: `删除账号`,
         content: `您确定要删除该账号吗？`,
@@ -184,6 +207,7 @@ export default {
           this.tableLoading = true;
           api.delAccount({loginName: loginName}).then(resp => {
             if (resp.code === 200) {
+              this.$message.success('删除成功');
               this.getList();
             }
           }).finally(() => {
@@ -200,7 +224,7 @@ export default {
     getList() {
       this.tableLoading = true;
       api.queryAccountList({
-        ...this.form,
+        ...this.thisForm,
         enterpriseId: this.enterpriseId,
         pageNum: this.current,
         pageSize: this.pageSize,
@@ -216,7 +240,16 @@ export default {
     handlePhoneOk() {
       if (!this.newPwd) {
         this.pwdNull = true;
-        return
+      }
+      if (!this.newPwd2) {
+        this.pwd2Null = true;
+      }
+      if (this.pwdNull || this.pwd2Null) {
+        return;
+      }
+      if (this.newPwd !== this.newPwd2) {
+        this.pwdDiff = true;
+        return;
       }
       this.modalLoading = true;
       api.updatePassword({
@@ -224,6 +257,7 @@ export default {
         newPwd: this.newPwd,
       }).then(resp => {
         if (resp.code === 200) {
+          this.$message.success('操作成功');
           this.showPwdModal = false;
         }
       }).finally(() => {
@@ -239,7 +273,15 @@ export default {
         }
       },
       immediate: true,
-    }
+    },
+    newPwd2: {
+      handler(newVal) {
+        if (newVal) {
+          this.pwd2Null = false;
+        }
+      },
+      immediate: true,
+    },
   }
 }
 </script>
@@ -274,6 +316,10 @@ export default {
 
   /deep/ .item-btns .item-btn {
     margin-right: 20px;
+  }
+
+  /deep/ .redBorder .ant-input {
+    border-color: red;
   }
 }
 </style>

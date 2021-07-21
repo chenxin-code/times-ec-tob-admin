@@ -4,7 +4,7 @@
       <a-button class="item-btn" :loading='btnloading' type="primary" @click="addEdit()">保存</a-button>
       <a-button class="item-btn" @click="$router.back()">返回</a-button>
     </div>
-    <a-form-model :model="form" layout="inline" :rules="rules" ref="thisForm" labelAlign='left'>
+    <a-form-model :model="thisForm" layout="inline" :rules="rules" ref="thisForm" labelAlign="left">
       <div class="common-title">
         <div class="common-title-content">企业基本信息</div>
       </div>
@@ -18,49 +18,50 @@
         <p v-show="showRedBorder" class="companySelectTip">请选择父级企业</p>
       </a-form-model-item>
       <a-form-model-item label="企业名称" prop="enterpriseName">
-        <a-input v-model="form.enterpriseName"/>
+        <a-input v-model="thisForm.enterpriseName"/>
       </a-form-model-item>
       <a-form-model-item label="企业编码" prop="enterpriseCode">
-        <a-input v-model="form.enterpriseCode"/>
+        <a-input v-model="thisForm.enterpriseCode"/>
       </a-form-model-item>
       <a-form-model-item label="企业人数" prop="employeeNum">
-        <a-input v-model="form.employeeNum"/>
+        <a-input v-model="thisForm.employeeNum"/>
       </a-form-model-item>
       <div class="common-title">
         <div class="common-title-content">企业信息</div>
       </div>
       <a-form-model-item label="经营范围" prop="businessScope">
-        <a-input v-model="form.businessScope"/>
+        <a-input v-model="thisForm.businessScope"/>
       </a-form-model-item>
       <a-form-model-item label="信用等级" prop="creditLevel">
-        <a-input v-model="form.creditLevel"/>
+        <a-input v-model="thisForm.creditLevel"/>
       </a-form-model-item>
-      <a-form-model-item label="所在地区" prop="a">
-        <a-input v-model="form.a"/>
+      <a-form-model-item label="所在地区">
+        <a-cascader :options="options" :default-value="defaultValue" placeholder="选择省市区" @change="onChange"
+                    style="width: 500px;" v-if="showCascader"/>
       </a-form-model-item>
       <a-form-model-item label="通讯地址" prop="mailAddress">
-        <a-input v-model="form.mailAddress"/>
+        <a-textarea v-model="thisForm.mailAddress"/>
       </a-form-model-item>
       <a-form-model-item label="公司地址" prop="detailAddress">
-        <a-input v-model="form.detailAddress"/>
+        <a-textarea v-model="thisForm.detailAddress"/>
       </a-form-model-item>
       <a-form-model-item label="备注" prop="remark">
-        <a-input v-model="form.remark"/>
+        <a-textarea v-model="thisForm.remark"/>
       </a-form-model-item>
       <div class="common-title">
         <div class="common-title-content">联系方式</div>
       </div>
       <a-form-model-item label="企业电话" prop="enterprisePhone">
-        <a-input v-model="form.enterprisePhone"/>
+        <a-input v-model="thisForm.enterprisePhone"/>
       </a-form-model-item>
       <a-form-model-item label="电子邮箱" prop="email">
-        <a-input v-model="form.email"/>
+        <a-input v-model="thisForm.email"/>
       </a-form-model-item>
       <a-form-model-item label="联系人" prop="concatPerson">
-        <a-input v-model="form.concatPerson"/>
+        <a-input v-model="thisForm.concatPerson"/>
       </a-form-model-item>
       <a-form-model-item label="联系电话" prop="concatPhone">
-        <a-input v-model="form.concatPhone"/>
+        <a-input v-model="thisForm.concatPhone"/>
       </a-form-model-item>
     </a-form-model>
     <a-modal title="选择父级企业" :visible="visible" @ok="handleOk" @cancel="visible = false" width="500px">
@@ -84,7 +85,7 @@ export default {
       parentName: null,
       visible: false,
       isTop: true,
-      form: {
+      thisForm: {
         enterpriseName: null,
         enterpriseCode: null,
         employeeNum: null,
@@ -97,6 +98,9 @@ export default {
         email: null,
         concatPerson: null,
         concatPhone: null,
+        provinceCode: null,//省
+        cityCode: null,//市
+        districtCode: null,//区
       },
       rules: {
         enterpriseName: [
@@ -113,6 +117,40 @@ export default {
         ],
       },
       btnloading: false,
+      options: [
+        {
+          value: '12321',
+          label: '浙江',
+          children: [
+            {
+              value: '5435',
+              label: '杭州',
+              children: [
+                {
+                  value: '76575',
+                  label: '西湖',
+                },
+                {
+                  value: '4353',
+                  label: '下沙',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          value: '765867',
+          label: '江苏',
+          children: [
+            {
+              value: '5435',
+              label: '南京',
+            },
+          ],
+        },
+      ],
+      defaultValue: [],
+      showCascader: false,
     }
   },
   mounted() {
@@ -124,24 +162,37 @@ export default {
           this.isTop = resp.data.parentId === '-1';
           this.parentId = resp.data.parentId;
           this.parentName = resp.data.parentName;
-          this.form.enterpriseName = resp.data.enterpriseName;
-          this.form.enterpriseCode = resp.data.enterpriseCode;
-          this.form.employeeNum = resp.data.employeeNum;
-          this.form.businessScope = resp.data.businessScope;
-          this.form.creditLevel = resp.data.creditLevel;
-          this.form.mailAddress = resp.data.mailAddress;
-          this.form.detailAddress = resp.data.detailAddress;
-          this.form.remark = resp.data.remark;
-          this.form.enterprisePhone = resp.data.enterprisePhone;
-          this.form.email = resp.data.email;
-          this.form.concatPerson = resp.data.concatPerson;
-          this.form.concatPhone = resp.data.concatPhone;
+          this.thisForm.enterpriseName = resp.data.enterpriseName;
+          this.thisForm.enterpriseCode = resp.data.enterpriseCode;
+          this.thisForm.employeeNum = resp.data.employeeNum;
+          this.thisForm.businessScope = resp.data.businessScope;
+          this.thisForm.creditLevel = resp.data.creditLevel;
+          this.thisForm.mailAddress = resp.data.mailAddress;
+          this.thisForm.detailAddress = resp.data.detailAddress;
+          this.thisForm.remark = resp.data.remark;
+          this.thisForm.enterprisePhone = resp.data.enterprisePhone;
+          this.thisForm.email = resp.data.email;
+          this.thisForm.concatPerson = resp.data.concatPerson;
+          this.thisForm.concatPhone = resp.data.concatPhone;
+          this.thisForm.provinceCode = resp.data.provinceCode;//省
+          this.thisForm.cityCode = resp.data.cityCode;//市
+          this.thisForm.districtCode = resp.data.districtCode;//区
+          this.defaultValue = [resp.data.provinceCode, resp.data.cityCode, resp.data.districtCode];
+          this.showCascader = true;//取到defaultValue再加载组件
         }
       });
+    } else if (this.$route.path === '/company/add') {
+      this.showCascader = true;
     }
   },
   computed: {},
   methods: {
+    onChange(value, selectedOptions) {
+      console.log(value, selectedOptions);
+      this.thisForm.provinceCode = value[0];//省
+      this.thisForm.cityCode = value[1];//市
+      this.thisForm.districtCode = value[2];//区
+    },
     onSelect(id, enterpriseName) {
       console.log('选中了', id, enterpriseName);
       this.selectParentId = id;
@@ -165,12 +216,12 @@ export default {
         this.$refs.thisForm.validate(valid => {
           if (valid && !this.showRedBorder) {
             if (this.isTop) {
-              this.form = Object.assign(this.form, {parentId: '-1', parentName: null});
+              this.thisForm = Object.assign(this.thisForm, {parentId: '-1', parentName: null});
             } else {
-              this.form = Object.assign(this.form, {parentId: this.parentId, parentName: this.parentName});
+              this.thisForm = Object.assign(this.thisForm, {parentId: this.parentId, parentName: this.parentName});
             }
             this.btnloading = true;
-            api.addProject(this.form).then(resp => {
+            api.addProject(this.thisForm).then(resp => {
               if (resp.code === 200) {
                 this.$message.success('操作成功');
                 this.$router.back();
@@ -186,14 +237,14 @@ export default {
         }
         this.$refs.thisForm.validate(valid => {
           if (valid && !this.showRedBorder) {
-            this.form = Object.assign(this.form, {id: this.$route.query.id, updateType: 0});
+            this.thisForm = Object.assign(this.thisForm, {id: this.$route.query.id, updateType: 0});
             if (this.isTop) {
-              this.form = Object.assign(this.form, {parentId: '-1', parentName: null});
+              this.thisForm = Object.assign(this.thisForm, {parentId: '-1', parentName: null});
             } else {
-              this.form = Object.assign(this.form, {parentId: this.parentId, parentName: this.parentName});
+              this.thisForm = Object.assign(this.thisForm, {parentId: this.parentId, parentName: this.parentName});
             }
             this.btnloading = true;
-            api.updateProject(this.form).then(resp => {
+            api.updateProject(this.thisForm).then(resp => {
               if (resp.code === 200) {
                 this.$message.success('操作成功');
                 this.$router.back();
@@ -214,7 +265,7 @@ export default {
   padding: 20px;
 
   .ant-form-item {
-    width: 600px;
+    width: 1000px;
     margin: 10px 0 10px 50px;
   }
 
@@ -223,7 +274,7 @@ export default {
   }
 
   /deep/ .ant-form-item-control-wrapper {
-    min-width: 200px;
+    width: 500px;
   }
 
   /deep/ .ant-form-item-label {

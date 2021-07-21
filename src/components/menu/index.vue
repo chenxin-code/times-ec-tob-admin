@@ -143,7 +143,7 @@ export default {
 .menuslis {
   height: 90%;
   width: 110%;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 .menu-icon {
   display: inline-block;
