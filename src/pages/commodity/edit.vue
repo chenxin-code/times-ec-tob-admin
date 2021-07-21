@@ -108,20 +108,17 @@
         <a-form-item label="销售价">
            <div class="intpud" v-for="(item,k) in dataList" :key="k">
              <span style="minWidth: 45px;" >数量：</span> 
-             <a-input placeholder="请输入" class="intpudnum"  type="number" />
+             <a-input placeholder="请输入" :value="item.id" class="intpudnum"  type="number" />
              <span class="spshu">税前销售价:</span> 
-             <a-input placeholder="请输入" class="intpudnum" type="number" />
+             <a-input placeholder="请输入" :value="item.name" class="intpudnum" type="number" />
              <span class="spshu">税后销售价:</span> 
-             <a-input placeholder="请输入" class="intpudnum" type="number" />
+             <a-input placeholder="请输入" :value="item.cod" class="intpudnum" type="number" />
            </div>
-
-             <a-button-group class="butdb">
-                <a-button size='small'><a-icon type="minus" /></a-button>
-                <a-button type="primary" size='small'> <a-icon type="plus" /></a-button>
-              </a-button-group>
-           
+          <a-button-group class="butdb">
+            <a-button size='small' @click="dellis" :disabled='deldisabled'><a-icon type="minus" /></a-button>
+            <a-button type="primary" @click="addlis" size='small'><a-icon type="plus"/></a-button>
+          </a-button-group>
         </a-form-item>
-
       </a-form>
     </div>
     <div class="content-footer">
@@ -153,7 +150,8 @@ export default {
       dataSource: [],
       dataLiading: false,
       submitLoading: false,
-      dataList:[{}],
+      deldisabled:false,
+      dataList:[{id:1}],
       //富文本
       pccontent: '',
       // editorOption: {
@@ -203,6 +201,19 @@ export default {
     next();
   },
   methods: {
+    addlis(){
+      this.deldisabled = false;
+      console.log(this.dataList.slice(-1)[0])
+      this.dataList.push({});
+      console.log(this.dataList);
+    },
+    dellis(){
+      if(this.dataList.length <=1){
+        this.deldisabled = true;
+        return;
+      }
+        this.dataList.shift();
+    },
     //富文本方法
     onEditorChange({ editor, html, text }) {
             this.content = html;
@@ -319,9 +330,10 @@ export default {
   position: relative;
 }
 .butdb{
-  position: absolute;
-  left: 550px;
-  top: 0px;
+  float: right;
+  // position: absolute;
+  // left: 550px;
+  // top: 0px;
 }
 .editorted{
   margin: 20px auto;
