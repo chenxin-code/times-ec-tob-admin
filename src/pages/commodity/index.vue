@@ -11,10 +11,7 @@
           </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item class="item-btns">
-        <a-button class="item-btn" type="primary" @click="quitList()">查询</a-button>
-        <a-button class="item-btn" @click="_toReset()">重置</a-button>
-      </a-form-model-item>
+     
        <a-form-model-item label="商品品类" prop="d">
         <a-select v-model="form.d" placeholder="请选择">
           <a-select-option :value="v.v" :label="v.n" v-for="(v,i) in selectArr" :key="i">
@@ -28,6 +25,10 @@
             {{ v.name }}
           </a-select-option>
         </a-select>
+      </a-form-model-item>
+       <a-form-model-item class="item-btns">
+        <a-button class="item-btn" type="primary" @click="quitList()">查询</a-button>
+        <a-button class="item-btn" @click="_toReset()">重置</a-button>
       </a-form-model-item>
      
     </a-form-model>
@@ -90,8 +91,8 @@ export default {
       tableColumns: [
         {
           title: "商品名称",
-          dataIndex: "brandName",
-          key:"brandName",
+          dataIndex: "itemName",
+          key:"itemName",
           width: 200,
         },
         {
@@ -236,6 +237,7 @@ export default {
       }
       api.getProductListByPager(params).then(resp => {
         if (resp.code === 200) {
+          console.log(this.tableData.sellingPriceList);
           this.tableData = resp.data.records;
           this.total = resp.data.total * 1;
         }
@@ -252,7 +254,7 @@ export default {
   padding: 20px;
 
   > div {
-    width: 400px;
+    //width: 400px;
   }
 
   /deep/ .ant-form-item-control-wrapper {
