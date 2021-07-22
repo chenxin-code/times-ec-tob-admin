@@ -41,7 +41,7 @@
             </a-form-model-item>
             
             <a-form-model-item label="下单场景">
-              <span class="info"></span>
+              <span class="info">{{dataList.orderSource}}</span>
             </a-form-model-item>
             <a-form-model-item label="创建时间">
               <span class="info">{{dataList.createTime}}</span>
