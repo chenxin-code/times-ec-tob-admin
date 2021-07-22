@@ -15,7 +15,7 @@
               :columns="tableColumns"
               :row-key="(r,i) => i"
               :data-source="tableData"
-              :scroll="{ x: 1000 }"
+              :scroll="{ x: 1000, y:scrollY}"
               :pagination="false"
               :loading="tableLoading"
               style="margin-top: 8px;">
@@ -80,6 +80,7 @@ export default {
       password: null,
       showTokenModal: false,
       parentId: null,
+      scrollY:100,
       tableColumns: [
         {
           title: "企业名称",
@@ -137,6 +138,7 @@ export default {
   },
   mounted() {
     this.getList();
+    setTimeout(() => this.scrollY = document.body.clientHeight - 320 + 'px', 0);
   },
   methods: {
     showToken(accountNumber,password){

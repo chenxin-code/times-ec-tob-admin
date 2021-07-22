@@ -198,7 +198,7 @@ export default {
   mounted() {
     this.getList();
     const timer1 = setTimeout(() => {
-      this.scrollY = document.body.clientHeight - 420 + 'px';
+      this.scrollY = document.body.clientHeight - 400 + 'px';
     }, 0);
     this.$once('hook:beforeDestroy', () => {
       clearTimeout(timer1);
@@ -226,10 +226,25 @@ export default {
           })
     },
     updates(id){//单独上下架
-    console.log(id);
-      api.updateSellingById(id).then((res)=>{
-            this.getList();
-          })
+     this.$confirm({
+        title: `上下架状态`,
+        content: `您确定要执行？`,
+        centered: true,
+        okText: '确定',
+        cancelText: '取消',
+        onOk: () => {
+          this.tableLoading = true;
+           api.updateSellingById(id).then((res)=>{
+             if (resp.code === 200) {
+               this.$message.success('成功');
+              this.getList();
+            }
+          }).finally(() => {
+            this.tableLoading = false;
+          });
+        }
+      });
+     
     },
     onShowSizeChange(current, pageSize) {//分页
       this.current = current;
@@ -271,7 +286,7 @@ export default {
   padding: 20px;
 
   > div {
-    width: 400px;
+    // width: 400px;
   }
 
   /deep/ .ant-form-item-control-wrapper {
@@ -288,7 +303,7 @@ export default {
   }
 
   /deep/ .item-btns {
-    width: 250px !important;
+    width: 300px !important;
 
     .ant-form-item-control-wrapper {
       width: 400px !important;
