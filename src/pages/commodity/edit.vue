@@ -5,6 +5,7 @@
       <span class="fallback" @click="FALLBACK" style="cursor:pointer">返回</span>
     </div>
     <div class="content-main" style="height: calc(100% - 91px);margin-top:20px;">
+      <demo/>
       <a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" style="height: 100%;overflow: auto;" autoComplete="off">
         <a-form-item label="SKU名称">
           <a-input
@@ -149,6 +150,7 @@ import moment from "moment";
 import { mapActions } from "vuex";
 import { debounce } from "@/utils/util";
 import { quillEditor } from 'vue-quill-editor'
+import demo from './../../components/demo';
 export default {
   name: "supplierEdit",
   props: {
@@ -157,7 +159,7 @@ export default {
       default: () => ({})
     }
   },
-  components: { quillEditor},
+  components: { quillEditor,demo},
   data() {
     return {
       form: this.$form.createForm(this, { name: "form" }),
