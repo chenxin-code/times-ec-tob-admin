@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100%;">
-    <a-form-model :model="form" layout="inline" ref="thisForm" labelAlign='left'>
+    <a-form-model layout="inline" ref="thisForm" labelAlign='left'>
       <a-form-model-item label="SKU名称/SKU编码" prop="a">
         <a-input v-model="sku" placeholder="请输入SKU名称或SKU编码" :maxLength='30'/>
       </a-form-model-item>
@@ -178,7 +178,7 @@ export default {
         {
           title: "商品状态",
           width: 200,
-          dataIndex: "",
+          dataIndex: "selling",
         },
         {
           title: "操作",
@@ -197,6 +197,9 @@ export default {
     }
   },
    created() {
+     api.getSupplierListByPager().then((res)=>{
+       console.log(res);
+     })
     const timer1 = setTimeout(() => {
       this.scrollY = document.body.clientHeight - 420 + 'px';
     }, 0);
@@ -217,10 +220,10 @@ export default {
     handleChangeing(value){
       this.supplier = value;
     },
-      edit(scope,typ){
-        console.log(scope.id);
-          this.$router.push({ name: 'commodityEdit', params: { userId: scope.id ,typ:typ}})
-      },
+    edit(scope,typ){
+      console.log(typ);
+        this.$router.push({ name: 'commodityEdit', params: { id: scope.id ,typ:typ}})
+    },
     //分页
     onShowSizeChange(current, pageSize) {
       this.current = current;
