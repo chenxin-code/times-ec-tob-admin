@@ -81,7 +81,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 - 接口地址 swigger
 - 原型地址：https://uw4rw2.axshare.com
-
+- 接口地址：https://mall-uat-api-linli.timesgroup.cn:9525/times-ec-tob-mall/swagger-ui.html
 ---
 
 ###  订单列表 & 售后列表
