@@ -110,7 +110,7 @@
         :columns="tableColumns"
         :row-key="(r,i) => i"
         :data-source="dataList.itemList"
-        :scroll="{ x: 1600, y: scrollY }"
+        :scroll="{ x: 1600 }"
         :pagination="false"
         style="margin-top:8px;"
       >

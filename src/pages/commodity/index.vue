@@ -13,11 +13,19 @@
       </a-form-model-item>
 
        <a-form-model-item label="商品品类" prop="d">
-        <a-select default-value='全部' @change="handleChangeing">
-          <a-select-option :value="v.id" v-for="(v,i) in selectArr" :key="i">
-            {{ v.name }}
-          </a-select-option>
-        </a-select>
+       <a-tree-select
+    v-model="value"
+    style="width: 100%"
+    :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+    :tree-data="treeData"
+    :replace-fields="{children:'children', key:'key', value: 'parentId', title: 'name'}"
+    placeholder="Please select"
+    tree-default-expand-all
+  >
+    <span v-if="key === '0-0-1'" slot="title" slot-scope="{ key, value }" style="color: #08c">
+      Child Node1 {{ value }}
+    </span>
+  </a-tree-select>
       </a-form-model-item>
       <a-form-model-item label="所属供应商" prop="d">
         <a-select default-value='全部' @change="handleChange">
@@ -76,6 +84,14 @@ export default {
   components: {},
   data() {
     return {
+      tableData: [],
+      tableLoading: false,
+      total: 0,
+      pageSize: 10,
+      current: 1,
+      treeData: [],
+      value: undefined,
+
       scrollY:100,
       selectArrstrain:[
         {id: '', name: '全部'},
@@ -84,8 +100,9 @@ export default {
       ],
       selectArr: [
         {id: '', name: '全部'},
-        {id: '二', name: '2'},
-        {id: '三', name: '3'},
+        {id: '二', name: '服装'},
+        {id: '三', name: '食品'},
+        {id: '三', name: '旅游'},
       ],
       selectlist:[],
         sku: '',
@@ -189,29 +206,25 @@ export default {
           scopedSlots: {customRender: "action"},
         },
       ],
-      tableData: [],
-      tableLoading: false,
-      total: 0,
-      pageSize: 10,
-      current: 1,
-      beSelected: [],
+      
     }
   },
    created() {
-     api.getSupplierListByPager({"pageNum":1,"pageSize":10}).then((res)=>{
-       this.selectlist = res.data.records;
-     })
-    const timer1 = setTimeout(() => {
-      this.scrollY = document.body.clientHeight - 420 + 'px';
-    }, 0);
-    this.$once('hook:beforeDestroy', () => {
-      clearTimeout(timer1);
-    });
-  },
-   mounted() {
-    this.getList();
+     this.getList();//列表
+     this.supplierlis();//供应商
+     api.getCategoryTree().then(resp => {
+        this.treeData = resp.data;
+        // replaceFields
+    })
+    setTimeout(() => this.scrollY = document.body.clientHeight - 420 + 'px', 0);
   },
   methods: {
+    supplierlis(value){
+        api.getSupplierListByPager({keyword:value??'',"pageNum":1,"pageSize":100000}).then((res)=>{
+          this.selectlist = res.data.records;
+          this.selectlist.unshift({id:'',supplierName:'全部'})
+        })
+    },
     handleChange(value){
       this.status = value;
     },

@@ -2,26 +2,27 @@
   <div style="height: 100%;">
     <a-form-model :model="thisForm" layout="inline" ref="thisForm" labelAlign="left">
       <a-form-model-item label="SKU名称/SKU编码" prop="a">
-        <a-input v-model="thisForm.a" placeholder="请输入SKU名称或SKU编码" :maxLength='30'/>
+        <a-input v-model="sku" placeholder="请输入SKU名称或SKU编码" :maxLength='30'/>
       </a-form-model-item>
-      <a-form-model-item label="商品状态" prop="b">
-        <a-select v-model="thisForm.b" placeholder="请选择">
-          <a-select-option :value="v.v" :label="v.n" v-for="(v,i) in selectArr" :key="i">
-            {{ v.n }}
-          </a-select-option>
+      <a-form-model-item label="状态" prop="b">
+        <a-select default-value="全部" @change="handleChangesataus">
+            <a-select-option :value="v.id" v-for="(v,i) in selectArrstrain" :key="i">
+              {{v.name}}
+            </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="商品品类" prop="c">
-        <a-select v-model="thisForm.c" placeholder="请选择">
-          <a-select-option :value="v.v" :label="v.n" v-for="(v,i) in selectArr" :key="i">
-            {{ v.n }}
+
+       <a-form-model-item label="商品品类" prop="d">
+        <a-select default-value='全部' @change="handleChangeing">
+          <a-select-option :value="v.id" v-for="(v,i) in selectArr" :key="i">
+            {{ v.name }}
           </a-select-option>
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="所属供应商" prop="d">
-        <a-select v-model="thisForm.d" placeholder="请选择">
-          <a-select-option :value="v.v" :label="v.n" v-for="(v,i) in selectArr" :key="i">
-            {{ v.n }}
+        <a-select default-value='全部' @change="handleChange">
+          <a-select-option :value="item.id"  v-for="item in selectlist" :key="item.id">
+            {{item.supplierName}}
           </a-select-option>
         </a-select>
       </a-form-model-item>
@@ -40,11 +41,11 @@
                 :columns="tableColumns"
                 :row-key="(r,i) => i"
                 :data-source="tableData"
-                :scroll="{ x: 1000 }"
+                :scroll="{ x: 1000 ,y: scrollY}"
                 :pagination="false"
                 :loading="tableLoading"
                 style="margin-top: 8px;">
-              <span slot="action" slot-scope="text, record">
+              <span slot="action" >
                 <a-button type="link">查看详情</a-button>
                 <a-button type="link">上架</a-button>
                 <a-button type="link">下架</a-button>
@@ -76,72 +77,82 @@ export default {
   components: {},
   data() {
     return {
-      selectArr: [
-        {n: '一', v: '1'},
-        {n: '二', v: '2'},
-        {n: '三', v: '3'},
+      scrollY:100,
+      selectArrstrain:[
+        {id: '', name: '全部'},
+        {id: '1', name: '上架'},
+        {id: '2', name: '下架'},
       ],
-      thisForm: {
-        a: null,
-        b: null,
-        c: null,
-        d: null,
-      },
+      selectArr: [
+        {id: '', name: '全部'},
+        {id: '二', name: '2'},
+        {id: '三', name: '3'},
+      ],
+      selectlist:[],
+        sku: '',
+        status: '',
+        strain: '',
+        supplier: '',
       tableColumns: [
         {
           title: "商品名称",
-          dataIndex: "a",
+          dataIndex: "itemName",
+          key:"itemName",
           width: 200,
         },
         {
           title: "SPU编码",
-          dataIndex: "b",
+          dataIndex: "",
+          key:"",
           width: 200,
         },
         {
           title: "SKU名称",
-          dataIndex: "c",
+          dataIndex: "skuName",
+          key:"skuName",
           width: 200,
         },
         {
           title: "SKU编码",
-          dataIndex: "d",
+          dataIndex: "skuCode",
+          key:"skuCode",
           width: 200,
         },
         {
           title: "商品品类",
-          dataIndex: "e",
+          dataIndex: "categoryName",
+          key:"categoryName",
           width: 200,
         },
         {
           title: "供应商",
           width: 200,
-          dataIndex: "f",
+          dataIndex: "supplierName",
+          key:"supplierName",
         },
-        {
-          title: "供应商",
-          width: 200,
-          dataIndex: "g",
-        },
-        {
+         {
           title: "库存",
           width: 200,
-          dataIndex: "h",
+          dataIndex: "stock",
+          key:"stock",
         },
-        {
+       {
           title: "成本价（数量=元）",
           width: 200,
-          dataIndex: "i",
+          key:"costPrice",
+          dataIndex: "costPrice",
         },
-        {
+       {
           title: "税前销售价（数量=元）",
           width: 200,
-          dataIndex: "j",
+          key:"beforeTaxSellingPrice",
+          dataIndex: "beforeTaxSellingPrice",
         },
-        {
+       {
           title: "税后销售价（数量=元）",
           width: 200,
-          dataIndex: "k",
+          key:"afterTaxSellingPrice",
+          dataIndex: "afterTaxSellingPrice",
         },
         {
           title: "操作",
@@ -170,8 +181,20 @@ export default {
       },
     }
   },
+  created() {
+    api.getSupplierListByPager({"pageNum":1,"pageSize":10000}).then((res)=>{
+       this.selectlist = res.data.records;
+       this.selectlist.unshift({id:'',supplierName:'全部'})
+     })
+  },
   mounted() {
     this.getList();
+    const timer1 = setTimeout(() => {
+      this.scrollY = document.body.clientHeight - 420 + 'px';
+    }, 0);
+    this.$once('hook:beforeDestroy', () => {
+      clearTimeout(timer1);
+    });
   },
   methods: {
     piliang(type) {
@@ -182,13 +205,27 @@ export default {
       this.pageSize = pageSize;
       this.getList();
     },
+    handleChange(value){
+      this.status = value;
+    },
+    handleChangesataus(value){
+      this.strain = value;
+    },
+    handleChangeing(value){
+      this.supplier = value;
+    },
     getList() {
       this.tableLoading = true;
-      api.getProductListByPager({
-        ...this.thisForm,
+      let params = {
+        categoryId: this.supplier, //商品id
+        keyword: this.sku,
+        selling: this.strain,//上下架
+        supplierId: this.status,//供应商id
         pageNum: this.current,
         pageSize: this.pageSize,
-      }).then(resp => {
+      }
+      JSON.stringify(params)
+      api.getProductListByPager(params).then(resp => {
         if (resp.code === 200) {
           this.tableData = resp.data.records;
           this.total = Number(resp.data.total);
