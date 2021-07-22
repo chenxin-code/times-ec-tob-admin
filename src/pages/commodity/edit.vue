@@ -8,7 +8,7 @@
       <a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" style="height: 100%;overflow: auto;" autoComplete="off">
         <a-form-item label="SKU名称">
           <a-input
-            v-decorator="['name', { rules: [{ required: true, message: '供应商名称不能为空' },{whitespace: true,message: '供应商名称不能为空'}] } ]"
+            v-decorator="['skuName', { rules: [{ required: true, message: '供应商名称不能为空' },{whitespace: true,message: '供应商名称不能为空'}] } ]"
             placeholder="请输入供应商名称"
           />
         </a-form-item>
@@ -19,73 +19,89 @@
         </a-form-item>
         <a-form-item label="SKU编码">
           <a-input
-            v-decorator="['code', { rules: [{ required: true, message: '合同编号不能为空' },{whitespace: true,message: '合同编号不能为空'}] } ]"
+            v-decorator="['skuCode', { rules: [{ required: true, message: '合同编号不能为空' },{whitespace: true,message: '合同编号不能为空'}] } ]"
             placeholder="请输入合同编号"
           />
         </a-form-item>
         <a-form-item label="SPU名称">
           <a-input
-            v-decorator="['contact', { rules: [{ required: true, message: '联系人名称不能为空' },{whitespace: true,message: '联系人名称不能为空'}] } ]"
+            v-decorator="['itemName', { rules: [{ required: true, message: '联系人名称不能为空' },{whitespace: true,message: '联系人名称不能为空'}] } ]"
             placeholder="请输入联系人名称"
           />
         </a-form-item>
         <a-form-item label="SPU编码">
           <a-input
-            v-decorator="['contactPhone', { rules: [{ required: true, message: '联系电话不能为空' },{pattern :/^1[3456789]\d{9}$/,message: '联系电话格式不正确'}] } ]"
+            v-decorator="['itemCode', { rules: [{ required: true, message: '联系电话不能为空' }] } ]"
             placeholder="请输入联系电话"
           />
         </a-form-item>
         <a-form-item label="商城SKU自编码">
           <a-input
-            v-decorator="['contactPhone', { rules: [{ required: true, message: '联系电话不能为空' },{pattern :/^1[3456789]\d{9}$/,message: '联系电话格式不正确'}] } ]"
+            v-decorator="['contactPhone',]"
             placeholder="请输入联系电话"
           />
         </a-form-item>
         <a-form-item label="商品状态">
-          <a-input
+           <a-select v-decorator="['selling', { rules: [{ required: true, message: '联系电话不能为空' }] } ]"
+           default-value="全部" @change="handleChangesataus">
+            <a-select-option :value="v.id" v-for="(v,i) in selectArrstrain" :key="i">
+              {{v.name}}
+            </a-select-option>
+        </a-select>
+          <!-- <a-input
             v-decorator="['contactPhone', { rules: [{ required: true, message: '联系电话不能为空' },{pattern :/^1[3456789]\d{9}$/,message: '联系电话格式不正确'}] } ]"
             placeholder="请输入联系电话"
-          />
+          /> -->
         </a-form-item>
         <a-form-item label="商品品类">
           <a-input
-            v-decorator="['contactPhone', { rules: [{ required: true, message: '联系电话不能为空' },{pattern :/^1[3456789]\d{9}$/,message: '联系电话格式不正确'}] } ]"
+            v-decorator="['contactPhone', { rules: [{ required: true, message: '联系电话不能为空' }] } ]"
             placeholder="请输入联系电话"
           />
         </a-form-item>
         <a-form-item label="所属品牌">
           <a-input
-            v-decorator="['contactPhone', { rules: [{ required: true, message: '联系电话不能为空' },{pattern :/^1[3456789]\d{9}$/,message: '联系电话格式不正确'}] } ]"
+            v-decorator="['brandName', { rules: [{ required: true, message: '联系电话不能为空' }] } ]"
             placeholder="请输入联系电话"
           />
         </a-form-item>
          <a-form-item label="供应商">
-          <a-input
-            v-decorator="['contactPhone', { rules: [{ required: true, message: '联系电话不能为空' },{pattern :/^1[3456789]\d{9}$/,message: '联系电话格式不正确'}] } ]"
-            placeholder="请输入联系电话"
-          />
+            <a-select
+              show-search
+              option-filter-prop="children"
+              @change="handleChange"
+               :show-arrow="false"
+              :filter-option="false"
+              :not-found-content="null"
+              @search="handleSearch"
+              v-decorator="['supplierName',{ rules: [{ required: true, message: '请选择供应商' }] }]"
+              placeholder="请选择供应商" >
+                <a-select-option v-for="item in supplierList" :key="item.id" :value="`${item.id}`+`:${item.supplierName}`+`:${item.companyId}`">
+                  {{item.supplierName}}
+                </a-select-option>
+            </a-select>
         </a-form-item>
          <a-form-item label="税收分类编码">
           <a-input
-            v-decorator="['contactPhone', { rules: [{ required: true, message: '联系电话不能为空' },{pattern :/^1[3456789]\d{9}$/,message: '联系电话格式不正确'}] } ]"
+            v-decorator="['contactPhone', { rules: [{ required: true, message: '联系电话不能为空' }] } ]"
             placeholder="请输入联系电话"
           />
         </a-form-item>
          <a-form-item label="税率">
           <a-input
-            v-decorator="['contactPhone', { rules: [{ required: true, message: '联系电话不能为空' },{pattern :/^1[3456789]\d{9}$/,message: '联系电话格式不正确'}] } ]"
+            v-decorator="['taxRate', { rules: [{ required: true, message: '联系电话不能为空' }] } ]"
             placeholder="请输入联系电话"
           />
         </a-form-item>
          <a-form-item label="价格类型">
           <a-input
-            v-decorator="['contactPhone', { rules: [{ required: true, message: '联系电话不能为空' },{pattern :/^1[3456789]\d{9}$/,message: '联系电话格式不正确'}] } ]"
+            v-decorator="['contactPhone', { rules: [{ required: true, message: '联系电话不能为空' }] } ]"
             placeholder="请输入联系电话"
           />
         </a-form-item>
          <a-form-item label="库存">
           <a-input
-            v-decorator="['contactPhone', { rules: [{ required: true, message: '联系电话不能为空' },{pattern :/^1[3456789]\d{9}$/,message: '联系电话格式不正确'}] } ]"
+            v-decorator="['stock', { rules: [{ required: true, message: '联系电话不能为空' },{pattern :/\d/,message: '格式不正确'}] } ]"
             placeholder="请输入联系电话"
           />
         </a-form-item>
@@ -97,22 +113,22 @@
           <quill-editor ref="TextEditor" class="editorted" v-model="appcontent" :options="editorOption" ></quill-editor>
         </a-form-item>
          <a-form-item label="成本价">
-           <div class="intpud">
+           <div class="intpud" v-for="item in costPrice" :key="item.id">
             <span  style="width: 50px;" >数量:</span> 
-             <a-input placeholder="请输入" class="cbintpudnum" type="number" />
+             <a-input placeholder="请输入" :value="item.minNum" class="cbintpudnum" type="number" />
              <span  style="width: 70px;">成本价：</span> 
-             <a-input placeholder="请输入" type="number" class="cbintpudnum" />
+             <a-input placeholder="请输入" :value="item.costPrice" type="number" class="cbintpudnum" />
            </div>
         </a-form-item>
 
         <a-form-item label="销售价">
-           <div class="intpud" v-for="(item,k) in dataList" :key="k">
+           <div class="intpud" v-for="(item,index) in sellingPrice" :key="index">
              <span style="minWidth: 45px;" >数量：</span> 
-             <a-input placeholder="请输入" :value="item.id" class="intpudnum"  type="number" />
+             <a-input placeholder="请输入" v-model="item.maxNum" class="intpudnum"  type="number" @change="onNum(item.maxNum,index)"/>
              <span class="spshu">税前销售价:</span> 
-             <a-input placeholder="请输入" :value="item.name" class="intpudnum" type="number" />
+             <a-input placeholder="请输入" v-model="item.minNum" class="intpudnum" type="number"  @change="onSaleBefore(item,index)"/>
              <span class="spshu">税后销售价:</span> 
-             <a-input placeholder="请输入" :value="item.cod" class="intpudnum" type="number" />
+             <a-input placeholder="请输入" v-model="item.priceType" class="intpudnum" type="number"  @change="onSaleAfter(item.priceType,index)" />
            </div>
           <a-button-group class="butdb">
             <a-button size='small' @click="dellis" :disabled='deldisabled'><a-icon type="minus" /></a-button>
@@ -122,7 +138,7 @@
       </a-form>
     </div>
     <div class="content-footer">
-      <a-button type="primary" size="large" style="width: 120px;" :loading="loading" @click="onSubmit(0)">保存</a-button>
+      <a-button type="primary" size="large" :disabled='deldisasub' style="width: 120px;" :loading="loading" @click="onSubmit(0)">保存</a-button>
     </div>
   </div>
 </template>
@@ -146,14 +162,24 @@ export default {
     return {
       form: this.$form.createForm(this, { name: "form" }),
       loading: false,
+      deldisasub:false,
       companyName: "",
-      dataSource: [],
+      supplierList:[],//供应商列表
+      supplierId:'',//供应商id
+      supplierName:'',//供应商名称
+      costPrice:[], //成本价
+      marketPrice:[],//市场价
+      sellingPrice:[],//销售价
       dataLiading: false,
       submitLoading: false,
       deldisabled:false,
-      dataList:[{id:1}],
       //富文本
       pccontent: '',
+      selectArrstrain:[
+        {id: '', name: '全部'},
+        {id: '1', name: '上架'},
+        {id: '2', name: '下架'},
+      ],
       // editorOption: {
       //     placeholder: '编辑文章内容'
       //   },
@@ -183,126 +209,159 @@ export default {
   },
   computed: {},
   created() {
-    this.initData(); //表
-    if(this.id.id){
-        api. updateProduct({supplierId: this.id.id}).then(res => {
-        })
-      }
+      this.params = this.$route.params;
+      console.log(this.params.typ);
+    this.getData();
+    this.supplier();
   },
   mounted() {
-    this.$refs.form.setFieldsValue({
-        status: this.formList[1].selectOptions[0]?.id,
-        supplier:this.formList[2].selectOptions[0]?.id,
-      });
-    this.getData();
+    if(this.params.typ == '1'){
+        this.deldisasub = true;
+      }else if(this.params.typ == '2'){
+      this.deldisasub = false;
+      }
+    // this.$refs.form.setFieldsValue({
+    //     status: this.formList[1].selectOptions[0]?.id,
+    //     supplier:this.formList[2].selectOptions[0]?.id,
+    //   });
   },
   beforeRouteLeave(to, from, next) {
     to.meta.keepAlive = false;
     next();
   },
   methods: {
-    addlis(){
-      this.deldisabled = false;
-      console.log(this.dataList.slice(-1)[0])
-      this.dataList.push({});
-      console.log(this.dataList);
+    onNum(item,index){
+      console.log(item,index);
+      this.sellingPrice[index].minNum = item;
     },
-    dellis(){
-      if(this.dataList.length <=1){
+    onSaleBefore(item,index){
+        console.log(item,index);
+    },
+    onSaleAfter(item,index){
+       this.sellingPrice[index].priceType = item;
+    },
+    handleChangesataus(value){
+      console.log(value);
+    },
+    handleSearch(value) {
+      debounce(() => {
+      this.supplier(value);
+       },300);
+    },
+    supplier(value){
+        api.getSupplierListByPager({keyword:value,"pageNum":1,"pageSize":10}).then((res)=>{
+          this.supplierList = res.data.records;
+        })
+    },
+    handleChange(value) {//供应商
+      this.supplierId = value.split(":")[0];
+      this.supplierName = value.split(":")[1];
+      this.companyId = value.split(":")[2];
+      console.log(this.supplierId, this.supplierName, this.companyId);
+    },
+    addlis(){//加
+      this.deldisabled = false;
+      console.log(this.sellingPrice)
+      this.sellingPrice.push(this.sellingPrice.split(-1)[0]);
+      // let arr = this.deldisabled;
+      // let a = JSON.params(JSON.stringify(arr));
+      // let b = a.lice(-1)[0];
+      this.sellingPrice.push(b);
+      console.log(this.sellingPrice);
+
+    //   addFjtc () {
+    //   // 增加车辆技术装备数据
+    //   const length = this.aFile.length
+    //   this.aFile.push({
+    //     key: length === 0 ? '1' : (parseInt(this.aFile[length - 1].key) + 1).toString(),
+    //     mj: '',  tccjwds: '',  xz: '',
+    //     tccwz: '',  zmcllj: '', editables: true, isNews: true
+    //   })
+    // }
+
+
+    },
+    dellis(){ //减
+      if(this.sellingPrice.length <=1){
         this.deldisabled = true;
         return;
       }
-        this.dataList.shift();
+        this.sellingPrice.pop();
     },
     //富文本方法
     onEditorChange({ editor, html, text }) {
             this.content = html;
         },
-    initData() {
-      this.dataLiading = true;
-      const getCompanyPageList = new Promise((resolve, reject) => {
-        api
-          .getCompanyPageList({
-            companyName: this.companyName,
-            companyType: 2,
-            pageIndex: this.currentLeft,
-            pageSize: this.pageSizeLeft
-          })
-          .then(res => {
-            this.totalLeft = Number(res.data.total);
-            this.dataSource = res.data.records.map(a => {
-              a.key = a.id;
-              return a;
-            });
-            resolve(res.data);
-          })
-          .catch(err => {
-            reject();
-          });
-      });
-    },
-   
     ...mapActions(["FALLBACK"]),
-    getData() {
-      if (this.id?.id) {
-        api.getSupplierDetail({ id: this.id.id }).then(res => {
+    getData() {//获取列表详情
+      console.log(this.params.id);
+      let that = this;
+        api.getProductDetail( this.params.id ).then(res => {
           if (res.code === 200) {
             const data = res.data;
+            that.supplierId = data.supplierId; //供应商id
+            that.supplierName = data.supplierName;
+            that.pccontent = data.pcItemInfo; //pc详情
+            that.appcontent = data.appItemInfo;//app详情
+            that.costPrice=data.costPrice,//成本价
+            that.marketPrice=data.marketPrice, //市场价
+            that.sellingPrice=data.sellingPrice,//销售价
             this.form.setFieldsValue({
-              name: data.supplierName,
-              time: [data.cooperationPeriod, data.cooperationEndperiod],
-              contact: data.contactName,
-              contactPhone: data.contactPhone,
-              code: data.contractNo
-              // companyName: this.companyName,
-              // companyId: data.companyName,
+              skuName:data.skuName,//sku名称
+              time: [data.cooperationPeriod, data.cooperationEndperiod],//时间
+              skuCode:data.skuCode, //sku编码
+              itemCode:data.itemCode, //spu编码
+              itemName:data.itemName, //spu名称
+              selling:data.selling==1?'上架':data.selling==2?'下架':'全部', //商品状态 上下架
+              brandName:data.brandName,//所属品牌
+              supplierName:data.supplierName,//供应商
+              taxRate: data.taxRate,//税率
+              stock:data.stock,//库存
             });
           }
         });
-      }
     },
+    //保存
     onSubmit(e) {
+      let that = this;
       console.log(this.pccontent,this.appcontent);
       debounce(() => {
-        const isAdd = !this.id.id;
         this.form.validateFields((err, values) => {
-          if (!err) {
             this.loading = true;
             values = {
-              id: !isAdd ? this.id.id : undefined,
-              contractNo: values.code,
-              supplierName: values.name, //供应商名称
-              // cooperationPeriod: values.time[0], //合作期限
-              cooperationPeriod:
-                values.time !== []
-                  ? moment(values.time[0]).format("YYYY-MM-DD")
-                  : null,
-              cooperationEndperiod:
-                values.time !== []
-                  ? moment(values.time[1]).format("YYYY-MM-DD")
-                  : null,
-              contactName: values.contact, //联系人名称
-              contactPhone: values.contactPhone, //联系电话
-              // companyName: this.companyName,
-              // companyId: this.companyId,
-              state: 1, //供应商状态 默认1启用   0禁用
-              companyList: this.dataSourceRight.map(a => a.id)
+              id:  this.params.id??'',
+              appItemInfo:that.appItemInfo,
+              supplierId : that.supplierId, //供应商id
+              supplierName: that.supplierName, //供应商名称
+              pccontent : that.pcItemInfo, //pc详情
+              appcontent : that.appItemInfo,//app详情
+              costPrice: that.costPrice,//成本价
+              marketPrice : that.marketPrice, //市场价
+              sellingPrice : that.sellingPrice,//销售价
+              skuName:values.skuName,//sku名称
+              time: [values.cooperationPeriod, values.cooperationEndperiod],//时间
+              skuCode:values.skuCode, //sku编码
+              itemCode:values.itemCode, //spu编码
+              itemName:values.itemName, //spu名称
+              selling:values.selling=='上架'?1:data.selling=='下架'?2:'全部', //商品状态 上下架
+              brandName:values.brandName,//所属品牌
+              supplierName:values.supplierName,//供应商
+              taxRate: values.taxRate,//税率
+              stock:values.stock,//库存
+              // cooperationEndperiod: values.time !== [] ? moment(values.time[1]).format("YYYY-MM-DD") : null,
+              // companyList: this.dataSourceRight.map(a => a.id)
             };
-            if(this.dataSourceRight.length < 1){
-              this.loading = false;
-              return this.$message.error("请关联子公司")
-            }
-            api[isAdd ? "addSupplier" : "editSupplier"](values)
+          
+            api.updateProduct(values)
               .then(res => {
                 if (res.code === 200) {
-                  this.$message.success((isAdd ? "新增" : "编辑") + "成功");
+                  this.$message.success("编辑成功");
                   this.$router.push({ name: "supplier" });
                 }
               })
               .finally(() => {
                 this.loading = false;
               });
-          }
         });
       });
     }

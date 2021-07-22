@@ -1,12 +1,12 @@
 export default [
-  {
-    title: '负数单管理',
-    authKeys: [''],
-    icon: require('@/assets/img/menu/icon_afterSales.png'),
-    menuKey: 'negative',
-    group: 'distribution',
-    path: '/negative',
-  },
+  // {
+  //   title: '负数单管理',
+  //   authKeys: [''],
+  //   icon: require('@/assets/img/menu/icon_afterSales.png'),
+  //   menuKey: 'negative',
+  //   group: 'distribution',
+  //   path: '/negative',
+  // },
   {
     title: '企业管理',
     authKeys: [''],

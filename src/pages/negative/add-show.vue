@@ -39,6 +39,7 @@
         <div class="common-title-content">选择商品</div>
       </div>
       <a-table
+          :row-selection="rowSelection"
           :columns="columns"
           :data-source="tableData"
           :pagination="false"
@@ -247,6 +248,11 @@ export default {
       ],
       tableData: [{a: 1,set1: '设置1',set2: '设置2',set3: '设置3',set4: '设置4',set5: '设置5',remark: '...'}],
       tableLoading: false,
+      rowSelection: {
+        onChange: (selectedRowKeys, selectedRows) => {
+
+        }
+      },
     }
   },
   computed: {

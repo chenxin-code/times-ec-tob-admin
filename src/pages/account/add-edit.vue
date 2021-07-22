@@ -15,10 +15,10 @@
         <p v-show="showRedBorder" class="companySelectTip">请选择所属企业</p>
       </a-form-model-item>
       <a-form-model-item label="姓名" prop="accountName">
-        <a-input v-model="thisForm.accountName" maxLength="10"/>
+        <a-input v-model="thisForm.accountName" :maxLength="10"/>
       </a-form-model-item>
       <a-form-model-item label="登录名" prop="loginName">
-        <a-input v-model="thisForm.loginName" maxLength="50" :disabled="isDisable"/>
+        <a-input v-model="thisForm.loginName" :maxLength="50" :disabled="isDisable"/>
       </a-form-model-item>
       <a-form-model-item label="状态">
         <a-select v-model="thisForm.accountState">
@@ -48,6 +48,7 @@
 <script>
 import api from "./../../api";
 import companyTree from './../../components/companyTree';
+import md5 from 'md5';
 
 export default {
   components: {companyTree},
@@ -143,7 +144,7 @@ export default {
   },
   methods: {
     onSelect(id, enterpriseName) {
-      console.log('选中了', id, enterpriseName);
+      console.log(id, enterpriseName);
       this.selectEnterpriseId = id;
       this.selectEnterpriseName = enterpriseName;
     },
@@ -168,6 +169,8 @@ export default {
               enterpriseId: this.enterpriseId,
               enterpriseName: this.enterpriseName
             });
+            this.thisForm.password = md5(this.thisForm.password);
+            this.thisForm.confirmPassword = md5(this.thisForm.confirmPassword);
             this.btnloading = true;
             api.addAccount(this.thisForm).then(resp => {
               if (resp.code === 200) {
@@ -188,7 +191,9 @@ export default {
             this.thisForm = Object.assign(this.thisForm, {
               id: this.$route.query.id,
               enterpriseId: this.enterpriseId,
-              enterpriseName: this.enterpriseName
+              enterpriseName: this.enterpriseName,
+              password: null,
+              confirmPassword: null,
             });
             this.btnloading = true;
             api.updateAccount(this.thisForm).then(resp => {
