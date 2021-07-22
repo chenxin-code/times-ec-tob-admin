@@ -20,7 +20,7 @@
                 :columns="tableColumns"
                 :row-key="(r,i) => i"
                 :data-source="tableData"
-                :scroll="{ x: 1000 }"
+                :scroll="{ x: 1000, y:scrollY}"
                 :pagination="false"
                 :loading="tableLoading"
                 style="margin-top: 8px;">
@@ -117,6 +117,7 @@ export default {
       pwd2Null: false,
       pwdDiff: false,
       newPwd: null,
+      scrollY:100,
       newPwd2: null,
       enterpriseId: null,
       thisForm: {
@@ -184,6 +185,7 @@ export default {
   },
   mounted() {
     this.getList();
+    setTimeout(() => this.scrollY = document.body.clientHeight - 350 + 'px', 0);
   },
   methods: {
     onSelect(id, enterpriseName) {

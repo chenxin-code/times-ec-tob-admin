@@ -1,26 +1,32 @@
 <template>
   <div style="height: 100%;">
-    <a-form-model :model="thisForm" layout="inline" ref="thisForm" labelAlign="left">
+    <a-form-model  layout="inline" ref="thisForm" labelAlign="left">
       <a-form-model-item label="SKU名称/SKU编码" prop="a">
         <a-input v-model="sku" placeholder="请输入SKU名称或SKU编码" :maxLength='30'/>
       </a-form-model-item>
       <a-form-model-item label="状态" prop="b">
-        <a-select default-value="全部" @change="handleChangesataus">
+        <a-select default-value="全部" @change="(value)=>this.strain = value">
             <a-select-option :value="v.id" v-for="(v,i) in selectArrstrain" :key="i">
               {{v.name}}
             </a-select-option>
         </a-select>
       </a-form-model-item>
 
-       <a-form-model-item label="商品品类" prop="d">
-        <a-select default-value='全部' @change="handleChangeing">
-          <a-select-option :value="v.id" v-for="(v,i) in selectArr" :key="i">
-            {{ v.name }}
-          </a-select-option>
-        </a-select>
+      <a-form-model-item label="商品品类" prop="d">
+       <a-tree-select
+    v-model="value"
+    style="width: 100%"
+    :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+    :tree-data="treeData"
+    :replace-fields="{children:'children',key:'categoryCode',value:'categoryId',title:'name'}"
+    @change='onChange'
+    defaultValue="全部"
+    tree-default-expand-all
+  >
+  </a-tree-select>
       </a-form-model-item>
       <a-form-model-item label="所属供应商" prop="d">
-        <a-select default-value='全部' @change="handleChange">
+        <a-select default-value='全部' @change="(value)=>this.status = value">
           <a-select-option :value="item.id"  v-for="item in selectlist" :key="item.id">
             {{item.supplierName}}
           </a-select-option>
@@ -45,10 +51,10 @@
                 :pagination="false"
                 :loading="tableLoading"
                 style="margin-top: 8px;">
-              <span slot="action" >
-                <a-button type="link">查看详情</a-button>
-                <a-button type="link">上架</a-button>
-                <a-button type="link">下架</a-button>
+              <span slot="action" slot-scope="scope">
+                <a-button type="link" @click="edit">查看详情</a-button>
+                <a-button v-if="scope.selling" type="link" @click="updates(scope.id)">上架</a-button>
+                <a-button v-else type="link" @click="updates(scope.id)">下架</a-button>
               </span>
             </a-table>
             <a-pagination
@@ -81,13 +87,11 @@ export default {
       selectArrstrain:[
         {id: '', name: '全部'},
         {id: '1', name: '上架'},
-        {id: '2', name: '下架'},
+        {id: '0', name: '下架'},
       ],
-      selectArr: [
-        {id: '', name: '全部'},
-        {id: '二', name: '2'},
-        {id: '三', name: '3'},
-      ],
+     treeData: [],
+     categoryId:'',//下拉树
+      value: undefined,
       selectlist:[],
         sku: '',
         status: '',
@@ -158,7 +162,7 @@ export default {
           title: "操作",
           key: "operation",
           fixed: "right",
-          width: 250,
+          width: 180,
           scopedSlots: {customRender: "action"},
         },
       ],
@@ -172,10 +176,10 @@ export default {
       beSelected: [],
       rowSelection: {
         onChange: (selectedRowKeys, selectedRows) => {
-          this.beSelected = [];
-          selectedRows.forEach((item) => {
-            this.beSelected.push(item.a)
-          });
+          let that = this;
+          that.beSelected = selectedRows.map((item)=>{
+            return item.id
+          })
           this.disBtn = selectedRows.length === 0
         }
       },
@@ -186,21 +190,63 @@ export default {
        this.selectlist = res.data.records;
        this.selectlist.unshift({id:'',supplierName:'全部'})
      })
+     api.getCategoryTree().then(resp => {
+        this.treeData = resp.data;
+        this.treeData.unshift({categoryId:'',name:"全部"})
+    })
   },
   mounted() {
     this.getList();
     const timer1 = setTimeout(() => {
-      this.scrollY = document.body.clientHeight - 420 + 'px';
+      this.scrollY = document.body.clientHeight - 400 + 'px';
     }, 0);
     this.$once('hook:beforeDestroy', () => {
       clearTimeout(timer1);
     });
   },
   methods: {
-    piliang(type) {
-      this.piliangLoading = true;
+    edit(){//查看详情
+        this.$router.push({ name: 'commodityEdit', params: { id: scope.id ,typ:1}})
     },
-    onShowSizeChange(current, pageSize) {
+    onChange(value){//下拉树
+      this.categoryId = value;
+    },
+    piliang(type) {//批量上下架
+      if(type === 'on'){
+        this.piliangLoading = true;
+          this.updateseli(1);
+      }else{
+        this.updateseli(0);
+      }
+    },
+    updateseli(type){
+      api.updateSelling({ids:this.beSelected,selling:type}).then((res)=>{
+            this.piliangLoading = false;
+            this.getList();
+          })
+    },
+    updates(id){//单独上下架
+     this.$confirm({
+        title: `上下架状态`,
+        content: `您确定要执行？`,
+        centered: true,
+        okText: '确定',
+        cancelText: '取消',
+        onOk: () => {
+          this.tableLoading = true;
+           api.updateSellingById(id).then((res)=>{
+             if (resp.code === 200) {
+               this.$message.success('成功');
+              this.getList();
+            }
+          }).finally(() => {
+            this.tableLoading = false;
+          });
+        }
+      });
+     
+    },
+    onShowSizeChange(current, pageSize) {//分页
       this.current = current;
       this.pageSize = pageSize;
       this.getList();
@@ -208,16 +254,13 @@ export default {
     handleChange(value){
       this.status = value;
     },
-    handleChangesataus(value){
-      this.strain = value;
-    },
     handleChangeing(value){
       this.supplier = value;
     },
     getList() {
       this.tableLoading = true;
       let params = {
-        categoryId: this.supplier, //商品id
+        categoryId: this.categoryId, //商品id
         keyword: this.sku,
         selling: this.strain,//上下架
         supplierId: this.status,//供应商id
@@ -243,7 +286,7 @@ export default {
   padding: 20px;
 
   > div {
-    width: 400px;
+    // width: 400px;
   }
 
   /deep/ .ant-form-item-control-wrapper {
@@ -260,7 +303,7 @@ export default {
   }
 
   /deep/ .item-btns {
-    width: 250px !important;
+    width: 300px !important;
 
     .ant-form-item-control-wrapper {
       width: 400px !important;
