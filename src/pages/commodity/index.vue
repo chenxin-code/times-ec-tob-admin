@@ -18,13 +18,11 @@
     style="width: 100%"
     :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
     :tree-data="treeData"
-    :replace-fields="{children:'children', key:'key', value: 'parentId', title: 'name'}"
-    placeholder="Please select"
+    :replace-fields="{children:'children', key:'categoryCode', value: 'categoryCode', title: 'name'}"
+    @change='onChange'
+    defaultValue="全部"
     tree-default-expand-all
   >
-    <span v-if="key === '0-0-1'" slot="title" slot-scope="{ key, value }" style="color: #08c">
-      Child Node1 {{ value }}
-    </span>
   </a-tree-select>
       </a-form-model-item>
       <a-form-model-item label="所属供应商" prop="d">
@@ -108,7 +106,7 @@ export default {
         sku: '',
         status: '',
         strain: '',
-        supplier: '',
+        categoryId: '',
       tableColumns: [
         {
           title: "商品名称",
@@ -214,11 +212,15 @@ export default {
      this.supplierlis();//供应商
      api.getCategoryTree().then(resp => {
         this.treeData = resp.data;
+        this.treeData.unshift({categoryCode:'',name:"全部"})
         // replaceFields
     })
     setTimeout(() => this.scrollY = document.body.clientHeight - 420 + 'px', 0);
   },
   methods: {
+    onChange(value){
+      this.categoryId = value;
+    },
     supplierlis(value){
         api.getSupplierListByPager({keyword:value??'',"pageNum":1,"pageSize":100000}).then((res)=>{
           this.selectlist = res.data.records;
@@ -230,9 +232,6 @@ export default {
     },
     handleChangesataus(value){
       this.strain = value;
-    },
-    handleChangeing(value){
-      this.supplier = value;
     },
     edit(scope,typ){
       console.log(typ);
@@ -253,7 +252,7 @@ export default {
     getList() {
       this.tableLoading = true;
       let params = {
-        categoryId: this.supplier, //商品id
+        categoryId: this.categoryId, //商品品类
         keyword: this.sku,
         selling: this.strain,//上下架
         supplierId: this.status,//供应商id
