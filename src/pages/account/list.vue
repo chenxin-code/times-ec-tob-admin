@@ -86,13 +86,13 @@
               <span style="color: red;">*</span>
               <span>确认密码</span>
             </div>
-            <a-input-password v-model="newPwd2" style="width: 350px;" :class="{ redBorder: pwd2Null }"
+            <a-input-password v-model="newPwd2" style="width: 350px;" :class="{ redBorder: pwd2Null || pwdDiff }"
                               placeholder="请输入确认密码"/>
           </div>
           <div v-if="pwd2Null"
                style="color: red;border-color: red;padding: 5px 0 5px 77px;font-size: 14px;line-height: 14px;">请输入确认密码
           </div>
-          <div v-if="pwdDiff"
+          <div v-if="!pwd2Null && pwdDiff"
                style="color: red;border-color: red;padding: 5px 0 5px 77px;font-size: 14px;line-height: 14px;">两次输入密码不一致
           </div>
         </a-form-item>
@@ -259,11 +259,16 @@ export default {
       }).then(resp => {
         if (resp.code === 200) {
           this.$message.success('操作成功');
+          this.loginName = null;
+          this.modalLoading = false;
+          this.pwdNull = false;
+          this.pwd2Null = false;
+          this.pwdDiff = false;
+          this.newPwd = null;
+          this.newPwd2 = null;
           this.showPwdModal = false;
         }
-      }).finally(() => {
-        this.modalLoading = false;
-      });
+      }).finally(() => {});
     },
   },
   watch: {
