@@ -6,10 +6,15 @@
           <a-table
               :columns="columns"
               :data-source="categoryData"
-              :expanded-row-keys.sync="expandedRowKeys"
               :loading="tableLoading"
-              :row-key="(r,i) => i"
-              :pagination="false"/>
+              row-key="categoryId"
+              :pagination="false">
+            <template slot="children" slot-scope="scope">
+              <div class="editable-row-operations">
+                <span v-html="childrenParse(scope.children)"></span>
+              </div>
+            </template>
+          </a-table>
         </a-col>
       </a-row>
     </div>
@@ -29,15 +34,25 @@ export default {
           dataIndex: 'name',
           key: 'name',
         },
-        // {
-        //   title: '是否末级',
-        //   dataIndex: 'age',
-        //   key: 'age',
-        // },
+        {
+          title: '是否末级',
+          key: 'children',
+          scopedSlots: {customRender: 'children'},
+        },
       ],
-      expandedRowKeys: [],
       tableLoading: false,
     };
+  },
+  computed: {
+    childrenParse() {
+      return param => {
+        if (param.length === 0) {
+          return '是';
+        } else {
+          return '否';
+        }
+      }
+    },
   },
   mounted() {
     this.tableLoading = true;
