@@ -25,7 +25,7 @@
               <span class="info">{{dataList.orderTime}}</span>
             </a-form-model-item>
               <a-form-model-item label="订单版本" >
-              <span class="info">{{}}</span>
+              <span class="info"></span>
             </a-form-model-item>
             <a-form-model-item label="备注">
               <span class="info">{{dataList.remark}}</span>
@@ -44,7 +44,7 @@
             </a-form-model-item>
             
             <a-form-model-item label="下单场景">
-              <span class="info">{{}}</span>
+              <span class="info"></span>
             </a-form-model-item>
             <a-form-model-item label="创建时间">
               <span class="info">{{dataList.createTime}}</span>
@@ -107,7 +107,7 @@
       </a-form-model>
       <div style="width:100%;display: flex;align-items:center;padding: 20px 20px;">
         <div style="width:3px;height:16px;background: #4B7AFB;"></div>
-        <span style="color:#666666;margin-left:5px;">订单价格</span>
+        <span style="color:#666666;margin-left:5px;">商品信息</span>
       </div>
       <a-table
         :columns="tableColumns"
