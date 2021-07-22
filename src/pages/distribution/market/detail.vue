@@ -9,7 +9,7 @@
         <div style="width:3px;height:16px;background: #4B7AFB;"></div>
         <span style="color:#666666;margin-left:5px;">订单基础信息</span>
       </div>
-      <a-form-model label="inline" :label-col="{ span: 5 }" :wrapper-col="{ span: 14 }" style="padding:0 10px;">
+      <a-form-model label="inline" :label-col="{ span: 7 }" :wrapper-col="{ span: 14 }" style="padding:0 10px;">
         <div class="form-wrop">
           <div class="form-wrop-item">
             <a-form-model-item label="订单编号" >
