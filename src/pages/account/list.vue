@@ -104,6 +104,7 @@
 <script>
 import api from "./../../api";
 import companyTree from './../../components/companyTree';
+import md5 from 'md5';
 
 export default {
   components: {companyTree},
@@ -254,7 +255,7 @@ export default {
       this.modalLoading = true;
       api.updatePassword({
         loginName: this.loginName,
-        newPwd: this.newPwd,
+        newPwd: md5(this.newPwd),
       }).then(resp => {
         if (resp.code === 200) {
           this.$message.success('操作成功');
