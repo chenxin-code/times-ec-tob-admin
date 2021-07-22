@@ -219,9 +219,12 @@ let router = new Router({
           name: "marketdetail",
           menuKey: "marketdetail",
           meta: {
-            menu: "/marketdetail",
+            menu: "/market",
             authKeys: [""],
-            bread: [{ path: "/market/marketdetail", name: "销售单详情" }],
+            bread: [
+              { path: "/market", name: "销售单管理" },
+              { path: "/market/marketdetail", name: "销售单详情" }
+            ],
             // keepAlive: true
           },
           component: () => import("../pages/distribution/market/detail"),
