@@ -9,7 +9,6 @@ export default {
     router.go(-1)
   },
   EXCHANGE_TOKEN(context) {
-    const SD_ACCESS_TOKEN = localStorage.getItem('SD_ACCESS_TOKEN')
     let getQueryString = name => {
       var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i')
       var r = window.location.search.substr(1).match(reg)
@@ -17,13 +16,13 @@ export default {
       return null
     }
 
-    window.localStorage.setItem(
-      'SD_ACCESS_TOKEN',
-      getQueryString('token') || SD_ACCESS_TOKEN
-    )
+    const SD_ACCESS_TOKEN = localStorage.getItem('SD_ACCESS_TOKEN')
+    const token = getQueryString('token') || SD_ACCESS_TOKEN
+
+    window.localStorage.setItem('SD_ACCESS_TOKEN', token)
 
     const para = {
-      originalToken: getQueryString('token') || SD_ACCESS_TOKEN,
+      originalToken: token,
     }
     api.loginByOriginalToken(para).then(res => {
       if (res.code === 200) {
