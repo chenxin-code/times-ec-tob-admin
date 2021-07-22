@@ -143,7 +143,7 @@ export default {
   },
   methods: {
     onSelect(id, enterpriseName) {
-      console.log('选中了', id, enterpriseName);
+      console.log(id, enterpriseName);
       this.selectEnterpriseId = id;
       this.selectEnterpriseName = enterpriseName;
     },

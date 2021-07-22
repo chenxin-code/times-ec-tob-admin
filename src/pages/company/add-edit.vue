@@ -178,6 +178,19 @@ export default {
   },
   computed: {},
   methods: {
+    findTree(areaData, districtCode, respData) {
+      for (let index = 0; index < areaData.length; index++) {
+        if (areaData[index].list) {
+          if (this.findTree(areaData[index].list, districtCode, respData)) {
+            return true;
+          }
+        }
+        if (areaData[index].cityCode === districtCode) {
+          areaData[index].list = respData;
+          return true;
+        }
+      }
+    },
     filter(inputValue, path) {
       return path.some(option => option.cityName.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
     },
@@ -186,9 +199,13 @@ export default {
       this.thisForm.provinceCode = value[0];//省
       this.thisForm.cityCode = value[1];//市
       this.thisForm.districtCode = value[2];//区
+      //获取街道
+      // api.getAreaChildData({parentCode: this.thisForm.districtCode}).then(resp => {
+      //   this.findTree(this.areaData, this.thisForm.districtCode, resp.data);
+      // });
     },
     onSelect(id, enterpriseName) {
-      console.log('选中了', id, enterpriseName);
+      console.log(id, enterpriseName);
       this.selectParentId = id;
       this.selectParentName = enterpriseName;
     },
