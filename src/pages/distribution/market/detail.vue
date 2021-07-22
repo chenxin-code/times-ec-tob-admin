@@ -24,9 +24,6 @@
             <a-form-model-item label="下单时间">
               <span class="info">{{dataList.orderTime}}</span>
             </a-form-model-item>
-              <a-form-model-item label="订单版本" >
-              <span class="info"></span>
-            </a-form-model-item>
             <a-form-model-item label="备注">
               <span class="info">{{dataList.remark}}</span>
             </a-form-model-item>
