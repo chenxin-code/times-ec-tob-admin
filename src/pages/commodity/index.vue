@@ -18,7 +18,7 @@
     style="width: 100%"
     :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
     :tree-data="treeData"
-    :replace-fields="{children:'children', key:'categoryCode', value: 'categoryCode', title: 'name'}"
+    :replace-fields="{children:'children',key:'categoryCode', value:'categoryId', title:'name'}"
     @change='onChange'
     defaultValue="全部"
     tree-default-expand-all
