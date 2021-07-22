@@ -21,8 +21,8 @@
       </a-form-model-item>
       <a-form-model-item label="所属供应商" prop="d">
         <a-select default-value='全部' @change="handleChange">
-          <a-select-option :value="v.id"  v-for="(v,i) in selectArr" :key="i">
-            {{ v.name }}
+          <a-select-option :value="item.id"  v-for="item in selectlist" :key="item.id">
+            {{item.supplierName}}
           </a-select-option>
         </a-select>
       </a-form-model-item>
@@ -87,6 +87,7 @@ export default {
         {id: '二', name: '2'},
         {id: '三', name: '3'},
       ],
+      selectlist:[],
         sku: '',
         status: '',
         strain: '',
@@ -197,8 +198,8 @@ export default {
     }
   },
    created() {
-     api.getSupplierListByPager().then((res)=>{
-       console.log(res);
+     api.getSupplierListByPager({"pageNum":1,"pageSize":10}).then((res)=>{
+       this.selectlist = res.data.records;
      })
     const timer1 = setTimeout(() => {
       this.scrollY = document.body.clientHeight - 420 + 'px';

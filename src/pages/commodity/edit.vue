@@ -94,10 +94,12 @@
           />
         </a-form-item>
          <a-form-item label="价格类型">
-          <a-input
-            v-decorator="['contactPhone', { rules: [{ required: true, message: '联系电话不能为空' }] } ]"
-            placeholder="请输入联系电话"
-          />
+            <a-select v-decorator="['contactPhone', { rules: [{ required: true, message: '联系电话不能为空' }] } ]"
+           default-value="全部" @change="hChangcontactPhone">
+            <a-select-option :value="v.id" v-for="(v,i) in selectcontact" :key="i">
+              {{v.name}}
+            </a-select-option>
+            </a-select>
         </a-form-item>
          <a-form-item label="库存">
           <a-input
@@ -175,6 +177,9 @@ export default {
       deldisabled:false,
       //富文本
       pccontent: '',
+      selectcontact:[
+        {id: '1', name: '普通价'},
+        {id: '2', name: '阶梯价'},],
       selectArrstrain:[
         {id: '', name: '全部'},
         {id: '1', name: '上架'},
@@ -261,12 +266,12 @@ export default {
     },
     addlis(){//加
       this.deldisabled = false;
-      console.log(this.sellingPrice)
-      this.sellingPrice.push(this.sellingPrice.split(-1)[0]);
+      console.log(this.sellingPrice.pop())
+      // this.sellingPrice.push(this.sellingPrice.split(-1)[0]);
       // let arr = this.deldisabled;
       // let a = JSON.params(JSON.stringify(arr));
       // let b = a.lice(-1)[0];
-      this.sellingPrice.push(b);
+      this.sellingPrice.push({});
       console.log(this.sellingPrice);
 
     //   addFjtc () {
