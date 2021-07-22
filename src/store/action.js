@@ -23,7 +23,7 @@ export default {
     )
 
     const para = {
-      originalToken: getQueryString('token'),
+      originalToken: getQueryString('token') || SD_ACCESS_TOKEN,
     }
     api.loginByOriginalToken(para).then(res => {
       if (res.code === 200) {
