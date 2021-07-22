@@ -1,17 +1,12 @@
 <template>
   <div style="height: 100%;display: flex;">
-    <div style="width: 20%;padding: 0 15px;overflow: auto">
-      <a-tree :tree-data="treeData" @select="onSelect()"></a-tree>
+    <div style="width: 20%;overflow: auto;">
+      <companyTree @onSelect="onSelect" />
     </div>
     <div style="width: 80%;">
-      <a-form-model :model="form" layout="inline" ref="thisForm" labelAlign='left'>
-        <a-form-model-item label="企业名称" prop="a">
-          <a-input v-model="form.a" placeholder="请输入企业名称" :maxLength='30'/>
-        </a-form-model-item>
+      <a-form-model layout="inline">
         <a-form-model-item class="item-btns">
-          <a-button class="item-btn" type="primary" @click="getList()">查询</a-button>
-          <a-button class="item-btn" @click="_toReset()">重置</a-button>
-          <a-button class="item-btn" @click="newOrder()" type="primary">新增</a-button>
+          <a-button class="item-btn" @click="$router.push({path: '/company/add'})" type="primary">新增</a-button>
         </a-form-model-item>
       </a-form-model>
       <a-row style="padding: 20px;height: 100%;">
@@ -24,9 +19,14 @@
               :pagination="false"
               :loading="tableLoading"
               style="margin-top: 8px;">
-              <span slot="action" slot-scope="text, record">
-                <a-button type="link">编辑</a-button>
-                <a-button type="link">查看token</a-button>
+            <template slot="statusStr" slot-scope="scope">
+              <div class="editable-row-operations">
+                <span v-html="statusStrParse(scope.status)"></span>
+              </div>
+            </template>
+              <span slot="action" slot-scope="scope">
+                <a-button type="link" @click="$router.push({path: '/company/edit', query: {id: scope.id}})">编辑</a-button>
+                <a-button type="link" @click="showToken(scope.accountNumber,scope.password)">查看token</a-button>
               </span>
           </a-table>
           <a-pagination
@@ -45,79 +45,66 @@
         </a-col>
       </a-row>
     </div>
+    <a-modal :centered="true" v-model="showTokenModal" title="查看token" :maskClosable="false">
+      <template slot="footer">
+        <a-button key="back" @click="showTokenModal = false">关闭</a-button>
+      </template>
+      <a-form layout="inline">
+        <a-form-item style="font-size: 18px;">
+          <div style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
+            <div style="width: 100px;margin-right: 10px;display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
+              <span>账号：</span>
+            </div>
+            <span style="width: 267px;color: #a1a1a1;">{{accountNumber}}</span>
+          </div>
+          <div style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
+            <div style="width: 100px;margin-right: 10px;display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
+              <span>密钥：</span>
+            </div>
+            <span style="width: 267px;color: #a1a1a1;">{{password}}</span>
+          </div>
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </div>
 </template>
 
 <script>
 import api from "./../../api";
+import companyTree from './../../components/companyTree';
 export default {
-  components: {},
+  components: {companyTree},
   data() {
     return {
-      treeData: [
-        {
-          title: '广州',
-          key: '广州',
-          children: [
-            {
-              title: '南沙',
-              key: '南沙',
-              children: [
-                {
-                  title: '金洲',
-                  key: '金洲',
-                  children: [
-                    { title: '御城1111111111111111111111111', key: '御城' },
-                    { title: '隽城', key: '隽城' },
-                  ]
-                },
-                { title: '蕉门', key: '蕉门' },
-                { title: '黄阁', key: '黄阁' },
-              ],
-            },
-            {
-              title: '天河',
-              key: '天河',
-            },
-          ],
-        },
-        {
-          title: '深圳',
-          key: '深圳',
-          children: [
-            { title: '南山', key: '南山' },
-            { title: '龙华', key: '龙华' },
-            { title: '龙岗', key: '龙岗' },
-          ],
-        }
-      ],
-      form: {
-        a: null,
-      },
+      accountNumber: null,
+      password: null,
+      showTokenModal: false,
+      parentId: null,
       tableColumns: [
         {
           title: "企业名称",
-          dataIndex: "a",
+          dataIndex: "enterpriseName",
           width: 200,
         },
         {
           title: "父企业名称",
-          dataIndex: "b",
+          dataIndex: "parentName",
           width: 200,
         },
         {
           title: "企业编码",
-          dataIndex: "c",
+          dataIndex: "enterpriseCode",
           width: 200,
         },
         {
           title: "企业状态",
-          dataIndex: "d",
+          key: 'statusStr',
+          scopedSlots: { customRender: 'statusStr' },
           width: 200,
         },
         {
           title: "经营范围",
-          dataIndex: "e",
+          dataIndex: "businessScope",
           width: 200,
         },
         {
@@ -135,18 +122,34 @@ export default {
       current: 1,
     }
   },
+  computed: {
+    statusStrParse() {
+      return param => {
+        if (param === 0) {
+          return '正常';
+        } else if (param === 1) {
+          return '停用';
+        } else {
+          return '';
+        }
+      }
+    },
+  },
   mounted() {
     this.getList();
   },
   methods: {
-    onSelect(selectedKeys, info) {
-      console.log('selected', selectedKeys, info);
+    showToken(accountNumber,password){
+      console.log(accountNumber,password);
+      this.accountNumber = accountNumber;
+      this.password = password;
+      this.showTokenModal = true;
     },
-    newOrder() {
-      this.$router.push({path: '/company/add'});
-    },
-    _toReset() {
-      this.$refs.thisForm.resetFields();
+    onSelect(id, enterpriseName){
+      console.log(id, enterpriseName);
+      this.parentId = id;
+      this.current = 1;
+      this.pageSize = 10;
       this.getList();
     },
     onShowSizeChange(current, pageSize) {
@@ -155,23 +158,16 @@ export default {
       this.getList();
     },
     getList() {
-      this.tableData = [{
-        a: 1,
-        b: 1,
-        c: 1,
-        d: 1,
-        e: 1
-      }];
-      return
       this.tableLoading = true;
-      api.接口({
-        ...this.form,
+      api.getProjectList({
         pageNum: this.current,
         pageSize: this.pageSize,
+        parentId: this.parentId,
+        queryType: 1,
       }).then(resp => {
         if (resp.code === 200) {
           this.tableData = resp.data.records;
-          this.total = resp.data.total * 1;
+          this.total = Number(resp.data.total);
         }
       }).finally(() => {
         this.tableLoading = false;

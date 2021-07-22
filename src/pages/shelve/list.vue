@@ -1,11 +1,25 @@
 <template>
   <div style="height: 100%;">
-    <a-form-model :model="form" layout="inline" ref="thisForm" labelAlign='left'>
+    <a-form-model :model="thisForm" layout="inline" ref="thisForm" labelAlign="left">
       <a-form-model-item label="SKU名称/SKU编码" prop="a">
-        <a-input v-model="form.a" placeholder="请输入SKU名称或SKU编码" :maxLength='30'/>
+        <a-input v-model="thisForm.a" placeholder="请输入SKU名称或SKU编码" :maxLength='30'/>
       </a-form-model-item>
       <a-form-model-item label="商品状态" prop="b">
-        <a-select v-model="form.b" placeholder="请选择">
+        <a-select v-model="thisForm.b" placeholder="请选择">
+          <a-select-option :value="v.v" :label="v.n" v-for="(v,i) in selectArr" :key="i">
+            {{ v.n }}
+          </a-select-option>
+        </a-select>
+      </a-form-model-item>
+      <a-form-model-item label="商品品类" prop="c">
+        <a-select v-model="thisForm.c" placeholder="请选择">
+          <a-select-option :value="v.v" :label="v.n" v-for="(v,i) in selectArr" :key="i">
+            {{ v.n }}
+          </a-select-option>
+        </a-select>
+      </a-form-model-item>
+      <a-form-model-item label="所属供应商" prop="d">
+        <a-select v-model="thisForm.d" placeholder="请选择">
           <a-select-option :value="v.v" :label="v.n" v-for="(v,i) in selectArr" :key="i">
             {{ v.n }}
           </a-select-option>
@@ -13,28 +27,8 @@
       </a-form-model-item>
       <a-form-model-item class="item-btns">
         <a-button class="item-btn" type="primary" @click="getList()">查询</a-button>
-        <a-button class="item-btn" @click="_toReset()">重置</a-button>
-      </a-form-model-item>
-      <a-form-model-item label="商品品类" prop="c">
-        <a-select v-model="form.c" placeholder="请选择">
-          <a-select-option :value="v.v" :label="v.n" v-for="(v,i) in selectArr" :key="i">
-            {{ v.n }}
-          </a-select-option>
-        </a-select>
-      </a-form-model-item>
-      <a-form-model-item label="所属供应商" prop="d">
-        <a-select v-model="form.d" placeholder="请选择">
-          <a-select-option :value="v.v" :label="v.n" v-for="(v,i) in selectArr" :key="i">
-            {{ v.n }}
-          </a-select-option>
-        </a-select>
-      </a-form-model-item>
-      <a-form-model-item class="item-btns">
-        <a-button class="item-btn" :disabled="disBtn" @click="piliang('on')" :loading="casLoading" type="primary">批量上架
-        </a-button>
-        <a-button class="item-btn" :disabled="disBtn" @click="piliang('off')" :loading="casLoading" type="primary">
-          批量下架
-        </a-button>
+        <a-button class="item-btn" :disabled="disBtn" @click="piliang('on')" :loading="piliangLoading" type="primary">批量上架</a-button>
+        <a-button class="item-btn" :disabled="disBtn" @click="piliang('off')" :loading="piliangLoading" type="primary">批量下架</a-button>
       </a-form-model-item>
     </a-form-model>
     <div id="neighborhoodLife">
@@ -67,7 +61,7 @@
                 :pageSizeOptions="['1','10','20','50','100']"
                 @change="onShowSizeChange"
                 @showSizeChange="onShowSizeChange"
-                style="margin-top: 30px;width: 100%;text-align: right;" />
+                style="margin-top: 30px;width: 100%;text-align: right;"/>
           </a-col>
         </a-row>
       </div>
@@ -87,7 +81,7 @@ export default {
         {n: '二', v: '2'},
         {n: '三', v: '3'},
       ],
-      form: {
+      thisForm: {
         a: null,
         b: null,
         c: null,
@@ -153,7 +147,7 @@ export default {
           title: "操作",
           key: "operation",
           fixed: "right",
-          width: 200,
+          width: 250,
           scopedSlots: {customRender: "action"},
         },
       ],
@@ -162,7 +156,7 @@ export default {
       total: 0,
       pageSize: 10,
       current: 1,
-      casLoading: false,
+      piliangLoading: false,
       disBtn: true,
       beSelected: [],
       rowSelection: {
@@ -181,11 +175,7 @@ export default {
   },
   methods: {
     piliang(type) {
-      this.casLoading = true;
-    },
-    _toReset() {
-      this.$refs.thisForm.resetFields();
-      this.getList();
+      this.piliangLoading = true;
     },
     onShowSizeChange(current, pageSize) {
       this.current = current;
@@ -193,29 +183,15 @@ export default {
       this.getList();
     },
     getList() {
-      this.tableData = [{
-        a: 1,
-        b: 1,
-        c: 1,
-        d: 1,
-        e: 1,
-        f: 1,
-        g: 1,
-        h: 1,
-        i: 1,
-        j: 1,
-        k: 1
-      }];
-      return
       this.tableLoading = true;
-      api.接口({
-        ...this.form,
+      api.getProductListByPager({
+        ...this.thisForm,
         pageNum: this.current,
         pageSize: this.pageSize,
       }).then(resp => {
         if (resp.code === 200) {
           this.tableData = resp.data.records;
-          this.total = resp.data.total * 1;
+          this.total = Number(resp.data.total);
         }
       }).finally(() => {
         this.tableLoading = false;

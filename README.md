@@ -80,13 +80,12 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 #### 接口地址列表
 
 - 接口地址 swigger
-- 案场：https://mall-uat-api-linli.timesgroup.cn:9527/times-ec-anchang/swagger-ui.html#/%E5%BA%94%E4%BB%98%E5%8D%95%E6%8E%A5%E5%8F%A3%E6%9C%8D%E5%8A%A1
-- erp：https://mall-uat-api-linli.timesgroup.cn:9526/times-ec-erp/swagger-ui.html#/%E8%BD%AC%E6%8E%A5%E5%95%86%E5%93%81%E4%B8%AD%E5%BF%83%E6%9C%8D%E5%8A%A1/queryBySkuIdUsingPOST
-
+- 原型地址：https://uw4rw2.axshare.com
 
 ---
-###  案场订单列表 & 售后列表
-#### 案场订单列表
+
+###  订单列表 & 售后列表
+#### 订单列表
 - 商品列表渲染常规字段 定义 在defaultConfig.js中定义，
 - action字段 目前定义  查看详情，申请售后，取消订单
 - 申请售后模态弹窗与订单详情模态弹窗一致，已封装在afterSaleApproveModal.vue文件
@@ -95,26 +94,3 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 - 配送信息需要在erp后台操作发货，才有发货信息流转到案场订单信息的配送信息
 - 配送信息的通过/挂起操作，通过即等于确认收货操作，挂起后仍可以通过
 
-
-#### 售后列表
-- 订单列表，订单详情申请售后结束统一返回售后列表 ，
-> 审核状态枚举
-``` js
-    {
-		id: "APPROVING",
-		name: "审核中",
-	},
-	{
-		id: "REJECT",
-		name: "审核不通过",
-	},
-	{
-		id: "APPROVED",
-		name: "审核通过",
-	},
-	{
-		id: "CANCEL",
-		name: "自行取消",
-	}
-```
-- 售后列表表格目前仅允许操作取消订单操作，更多是作为展示使用

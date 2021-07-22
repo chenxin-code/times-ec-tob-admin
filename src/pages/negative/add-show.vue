@@ -1,29 +1,45 @@
 <template>
   <div>
     <div class="btns">
-      <a-button class="item-btn" :loading='btnloading' type="primary" @click="addEdit()" v-if="$route.path === '/negative/add'">保存</a-button>
+      <a-button class="item-btn" :loading="btnloading" type="primary" @click="addEdit()" v-if="$route.path === '/negative/add'">保存</a-button>
       <a-button class="item-btn"  @click="$router.back()">返回</a-button>
     </div>
-    <a-form-model :model="form" layout="inline" :rules="rules" ref="thisForm" labelAlign='left'>
+    <a-form-model :model="thisForm" layout="inline" :rules="rules" ref="thisForm" labelAlign="left">
       <div class="common-title">
-        <div class="common-title-content">xxxxx新增</div>
+        <div class="common-title-content">新增负数单</div>
       </div>
-      <a-form-model-item label="负数单号" prop="a">
-        <a-input v-model="form.a" :disabled="isDisable" />
+      <a-form-model-item label="选择订单" prop="saleOrderNo">
+        <a-select
+            show-search
+            :value="thisForm.saleOrderNo"
+            placeholder="搜索订单编号"
+            style="width: 200px"
+            :default-active-first-option="false"
+            :show-arrow="false"
+            :filter-option="false"
+            :not-found-content="null"
+            @search="handleSearch"
+            @change="handleChange"
+            :disabled="isDisable">
+          <a-select-option v-for="item in orderNoList" :key="item.value">
+            {{ item.text }}
+          </a-select-option>
+        </a-select>
       </a-form-model-item>
-      <a-form-model-item label="选择订单" prop="a">
-        <a-input v-model="form.a" :disabled="isDisable" />
+      <a-form-model-item label="负数单号" v-if="isDisable">
+
       </a-form-model-item>
-      <a-form-model-item label="创建人" prop="a">
-        <a-input v-model="form.a" :disabled="isDisable" />
+      <a-form-model-item label="创建人" v-if="isDisable">
+
       </a-form-model-item>
-      <a-form-model-item label="创建时间" prop="a">
-        <a-input v-model="form.a" :disabled="isDisable" />
+      <a-form-model-item label="创建时间" v-if="isDisable">
+
       </a-form-model-item>
       <div class="common-title">
         <div class="common-title-content">选择商品</div>
       </div>
       <a-table
+          :row-selection="rowSelection"
           :columns="columns"
           :data-source="tableData"
           :pagination="false"
@@ -73,16 +89,16 @@
       <a-form-model-item label="已扣税前优惠总价">0.00</a-form-model-item>
       <a-form-model-item label="已扣税后优惠总价">0.00</a-form-model-item>
       <a-form-model-item label="税前扣减销售总价" prop="a">
-        <a-input v-model="form.a" :disabled="isDisable" />
+        <a-input v-model="thisForm.a" :disabled="isDisable" />
       </a-form-model-item>
       <a-form-model-item label="税后扣减销售总价" prop="a">
-        <a-input v-model="form.a" :disabled="isDisable" />
+        <a-input v-model="thisForm.a" :disabled="isDisable" />
       </a-form-model-item>
       <a-form-model-item label="税前扣减优惠总价" prop="a">
-        <a-input v-model="form.a" :disabled="isDisable" />
+        <a-input v-model="thisForm.a" :disabled="isDisable" />
       </a-form-model-item>
       <a-form-model-item label="税后扣减优惠总价" prop="a">
-        <a-input v-model="form.a" :disabled="isDisable" />
+        <a-input v-model="thisForm.a" :disabled="isDisable" />
       </a-form-model-item>
     </a-form-model>
   </div>
@@ -92,13 +108,13 @@
 export default {
   data() {
     return {
-      form: {
+      orderNoList: [],
+      thisForm: {
         a: null,
-        b: null,
       },
       rules: {
-        a: [
-          { required: true, message: '请输入内容', trigger: 'blur' },
+        saleOrderNo: [
+          { required: true, message: '请选择订单', trigger: 'blur' },
         ],
       },
       btnloading: false,
@@ -232,11 +248,26 @@ export default {
       ],
       tableData: [{a: 1,set1: '设置1',set2: '设置2',set3: '设置3',set4: '设置4',set5: '设置5',remark: '...'}],
       tableLoading: false,
+      rowSelection: {
+        onChange: (selectedRowKeys, selectedRows) => {
+
+        }
+      },
     }
   },
   computed: {
     isDisable() {
       return this.$route.path === '/negative/show'
+    },
+  },
+  methods: {
+    handleSearch(value) {
+      fetch(value, data => (this.orderNoList = data));
+    },
+    handleChange(value) {
+      console.log(value);
+      this.thisForm.saleOrderNo = value;
+      fetch(value, data => (this.orderNoList = data));
     },
   },
 }
@@ -253,7 +284,7 @@ export default {
     min-width: 200px;
   }
   /deep/.ant-form-item-control-wrapper{
-    min-width: 200px;
+    width: 250px;
   }
   /deep/.ant-form-item-label{
     //width: 110px;
@@ -277,7 +308,7 @@ export default {
 }
 .common-title {
   color: #666;
-  padding: 20px 0 0 30px;
+  padding: 20px 0 20px 30px;
   .common-title-content {
     font-size: 16px;
     height: 16px;
