@@ -40,7 +40,7 @@
     </a-form-model>
     <div id="neighborhoodLife">
       <div class="content-main" ref="content_main">
-        <a-row style="padding: 20px;height: 100%;">
+        <a-row style="padding: 4px;height: 100%;">
           <a-col>
             <a-table
                 :row-selection="rowSelection"
@@ -68,7 +68,7 @@
                 :pageSizeOptions="['1','10','20','50','100']"
                 @change="onShowSizeChange"
                 @showSizeChange="onShowSizeChange"
-                style="margin-top: 30px;width: 100%;text-align: right;"/>
+                style="margin-top: 10px;width: 100%;text-align: right;"/>
           </a-col>
         </a-row>
       </div>
@@ -99,6 +99,13 @@ export default {
         supplier: '',
       tableColumns: [
         {
+          title: "序号",
+          key: "index",
+          width: 60,
+          fixed: "left",
+          customRender: (text,record,index) => `${index+1}`,
+        },
+        {
           title: "商品名称",
           dataIndex: "itemName",
           key:"itemName",
@@ -126,7 +133,7 @@ export default {
           title: "商品品类",
           dataIndex: "categoryName",
           key:"categoryName",
-          width: 200,
+          width: 100,
         },
         {
           title: "供应商",
@@ -136,7 +143,7 @@ export default {
         },
          {
           title: "库存",
-          width: 200,
+          width: 100,
           dataIndex: "stock",
           key:"stock",
         },
@@ -198,7 +205,7 @@ export default {
   mounted() {
     this.getList();
     const timer1 = setTimeout(() => {
-      this.scrollY = document.body.clientHeight - 400 + 'px';
+      this.scrollY = document.body.clientHeight - 290 + 'px';
     }, 0);
     this.$once('hook:beforeDestroy', () => {
       clearTimeout(timer1);
@@ -282,7 +289,7 @@ export default {
 
 <style lang="less" scoped>
 .ant-form {
-  padding: 20px;
+  padding: 6px;
 
 
   /deep/ .ant-form-item-control-wrapper {
@@ -302,7 +309,7 @@ export default {
     width: 300px !important;
 
     .ant-form-item-control-wrapper {
-      width: 400px !important;
+      width: 300px !important;
     }
   }
 
