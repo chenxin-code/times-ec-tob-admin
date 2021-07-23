@@ -5,7 +5,7 @@
         <a-input v-model="sku" placeholder="请输入SKU名称或SKU编码" :maxLength='30'/>
       </a-form-model-item>
       <a-form-model-item label="状态" prop="b">
-        <a-select default-value="全部" @change="(value)=>this.strain = value">
+        <a-select default-value="全部" @change="(value)=>this.selling = value">
             <a-select-option :value="v.id" v-for="(v,i) in selectArrstrain" :key="i">
               {{v.name}}
             </a-select-option>
@@ -19,7 +19,7 @@
     :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
     :tree-data="treeData"
     :replace-fields="{children:'children',key:'categoryCode',value:'categoryId',title:'name'}"
-    @change='onChange'
+    @change='(value)=>this.categoryId = value'
     defaultValue="全部"
     tree-default-expand-all
   >
@@ -53,8 +53,8 @@
                 style="margin-top: 8px;">
               <span slot="action" slot-scope="scope">
                 <a-button type="link" @click="edit">查看详情</a-button>
-                <a-button v-if="scope.selling" type="link" @click="updates(scope.id)">上架</a-button>
-                <a-button v-else type="link" @click="updates(scope.id)">下架</a-button>
+                <a-button v-if="scope.selling" type="link" @click="updates(scope)">上架</a-button>
+                <a-button v-else type="link" @click="updates(scope)">下架</a-button>
               </span>
             </a-table>
             <a-pagination
@@ -84,10 +84,10 @@ export default {
   data() {
     return {
       scrollY:100,
-      selectArrstrain:[
+      selectArrstrain:[ //有bug
         {id: '', name: '全部'},
-        {id: '1', name: '上架'},
-        {id: '0', name: '下架'},
+        {id: -1, name: '上架'},
+        {id: -1, name: '下架'},
       ],
      treeData: [],
      categoryId:'',//下拉树
@@ -95,7 +95,7 @@ export default {
       selectlist:[],
         sku: '',
         status: '',
-        strain: '',
+        selling: '',//山下架
         supplier: '',
       tableColumns: [
         {
@@ -208,37 +208,41 @@ export default {
     edit(){//查看详情
         this.$router.push({ name: 'commodityEdit', params: { id: scope.id ,typ:1}})
     },
-    onChange(value){//下拉树
-      this.categoryId = value;
-    },
     piliang(type) {//批量上下架
-      if(type === 'on'){
-        this.piliangLoading = true;
-          this.updateseli(1);
-      }else{
-        this.updateseli(0);
-      }
+      if(type === 'on') this.updateseli(1);
+      else this.updateseli(0);
     },
     updateseli(type){
-      api.updateSelling({ids:this.beSelected,selling:type}).then((res)=>{
-            this.piliangLoading = false;
-            this.getList();
-          })
-    },
-    updates(id){//单独上下架
-     this.$confirm({
-        title: `上下架状态`,
-        content: `您确定要执行？`,
+        this.$confirm({
+        title: `批量状态更改`,
+        content: `您确定要执行${type== 0 ?'批量下架':'批量上架'}？`,
         centered: true,
         okText: '确定',
         cancelText: '取消',
         onOk: () => {
           this.tableLoading = true;
-           api.updateSellingById(id).then((res)=>{
-             if (resp.code === 200) {
-               this.$message.success('成功');
+            api.updateSelling({ids:this.beSelected,selling:type}).then((res)=>{
+              this.$message.success(`${type== 0 ?'批量下架':'批量上架'}成功`);
+              this.piliangLoading = false;
               this.getList();
-            }
+          }).finally(() => {
+            this.tableLoading = false;
+          });
+        }
+      });
+    },
+    updates(scope){//单独上下架
+     this.$confirm({
+        title: `状态更改`,
+        content: `您确定要执行${scope.selling?'上架':'下架'}？`,
+        centered: true,
+        okText: '确定',
+        cancelText: '取消',
+        onOk: () => {
+          this.tableLoading = true;
+           api.updateSellingById(scope.id).then((res)=>{
+              this.$message.success(`${scope.selling?'上架':'下架'}成功`);
+              this.getList();
           }).finally(() => {
             this.tableLoading = false;
           });
@@ -251,18 +255,12 @@ export default {
       this.pageSize = pageSize;
       this.getList();
     },
-    handleChange(value){
-      this.status = value;
-    },
-    handleChangeing(value){
-      this.supplier = value;
-    },
     getList() {
       this.tableLoading = true;
       let params = {
         categoryId: this.categoryId, //商品id
         keyword: this.sku,
-        selling: this.strain,//上下架
+        selling: this.selling,//上下架
         supplierId: this.status,//供应商id
         pageNum: this.current,
         pageSize: this.pageSize,
@@ -277,6 +275,7 @@ export default {
         this.tableLoading = false;
       });
     },
+
   }
 }
 </script>
@@ -285,9 +284,6 @@ export default {
 .ant-form {
   padding: 20px;
 
-  > div {
-    // width: 400px;
-  }
 
   /deep/ .ant-form-item-control-wrapper {
     width: 250px;
