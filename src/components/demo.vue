@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-for="(item,index) in RangePrice" :key="index">
-      <a-input v-model="item.From" :disabled="index > 0"/>
+      {{item.From}}
       ~
       <a-input v-model="item.To"/>
       价格
@@ -18,7 +18,7 @@ export default {
   data() {
     return {
       RangePrice: [
-        {From: null, To: null, Price: null},
+        {From: 0, To: null, Price: null},
       ],
     }
   },

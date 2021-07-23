@@ -9,16 +9,15 @@
           <a-button class="item-btn" @click="$router.push({path: '/company/add'})" type="primary">新增</a-button>
         </a-form-model-item>
       </a-form-model>
-      <a-row style="padding: 20px;height: 100%;">
+      <a-row style="padding: 0 20px;height: 100%;">
         <a-col>
           <a-table
               :columns="tableColumns"
               :row-key="(r,i) => i"
               :data-source="tableData"
-              :scroll="{ x: 1000 }"
+              :scroll="{ x: 1000, y:scrollY}"
               :pagination="false"
-              :loading="tableLoading"
-              style="margin-top: 8px;">
+              :loading="tableLoading">
             <template slot="statusStr" slot-scope="scope">
               <div class="editable-row-operations">
                 <span v-html="statusStrParse(scope.status)"></span>
@@ -80,6 +79,7 @@ export default {
       password: null,
       showTokenModal: false,
       parentId: null,
+      scrollY:100,
       tableColumns: [
         {
           title: "企业名称",
@@ -137,6 +137,7 @@ export default {
   },
   mounted() {
     this.getList();
+    setTimeout(() => this.scrollY = document.body.clientHeight - 320 + 'px', 0);
   },
   methods: {
     showToken(accountNumber,password){

@@ -1,26 +1,32 @@
 <template>
   <div style="height: 100%;">
-    <a-form-model :model="thisForm" layout="inline" ref="thisForm" labelAlign="left">
+    <a-form-model  layout="inline" ref="thisForm" labelAlign="left">
       <a-form-model-item label="SKU名称/SKU编码" prop="a">
         <a-input v-model="sku" placeholder="请输入SKU名称或SKU编码" :maxLength='30'/>
       </a-form-model-item>
       <a-form-model-item label="状态" prop="b">
-        <a-select default-value="全部" @change="handleChangesataus">
+        <a-select default-value="全部" @change="(value)=>this.selling = value">
             <a-select-option :value="v.id" v-for="(v,i) in selectArrstrain" :key="i">
               {{v.name}}
             </a-select-option>
         </a-select>
       </a-form-model-item>
 
-       <a-form-model-item label="商品品类" prop="d">
-        <a-select default-value='全部' @change="handleChangeing">
-          <a-select-option :value="v.id" v-for="(v,i) in selectArr" :key="i">
-            {{ v.name }}
-          </a-select-option>
-        </a-select>
+      <a-form-model-item label="商品品类" prop="d">
+       <a-tree-select
+    v-model="value"
+    style="width: 100%"
+    :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+    :tree-data="treeData"
+    :replace-fields="{children:'children',key:'categoryCode',value:'categoryId',title:'name'}"
+    @change='(value)=>this.categoryId = value'
+    defaultValue="全部"
+    tree-default-expand-all
+  >
+  </a-tree-select>
       </a-form-model-item>
       <a-form-model-item label="所属供应商" prop="d">
-        <a-select default-value='全部' @change="handleChange">
+        <a-select default-value='全部' @change="(value)=>this.status = value">
           <a-select-option :value="item.id"  v-for="item in selectlist" :key="item.id">
             {{item.supplierName}}
           </a-select-option>
@@ -34,7 +40,7 @@
     </a-form-model>
     <div id="neighborhoodLife">
       <div class="content-main" ref="content_main">
-        <a-row style="padding: 20px;height: 100%;">
+        <a-row style="padding: 4px;height: 100%;">
           <a-col>
             <a-table
                 :row-selection="rowSelection"
@@ -45,10 +51,10 @@
                 :pagination="false"
                 :loading="tableLoading"
                 style="margin-top: 8px;">
-              <span slot="action" >
-                <a-button type="link">查看详情</a-button>
-                <a-button type="link">上架</a-button>
-                <a-button type="link">下架</a-button>
+              <span slot="action" slot-scope="scope">
+                <a-button type="link" @click="$router.push({ name: 'commodityEdit', params: { id: scope.id ,typ: '1'}})">查看详情</a-button>
+                <a-button v-if="scope.selling" type="link" @click="updates(scope)">上架</a-button>
+                <a-button v-else type="link" @click="updates(scope)">下架</a-button>
               </span>
             </a-table>
             <a-pagination
@@ -62,7 +68,7 @@
                 :pageSizeOptions="['1','10','20','50','100']"
                 @change="onShowSizeChange"
                 @showSizeChange="onShowSizeChange"
-                style="margin-top: 30px;width: 100%;text-align: right;"/>
+                style="margin-top: 10px;width: 100%;text-align: right;"/>
           </a-col>
         </a-row>
       </div>
@@ -78,22 +84,27 @@ export default {
   data() {
     return {
       scrollY:100,
-      selectArrstrain:[
+      selectArrstrain:[ //有bug
         {id: '', name: '全部'},
-        {id: '1', name: '上架'},
-        {id: '2', name: '下架'},
+        {id: -1, name: '上架'},
+        {id: -1, name: '下架'},
       ],
-      selectArr: [
-        {id: '', name: '全部'},
-        {id: '二', name: '2'},
-        {id: '三', name: '3'},
-      ],
+     treeData: [],
+     categoryId:'',//下拉树
+      value: undefined,
       selectlist:[],
         sku: '',
         status: '',
-        strain: '',
+        selling: '',//山下架
         supplier: '',
       tableColumns: [
+        {
+          title: "序号",
+          key: "index",
+          width: 60,
+          fixed: "left",
+          customRender: (text,record,index) => `${index+1}`,
+        },
         {
           title: "商品名称",
           dataIndex: "itemName",
@@ -102,8 +113,8 @@ export default {
         },
         {
           title: "SPU编码",
-          dataIndex: "",
-          key:"",
+          dataIndex: "itemCode",
+          key:"itemCode",
           width: 200,
         },
         {
@@ -122,7 +133,7 @@ export default {
           title: "商品品类",
           dataIndex: "categoryName",
           key:"categoryName",
-          width: 200,
+          width: 100,
         },
         {
           title: "供应商",
@@ -132,7 +143,7 @@ export default {
         },
          {
           title: "库存",
-          width: 200,
+          width: 100,
           dataIndex: "stock",
           key:"stock",
         },
@@ -158,7 +169,7 @@ export default {
           title: "操作",
           key: "operation",
           fixed: "right",
-          width: 250,
+          width: 180,
           scopedSlots: {customRender: "action"},
         },
       ],
@@ -172,10 +183,10 @@ export default {
       beSelected: [],
       rowSelection: {
         onChange: (selectedRowKeys, selectedRows) => {
-          this.beSelected = [];
-          selectedRows.forEach((item) => {
-            this.beSelected.push(item.a)
-          });
+          let that = this;
+          that.beSelected = selectedRows.map((item)=>{
+            return item.id
+          })
           this.disBtn = selectedRows.length === 0
         }
       },
@@ -186,40 +197,74 @@ export default {
        this.selectlist = res.data.records;
        this.selectlist.unshift({id:'',supplierName:'全部'})
      })
+     api.getCategoryTree().then(resp => {
+        this.treeData = resp.data;
+        this.treeData.unshift({categoryId:'',name:"全部"})
+    })
   },
   mounted() {
     this.getList();
     const timer1 = setTimeout(() => {
-      this.scrollY = document.body.clientHeight - 420 + 'px';
+      this.scrollY = document.body.clientHeight - 290 + 'px';
     }, 0);
     this.$once('hook:beforeDestroy', () => {
       clearTimeout(timer1);
     });
   },
   methods: {
-    piliang(type) {
-      this.piliangLoading = true;
+    piliang(type) {//批量上下架
+      if(type === 'on') this.updateseli(1);
+      else this.updateseli(0);
     },
-    onShowSizeChange(current, pageSize) {
+    updateseli(type){
+        this.$confirm({
+        title: `批量状态更改`,
+        content: `您确定要执行${type== 0 ?'批量下架':'批量上架'}？`,
+        centered: true,
+        okText: '确定',
+        cancelText: '取消',
+        onOk: () => {
+          this.tableLoading = true;
+            api.updateSelling({ids:this.beSelected,selling:type}).then((res)=>{
+              this.$message.success(`${type== 0 ?'批量下架':'批量上架'}成功`);
+              this.piliangLoading = false;
+              this.getList();
+          }).finally(() => {
+            this.tableLoading = false;
+          });
+        }
+      });
+    },
+    updates(scope){//单独上下架
+     this.$confirm({
+        title: `状态更改`,
+        content: `您确定要执行${scope.selling?'上架':'下架'}？`,
+        centered: true,
+        okText: '确定',
+        cancelText: '取消',
+        onOk: () => {
+          this.tableLoading = true;
+           api.updateSellingById(scope.id).then((res)=>{
+              this.$message.success(`${scope.selling?'上架':'下架'}成功`);
+              this.getList();
+          }).finally(() => {
+            this.tableLoading = false;
+          });
+        }
+      });
+     
+    },
+    onShowSizeChange(current, pageSize) {//分页
       this.current = current;
       this.pageSize = pageSize;
       this.getList();
     },
-    handleChange(value){
-      this.status = value;
-    },
-    handleChangesataus(value){
-      this.strain = value;
-    },
-    handleChangeing(value){
-      this.supplier = value;
-    },
     getList() {
       this.tableLoading = true;
       let params = {
-        categoryId: this.supplier, //商品id
+        categoryId: this.categoryId, //商品id
         keyword: this.sku,
-        selling: this.strain,//上下架
+        selling: this.selling,//上下架
         supplierId: this.status,//供应商id
         pageNum: this.current,
         pageSize: this.pageSize,
@@ -234,17 +279,15 @@ export default {
         this.tableLoading = false;
       });
     },
+
   }
 }
 </script>
 
 <style lang="less" scoped>
 .ant-form {
-  padding: 20px;
+  padding: 6px;
 
-  > div {
-    width: 400px;
-  }
 
   /deep/ .ant-form-item-control-wrapper {
     width: 250px;
@@ -260,10 +303,10 @@ export default {
   }
 
   /deep/ .item-btns {
-    width: 250px !important;
+    width: 300px !important;
 
     .ant-form-item-control-wrapper {
-      width: 400px !important;
+      width: 300px !important;
     }
   }
 

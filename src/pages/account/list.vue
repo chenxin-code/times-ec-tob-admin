@@ -14,16 +14,15 @@
         </a-form-model-item>
       </a-form-model>
       <div class="content-main" ref="content_main">
-        <a-row style="padding: 20px;height: 100%;">
+        <a-row style="padding: 0 20px;height: 100%;">
           <a-col>
             <a-table
                 :columns="tableColumns"
                 :row-key="(r,i) => i"
                 :data-source="tableData"
-                :scroll="{ x: 1000 }"
+                :scroll="{ x: 1000, y:scrollY}"
                 :pagination="false"
-                :loading="tableLoading"
-                style="margin-top: 8px;">
+                :loading="tableLoading">
               <template slot="accountState" slot-scope="scope">
                 <div class="editable-row-operations">
                   <span v-html="accountStateParse(scope.accountState)"></span>
@@ -117,6 +116,7 @@ export default {
       pwd2Null: false,
       pwdDiff: false,
       newPwd: null,
+      scrollY:100,
       newPwd2: null,
       enterpriseId: null,
       thisForm: {
@@ -184,6 +184,7 @@ export default {
   },
   mounted() {
     this.getList();
+    setTimeout(() => this.scrollY = document.body.clientHeight - 350 + 'px', 0);
   },
   methods: {
     onSelect(id, enterpriseName) {

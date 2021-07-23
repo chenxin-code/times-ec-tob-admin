@@ -142,12 +142,11 @@
 </script>
 
 <style lang="less" scoped>
-  #home {
-    //height: 100%;
+#home {
+    height: 100%;
 
     .container {
       height: 100%;
-      min-height:100vh;
 
       aside.ant-layout-sider {
         z-index: 2;
@@ -201,9 +200,10 @@
 
       .content {
         height: calc(100% - 90px);
-        margin: 24px 16px;
+        margin: 10px 16px;
         background: #fff;
-        overflow: auto;
+        // overflow: auto;
+        overflow-y: scroll;
 
         .home-fail {
           padding: 20px;
