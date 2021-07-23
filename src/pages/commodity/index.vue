@@ -48,8 +48,8 @@
           </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item class="item-btns">
-        <a-button class="item-btn" type="primary" @click="quitList()"
+      <a-form-model-item>
+        <a-button type="primary" @click="quitList()"
           >查询</a-button
         >
         <!-- <a-button class="item-btn" @click="_toReset()">重置</a-button> -->
@@ -57,7 +57,7 @@
     </a-form-model>
     <div id="neighborhoodLife">
       <div class="content-main" ref="content_main">
-        <a-row style="padding: 20px;height: 100%;">
+        <a-row style="padding: 4px;height: 100%;">
           <a-col>
             <a-table
               :columns="tableColumns"
@@ -84,7 +84,7 @@
               :pageSizeOptions="['1', '10', '20', '50', '100']"
               @change="onShowSizeChange"
               @showSizeChange="onShowSizeChange"
-              style="margin-top: 30px;width: 100%;text-align: right;"
+              style="margin-top: 10px;width: 100%;text-align: right;"
             />
           </a-col>
         </a-row>
@@ -128,6 +128,13 @@ export default {
       categoryId: '',
       tableColumns: [
         {
+          title: "序号",
+          key: "index",
+          width: 60,
+          fixed: "left",
+          customRender: (text,record,index) => `${index+1}`,
+        },
+        {
           title: '商品名称',
           dataIndex: 'itemName',
           key: 'itemName',
@@ -135,8 +142,8 @@ export default {
         },
         {
           title: 'SPU编码',
-          dataIndex: '',
-          key: '',
+          dataIndex: 'itemCode',
+          key: 'itemCode',
           width: 200,
         },
         {
@@ -153,15 +160,16 @@ export default {
         },
         {
           title: '商品品类',
-          dataIndex: 'categoryName',
+          dataIndex:'categoryName',
+          // scopedSlots: { customRender: 'categoryName'},
           key: 'categoryName',
-          width: 200,
+          width: 100,
         },
         {
           title: '单位',
           dataIndex: 'unit',
           key: 'unit',
-          width: 200,
+          width: 60,
         },
         {
           title: '供应商',
@@ -177,42 +185,43 @@ export default {
         },
         {
           title: '税率',
-          width: 200,
+          width: 60,
           dataIndex: 'taxRate',
           key: 'taxRate',
         },
         {
           title: '库存',
-          width: 200,
+          width: 80,
           dataIndex: 'stock',
           key: 'stock',
         },
         {
           title: '是否阶梯价',
-          width: 200,
+          width: 80,
           dataIndex: '',
         },
         {
-          title: '成本价（数量=元）',
-          width: 200,
+          title: '成本价(数量=元)',
+          width: 100,
           key: 'costPrice',
           dataIndex: 'costPrice',
         },
         {
-          title: '税前销售价（数量=元）',
-          width: 200,
+          title: '税前销售价(数量=元)',
+          width: 120,
           key: 'beforeTaxSellingPrice',
           dataIndex: 'beforeTaxSellingPrice',
         },
         {
-          title: '税后销售价（数量=元）',
-          width: 200,
+          title: '税后销售价(数量=元)',
+          width: 120,
           key: 'afterTaxSellingPrice',
           dataIndex: 'afterTaxSellingPrice',
         },
         {
           title: '商品状态',
-          width: 200,
+          customRender:(selling)=>selling==1?'上架':'下架',
+          width: 90,
           dataIndex: 'selling',
         },
         {
@@ -234,7 +243,7 @@ export default {
       // replaceFields
     })
     setTimeout(
-      () => (this.scrollY = document.body.clientHeight - 400 + 'px'),
+      () => (this.scrollY = document.body.clientHeight - 310 + 'px'),
       0
     )
   },
@@ -308,7 +317,7 @@ export default {
 
 <style lang="less" scoped>
 .ant-form {
-  padding: 20px;
+  padding: 6px;
 
   // > div {
   //   width: 400px;
@@ -335,8 +344,5 @@ export default {
     }
   }
 
-  /deep/ .item-btns .item-btn {
-    // margin-right: 20px;
-  }
 }
 </style>
