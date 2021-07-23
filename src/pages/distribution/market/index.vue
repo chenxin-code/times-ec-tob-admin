@@ -137,26 +137,6 @@ export default {
   },
   data() {
     let orderStatusListSelect = [
-      {
-        id: '0',
-        name: '全部',
-      },
-      {
-        id: '1',
-        name: '待发货',
-      },
-      {
-        id: '2',
-        name: '已发货',
-      },
-      {
-        id: '3',
-        name: '已完成',
-      },
-      {
-        id: '4',
-        name: '已关闭',
-      },
     ]
     let columns = [
       {
@@ -182,7 +162,7 @@ export default {
         key: 'payWay',
         customRender: (text, record, index) => {
           let str = ''
-          switch (text) {
+          switch (record.payWay) {
             case 'ONLINE':
               str = '线上'
               break
@@ -190,7 +170,7 @@ export default {
               str = '线下'
               break
             default:
-              '22'
+              ''
               break
           }
           return str
@@ -279,7 +259,7 @@ export default {
       loading: false,
       dataList: [],
       cityCompanyList: [],
-      orderStatusValue: '0', // 采购公司 城市公司
+      orderStatusValue: '', // 采购公司 城市公司
       orderStatusListSelect,
       afterVisible: false,
       endOpen: false,
