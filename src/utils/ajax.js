@@ -7,6 +7,7 @@ import message from 'ant-design-vue/es/message'
 import * as api from '@/api/login'
 import QS from 'qs'
 import store from '../store'
+import { returnBaseCms } from './util'
 
 // 一体化线上域名-返回登陆
 const baseCmsWebsite =
@@ -168,13 +169,13 @@ async function refreshToken() {
     .finally(() => {})
 }
 
-// 返回一体化
-async function returnBaseCms(res) {
-  message.error('登陆已过期，需要重新登陆')
-  setTimeout(function() {
-    window.location.href = baseCmsWebsite
-  }, 2000)
-}
+// // 返回一体化
+// async function returnBaseCms(res) {
+//   message.error('登陆已过期，需要重新登陆')
+//   setTimeout(function() {
+//     window.location.href = baseCmsWebsite
+//   }, 2000)
+// }
 
 export const fetchApi = (
   api,
