@@ -113,6 +113,8 @@
           <a @click="applyAfterSale(record)">修改城市公司</a>
           <a-divider type="vertical" />
           <a @click="checkDetails(record)">查看</a>
+          <a-divider type="vertical" />
+          <a @click="checkDeliveryOrder(record)">查看配送订单</a>
         </span>
       </a-table>
     </div>
@@ -246,7 +248,7 @@ export default {
         title: '操作',
         key: 'operation',
         fixed: 'right',
-        width: 200,
+        width: 300,
         scopedSlots: { customRender: 'action' },
       },
     ]
@@ -426,6 +428,12 @@ export default {
         params: {
           saleOrderNo: record.saleOrderNo,
         },
+      })
+    },
+    // 查看配送订单
+    checkDeliveryOrder() {
+      this.$router.push({
+        name: 'deliveryOrder'
       })
     },
     // 获取城市公司

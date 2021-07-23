@@ -230,6 +230,21 @@ let router = new Router({
           component: () => import("../pages/distribution/market/detail"),
         },
         {
+          path: "/market/deliveryOrder",
+          name: "deliveryOrder",
+          menuKey: "deliveryOrder",
+          meta: {
+            menu: "/market",
+            authKeys: [""],
+            bread: [
+              { path: "/market", name: "销售单管理" },
+              { path: "/market/deliveryOrder", name: "配送单查询" }
+            ],
+            // keepAlive: true
+          },
+          component: () => import("../pages/distribution/market/deliveryOrder"),
+        },
+        {
           path: "/supplier",
           name: "supplier",
           menuKey: "supplier",
