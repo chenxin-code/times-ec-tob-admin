@@ -4,7 +4,7 @@
       销售单详情
       <span class="fallback" @click="FALLBACK" style="cursor:pointer">返回</span>
     </div> -->
-    <div class="content-main" style="padding-bottom:100px; overflow-y: auto;height: calc(100% - 45px);">
+    <div class="content-main" style="padding-bottom:50px; overflow-y: auto;height: calc(100% - 45px);">
       <div style="width:100%;display: flex;align-items:center;padding: 20px 20px;">
         <div style="width:3px;height:16px;background: #4B7AFB;"></div>
         <span style="color:#666666;margin-left:5px;">订单基础信息</span>
