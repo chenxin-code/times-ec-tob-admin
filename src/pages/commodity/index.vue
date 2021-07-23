@@ -142,8 +142,8 @@ export default {
         },
         {
           title: 'SPU编码',
-          dataIndex: '',
-          key: '',
+          dataIndex: 'itemCode',
+          key: 'itemCode',
           width: 200,
         },
         {

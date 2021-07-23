@@ -101,13 +101,13 @@
         :loading="loading"
         @change="tableChange"
       >
-        <div slot="addressDto" slot-scope="text, record">
-          <div>
+        <!-- <div slot="addressDto" slot-scope="text, record">
+          <div> -->
             <!-- <p>姓名：{{record.addressDto.receiverName}}</p>
 						<p>电话：{{record.addressDto.receiverPhone}}}</p>
 						<p>地址：{{record.addressDto.detailAddress}}}</p> -->
-          </div>
-        </div>
+          <!-- </div>
+        </div> -->
         <!-- 操作 -->
         <span slot="action" slot-scope="text, record">
           <a @click="applyAfterSale(record)">修改城市公司</a>
@@ -339,7 +339,7 @@ export default {
   },
   created() {
     const timer1 = setTimeout(() => {
-      this.scrollY = document.body.clientHeight - 370 + 'px'
+      this.scrollY = document.body.clientHeight - 400 + 'px'
     }, 0)
     this.$once('hook:beforeDestroy', () => {
       clearTimeout(timer1)
