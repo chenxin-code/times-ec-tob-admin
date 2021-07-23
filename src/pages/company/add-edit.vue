@@ -140,44 +140,54 @@ export default {
     }
   },
   mounted() {
-    api.getAreaData({level: 3}).then(response => {
-      if (response.code === 200) {
-        this.areaData = response.data[0].list;//去掉中国
-        if (this.$route.path === '/company/edit') {
-          api.getProjectDetail({
-            id: this.$route.query.id
-          }).then(resp => {
-            if (resp.code === 200) {
-              this.isTop = resp.data.parentId === '-1';
-              this.parentId = resp.data.parentId;
-              this.parentName = resp.data.parentName;
-              this.thisForm.enterpriseName = resp.data.enterpriseName;
-              this.thisForm.enterpriseCode = resp.data.enterpriseCode;
-              this.thisForm.employeeNum = resp.data.employeeNum;
-              this.thisForm.businessScope = resp.data.businessScope;
-              this.thisForm.creditLevel = resp.data.creditLevel;
-              this.thisForm.mailAddress = resp.data.mailAddress;
-              this.thisForm.detailAddress = resp.data.detailAddress;
-              this.thisForm.remark = resp.data.remark;
-              this.thisForm.enterprisePhone = resp.data.enterprisePhone;
-              this.thisForm.email = resp.data.email;
-              this.thisForm.concatPerson = resp.data.concatPerson;
-              this.thisForm.concatPhone = resp.data.concatPhone;
-              this.thisForm.provinceCode = resp.data.provinceCode;//省
-              this.thisForm.cityCode = resp.data.cityCode;//市
-              this.thisForm.districtCode = resp.data.districtCode;//区
-              this.defaultValue = [resp.data.provinceCode, resp.data.cityCode, resp.data.districtCode];
-              this.showCascader = true;//取到defaultValue再加载组件
-            }
-          });
-        } else if (this.$route.path === '/company/add') {
-          this.showCascader = true;
+    let tob_areaData = sessionStorage.getItem('tob_areaData');
+    if(tob_areaData){
+      this.areaData = JSON.parse(tob_areaData);
+      this.afterGetAreaData();
+    }else{
+      api.getAreaData({level: 3}).then(response => {
+        if (response.code === 200) {
+          this.areaData = response.data[0].list;//去掉中国
+          sessionStorage.setItem('tob_areaData', JSON.stringify(this.areaData));
+          this.afterGetAreaData();
         }
-      }
-    });
+      });
+    }
   },
   computed: {},
   methods: {
+    afterGetAreaData() {
+      if (this.$route.path === '/company/edit') {
+        api.getProjectDetail({
+          id: this.$route.query.id
+        }).then(resp => {
+          if (resp.code === 200) {
+            this.isTop = resp.data.parentId === '-1';
+            this.parentId = resp.data.parentId;
+            this.parentName = resp.data.parentName;
+            this.thisForm.enterpriseName = resp.data.enterpriseName;
+            this.thisForm.enterpriseCode = resp.data.enterpriseCode;
+            this.thisForm.employeeNum = resp.data.employeeNum;
+            this.thisForm.businessScope = resp.data.businessScope;
+            this.thisForm.creditLevel = resp.data.creditLevel;
+            this.thisForm.mailAddress = resp.data.mailAddress;
+            this.thisForm.detailAddress = resp.data.detailAddress;
+            this.thisForm.remark = resp.data.remark;
+            this.thisForm.enterprisePhone = resp.data.enterprisePhone;
+            this.thisForm.email = resp.data.email;
+            this.thisForm.concatPerson = resp.data.concatPerson;
+            this.thisForm.concatPhone = resp.data.concatPhone;
+            this.thisForm.provinceCode = resp.data.provinceCode;//省
+            this.thisForm.cityCode = resp.data.cityCode;//市
+            this.thisForm.districtCode = resp.data.districtCode;//区
+            this.defaultValue = [resp.data.provinceCode, resp.data.cityCode, resp.data.districtCode];
+            this.showCascader = true;//取到defaultValue再加载组件
+          }
+        });
+      } else if (this.$route.path === '/company/add') {
+        this.showCascader = true;
+      }
+    },
     findTree(areaData, districtCode, respData) {
       for (let index = 0; index < areaData.length; index++) {
         if (areaData[index].list) {

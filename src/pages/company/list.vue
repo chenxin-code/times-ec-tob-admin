@@ -9,7 +9,7 @@
           <a-button class="item-btn" @click="$router.push({path: '/company/add'})" type="primary">新增</a-button>
         </a-form-model-item>
       </a-form-model>
-      <a-row style="padding: 20px;height: 100%;">
+      <a-row style="padding: 0 20px;height: 100%;">
         <a-col>
           <a-table
               :columns="tableColumns"
@@ -17,8 +17,7 @@
               :data-source="tableData"
               :scroll="{ x: 1000, y:scrollY}"
               :pagination="false"
-              :loading="tableLoading"
-              style="margin-top: 8px;">
+              :loading="tableLoading">
             <template slot="statusStr" slot-scope="scope">
               <div class="editable-row-operations">
                 <span v-html="statusStrParse(scope.status)"></span>
