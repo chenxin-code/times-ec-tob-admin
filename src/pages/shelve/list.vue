@@ -52,7 +52,7 @@
                 :loading="tableLoading"
                 style="margin-top: 8px;">
               <span slot="action" slot-scope="scope">
-                <a-button type="link" @click="edit">查看详情</a-button>
+                <a-button type="link" @click="$router.push({ name: 'commodityEdit', params: { id: scope.id ,typ: '1'}})">查看详情</a-button>
                 <a-button v-if="scope.selling" type="link" @click="updates(scope)">上架</a-button>
                 <a-button v-else type="link" @click="updates(scope)">下架</a-button>
               </span>
@@ -212,9 +212,6 @@ export default {
     });
   },
   methods: {
-    edit(){//查看详情
-        this.$router.push({ name: 'commodityEdit', params: { id: scope.id ,typ:1}})
-    },
     piliang(type) {//批量上下架
       if(type === 'on') this.updateseli(1);
       else this.updateseli(0);
