@@ -54,18 +54,18 @@
         <a-button key="back" @click="showTokenModal = false">关闭</a-button>
       </template>
       <a-form layout="inline">
-        <a-form-item style="font-size: 18px;">
-          <div style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
-            <div style="width: 100px;margin-right: 10px;display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
+        <a-form-item style="font-size: 18px;" class="token-modal">
+          <div>
+            <span style="margin-right: 10px;">
               <span>账号：</span>
-            </div>
-            <span style="width: 267px;color: #a1a1a1;">{{accountNumber}}</span>
+            </span>
+            <span style="color: #a1a1a1;">{{accountNumber}}</span>
           </div>
-          <div style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
-            <div style="width: 100px;margin-right: 10px;display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
+          <div>
+            <span style="margin-right: 10px;">
               <span>密钥：</span>
-            </div>
-            <span style="width: 267px;color: #a1a1a1;">{{password}}</span>
+            </span>
+            <span style="color: #a1a1a1;">{{password}}</span>
           </div>
         </a-form-item>
       </a-form>
@@ -204,6 +204,13 @@ export default {
 
   /deep/ .ant-form-item-control-wrapper {
     width: 250px;
+  }
+
+  > .token-modal {
+    width: 500px;
+    /deep/ .ant-form-item-control-wrapper {
+      width: 500px;
+    }
   }
 
   /deep/ .ant-calendar-picker-input {
