@@ -23,7 +23,7 @@
           v-model="searchData.orderTimeStart"
           :disabled-date="disabledStartDate"
           show-time
-          format="YYYY-MM-DD HH:mm:ss"
+          format="YYYY-MM-DD"
           placeholder="下单开始时间"
           @openChange="handleStartOpenChange"
           @change="onStartDateChange"
@@ -37,7 +37,7 @@
           v-model="searchData.orderTimeEnd"
           :disabled-date="disabledEndDate"
           show-time
-          format="YYYY-MM-DD HH:mm:ss"
+          format="YYYY-MM-DD"
           placeholder="下单结束时间"
           :open="endOpen"
           @openChange="handleEndOpenChange"
@@ -128,6 +128,7 @@
 
 <script>
 import AfterSaleApproveModal from './afterSaleApproveModal'
+import moment from 'moment'
 import api from '@/api'
 import { mapState } from 'vuex'
 export default {
@@ -276,8 +277,8 @@ export default {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         saleOrderNo: this.searchData.saleOrderNo, // 订单编号
-        orderTimeStart: this.searchData.orderTimeStart, // 开始时间
-        orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
+        orderTimeStart: this.parseDate(this.searchData.orderTimeStart), // 开始时间
+        orderTimeEnd: this.parseDate(this.searchData.orderTimeEnd), // 结束时间
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
         receiver: this.searchData.receiver, // 收货人 模糊查询
         cityCompany: this.searchData.cityCompany, // 城市公司
@@ -309,8 +310,8 @@ export default {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         saleOrderNo: this.searchData.saleOrderNo, // 订单编号
-        orderTimeStart: this.searchData.orderTimeStart, // 开始时间
-        orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
+        orderTimeStart: this.parseDate(this.searchData.orderTimeStart), // 开始时间
+        orderTimeEnd: this.parseDate(this.searchData.orderTimeEnd), // 结束时间
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
         receiver: this.searchData.receiver, // 收货人 模糊查询
         cityCompany: this.searchData.cityCompany, // 城市公司
@@ -337,8 +338,8 @@ export default {
           pageNum: this.pageData.pageNum, // 第几页
           pageSize: this.pageData.pageSize, // 每页多少条
           saleOrderNo: this.searchData.saleOrderNo, // 订单编号
-          orderTimeStart: this.searchData.orderTimeStart, // 开始时间
-          orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
+          orderTimeStart: this.parseDate(this.searchData.orderTimeStart), // 开始时间
+          orderTimeEnd: this.parseDate(this.searchData.orderTimeEnd), // 结束时间
           purchaseCompany: this.searchData.purchaseCompany, // 采购公司
           receiver: this.searchData.receiver, // 收货人 模糊查询
           cityCompany: this.searchData.cityCompany, // 城市公司
@@ -358,13 +359,22 @@ export default {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         saleOrderNo: this.searchData.saleOrderNo, // 订单编号
-        orderTimeStart: this.searchData.orderTimeStart, // 开始时间
-        orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
+        orderTimeStart: this.parseDate(this.searchData.orderTimeStart), // 开始时间
+        orderTimeEnd: this.parseDate(this.searchData.orderTimeEnd), // 结束时间
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
         receiver: this.searchData.receiver, // 收货人 模糊查询
         cityCompany: this.searchData.cityCompany, // 城市公司
       }
       this.getData(params)
+    },
+    parseDate(date) {
+      let str = undefined
+      if(date) {
+        let oDate = new Date(date)
+        str = oDate.getFullYear() + '-' + (oDate.getMonth() + 1) + '-' + oDate.getDate()
+      }
+      return str
+    
     },
     tableChange(e) {
       let { pageSize, current } = e
@@ -393,8 +403,8 @@ export default {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         saleOrderNo: this.searchData.saleOrderNo, // 订单编号
-        orderTimeStart: this.searchData.orderTimeStart, // 开始时间
-        orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
+        orderTimeStart: this.parseDate(this.searchData.orderTimeStart), // 开始时间
+        orderTimeEnd: this.parseDate(this.searchData.orderTimeEnd), // 结束时间
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
         receiver: this.searchData.receiver, // 收货人 模糊查询
         cityCompany: this.searchData.cityCompany, // 城市公司
@@ -445,8 +455,8 @@ export default {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         saleOrderNo: this.searchData.saleOrderNo, // 订单编号
-        orderTimeStart: this.searchData.orderTimeStart, // 开始时间
-        orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
+        orderTimeStart: this.parseDate(this.searchData.orderTimeStart), // 开始时间
+        orderTimeEnd: this.parseDate(this.searchData.orderTimeEnd), // 结束时间
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
         receiver: this.searchData.receiver, // 收货人 模糊查询
         cityCompany: this.searchData.cityCompany, // 城市公司
