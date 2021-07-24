@@ -131,11 +131,11 @@
         </a-form-item>
 
         <a-form-item label="销售价" v-show="isTieredPricing== false">
-          <div class="intpud" v-for="(item,index) in sellingPrice" :key="index">
+          <div class="intpud">
             <span class="spshu">税前销售价:</span>
-            <a-input placeholder="请输入" v-model="item.priceBeforeTax" class="intpudnum" type="number" />
+            <a-input placeholder="请输入" v-model="sellingPrice[0].priceBeforeTax" class="intpudnum" type="number" />
             <span class="spshu">税后销售价:</span>
-            <a-input placeholder="请输入" v-model="item.priceAfterTax" class="intpudnum" type="number" />
+            <a-input placeholder="请输入" v-model="sellingPrice[0].priceAfterTax" class="intpudnum" type="number" />
           </div>
         </a-form-item>
 
@@ -286,7 +286,7 @@ export default {
           this.sellingPrice = data.sellingPrice;//销售价
           this.categoryId = data.categoryId, //所属类目id
           this.categoryName = data.categoryName, //所属类目名称
-          this.isTieredPricing=true ,//价格类型
+          this.isTieredPricing=data.isTieredPricing ,//价格类型
           this.form.setFieldsValue({
             skuCodeInside:data.skuCodeInside,//商品sku自编码
             categoryId:data.categoryName,//所属类目id

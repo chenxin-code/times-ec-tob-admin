@@ -72,6 +72,9 @@
                 <a-button type="link" @click="edit(scope, '1')">查看</a-button>
                 <a-button type="link" @click="edit(scope, '2')">编辑</a-button>
               </span>
+              <template slot="isTieredPricing" slot-scope="scope">
+              {{scope.isTieredPricing== true?'是':'否'}}
+            </template>
                <template slot="costPrice" slot-scope="scope">
               <div class="editable-row-operations" v-for="item in scope.costPrice" :key="item.skuId">
                 <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} : {{ item.costPrice}}</p>
@@ -220,7 +223,8 @@ export default {
           title: '是否阶梯价',
           width: 80,
           key: 'isTieredPricing',
-          customRender:(isTieredPricing)=>isTieredPricing==='true'?'是':'否',
+          scopedSlots: { customRender: 'isTieredPricing'}
+          // customRender:(isTieredPricing)=>isTieredPricing == 'true' ? '是':'否',
         },
         {
           title: '成本价(数量=元)',
