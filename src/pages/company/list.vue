@@ -4,8 +4,12 @@
       <companyTree @onSelect="onSelect" />
     </div>
     <div style="width: 80%;">
-      <a-form-model layout="inline">
+      <a-form-model :model="thisForm" layout="inline" ref="thisForm" labelAlign="left">
+        <a-form-model-item label="企业名称" prop="enterpriseName">
+          <a-input v-model="thisForm.enterpriseName" placeholder="请输入企业名称" :maxLength='30'/>
+        </a-form-model-item>
         <a-form-model-item class="item-btns">
+          <a-button class="item-btn" type="primary" @click="getList()">查询</a-button>
           <a-button class="item-btn" @click="reset()">重置</a-button>
           <a-button class="item-btn" @click="$router.push({path: '/company/add'})" type="primary">新增</a-button>
         </a-form-model-item>
@@ -81,6 +85,9 @@ export default {
       showTokenModal: false,
       parentId: null,
       scrollY:100,
+      thisForm: {
+        enterpriseName: null
+      },
       tableColumns: [
         {
           title: "企业名称",
@@ -143,6 +150,7 @@ export default {
   methods: {
     reset(){
       this.parentId = null;
+      this.thisForm.enterpriseName = null;
       this.current = 1;
       this.pageSize = 10;
       this.getList();
@@ -168,6 +176,7 @@ export default {
     getList() {
       this.tableLoading = true;
       api.getProjectList({
+        ...this.thisForm,
         pageNum: this.current,
         pageSize: this.pageSize,
         parentId: this.parentId,

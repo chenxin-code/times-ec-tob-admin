@@ -190,6 +190,7 @@ export default {
   methods: {
     reset(){
       this.enterpriseId = null;
+      this.thisForm.accountName = null;
       this.current = 1;
       this.pageSize = 10;
       this.getList();
