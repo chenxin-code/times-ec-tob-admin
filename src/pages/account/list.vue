@@ -5,6 +5,9 @@
     </div>
     <div style="width: 80%;">
       <a-form-model :model="thisForm" layout="inline" ref="thisForm" labelAlign="left">
+        <a-form-model-item label="所属企业" prop="enterpriseName">
+          <a-input v-model="thisForm.enterpriseName" placeholder="请输入企业名称" :maxLength='30'/>
+        </a-form-model-item>
         <a-form-model-item label="姓名" prop="accountName">
           <a-input v-model="thisForm.accountName" placeholder="请输入姓名" :maxLength='30'/>
         </a-form-model-item>
@@ -121,7 +124,8 @@ export default {
       newPwd2: null,
       enterpriseId: null,
       thisForm: {
-        accountName: null
+        enterpriseName: null,
+        accountName: null,
       },
       tableColumns: [
         {
@@ -190,6 +194,7 @@ export default {
   methods: {
     reset(){
       this.enterpriseId = null;
+      this.thisForm.enterpriseName = null;
       this.thisForm.accountName = null;
       this.current = 1;
       this.pageSize = 10;
@@ -306,7 +311,7 @@ export default {
   padding: 20px;
 
   > div {
-    width: 300px;
+    width: 330px;
   }
 
   /deep/ .ant-form-item-control-wrapper {
@@ -318,14 +323,15 @@ export default {
   }
 
   /deep/ .ant-form-item-label {
-    width: 50px;
+    width: 70px;
+    text-align: right;
   }
 
   /deep/ .item-btns {
-    width: 500px !important;
+    width: 250px !important;
 
     .ant-form-item-control-wrapper {
-      width: 400px !important;
+      width: 300px !important;
     }
   }
 

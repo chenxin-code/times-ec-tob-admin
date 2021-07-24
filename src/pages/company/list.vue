@@ -218,14 +218,15 @@ export default {
   }
 
   /deep/ .ant-form-item-label {
-    width: 100px;
+    width: 80px;
+    text-align: right;
   }
 
   /deep/ .item-btns {
-    width: 500px !important;
+    width: 300px !important;
 
     .ant-form-item-control-wrapper {
-      width: 400px !important;
+      width: 300px !important;
     }
   }
 

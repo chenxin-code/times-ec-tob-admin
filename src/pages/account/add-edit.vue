@@ -18,7 +18,7 @@
         <a-input v-model="thisForm.accountName" :maxLength="10"/>
       </a-form-model-item>
       <a-form-model-item label="登录名" prop="loginName">
-        <a-input v-model="thisForm.loginName" :maxLength="50" :disabled="isDisable"/>
+        <a-input v-model="thisForm.loginName" autocomplete="off" :maxLength="50" :disabled="isDisable"/>
       </a-form-model-item>
       <a-form-model-item label="状态">
         <a-select v-model="thisForm.accountState">
@@ -27,10 +27,10 @@
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="密码" prop="password" v-if="!isDisable">
-        <a-input-password v-model="thisForm.password"/>
+        <a-input-password v-model="thisForm.password" autocomplete="off"/>
       </a-form-model-item>
       <a-form-model-item label="确认密码" prop="confirmPassword" v-if="!isDisable">
-        <a-input-password v-model="thisForm.confirmPassword"/>
+        <a-input-password v-model="thisForm.confirmPassword" autocomplete="off"/>
       </a-form-model-item>
       <a-form-model-item label="电子邮箱" prop="email">
         <a-input v-model="thisForm.email"/>
