@@ -10,6 +10,7 @@
         </a-form-model-item>
         <a-form-model-item class="item-btns">
           <a-button class="item-btn" type="primary" @click="getList()">查询</a-button>
+          <a-button class="item-btn" @click="reset()">重置</a-button>
           <a-button class="item-btn" @click="$router.push({path: '/account/add'})" type="primary">新增</a-button>
         </a-form-model-item>
       </a-form-model>
@@ -187,6 +188,12 @@ export default {
     setTimeout(() => this.scrollY = document.body.clientHeight - 350 + 'px', 0);
   },
   methods: {
+    reset(){
+      this.enterpriseId = null;
+      this.current = 1;
+      this.pageSize = 10;
+      this.getList();
+    },
     onSelect(id, enterpriseName) {
       console.log(id, enterpriseName);
       this.enterpriseId = id;
