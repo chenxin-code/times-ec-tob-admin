@@ -3,6 +3,8 @@
 */
 import router from '../router'
 import api from '../api'
+import { returnBaseCms } from '../utils/util'
+
 export default {
   // 返回
   FALLBACK() {
@@ -30,6 +32,14 @@ export default {
         window.localStorage.setItem('Case_Access_Token', Access_Token)
         context.commit('SET_CASE_TOKEN', Access_Token)
       }
+      //判断如果没有一体化token就跳转
+      if (res.code == 500) {
+        // setTimeout(function() {
+        //   window.location.href = process.env.VUE_APP_BASE_CMS_WEBSITE
+        // }, 2000)
+        returnBaseCms()
+      }
+      console.log('loginByOriginalToken--->', res)
     })
   },
 }

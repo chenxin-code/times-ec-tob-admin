@@ -4,12 +4,12 @@
       销售单详情
       <span class="fallback" @click="FALLBACK" style="cursor:pointer">返回</span>
     </div> -->
-    <div class="content-main" style="overflow-y: auto;height: calc(100% - 45px);">
+    <div class="content-main" style="padding-bottom:50px; overflow-y: auto;height: calc(100% - 45px);">
       <div style="width:100%;display: flex;align-items:center;padding: 20px 20px;">
         <div style="width:3px;height:16px;background: #4B7AFB;"></div>
         <span style="color:#666666;margin-left:5px;">订单基础信息</span>
       </div>
-      <a-form-model label="inline" :label-col="{ span: 7 }" :wrapper-col="{ span: 14 }" style="padding:0 10px;">
+      <a-form-model label="inline" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" style="padding:0 10px;">
         <div class="form-wrop">
           <div class="form-wrop-item">
             <a-form-model-item label="订单编号" >
@@ -33,7 +33,7 @@
               <span class="info">{{dataList.projectName}}</span>
             </a-form-model-item>
             
-            <a-form-model-item label="采购公司（出账公司）">
+            <a-form-model-item label="采购公司(出账公司)">
               <span class="info">{{dataList.purchaseCompany}}</span>
             </a-form-model-item>
             <a-form-model-item label="支付方式">
@@ -54,7 +54,7 @@
         <div style="width:3px;height:16px;background: #4B7AFB;"></div>
         <span style="color:#666666;margin-left:5px;">订单价格</span>
       </div>
-      <a-form-model :label-col="{ span: 4 }" :wrapper-col="{ span: 14 }" style="padding:0 10px;">
+      <a-form-model :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" style="padding:0 10px;">
         <div class="form-wrop">
           <div class="form-wrop-item">
             <a-form-model-item label="税前订单总额" >
@@ -79,7 +79,7 @@
         <div style="width:3px;height:16px;background: #4B7AFB;"></div>
         <span style="color:#666666;margin-left:5px;">收货信息</span>
       </div>
-      <a-form-model :label-col="{ span: 4 }" :wrapper-col="{ span: 14 }" style="padding:0 10px;">
+      <a-form-model :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" style="padding:0 10px;">
         <div class="form-wrop">
           <div class="form-wrop-item">
             <a-form-model-item label="收货人" >
@@ -145,12 +145,14 @@
             title: "商品名称",
             dataIndex: "itemName",
             key: "itemName",
+            width: 200,
             ellipsis: true,
           },
           {
             title: "SKU名称",
-            key: "",
-            width: 120,
+            key: "skuName",
+            dataIndex: 'skuName',
+            width: 200,
             ellipsis: true,
           },
           {
@@ -194,25 +196,25 @@
           },
            {
             title: "税前优惠价",
-            key: "totalPretaxReducedPrice",
-            dataIndex: "totalPretaxReducedPrice",
+            key: "pretaxReducedPrice",
+            dataIndex: "pretaxReducedPrice",
             ellipsis: true,
           },
           {
             title: "税后优惠价",
-            key: "totalReducedPrice",
-            dataIndex: "totalReducedPrice",
+            key: "reducedPrice",
+            dataIndex: "reducedPrice",
             ellipsis: true,
           },
           {
             title: "税率",
-            key: "",
-            dataIndex: "",
+            key: "taxRate",
+            dataIndex: "taxRate",
             ellipsis: true,
           },
           {
             title: "备注",
-            key: "taxRate",
+            key: "remark",
             dataIndex: "taxRate",
             ellipsis: true,
           }
