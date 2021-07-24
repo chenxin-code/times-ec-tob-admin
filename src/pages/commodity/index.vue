@@ -72,6 +72,34 @@
                 <a-button type="link" @click="edit(scope, '1')">查看</a-button>
                 <a-button type="link" @click="edit(scope, '2')">编辑</a-button>
               </span>
+               <template slot="costPrice" slot-scope="scope">
+              <div class="editable-row-operations" v-for="item in scope.costPrice" :key="item.skuId">
+                <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} : {{ item.costPrice}}</p>
+                <p v-else > {{ item.costPrice}}</p>
+              </div>
+            </template>
+            
+            <template slot="sellingPrice" slot-scope="scope">
+              <div class="editable-row-operations" v-for="item in scope.sellingPrice" :key="item.skuId">
+                <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} : {{ item.priceBeforeTax}}</p>
+                <p v-else > {{ item.priceBeforeTax}}</p>
+              </div>
+            </template>
+
+            <template slot="sellingPrice" slot-scope="scope">
+              <div class="editable-row-operations" v-for="item in scope.sellingPrice" :key="item.skuId">
+                <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} : {{ item.priceBeforeTax}}</p>
+                <p v-else > {{ item.priceBeforeTax}}</p>
+              </div>
+            </template>
+
+            <template slot="sellingPricepro" slot-scope="scope">
+              <div class="editable-row-operations" v-for="item in scope.sellingPrice" :key="item.skuId">
+                <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} : {{ item.priceBeforeTax}}</p>
+                <p v-else > {{ item.priceBeforeTax}}</p>
+              </div>
+            </template>
+
             </a-table>
             <a-pagination
               :total="total"
@@ -108,18 +136,11 @@ export default {
       current: 1,
       treeData: [],
       value: undefined,
-
       scrollY: 100,
       selectArrstrain: [
         { id: '', name: '全部' },
         { id: '1', name: '上架' },
         { id: '2', name: '下架' },
-      ],
-      selectArr: [
-        { id: '', name: '全部' },
-        { id: '二', name: '服装' },
-        { id: '三', name: '食品' },
-        { id: '三', name: '旅游' },
       ],
       selectlist: [],
       sku: '',
@@ -198,25 +219,28 @@ export default {
         {
           title: '是否阶梯价',
           width: 80,
-          dataIndex: '',
+          key: 'isTieredPricing',
+          customRender:(isTieredPricing)=>isTieredPricing==='true'?'是':'否',
         },
         {
           title: '成本价(数量=元)',
           width: 100,
           key: 'costPrice',
-          dataIndex: 'costPrice',
+          scopedSlots: { customRender: 'costPrice'}
         },
         {
           title: '税前销售价(数量=元)',
           width: 120,
-          key: 'beforeTaxSellingPrice',
-          dataIndex: 'beforeTaxSellingPrice',
+          key: 'sellingPrice',
+          // dataIndex: 'beforeTaxSellingPrice',
+          scopedSlots: { customRender: 'sellingPrice'}
         },
         {
           title: '税后销售价(数量=元)',
           width: 120,
-          key: 'afterTaxSellingPrice',
-          dataIndex: 'afterTaxSellingPrice',
+          // key: 'sellingPrice',
+          // dataIndex: 'sellingPrice',
+          scopedSlots: { customRender: 'sellingPricepro'}
         },
         {
           title: '商品状态',
