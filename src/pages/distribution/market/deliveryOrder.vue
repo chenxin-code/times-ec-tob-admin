@@ -6,7 +6,7 @@
         <span style="color:#666666;margin-left:5px;">配送单</span>
       </div>
       <a-table
-        :columns="tableColumns"
+        :columns="columns1"
         :row-key="(r,i) => i"
         :data-source="dataList"
         :scroll="{ x: 1600 }"
@@ -14,16 +14,49 @@
         style="margin-top:8px;"
       >
         <span slot="action" slot-scope="scope">
-          <a-button type="link"
-                    @click="$router.push({path: '/account/edit', query: {id: scope.id,loginName: scope.loginName}})">编辑</a-button>
-          <a-button type="link" @click="updatePwd(scope.loginName)">修改密码</a-button>
-          <a-button type="link" @click="goDel(scope.loginName)">删除</a-button>
+          <a-button type="link" @click="detail(scope)">查看</a-button>
+          <a-button type="link" @click="signFor(scope)">签收</a-button>
         </span>
       </a-table>
     </div>
     <div class="content-footer">
      <a-button type="primary" size="large" style="width: 120px; margin-right: 10px;" @click="FALLBACK">返回</a-button>
     </div>
+    <a-modal
+			v-model="isShowModal"
+			title=""
+			okText="确定"
+			:width="1000"
+      :footer="null"
+			@cancel="handleCancel"
+		>
+			<template>
+        <div class="item-list">
+          <span>配送单号：989889898</span>
+          <span>配送时间：2021-11-11</span>
+        </div>
+        <div>
+          <a-table
+            :columns="columns2"
+            :row-key="(r,i) => i"
+            :data-source="dataListDetail"
+            :scroll="{ x: 800 }"
+            :pagination="false"
+            style="margin-top:8px;">
+          </a-table>
+          <template>
+            <div slot="noReceiveNum" slot-scope="scope">
+              <span>{{scope.deliveryNum - scope.receiveNum}}</span>
+            </div>
+          </template>
+        </div>
+        <div class="item-list">
+          <span>签收单号：989889898</span>
+          <span>签收时间：2021-11-11</span>
+          <img src="" />
+        </div>
+			</template>
+		</a-modal>
   </div>
 </template>
 
@@ -35,44 +68,70 @@
     name: "deliveryOrder",
     data() {
       return {
+        saleOrderNo: '',
+        pageData: {
+          pageNum: 1,
+          pageSize: 10,
+        },
         dataList: [],
+        dataListDetail: [],
+        isShowModal: false,
          //表格高度
         scrollY: 300,
          //表头数据
-        tableColumns: [
+        columns1: [
           {
             title: "配送单号",
-            dataIndex: "itemName",
-            key: "itemName",
+            dataIndex: "deliveryNo",
+            key: "deliveryNo",
             width: 120,
             ellipsis: true,
           },
           {
             title: "配送时间",
-            key: "",
+            dataIndex: 'deliveryTime',
+            key: "deliveryTime",
             width: 120,
             ellipsis: true,
           },
           {
             title: "签收单号",
-            key: "skuCode",
-            dataIndex: "skuCode",
+            key: "receiveNo",
+            dataIndex: "receiveNo",
             width: 120,
             ellipsis: true,
           },
           {
             title: "签收时间",
-            dataIndex: "itemSpecs",
-            key: "itemSpecs",
+            dataIndex: "",
+            key: "",
             width: 120,
             ellipsis: true,
           },
           {
             title: "状态",
-            key: "supplierName",
-            dataIndex: "supplierName",
+            key: "approveStatus",
+            dataIndex: "approveStatus",
             width: 120,
             ellipsis: true,
+            customRender: (text, record, index) => {
+              let str = ''
+              switch (record.approveStatus) {
+                case '0':
+                  str = '未审核'
+                  break
+                case '0':
+                  str = '审核通过'
+                  break
+                case '2':
+                  str = '审核驳回'
+                  break
+                default:
+                  ''
+                  break
+              }
+              return str
+            },
           },
           {
             title: "操作",
@@ -81,18 +140,93 @@
             width: 250,
             scopedSlots: {customRender: "action"},
           }
+        ],
+        columns2: [
+          {
+            title: "商品名称",
+            dataIndex: "itemName",
+            key: "itemName",
+
+            ellipsis: true,
+          },
+          {
+            title: "配送数量",
+            key: "deliveryNum",
+            dataIndex: 'deliveryNum',
+            ellipsis: true,
+          },
+          {
+            title: "签收数量",
+            key: "receiveNum",
+            dataIndex: "receiveNum",
+            ellipsis: true,
+          },
+          {
+            title: "未签收数量",
+            width: 250,
+            scopedSlots: {customRender: "noReceiveNum"},
+          },
+          {
+            title: "备注",
+            key: "remark",
+            dataIndex: "remark",
+            ellipsis: true,
+          }
         ]
       }
     },
     created() {
-      // let params = {saleOrderNo: this.$route.params.saleOrderNo}
-      // this.getData(params)
+      this.saleOrderNo = this.$route.params.saleOrderNo
+      let params = {
+        saleOrderNo: this.saleOrderNo
+      }
+      this.getData(params)
     },
     methods: {
       ...mapActions(["FALLBACK"]),
       async getData(params) {
-        let res = await api.getMarketDetail(params);
+        let res = await api.marketDeliveryOrderList(params);
         this.dataList = res.data
+      },
+      // 取消
+      handleCancel() {
+
+      },
+      // 详情
+      async detail(row) {
+        this.isShowModal = true
+        try {
+          let res = await api.marketQueryInfo(params)
+          this.dataListDetail = res.data.record.deliveryItemList
+        } catch(e) {
+        }
+      },
+      // 签收
+      signFor(row) {
+        this.$confirm({
+          title: '签收',
+          content: '确定签收？',
+          centered: true,
+          okText: '确定',
+          cancelText: '取消',
+          onOk: () => {
+            let params = {
+
+            }
+            api.marketDeliveryOrderConfirm(params).then(res => {
+              if(res.code == 200) {
+                this.$message.success('签收成功')
+                let params = {
+                  saleOrderNo: this.saleOrderNo
+                }
+                this.getData(params)
+              }
+            })
+          },
+          onCancel: () => {
+            console.log('Cancel');
+          },
+        });
       }
     }
   }
@@ -103,5 +237,12 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
+}
+.item-list {
+  padding: 10px 0;
+  span {
+    padding-right: 10px;
+    display: inline-block;
+  }
 }
 </style>
