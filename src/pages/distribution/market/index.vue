@@ -17,31 +17,12 @@
         />
       </div>
       <div class="search-list-item">
-        <span class="label-text">开始时间：</span>
-        <a-date-picker
+        <span class="label-text">下单时间：</span>
+        <a-range-picker
           class="iw250"
-          v-model="searchData.orderTimeStart"
-          :disabled-date="disabledStartDate"
+          v-model="searchData.dateTime"
           show-time
           format="YYYY-MM-DD"
-          placeholder="下单开始时间"
-          @openChange="handleStartOpenChange"
-          @change="onStartDateChange"
-        />
-      </div>
-      <div class="search-list-item">
-        <span class="label-text">结束时间：</span>
-
-        <a-date-picker
-          class="iw250"
-          v-model="searchData.orderTimeEnd"
-          :disabled-date="disabledEndDate"
-          show-time
-          format="YYYY-MM-DD"
-          placeholder="下单结束时间"
-          :open="endOpen"
-          @openChange="handleEndOpenChange"
-          @change="onEndDateChange"
         />
       </div>
       <div class="search-list-item">
@@ -250,6 +231,7 @@ export default {
       pageData,
       searchData: {
         saleOrderNo: '', // 订单编号
+        dateTime: [], // 时间
         orderTimeStart: '', // 开始时间
         orderTimeEnd: '', // 结束时间
         purchaseCompany: '', // 采购公司
@@ -277,8 +259,8 @@ export default {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         saleOrderNo: this.searchData.saleOrderNo, // 订单编号
-        orderTimeStart: this.parseDate(this.searchData.orderTimeStart), // 开始时间
-        orderTimeEnd: this.parseDate(this.searchData.orderTimeEnd), // 结束时间
+        orderTimeStart: this.searchData.dateTime.length > 0 ? this.parseDate(this.searchData.dateTime[0]) : '', // 开始时间
+        orderTimeEnd: this.searchData.dateTime.length > 0 ? this.parseDate(this.searchData.dateTime[1]) : '', // 结束时间
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
         receiver: this.searchData.receiver, // 收货人 模糊查询
         cityCompany: this.searchData.cityCompany, // 城市公司
@@ -310,8 +292,8 @@ export default {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         saleOrderNo: this.searchData.saleOrderNo, // 订单编号
-        orderTimeStart: this.parseDate(this.searchData.orderTimeStart), // 开始时间
-        orderTimeEnd: this.parseDate(this.searchData.orderTimeEnd), // 结束时间
+        orderTimeStart: this.searchData.dateTime.length > 0 ? this.parseDate(this.searchData.dateTime[0]) : '', // 开始时间
+        orderTimeEnd: this.searchData.dateTime.length > 0 ? this.parseDate(this.searchData.dateTime[1]) : '', // 结束时间
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
         receiver: this.searchData.receiver, // 收货人 模糊查询
         cityCompany: this.searchData.cityCompany, // 城市公司
@@ -338,8 +320,8 @@ export default {
           pageNum: this.pageData.pageNum, // 第几页
           pageSize: this.pageData.pageSize, // 每页多少条
           saleOrderNo: this.searchData.saleOrderNo, // 订单编号
-          orderTimeStart: this.parseDate(this.searchData.orderTimeStart), // 开始时间
-          orderTimeEnd: this.parseDate(this.searchData.orderTimeEnd), // 结束时间
+          orderTimeStart: this.searchData.dateTime.length > 0 ? this.parseDate(this.searchData.dateTime[0]) : '', // 开始时间
+        orderTimeEnd: this.searchData.dateTime.length > 0 ? this.parseDate(this.searchData.dateTime[1]) : '', // 结束时间
           purchaseCompany: this.searchData.purchaseCompany, // 采购公司
           receiver: this.searchData.receiver, // 收货人 模糊查询
           cityCompany: this.searchData.cityCompany, // 城市公司
@@ -359,8 +341,8 @@ export default {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         saleOrderNo: this.searchData.saleOrderNo, // 订单编号
-        orderTimeStart: this.parseDate(this.searchData.orderTimeStart), // 开始时间
-        orderTimeEnd: this.parseDate(this.searchData.orderTimeEnd), // 结束时间
+        orderTimeStart: this.searchData.dateTime.length > 0 ? this.parseDate(this.searchData.dateTime[0]) : '', // 开始时间
+        orderTimeEnd: this.searchData.dateTime.length > 0 ? this.parseDate(this.searchData.dateTime[1]) : '', // 结束时间
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
         receiver: this.searchData.receiver, // 收货人 模糊查询
         cityCompany: this.searchData.cityCompany, // 城市公司
@@ -392,6 +374,7 @@ export default {
     toReset() {
       this.searchData = {
         saleOrderNo: '', // 订单编号
+        dateTime: [],
         orderTimeStart: '', // 开始时间
         orderTimeEnd: '', // 结束时间
         purchaseCompany: '', // 采购公司
@@ -412,18 +395,22 @@ export default {
       this.getData(params)
     },
     // 查看详情
-    checkDetails(record) {
+    checkDetails(row) {
       this.$router.push({
         name: 'marketdetail',
         params: {
-          saleOrderNo: record.saleOrderNo,
+          saleOrderNo: row.saleOrderNo,
         },
       })
     },
     // 查看配送订单
-    checkDeliveryOrder() {
+    checkDeliveryOrder(row) {
       this.$router.push({
-        name: 'deliveryOrder'
+        name: 'deliveryOrder',
+        params: {
+          purchaseCode: row.purchaseCompanyCode,
+          saleOrderNo: row.saleOrderNo
+        }
       })
     },
     // 获取城市公司
@@ -455,8 +442,8 @@ export default {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         saleOrderNo: this.searchData.saleOrderNo, // 订单编号
-        orderTimeStart: this.parseDate(this.searchData.orderTimeStart), // 开始时间
-        orderTimeEnd: this.parseDate(this.searchData.orderTimeEnd), // 结束时间
+        orderTimeStart: this.searchData.dateTime.length > 0 ? this.parseDate(this.searchData.dateTime[0]) : '', // 开始时间
+        orderTimeEnd: this.searchData.dateTime.length > 0 ? this.parseDate(this.searchData.dateTime[1]) : '', // 结束时间
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
         receiver: this.searchData.receiver, // 收货人 模糊查询
         cityCompany: this.searchData.cityCompany, // 城市公司
@@ -465,35 +452,7 @@ export default {
     },
     changeHandle() {
       this.afterVisible = false
-    },
-    disabledStartDate(orderTimeStart) {
-      const orderTimeEnd = this.searchData.orderTimeEnd
-      if (!orderTimeStart || !orderTimeEnd) {
-        return false
-      }
-      return orderTimeStart.valueOf() > orderTimeEnd.valueOf()
-    },
-    disabledEndDate(orderTimeEnd) {
-      const orderTimeStart = this.searchData.orderTimeStart
-      if (!orderTimeEnd || !orderTimeStart) {
-        return false
-      }
-      return orderTimeStart.valueOf() >= orderTimeEnd.valueOf()
-    },
-    handleStartOpenChange(open) {
-      if (!open) {
-        this.endOpen = true
-      }
-    },
-    handleEndOpenChange(open) {
-      this.endOpen = open
-    },
-    onStartDateChange(date, dateString) {
-      this.orderTimeStart = dateString
-    },
-    onEndDateChange(date, dateString) {
-      this.orderTimeEnd = dateString
-    },
+    }
   },
 }
 </script>
