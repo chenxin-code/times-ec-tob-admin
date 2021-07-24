@@ -8,55 +8,36 @@
       <a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" style="height: 100%;overflow: auto;"
               autoComplete="off">
         <a-form-item label="SKU名称">
-          <a-input
-              v-decorator="['skuName', { rules: [{ required: true, message: '供应商名称不能为空' },{whitespace: true,message: '供应商名称不能为空'}] } ]"
-              placeholder="请输入供应商名称"
-          />
+          <a-input disabled  v-decorator="['skuName']"/>
         </a-form-item>
-        <a-form-item label="合作期限">
+        <!-- <a-form-item label="合作期限">
           <a-range-picker showToday.Boolean="true" style="width: 100%"
-                          v-decorator="['time', { rules: [{ required: true, message: '合作期限不能为空' }] } ]"
+                          v-decorator="['time',]"
           />
-        </a-form-item>
+        </a-form-item> -->
         <a-form-item label="SKU编码">
-          <a-input
-              v-decorator="['skuCode', { rules: [{ required: true, message: '合同编号不能为空' },{whitespace: true,message: '合同编号不能为空'}] } ]"
-              placeholder="请输入合同编号"
-          />
+          <a-input disabled v-decorator="['skuCode']" />
         </a-form-item>
         <a-form-item label="SPU名称">
-          <a-input
-              v-decorator="['itemName', { rules: [{ required: true, message: '联系人名称不能为空' },{whitespace: true,message: '联系人名称不能为空'}] } ]"
-              placeholder="请输入联系人名称"
-          />
+          <a-input  disabled v-decorator="['itemName',]" />
         </a-form-item>
         <a-form-item label="SPU编码">
-          <a-input
-              v-decorator="['itemCode', { rules: [{ required: true, message: '联系电话不能为空' }] } ]"
-              placeholder="请输入联系电话"
-          />
+          <a-input disabled v-decorator="['itemCode',]" />
         </a-form-item>
         <a-form-item label="商城SKU自编码">
-          <a-input
-              v-decorator="['contactPhone',]"
-              placeholder="请输入联系电话"
-          />
+          <a-input v-decorator="['skuCodeInside']" placeholder="请输入SKU自编码" />
         </a-form-item>
         <a-form-item label="商品状态">
-          <a-select v-decorator="['selling', { rules: [{ required: true, message: '联系电话不能为空' }] } ]"
-                    default-value="全部" @change="handleChangesataus">
+          <a-select v-decorator="['selling', { rules: [{ required: true, message: '商品状态不能为空' }] } ]"
+                    default-value="全部" >
             <a-select-option :value="v.id" v-for="(v,i) in selectArrstrain" :key="i">
               {{ v.name }}
             </a-select-option>
           </a-select>
-          <!-- <a-input
-            v-decorator="['contactPhone', { rules: [{ required: true, message: '联系电话不能为空' },{pattern :/^1[3456789]\d{9}$/,message: '联系电话格式不正确'}] } ]"
-            placeholder="请输入联系电话"
-          /> -->
         </a-form-item>
         <a-form-item label="商品品类">
           <a-tree-select
-              v-model="value"
+               v-decorator="['categoryId']"
               style="width: 100%"
               :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
               :tree-data="treeData"
@@ -67,15 +48,14 @@
             title: 'name',
           }"
               @change="onChange"
-              defaultValue="全部"
               tree-default-expand-all
           >
           </a-tree-select>
         </a-form-item>
         <a-form-item label="所属品牌">
           <a-input
-              v-decorator="['brandName', { rules: [{ required: true, message: '联系电话不能为空' }] } ]"
-              placeholder="请输入联系电话"
+              v-decorator="['brandName', { rules: [{ required: true, message: '所属品牌不能为空' }] } ]"
+              placeholder="请输入所属品牌"
           />
         </a-form-item>
         <a-form-item label="供应商">
@@ -96,59 +76,49 @@
           </a-select>
         </a-form-item>
         <a-form-item label="税收分类编码">
-          <a-input
-              v-decorator="['contactPhone', { rules: [{ required: true, message: '联系电话不能为空' }] } ]"
-              placeholder="请输入联系电话"
-          />
+          <a-input disabled v-decorator="['taxCategoryCode']" />
         </a-form-item>
         <a-form-item label="税率">
-          <a-input
-              v-decorator="['taxRate', { rules: [{ required: true, message: '联系电话不能为空' }] } ]"
-              placeholder="请输入联系电话"
+          <a-input type="number"
+              v-decorator="['taxRate',{ rules: [{ required: true, message: '税率不能为空' },{pattern :/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/,message: '税率不正确'}] }]"
+              placeholder="请输入税率"
           />
         </a-form-item>
         <a-form-item label="价格类型">
-          <a-select v-decorator="['contactPhone', { rules: [{ required: true, message: '联系电话不能为空' }] } ]"
-                    default-value="全部" @change="hChangcontactPhone">
+          <a-select v-model="isTieredPricing" @change="isTieredPricingchange">
             <a-select-option :value="v.id" v-for="(v,i) in selectcontact" :key="i">
-              {{ v.name }}
+              {{v.name}}
             </a-select-option>
           </a-select>
         </a-form-item>
         <a-form-item label="库存">
           <a-input
-              v-decorator="['stock', { rules: [{ required: true, message: '联系电话不能为空' },{pattern :/\d/,message: '格式不正确'}] } ]"
-              placeholder="请输入联系电话"
+              v-decorator="['stock', { rules: [{ required: true, message: '库存不能为空' },{pattern :/\d/,message: '库存不正确'}] } ]"
+              placeholder="请输入库存" type="number"
           />
         </a-form-item>
         <a-form-item label="PC端商品详情">
-          <quill-editor ref="myTextEditor" class="editorted" v-model="pccontent" :options="editorOption"></quill-editor>
+          <quill-editor ref="myTextEditor" class="editorted" v-model="pcItemInfo" :options="editorOption"></quill-editor>
         </a-form-item>
         <a-form-item label="app商品详情">
-          <quill-editor ref="TextEditor" class="editorted" v-model="appcontent" :options="editorOption"></quill-editor>
+          <quill-editor ref="TextEditor" class="editorted" v-model="appItemInfo" :options="editorOption"></quill-editor>
         </a-form-item>
-        <a-form-item label="成本价">
+        <a-form-item label="成本价" v-show="costPrice.length>0 ">
           <div class="intpud" v-for="item in costPrice" :key="item.id">
             <span style="width: 50px;">数量:</span>
             <a-input placeholder="请输入" :value="item.minNum" class="cbintpudnum" type="number"/>
             <span style="width: 70px;">成本价：</span>
-            <a-input placeholder="请输入" :value="item.costPrice" type="number" class="cbintpudnum"/>
+            <a-input disabled :value="item.costPrice" type="number" class="cbintpudnum"/>
           </div>
         </a-form-item>
-
-        <a-form-item label="销售价">
+        <a-form-item label="销售价" v-show="isTieredPricing== true">
           <div class="intpud" v-for="(item,index) in sellingPrice" :key="index">
             <span style="min-width: 45px;">数量：</span>
-            <span>{{item.minNum}}</span>
-            ~
-            <a-input placeholder="请输入" v-model="item.maxNum" class="intpudnum" type="number"
-                     @change="onNum(item.maxNum,index)"/>
+            <span>{{item.minNum}}</span>~<a-input placeholder="无穷大" v-model="item.maxNum" class="intpudnum" type="number" />
             <span class="spshu">税前销售价:</span>
-            <a-input placeholder="请输入" v-model="item.beforeTaxSellingPrice" class="intpudnum" type="number"
-                     @change="onSaleBefore(item,index)"/>
+            <a-input placeholder="请输入" v-model="item.priceBeforeTax" class="intpudnum" type="number" />
             <span class="spshu">税后销售价:</span>
-            <a-input placeholder="请输入" v-model="item.afterTaxSellingPrice" class="intpudnum" type="number"
-                     @change="onSaleAfter(item.priceType,index)"/>
+            <a-input placeholder="请输入" v-model="item.priceAfterTax" class="intpudnum" type="number" />
           </div>
           <a-button-group class="butdb">
             <a-button @click="addlis()" type="primary" size='small'>
@@ -158,7 +128,15 @@
               <a-icon type="minus"/>
             </a-button>
           </a-button-group>
+        </a-form-item>
 
+        <a-form-item label="销售价" v-show="isTieredPricing== false">
+          <div class="intpud">
+            <span class="spshu">税前销售价:</span>
+            <a-input placeholder="请输入" v-model="sellingPrice[0].priceBeforeTax" class="intpudnum" type="number" />
+            <span class="spshu">税后销售价:</span>
+            <a-input placeholder="请输入" v-model="sellingPrice[0].priceAfterTax" class="intpudnum" type="number" />
+          </div>
         </a-form-item>
       </a-form>
     </div>
@@ -186,30 +164,30 @@ export default {
     return {
       form: this.$form.createForm(this, {name: "form"}),
       loading: false,
-      companyName: "",
+      value: undefined,
+      isTieredPricing:true,//是否阶梯价
       supplierList: [],//供应商列表
       supplierId: '',//供应商id
       supplierName: '',//供应商名称
       costPrice: [], //成本价
       marketPrice: [],//市场价
+      categoryId: null,//	所属类目id
+      categoryName:'',//所属类目名称
       sellingPrice: [
-          {minNum: 0, maxNum: null, beforeTaxSellingPrice: null, afterTaxSellingPrice: null},
+          {minNum: 1, maxNum: null, priceBeforeTax: null, priceAfterTax: null},
       ],//销售价
       dataLiading: false,
       submitLoading: false,
       //富文本
-      pccontent: '',
+      pcItemInfo: '',
+      appItemInfo: '',
       selectcontact: [
-        {id: '1', name: '普通价'},
-        {id: '2', name: '阶梯价'},],
+        {id: false, name: '普通价'},
+        {id: true, name: '阶梯价'},],
       selectArrstrain: [
-        {id: '', name: '全部'},
-        {id: '1', name: '上架'},
-        {id: '2', name: '下架'},
+        {id: true, name: '上架'},
+        {id: false, name: '下架'},
       ],
-      // editorOption: {
-      //     placeholder: '编辑文章内容'
-      //   },
       editorOption: {
         placeholder: "请在这里输入",
         modules: {
@@ -231,9 +209,8 @@ export default {
           ],
         },
       },
-      appcontent: '',
-      treeData: [],
-      categoryId: null,
+      treeData: [],//品类列表
+      
     };
   },
   computed: {},
@@ -242,40 +219,22 @@ export default {
     this.supplier();
     api.getCategoryTree().then(resp => {
       this.treeData = resp.data
-      this.treeData.unshift({ categoryCode: '', name: '全部' })
-      // replaceFields
     });
-  },
-  mounted() {
-    // this.$refs.form.setFieldsValue({
-    //     status: this.formList[1].selectOptions[0]?.id,
-    //     supplier:this.formList[2].selectOptions[0]?.id,
-    //   });
   },
   beforeRouteLeave(to, from, next) {
     to.meta.keepAlive = false;
     next();
   },
   methods: {
-    onChange(value) {
-      this.categoryId = value
-    },
-    hChangcontactPhone(){},
-    onNum(item, index) {
-      return
-      console.log(item, index);
-      this.sellingPrice[index].minNum = item;
-    },
-    onSaleBefore(item, index) {
-      return
-      console.log(item, index);
-    },
-    onSaleAfter(item, index) {
-      return
-      this.sellingPrice[index].priceType = item;
-    },
-    handleChangesataus(value) {
+    
+    isTieredPricingchange(value){
       console.log(value);
+      this.isTieredPricing = value;
+    },
+    onChange(value,key) {
+      console.log(value,key);
+      this.categoryId = value;
+      this.categoryName = key[0];
     },
     handleSearch(value) {
       debounce(() => {
@@ -297,9 +256,9 @@ export default {
       if (this.sellingPrice[this.sellingPrice.length - 1].maxNum) {
         this.sellingPrice.push({
           minNum: this.sellingPrice[this.sellingPrice.length - 1].maxNum,
-          maxNum: null,
-          beforeTaxSellingPrice: null,
-          afterTaxSellingPrice: null
+          maxNum: this.sellingPrice[this.sellingPrice.length - 1].maxNum,
+          priceBeforeTax: this.sellingPrice[this.sellingPrice.length - 1].priceBeforeTax,
+          priceAfterTax: this.sellingPrice[this.sellingPrice.length - 1].priceAfterTax
         });
       } else {
         this.$message.error('请填写上一条的最大值');
@@ -318,21 +277,27 @@ export default {
           const data = res.data;
           this.supplierId = data.supplierId; //供应商id
           this.supplierName = data.supplierName;
-          this.pccontent = data.pcItemInfo; //pc详情
-          this.appcontent = data.appItemInfo;//app详情
+          this.pcItemInfo = data.pcItemInfo; //pc详情
+          this.appItemInfo = data.appItemInfo;//app详情
           this.costPrice = data.costPrice;//成本价
           this.marketPrice = data.marketPrice; //市场价
           this.sellingPrice = data.sellingPrice;//销售价
+          this.categoryId = data.categoryId, //所属类目id
+          this.categoryName = data.categoryName, //所属类目名称
+          this.isTieredPricing=data.isTieredPricing ,//价格类型
           this.form.setFieldsValue({
+            skuCodeInside:data.skuCodeInside,//商品sku自编码
+            categoryId:data.categoryName,//所属类目id
+            taxCategoryCode:data.taxCategoryCode,//税收分类编码
             skuName: data.skuName,//sku名称
+            selling: data.selling== true?'上架':'下架',//商品状态
             time: [data.cooperationPeriod, data.cooperationEndperiod],//时间
             skuCode: data.skuCode, //sku编码
             itemCode: data.itemCode, //spu编码
             itemName: data.itemName, //spu名称
-            selling: data.selling == 1 ? '上架' : data.selling == 2 ? '下架' : '全部', //商品状态 上下架
             brandName: data.brandName,//所属品牌
             supplierName: data.supplierName,//供应商
-            taxRate: data.taxRate,//税率
+            taxRate:  data.taxRate,//税率
             stock: data.stock,//库存
           });
         }
@@ -340,38 +305,42 @@ export default {
     },
     //保存
     onSubmit() {
-      console.log(this.pccontent, this.appcontent);
+      let that = this
       debounce(() => {
         this.form.validateFields((err, values) => {
           this.loading = true;
-          values = {
-            id: this.$route.params.id ?? '',
-            appItemInfo: this.appItemInfo,
-            supplierId: this.supplierId, //供应商id
-            supplierName: this.supplierName, //供应商名称
-            pccontent: this.pcItemInfo, //pc详情
-            appcontent: this.appItemInfo,//app详情
-            costPrice: this.costPrice,//成本价
-            marketPrice: this.marketPrice, //市场价
-            sellingPrice: this.sellingPrice,//销售价
+          if(that.isTieredPricing == false){
+            that.sellingPrice = that.sellingPrice[0];
+          }
+          let data = {
+            id: that.$route.params.id ?? '',
+            categoryId:that.categoryId, //所属类目id
+            categoryName:that.categoryName, //所属类目名称
+            supplierId: that.supplierId, //供应商id
+            supplierName: that.supplierName, //供应商名称
+            isTieredPricing:that.isTieredPricing,//价格类型
+            pcItemInfo: that.pcItemInfo, //pc详情
+            appItemInfo: that.appItemInfo,//app详情
+            costPrice: that.costPrice,//成本价
+            marketPrice: that.marketPrice, //市场价
+            sellingPrice: that.sellingPrice,//销售价
+            taxCategoryCode:values.taxCategoryCode,//税收分类编码
             skuName: values.skuName,//sku名称
-            time: [values.cooperationPeriod, values.cooperationEndperiod],//时间
             skuCode: values.skuCode, //sku编码
             itemCode: values.itemCode, //spu编码
+            skuCodeInside:values.skuCodeInside,//商品sku自编码
             itemName: values.itemName, //spu名称
-            selling: values.selling === '上架' ? 1 : data.selling === '下架' ? 2 : '全部', //商品状态 上下架
+            selling: values.selling == '上架'?true:false, //商品状态 上下架
             brandName: values.brandName,//所属品牌
             supplierName: values.supplierName,//供应商
-            taxRate: values.taxRate,//税率
-            stock: values.stock,//库存
-            // cooperationEndperiod: values.time !== [] ? moment(values.time[1]).format("YYYY-MM-DD") : null,
-            // companyList: this.dataSourceRight.map(a => a.id)
-          };
-
-          api.updateProduct(values).then(res => {
+            taxRate:Number(values.taxRate),//税率
+            stock:Number(values.stock),//库存
+          };  
+          console.log(data);
+          api.updateProduct(data).then(res => {
                 if (res.code === 200) {
                   this.$message.success("编辑成功");
-                  this.$router.push({name: "supplier"});
+                  this.$router.push({name: "commodity"});
                 }
               }).finally(() => {
                 this.loading = false;

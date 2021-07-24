@@ -215,7 +215,8 @@
           {
             title: "备注",
             key: "remark",
-            dataIndex: "taxRate",
+            dataIndex: "remark",
+            width: 200,
             ellipsis: true,
           }
         ]
