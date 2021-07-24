@@ -6,6 +6,7 @@
     <div style="width: 80%;">
       <a-form-model layout="inline">
         <a-form-model-item class="item-btns">
+          <a-button class="item-btn" @click="reset()">重置</a-button>
           <a-button class="item-btn" @click="$router.push({path: '/company/add'})" type="primary">新增</a-button>
         </a-form-model-item>
       </a-form-model>
@@ -140,6 +141,12 @@ export default {
     setTimeout(() => this.scrollY = document.body.clientHeight - 320 + 'px', 0);
   },
   methods: {
+    reset(){
+      this.parentId = null;
+      this.current = 1;
+      this.pageSize = 10;
+      this.getList();
+    },
     showToken(accountNumber,password){
       console.log(accountNumber,password);
       this.accountNumber = accountNumber;
