@@ -138,8 +138,6 @@
             <a-input placeholder="请输入" v-model="sellingPrice[0].priceAfterTax" class="intpudnum" type="number" />
           </div>
         </a-form-item>
-
-
       </a-form>
     </div>
     <div class="content-footer">
@@ -311,6 +309,9 @@ export default {
       debounce(() => {
         this.form.validateFields((err, values) => {
           this.loading = true;
+          if(that.isTieredPricing == false){
+            that.sellingPrice = that.sellingPrice[0];
+          }
           let data = {
             id: that.$route.params.id ?? '',
             categoryId:that.categoryId, //所属类目id
