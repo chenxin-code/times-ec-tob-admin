@@ -48,11 +48,9 @@
           </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item>
-        <a-button type="primary" @click="quitList()"
-          >查询</a-button
-        >
-        <!-- <a-button class="item-btn" @click="_toReset()">重置</a-button> -->
+      <a-form-model-item class="item-btns">
+        <a-button class="item-btn" type="primary" @click="quitList()">查询</a-button>
+        <a-button class="item-btn" @click="reset()">重置</a-button>
       </a-form-model-item>
     </a-form-model>
     <div id="neighborhoodLife">
@@ -142,8 +140,8 @@ export default {
       scrollY: 100,
       selectArrstrain: [
         { id: '', name: '全部' },
-        { id: '1', name: '上架' },
-        { id: '2', name: '下架' },
+        { id: 1, name: '上架' },
+        { id: 0, name: '下架' },
       ],
       selectlist: [],
       sku: '',
@@ -267,7 +265,8 @@ export default {
     this.supplierlis() //供应商
     api.getCategoryTree().then(resp => {
       this.treeData = resp.data
-      this.treeData.unshift({ categoryCode: '', name: '全部' })
+      this.treeData.unshift({ categoryCode: '', name: '全部' });
+      console.log('treeData',this.treeData);
       // replaceFields
     })
     setTimeout(
@@ -276,6 +275,11 @@ export default {
     )
   },
   methods: {
+    reset(){
+      this.sku = null;
+      this.strain = null;
+      this.categoryId = '';
+    },
     onChange(value) {
       this.categoryId = value
     },
@@ -370,6 +374,10 @@ export default {
     .ant-form-item-control-wrapper {
       width: 400px !important;
     }
+  }
+
+  /deep/ .item-btns .item-btn {
+    margin-right: 20px;
   }
 
 }

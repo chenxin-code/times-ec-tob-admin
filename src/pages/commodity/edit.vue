@@ -317,7 +317,7 @@ export default {
             categoryId:that.categoryId, //所属类目id
             categoryName:that.categoryName, //所属类目名称
             supplierId: that.supplierId, //供应商id
-            supplierName: that.supplierName, //供应商名称
+            //supplierName: that.supplierName, //供应商名称
             isTieredPricing:that.isTieredPricing,//价格类型
             pcItemInfo: that.pcItemInfo, //pc详情
             appItemInfo: that.appItemInfo,//app详情
