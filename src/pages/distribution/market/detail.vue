@@ -169,7 +169,7 @@
             title: "规格",
             dataIndex: "itemSpecs",
             key: "itemSpecs",
-            width: 120,
+            width: 250,
             ellipsis: true,
             align: 'center'
           },
