@@ -15,7 +15,7 @@
       >
         <span slot="action" slot-scope="scope">
           <a-button type="link" @click="detail(scope)">查看</a-button>
-          <a-button type="link" @click="signFor(scope)">签收</a-button>
+          <!-- <a-button type="link" @click="signFor(scope)">签收</a-button> -->
         </span>
       </a-table>
     </div>
@@ -50,10 +50,15 @@
             </div>
           </template>
         </div>
-        <div class="item-list">
+        <div class="item-list" v-if="dataListDetail.approveStatus != 0">
           <span>签收单号：{{dataListDetail.receiveNo}}</span>
           <span>签收时间：{{dataListDetail.receiveTime}}</span>
-          <img src="" />
+          <div class="img-box">
+            <img 
+              v-for="item in dataListDetail.receiverProofImgs"
+              :key="item"
+              :src="item" />
+          </div>
         </div>
 			</template>
 		</a-modal>
@@ -137,7 +142,7 @@
             title: "操作",
             key: "operation",
             fixed: "right",
-            width: 250,
+            width: 100,
             scopedSlots: {customRender: "action"},
           }
         ],
@@ -219,7 +224,6 @@
           cancelText: '取消',
           onOk: () => {
             let params = {
-
             }
             api.marketDeliveryOrderConfirm(params).then(res => {
               if(res.code == 200) {
@@ -251,6 +255,14 @@
   span {
     padding-right: 10px;
     display: inline-block;
+  }
+}
+.img-box {
+  padding-top: 10px;
+  img {
+    width:auto;
+    height: 100px;
+    margin-right: 10px;
   }
 }
 </style>

@@ -7,15 +7,10 @@
     <div class="content-main" style="height: calc(100% - 100px);margin-top: 0px;">
       <a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" style="height: 100%;overflow: auto;"
               autoComplete="off">
-        <a-form-item label="SKU名称">
+        <a-form-item label="SKU名称" >
           <a-input disabled  v-decorator="['skuName']"/>
         </a-form-item>
-        <!-- <a-form-item label="合作期限">
-          <a-range-picker showToday.Boolean="true" style="width: 100%"
-                          v-decorator="['time',]"
-          />
-        </a-form-item> -->
-        <a-form-item label="SKU编码">
+        <a-form-item label="SKU编码" >
           <a-input disabled v-decorator="['skuCode']" />
         </a-form-item>
         <a-form-item label="SPU名称">
@@ -25,10 +20,10 @@
           <a-input disabled v-decorator="['itemCode',]" />
         </a-form-item>
         <a-form-item label="商城SKU自编码">
-          <a-input v-decorator="['skuCodeInside']" placeholder="请输入SKU自编码" />
+          <a-input :disabled="disbliend" v-decorator="['skuCodeInside']" placeholder="请输入SKU自编码" />
         </a-form-item>
         <a-form-item label="商品状态">
-          <a-select v-decorator="['selling', { rules: [{ required: true, message: '商品状态不能为空' }] } ]"
+          <a-select :disabled="disbliend" v-decorator="['selling', { rules: [{ required: true, message: '商品状态不能为空' }] } ]"
                     default-value="全部" >
             <a-select-option :value="v.id" v-for="(v,i) in selectArrstrain" :key="i">
               {{ v.name }}
@@ -36,7 +31,7 @@
           </a-select>
         </a-form-item>
         <a-form-item label="商品品类">
-          <a-tree-select
+          <a-tree-select :disabled="disbliend"
                v-decorator="['categoryId']"
               style="width: 100%"
               :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
@@ -53,29 +48,19 @@
           </a-tree-select>
         </a-form-item>
         <a-form-item label="所属品牌">
-          <a-input
+          <a-input :disabled="disbliend"
               v-decorator="['brandName', { rules: [{ required: true, message: '所属品牌不能为空' }] } ]"
               placeholder="请输入所属品牌"
           />
         </a-form-item>
         <a-form-item label="供应商">
-          <!-- <a-select
-              show-search
-              option-filter-prop="children"
-              :filter-option="false"
-              @search="handleSearch"
-              @change="handleChange"
-              :show-arrow="true"
-              v-decorator="['supplierName',{ rules: [{ required: true, message: '请选择供应商' }] }]"
-              placeholder="请选择供应商"> -->
                <a-select
+               :disabled="disbliend"
                 show-search
                 placeholder="请选择供应商"
                 option-filter-prop="children"
                 :filter-option="filterOption"
-                @focus="handleFocus"
                 @search="handleSearch"
-                @blur="handleBlur"
                 @change="handleChange"
                 v-decorator="['supplierName',{ rules: [{ required: true, message: '请选择供应商' }] }]"
               >
@@ -89,34 +74,34 @@
           <a-input disabled v-decorator="['taxCategoryCode']" />
         </a-form-item>
         <a-form-item label="税率">
-          <a-input type="number"
+          <a-input type="number" :disabled="disbliend"
               v-decorator="['taxRate',{ rules: [{ required: true, message: '税率不能为空' },{pattern :/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/,message: '税率不正确'}] }]"
               placeholder="请输入税率"
           />
         </a-form-item>
         <a-form-item label="价格类型">
-          <a-select v-model="isTieredPricing" @change="isTieredPricingchange">
+          <a-select :disabled="disbliend" v-model="isTieredPricing" @change="isTieredPricingchange">
             <a-select-option :value="v.id" v-for="(v,i) in selectcontact" :key="i">
               {{v.name}}
             </a-select-option>
           </a-select>
         </a-form-item>
         <a-form-item label="库存">
-          <a-input
+          <a-input :disabled="disbliend"
               v-decorator="['stock', { rules: [{ required: true, message: '库存不能为空' },{pattern :/\d/,message: '库存不正确'}] } ]"
               placeholder="请输入库存" type="number"
           />
         </a-form-item>
         <a-form-item label="PC端商品详情">
-          <quill-editor ref="myTextEditor" class="editorted" v-model="pcItemInfo" :options="editorOption"></quill-editor>
+          <quill-editor ref="myTextEditor" @focus="onEditorFocus($event)" class="editorted" v-model="pcItemInfo" :options="editorOption"></quill-editor>
         </a-form-item>
         <a-form-item label="app商品详情">
-          <quill-editor ref="TextEditor" class="editorted" v-model="appItemInfo" :options="editorOption"></quill-editor>
+          <quill-editor ref="TextEditor" @focus="onEditorFocus($event)" class="editorted" v-model="appItemInfo" :options="editorOption"></quill-editor>
         </a-form-item>
         <a-form-item label="成本价" v-show="costPrice.length>0 ">
           <div class="intpud" v-for="item in costPrice" :key="item.id">
             <span style="width: 50px;">数量:</span>
-            <a-input placeholder="请输入" :value="item.minNum" class="cbintpudnum" type="number"/>
+            <a-input placeholder="请输入" :disabled="disbliend" :value="item.minNum" class="cbintpudnum" type="number"/>
             <span style="width: 70px;">成本价：</span>
             <a-input disabled :value="item.costPrice" type="number" class="cbintpudnum"/>
           </div>
@@ -124,13 +109,13 @@
         <a-form-item label="销售价" v-show="isTieredPricing== true">
           <div class="intpud" v-for="(item,index) in sellingPrice" :key="index">
             <span style="min-width: 45px;">数量：</span>
-            <span>{{item.minNum}}</span>~<a-input placeholder="无穷大" v-model="item.maxNum" class="intpudnum" type="number" />
+            <span>{{item.minNum}}</span>~<a-input :disabled="disbliend" placeholder="无穷大" v-model="item.maxNum" class="intpudnum" type="number" />
             <span class="spshu">税前销售价:</span>
-            <a-input placeholder="请输入" v-model="item.priceBeforeTax" class="intpudnum" type="number" />
+            <a-input placeholder="请输入" :disabled="disbliend" v-model="item.priceBeforeTax" class="intpudnum" type="number" />
             <span class="spshu">税后销售价:</span>
-            <a-input placeholder="请输入" v-model="item.priceAfterTax" class="intpudnum" type="number" />
+            <a-input placeholder="请输入" :disabled="disbliend" v-model="item.priceAfterTax" class="intpudnum" type="number" />
           </div>
-          <a-button-group class="butdb">
+          <a-button-group class="butdb" v-if="!disbliend" >
             <a-button @click="addlis()" type="primary" size='small'>
               <a-icon type="plus"/>
             </a-button>
@@ -143,9 +128,9 @@
         <a-form-item label="销售价" v-show="isTieredPricing== false">
           <div class="intpud">
             <span class="spshu">税前销售价:</span>
-            <a-input placeholder="请输入" v-model="sellingPrice[0].priceBeforeTax" class="intpudnum" type="number" />
+            <a-input placeholder="请输入" :disabled="disbliend" v-model="sellingPrice[0].priceBeforeTax" class="intpudnum" type="number" />
             <span class="spshu">税后销售价:</span>
-            <a-input placeholder="请输入" v-model="sellingPrice[0].priceAfterTax" class="intpudnum" type="number" />
+            <a-input placeholder="请输入" :disabled="disbliend" v-model="sellingPrice[0].priceAfterTax" class="intpudnum" type="number" />
           </div>
         </a-form-item>
       </a-form>
@@ -173,6 +158,7 @@ export default {
   data() {
     return {
       form: this.$form.createForm(this, {name: "form"}),
+      disbliend:false, //禁用
       loading: false,
       value: undefined,
       isTieredPricing:true,//是否阶梯价
@@ -231,11 +217,21 @@ export default {
       this.treeData = resp.data
     });
   },
+  mounted() {
+    if(this.$route.params.typ == 1) this.disbliend = true;
+  },
   beforeRouteLeave(to, from, next) {
     to.meta.keepAlive = false;
     next();
   },
   methods: {
+     onEditorFocus(event) { 
+       if(this.$route.params.typ === '1'){
+         event.enable(false);
+       }else{
+         event.enable(true);
+       }
+ },
     filterOption(input, option) {
       return (
         option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
