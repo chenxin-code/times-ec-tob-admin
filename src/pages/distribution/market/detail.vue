@@ -139,7 +139,7 @@
             title: '序号',
             customRender: (text, record, index) => `${index + 1}`,
             width: 110,
-            align: 'center',
+            align: 'center'
           },
           {
             title: "商品名称",
@@ -147,6 +147,7 @@
             key: "itemName",
             width: 200,
             ellipsis: true,
+            align: 'center'
           },
           {
             title: "SKU名称",
@@ -154,13 +155,15 @@
             dataIndex: 'skuName',
             width: 200,
             ellipsis: true,
+            align: 'center'
           },
           {
             title: "SKU编码",
             key: "skuCode",
             dataIndex: "skuCode",
-            width: 120,
+            width: 200,
             ellipsis: true,
+            align: 'center'
           },
           {
             title: "规格",
@@ -168,6 +171,7 @@
             key: "itemSpecs",
             width: 120,
             ellipsis: true,
+            align: 'center'
           },
           {
             title: "所属供应商",
@@ -175,42 +179,55 @@
             dataIndex: "supplierName",
             width: 200,
             ellipsis: true,
+            align: 'center'
           },
           {
             title: "购买数量",
             key: "itemNum",
             dataIndex: "itemNum",
+            width: 150,
             ellipsis: true,
+            align: 'center'
           },
          {
             title: "税前销售价",
             key: "pretaxItemPrice",
             dataIndex: "pretaxItemPrice",
+            width: 150,
             ellipsis: true,
+            align: 'center'
           },
            {
             title: "税后销售价",
             key: "itemPrice",
             dataIndex: "itemPrice",
+            width: 150,
             ellipsis: true,
+            align: 'center'
           },
            {
             title: "税前优惠价",
             key: "pretaxReducedPrice",
             dataIndex: "pretaxReducedPrice",
+            width: 150,
             ellipsis: true,
+            align: 'center'
           },
           {
             title: "税后优惠价",
             key: "reducedPrice",
             dataIndex: "reducedPrice",
+            width: 150,
             ellipsis: true,
+            align: 'center'
           },
           {
             title: "税率",
             key: "taxRate",
             dataIndex: "taxRate",
+            width: 150,
             ellipsis: true,
+            align: 'center'
           },
           {
             title: "备注",
@@ -218,6 +235,7 @@
             dataIndex: "remark",
             width: 200,
             ellipsis: true,
+            align: 'center'
           }
         ]
       }
