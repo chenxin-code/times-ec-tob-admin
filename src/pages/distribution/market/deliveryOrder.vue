@@ -15,7 +15,7 @@
       >
         <span slot="action" slot-scope="scope">
           <a-button type="link" @click="detail(scope)">查看</a-button>
-          <!-- <a-button type="link" @click="signFor(scope)">签收</a-button> -->
+          <a-button type="link" @click="signFor(scope)">签收</a-button>
         </span>
       </a-table>
     </div>
@@ -142,7 +142,7 @@
             title: "操作",
             key: "operation",
             fixed: "right",
-            width: 100,
+            width: 200,
             scopedSlots: {customRender: "action"},
           }
         ],
@@ -204,15 +204,14 @@
       // 详情
       async detail(row) {
         this.isShowModal = true
-         this.dataListDetail = row
-        // try {
-        //   let params = {
-        //     deliveryNo: row.deliveryNo
-        //   }
-        //   let res = await api.marketQueryInfo(params)
-        //   this.dataListDetail = res.data.record
-        // } catch(e) {
-        // }
+        try {
+          let params = {
+            deliveryNo: row.deliveryNo
+          }
+          let res = await api.marketQueryInfo(params)
+          this.dataListDetail = res.data
+        } catch(e) {
+        }
       },
       // 签收
       signFor(row) {
@@ -224,7 +223,17 @@
           cancelText: '取消',
           onOk: () => {
             let params = {
+              deliveryNo: row.deliveryNo,
+              receiverProofImgs: row.receiverProofImgs ? row.receiverProofImgs : [],
+              itemList: []
             }
+            row.deliveryItemList.forEach(item => {
+              let opt = {
+                deliveryItemId: item.id,
+                num: item.receiveNum ? item.receiveNum : 0
+              }
+              params.itemList.push(opt)
+            })
             api.marketDeliveryOrderConfirm(params).then(res => {
               if(res.code == 200) {
                 this.$message.success('签收成功')

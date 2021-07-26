@@ -9,7 +9,11 @@
         />
       </a-form-model-item>
       <a-form-model-item label="状态" prop="b">
+<<<<<<< HEAD
         <a-select default-value="全部" @change="(value)=>this.strain = value" v-model="strain">
+=======
+        <a-select default-value="全部" @change="value => (this.strain = value)">
+>>>>>>> 8b25cae228fb0a573b9e76de9fcb963d3b1b0e53
           <a-select-option
             :value="v.id"
             v-for="(v, i) in selectArrstrain"
@@ -23,12 +27,17 @@
         <a-tree-select
           show-search
           searchPlaceholder
-          treeNodeFilterProp
+          treeNodeFilterProp="title"
           v-model="value"
           style="width: 100%"
           :dropdown-style="{ maxHeight: '300px', overflow: 'auto' }"
           :tree-data="treeData"
-          :replace-fields="{ children: 'children',  key: 'categoryCode', value: 'categoryId', title: 'name'}"
+          :replace-fields="{
+            children: 'children',
+            key: 'categoryCode',
+            value: 'categoryId',
+            title: 'name',
+          }"
           @change="onChange"
           defaultValue="全部"
           tree-default-expand-all
@@ -100,6 +109,21 @@
               </div>
             </template>
 
+              <template slot="sellingPricepro" slot-scope="scope">
+                <div
+                  class="editable-row-operations"
+                  v-for="(item, index) in scope.sellingPrice"
+                  :key="index"
+                >
+                  <p v-if="scope.isTieredPricing">
+                    {{ item.minNum }}-{{
+                      item.maxNum ? item.maxNum : '无穷大'
+                    }}
+                    = {{ item.priceBeforeTax }}￥
+                  </p>
+                  <p v-else>{{ item.priceBeforeTax }}￥</p>
+                </div>
+              </template>
             </a-table>
             <a-pagination
               :total="total"
@@ -150,11 +174,11 @@ export default {
       categoryId: '',
       tableColumns: [
         {
-          title: "序号",
-          key: "index",
+          title: '序号',
+          key: 'index',
           width: 60,
-          fixed: "left",
-          customRender: (text,record,index) => `${index+1}`,
+          fixed: 'left',
+          customRender: (text, record, index) => `${index + 1}`,
         },
         {
           title: '商品名称',
@@ -182,7 +206,7 @@ export default {
         },
         {
           title: '商品品类',
-          dataIndex:'categoryName',
+          dataIndex: 'categoryName',
           // scopedSlots: { customRender: 'categoryName'},
           key: 'categoryName',
           width: 100,
@@ -221,32 +245,32 @@ export default {
           title: '是否阶梯价',
           width: 80,
           key: 'isTieredPricing',
-          scopedSlots: { customRender: 'isTieredPricing'}
+          scopedSlots: { customRender: 'isTieredPricing' },
           // customRender:(isTieredPricing)=>isTieredPricing == 'true' ? '是':'否',
         },
         {
           title: '成本价(数量=元)',
           width: 160,
           key: 'costPrice',
-          scopedSlots: { customRender: 'costPrice'}
+          scopedSlots: { customRender: 'costPrice' },
         },
         {
           title: '税前销售价(数量=元)',
           width: 160,
           key: 'sellingPrice',
           // dataIndex: 'beforeTaxSellingPrice',
-          scopedSlots: { customRender: 'sellingPrice'}
+          scopedSlots: { customRender: 'sellingPrice' },
         },
         {
           title: '税后销售价(数量=元)',
           width: 160,
           // key: 'sellingPrice',
           // dataIndex: 'sellingPrice',
-          scopedSlots: { customRender: 'sellingPricepro'}
+          scopedSlots: { customRender: 'sellingPricepro' },
         },
         {
           title: '商品状态',
-          customRender:(selling)=>selling==1?'上架':'下架',
+          customRender: selling => (selling == 1 ? '上架' : '下架'),
           width: 90,
           dataIndex: 'selling',
         },
@@ -265,7 +289,13 @@ export default {
     this.supplierlis() //供应商
     api.getCategoryTree().then(resp => {
       this.treeData = resp.data
+<<<<<<< HEAD
       this.treeData.unshift({ categoryCode: '', name: '全部' });
+=======
+      this.treeData.unshift({ categoryCode: '', name: '全部' })
+      console.log('treeData', this.treeData)
+      // replaceFields
+>>>>>>> 8b25cae228fb0a573b9e76de9fcb963d3b1b0e53
     })
     setTimeout(
       () => (this.scrollY = document.body.clientHeight - 310 + 'px'),
@@ -273,6 +303,7 @@ export default {
     )
   },
   methods: {
+<<<<<<< HEAD
     reset(){//重置
       this.sku = '';
       this.strain = '';
@@ -289,6 +320,12 @@ export default {
       debounce(() => {
         this.supplierlis(value);
       }, 500);
+=======
+    reset() {
+      this.sku = null
+      this.strain = null
+      this.categoryId = ''
+>>>>>>> 8b25cae228fb0a573b9e76de9fcb963d3b1b0e53
     },
     onChange(value) {
       this.categoryId = value
@@ -387,6 +424,5 @@ export default {
   /deep/ .item-btns .item-btn {
     margin-right: 20px;
   }
-
 }
 </style>
