@@ -7,15 +7,10 @@
     <div class="content-main" style="height: calc(100% - 100px);margin-top: 0px;">
       <a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" style="height: 100%;overflow: auto;"
               autoComplete="off">
-        <a-form-item label="SKU名称">
+        <a-form-item label="SKU名称" >
           <a-input disabled  v-decorator="['skuName']"/>
         </a-form-item>
-        <!-- <a-form-item label="合作期限">
-          <a-range-picker showToday.Boolean="true" style="width: 100%"
-                          v-decorator="['time',]"
-          />
-        </a-form-item> -->
-        <a-form-item label="SKU编码">
+        <a-form-item label="SKU编码" >
           <a-input disabled v-decorator="['skuCode']" />
         </a-form-item>
         <a-form-item label="SPU名称">
@@ -59,23 +54,12 @@
           />
         </a-form-item>
         <a-form-item label="供应商">
-          <!-- <a-select
-              show-search
-              option-filter-prop="children"
-              :filter-option="false"
-              @search="handleSearch"
-              @change="handleChange"
-              :show-arrow="true"
-              v-decorator="['supplierName',{ rules: [{ required: true, message: '请选择供应商' }] }]"
-              placeholder="请选择供应商"> -->
                <a-select
                 show-search
                 placeholder="请选择供应商"
                 option-filter-prop="children"
                 :filter-option="filterOption"
-                @focus="handleFocus"
                 @search="handleSearch"
-                @blur="handleBlur"
                 @change="handleChange"
                 v-decorator="['supplierName',{ rules: [{ required: true, message: '请选择供应商' }] }]"
               >
