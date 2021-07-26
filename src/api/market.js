@@ -4,8 +4,8 @@ let marketDetailUrl = '/times-ec-tob-mall/admin/saleOrder/query/order/'
 let marketCompanyListUrl = '/times-ec-tob-mall/admin/project/city/company/list'
 let marketUpdateCityCompanyUrl = '/times-ec-tob-mall/admin/saleOrder/update/cityCompany'
 let marketDeliveryOrderListUrl = '/times-ec-tob-mall/admin/delivery/order/list/'
-let marketDeliveryOrderConfirmUrl = '/admin/delivery/order/confirm'
-let marketQueryInfoUrl = '/admin/delivery/order/queryInfo/'
+let marketDeliveryOrderConfirmUrl = '/times-ec-tob-mall/admin/delivery/order/confirm'
+let marketQueryInfoUrl = '/times-ec-tob-mall/admin/delivery/order/queryInfo/'
 
 // 列表
 export const getMarketOrderList = (data) => {
