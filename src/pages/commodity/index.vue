@@ -9,11 +9,7 @@
         />
       </a-form-model-item>
       <a-form-model-item label="状态" prop="b">
-<<<<<<< HEAD
         <a-select default-value="全部" @change="(value)=>this.strain = value" v-model="strain">
-=======
-        <a-select default-value="全部" @change="value => (this.strain = value)">
->>>>>>> 8b25cae228fb0a573b9e76de9fcb963d3b1b0e53
           <a-select-option
             :value="v.id"
             v-for="(v, i) in selectArrstrain"
@@ -289,13 +285,7 @@ export default {
     this.supplierlis() //供应商
     api.getCategoryTree().then(resp => {
       this.treeData = resp.data
-<<<<<<< HEAD
       this.treeData.unshift({ categoryCode: '', name: '全部' });
-=======
-      this.treeData.unshift({ categoryCode: '', name: '全部' })
-      console.log('treeData', this.treeData)
-      // replaceFields
->>>>>>> 8b25cae228fb0a573b9e76de9fcb963d3b1b0e53
     })
     setTimeout(
       () => (this.scrollY = document.body.clientHeight - 310 + 'px'),
@@ -303,7 +293,6 @@ export default {
     )
   },
   methods: {
-<<<<<<< HEAD
     reset(){//重置
       this.sku = '';
       this.strain = '';
@@ -320,12 +309,6 @@ export default {
       debounce(() => {
         this.supplierlis(value);
       }, 500);
-=======
-    reset() {
-      this.sku = null
-      this.strain = null
-      this.categoryId = ''
->>>>>>> 8b25cae228fb0a573b9e76de9fcb963d3b1b0e53
     },
     onChange(value) {
       this.categoryId = value
