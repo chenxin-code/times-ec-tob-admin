@@ -74,21 +74,21 @@
               {{scope.isTieredPricing== true?'是':'否'}}
             </template>
                <template slot="costPrice" slot-scope="scope">
-              <div class="editable-row-operations" v-for="item in scope.costPrice" :key="item.skuId">
+              <div class="editable-row-operations" v-for="(item,index) in scope.costPrice" :key="index">
                 <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} = {{ item.costPrice}}￥</p>
                 <p v-else > {{ item.costPrice}}￥</p>
               </div>
             </template>
-            
+
             <template slot="sellingPrice" slot-scope="scope">
-              <div class="editable-row-operations" v-for="item in scope.sellingPrice" :key="item.skuId">
+              <div class="editable-row-operations" v-for="(item,index) in scope.sellingPrice" :key="index">
                 <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} = {{ item.priceBeforeTax}}￥</p>
                 <p v-else > {{ item.priceBeforeTax}}￥</p>
               </div>
             </template>
 
             <template slot="sellingPricepro" slot-scope="scope">
-              <div class="editable-row-operations" v-for="item in scope.sellingPrice" :key="item.skuId">
+              <div class="editable-row-operations" v-for="(item,index) in scope.sellingPrice" :key="index">
                 <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} = {{ item.priceBeforeTax}}￥</p>
                 <p v-else > {{ item.priceBeforeTax}}￥</p>
               </div>
@@ -278,8 +278,8 @@ export default {
     },
     supplierlis(value) {
       api
-        .getSupplierListByPager({
-          keyword: value ?? '',
+        .getSupplierListByPager2({
+          //keyword: value ?? '',
           pageNum: 1,
           pageSize: 100000,
         })

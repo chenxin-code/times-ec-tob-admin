@@ -193,7 +193,7 @@ export default {
     }
   },
   created() {
-    api.getSupplierListByPager({"pageNum":1,"pageSize":10000}).then((res)=>{
+    api.getSupplierListByPager2({"pageNum":1,"pageSize":10000}).then((res)=>{
        this.selectlist = res.data.records;
        this.selectlist.unshift({id:'',supplierName:'全部'})
      })
