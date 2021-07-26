@@ -316,12 +316,12 @@ export default {
     //保存
     onSubmit() {
       let that = this
+      for (let i = 0; i <  that.sellingPrice.length; i++) {
+      if(that.costPrice[0].costPrice > that.sellingPrice[i].priceAfterTax ||that.costPrice[0].costPrice > that.sellingPrice[i].priceBeforeTax)
+      return this.$message.error('销售价必须大于成本价')}
       debounce(() => {
         this.form.validateFields((err, values) => {
-          this.loading = true;
-          if(that.isTieredPricing == false){
-            that.sellingPrice = that.sellingPrice[0];
-          }
+          if(that.isTieredPricing == false) that.sellingPrice = that.sellingPrice[0];
           let data = {
             id: that.$route.params.id ?? '',
             categoryId:that.categoryId, //所属类目id
@@ -346,7 +346,7 @@ export default {
             taxRate:Number(values.taxRate),//税率
             stock:Number(values.stock),//库存
           };  
-          console.log(data);
+          this.loading = true;
           api.updateProduct(data).then(res => {
                 if (res.code === 200) {
                   this.$message.success("编辑成功");

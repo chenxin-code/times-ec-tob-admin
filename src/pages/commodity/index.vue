@@ -9,7 +9,7 @@
         />
       </a-form-model-item>
       <a-form-model-item label="状态" prop="b">
-        <a-select default-value="全部" @change="handleChangesataus">
+        <a-select default-value="全部" @change="(value)=>this.strain = value">
           <a-select-option
             :value="v.id"
             v-for="(v, i) in selectArrstrain"
@@ -21,16 +21,14 @@
       </a-form-model-item>
       <a-form-model-item label="商品品类" prop="d">
         <a-tree-select
+          show-search
+          searchPlaceholder
+          treeNodeFilterProp
           v-model="value"
           style="width: 100%"
-          :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+          :dropdown-style="{ maxHeight: '300px', overflow: 'auto' }"
           :tree-data="treeData"
-          :replace-fields="{
-            children: 'children',
-            key: 'categoryCode',
-            value: 'categoryId',
-            title: 'name',
-          }"
+          :replace-fields="{ children: 'children',  key: 'categoryCode', value: 'categoryId', title: 'name'}"
           @change="onChange"
           defaultValue="全部"
           tree-default-expand-all
@@ -290,9 +288,6 @@ export default {
     },
     handleChange(value) {
       this.status = value
-    },
-    handleChangesataus(value) {
-      this.strain = value
     },
     edit(scope, typ) {
       console.log(typ)
