@@ -9,7 +9,7 @@
         />
       </a-form-model-item>
       <a-form-model-item label="状态" prop="b">
-        <a-select default-value="全部" @change="(value)=>this.strain = value">
+        <a-select default-value="全部" @change="(value)=>this.strain = value" v-model="strain">
           <a-select-option
             :value="v.id"
             v-for="(v, i) in selectArrstrain"
@@ -36,9 +36,17 @@
         </a-tree-select>
       </a-form-model-item>
       <a-form-model-item label="所属供应商" prop="d">
-        <a-select default-value="全部" @change="handleChange">
+           <a-select
+                default-value="全部"
+                show-search
+                v-model="drstatus"
+                option-filter-prop="children"
+                :filter-option="filterOption"
+                @search="handleSearch"
+                @change="handleChange"
+              >
           <a-select-option
-            :value="item.id"
+            :value="item.supplierCode"
             v-for="item in selectlist"
             :key="item.id"
           >
@@ -48,7 +56,7 @@
       </a-form-model-item>
       <a-form-model-item class="item-btns">
         <a-button class="item-btn" type="primary" @click="quitList()">查询</a-button>
-        <a-button class="item-btn" @click="reset()">重置</a-button>
+        <a-button class="item-btn" type="primary" @click="reset()">重置</a-button>
       </a-form-model-item>
     </a-form-model>
     <div id="neighborhoodLife">
@@ -74,21 +82,21 @@
                <template slot="costPrice" slot-scope="scope">
               <div class="editable-row-operations" v-for="(item,index) in scope.costPrice" :key="index">
                 <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} = {{ item.costPrice}}￥</p>
-                <p v-else > {{ item.costPrice}}￥</p>
+                <p v-else > ￥{{ item.costPrice}}</p>
               </div>
             </template>
 
             <template slot="sellingPrice" slot-scope="scope">
               <div class="editable-row-operations" v-for="(item,index) in scope.sellingPrice" :key="index">
                 <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} = {{ item.priceBeforeTax}}￥</p>
-                <p v-else > {{ item.priceBeforeTax}}￥</p>
+                <p v-else > ￥{{ item.priceBeforeTax}}</p>
               </div>
             </template>
 
             <template slot="sellingPricepro" slot-scope="scope">
               <div class="editable-row-operations" v-for="(item,index) in scope.sellingPrice" :key="index">
                 <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} = {{ item.priceBeforeTax}}￥</p>
-                <p v-else > {{ item.priceBeforeTax}}￥</p>
+                <p v-else > ￥{{ item.priceBeforeTax}}</p>
               </div>
             </template>
 
@@ -137,6 +145,7 @@ export default {
       selectlist: [],
       sku: '',
       status: '',
+      drstatus:'全部',//所属供应商默认值
       strain: '',
       categoryId: '',
       tableColumns: [
@@ -257,8 +266,6 @@ export default {
     api.getCategoryTree().then(resp => {
       this.treeData = resp.data
       this.treeData.unshift({ categoryCode: '', name: '全部' });
-      console.log('treeData',this.treeData);
-      // replaceFields
     })
     setTimeout(
       () => (this.scrollY = document.body.clientHeight - 310 + 'px'),
@@ -266,10 +273,22 @@ export default {
     )
   },
   methods: {
-    reset(){
-      this.sku = null;
-      this.strain = null;
-      this.categoryId = '';
+    reset(){//重置
+      this.sku = '';
+      this.strain = '';
+      this.value = '全部';
+      this.drstatus= '全部'; //默认值
+      this.status = ''; //传参
+    },
+     filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+      );
+    },
+    handleSearch(value) {
+      debounce(() => {
+        this.supplierlis(value);
+      }, 500);
     },
     onChange(value) {
       this.categoryId = value
@@ -288,6 +307,7 @@ export default {
     },
     handleChange(value) {
       this.status = value
+      console.log(this.status);
     },
     edit(scope, typ) {
       console.log(typ)

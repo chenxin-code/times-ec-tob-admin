@@ -265,8 +265,8 @@ export default {
     addlis() {//加
       if (this.sellingPrice[this.sellingPrice.length - 1].maxNum) {
         this.sellingPrice.push({
-          minNum: this.sellingPrice[this.sellingPrice.length - 1].maxNum,
-          maxNum: this.sellingPrice[this.sellingPrice.length - 1].maxNum,
+          minNum: Number(this.sellingPrice[this.sellingPrice.length - 1].maxNum)+ 1 ,
+          maxNum:  Number(this.sellingPrice[this.sellingPrice.length - 1].maxNum)+ 1 ,
           priceBeforeTax: this.sellingPrice[this.sellingPrice.length - 1].priceBeforeTax,
           priceAfterTax: this.sellingPrice[this.sellingPrice.length - 1].priceAfterTax
         });
