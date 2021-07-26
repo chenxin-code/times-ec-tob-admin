@@ -99,10 +99,10 @@
           />
         </a-form-item>
         <a-form-item label="PC端商品详情">
-          <quill-editor ref="myTextEditor" class="editorted" v-model="pcItemInfo" :options="editorOption"></quill-editor>
+          <quill-editor ref="myTextEditor" @focus="onEditorFocus($event)" class="editorted" v-model="pcItemInfo" :options="editorOption"></quill-editor>
         </a-form-item>
         <a-form-item label="app商品详情">
-          <quill-editor ref="TextEditor" class="editorted" v-model="appItemInfo" :options="editorOption"></quill-editor>
+          <quill-editor ref="TextEditor" @focus="onEditorFocus($event)" class="editorted" v-model="appItemInfo" :options="editorOption"></quill-editor>
         </a-form-item>
         <a-form-item label="成本价" v-show="costPrice.length>0 ">
           <div class="intpud" v-for="item in costPrice" :key="item.id">
@@ -227,7 +227,13 @@ export default {
     next();
   },
   methods: {
-    
+    onEditorFocus(event) { 
+       if(this.$route.params.typ === '1'){
+         event.enable(false);
+       }else{
+         event.enable(true);
+       }
+    },
     isTieredPricingchange(value){
       console.log(value);
       this.isTieredPricing = value;
