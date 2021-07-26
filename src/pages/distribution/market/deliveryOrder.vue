@@ -32,14 +32,14 @@
 		>
 			<template>
         <div class="item-list">
-          <span>配送单号：989889898</span>
-          <span>配送时间：2021-11-11</span>
+          <span>配送单号：{{dataListDetail.deliveryNo}}</span>
+          <span>配送时间：{{dataListDetail.deliveryTime}}</span>
         </div>
         <div>
           <a-table
             :columns="columns2"
             :row-key="(r,i) => i"
-            :data-source="dataListDetail"
+            :data-source="dataListDetail.deliveryItemList"
             :scroll="{ x: 800 }"
             :pagination="false"
             style="margin-top:8px;">
@@ -51,8 +51,8 @@
           </template>
         </div>
         <div class="item-list">
-          <span>签收单号：989889898</span>
-          <span>签收时间：2021-11-11</span>
+          <span>签收单号：{{dataListDetail.receiveNo}}</span>
+          <span>签收时间：{{dataListDetail.receiveTime}}</span>
           <img src="" />
         </div>
 			</template>
@@ -74,7 +74,7 @@
           pageSize: 10,
         },
         dataList: [],
-        dataListDetail: [],
+        dataListDetail: {},
         isShowModal: false,
          //表格高度
         scrollY: 300,
@@ -117,14 +117,14 @@
             customRender: (text, record, index) => {
               let str = ''
               switch (record.approveStatus) {
-                case '0':
-                  str = '未审核'
+                case 0:
+                  str = '未签收'
                   break
-                case '0':
-                  str = '审核通过'
+                case 0:
+                  str = '全部签收'
                   break
-                case '2':
-                  str = '审核驳回'
+                case 2:
+                  str = '部分签收'
                   break
                 default:
                   ''
@@ -146,31 +146,35 @@
             title: "商品名称",
             dataIndex: "itemName",
             key: "itemName",
-
             ellipsis: true,
+            align: 'center'
           },
           {
             title: "配送数量",
             key: "deliveryNum",
             dataIndex: 'deliveryNum',
             ellipsis: true,
+            align: 'center'
           },
           {
             title: "签收数量",
             key: "receiveNum",
             dataIndex: "receiveNum",
             ellipsis: true,
+            align: 'center'
           },
           {
             title: "未签收数量",
             width: 250,
             scopedSlots: {customRender: "noReceiveNum"},
+            align: 'center'
           },
           {
             title: "备注",
-            key: "remark",
-            dataIndex: "remark",
+            key: "payBillMark",
+            dataIndex: "payBillMark",
             ellipsis: true,
+            align: 'center'
           }
         ]
       }
@@ -195,11 +199,15 @@
       // 详情
       async detail(row) {
         this.isShowModal = true
-        try {
-          let res = await api.marketQueryInfo(params)
-          this.dataListDetail = res.data.record.deliveryItemList
-        } catch(e) {
-        }
+         this.dataListDetail = row
+        // try {
+        //   let params = {
+        //     deliveryNo: row.deliveryNo
+        //   }
+        //   let res = await api.marketQueryInfo(params)
+        //   this.dataListDetail = res.data.record
+        // } catch(e) {
+        // }
       },
       // 签收
       signFor(row) {

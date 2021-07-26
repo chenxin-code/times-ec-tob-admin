@@ -59,16 +59,26 @@
           />
         </a-form-item>
         <a-form-item label="供应商">
-          <a-select
+          <!-- <a-select
               show-search
               option-filter-prop="children"
-              @change="handleChange"
-              :show-arrow="false"
               :filter-option="false"
-              :not-found-content="null"
               @search="handleSearch"
+              @change="handleChange"
+              :show-arrow="true"
               v-decorator="['supplierName',{ rules: [{ required: true, message: '请选择供应商' }] }]"
-              placeholder="请选择供应商">
+              placeholder="请选择供应商"> -->
+               <a-select
+                show-search
+                placeholder="请选择供应商"
+                option-filter-prop="children"
+                :filter-option="filterOption"
+                @focus="handleFocus"
+                @search="handleSearch"
+                @blur="handleBlur"
+                @change="handleChange"
+                v-decorator="['supplierName',{ rules: [{ required: true, message: '请选择供应商' }] }]"
+              >
             <a-select-option v-for="item in supplierList" :key="item.id"
                              :value="`${item.id}`+`:${item.supplierName}`+`:${item.companyId}`">
               {{ item.supplierName }}
@@ -226,7 +236,11 @@ export default {
     next();
   },
   methods: {
-    
+    filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+      );
+    },
     isTieredPricingchange(value){
       console.log(value);
       this.isTieredPricing = value;
@@ -239,10 +253,10 @@ export default {
     handleSearch(value) {
       debounce(() => {
         this.supplier(value);
-      }, 300);
+      }, 500);
     },
     supplier(value) {
-      api.getSupplierListByPager({keyword: value, "pageNum": 1, "pageSize": 10}).then((res) => {
+      api.getSupplierListByPager2({keyword: value, "pageNum": 1, "pageSize": 1000}).then((res) => {
         this.supplierList = res.data.records;
       })
     },

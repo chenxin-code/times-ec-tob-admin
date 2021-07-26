@@ -318,8 +318,8 @@ let router = new Router({
             menu: "/commodity",
             authKeys: [""],
             bread: [
-              { path: "/commodity", name: "供应商" },
-              { path: "commodity/edit", name: "供应商详情" },
+              { path: "/commodity", name: "商品管理" },
+              { path: "commodity/edit", name: "商品管理详情" },
             ],
             isUseCache: false,
             keepAlive: false,

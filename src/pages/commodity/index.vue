@@ -48,11 +48,9 @@
           </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item>
-        <a-button type="primary" @click="quitList()"
-          >查询</a-button
-        >
-        <!-- <a-button class="item-btn" @click="_toReset()">重置</a-button> -->
+      <a-form-model-item class="item-btns">
+        <a-button class="item-btn" type="primary" @click="quitList()">查询</a-button>
+        <a-button class="item-btn" @click="reset()">重置</a-button>
       </a-form-model-item>
     </a-form-model>
     <div id="neighborhoodLife">
@@ -76,30 +74,23 @@
               {{scope.isTieredPricing== true?'是':'否'}}
             </template>
                <template slot="costPrice" slot-scope="scope">
-              <div class="editable-row-operations" v-for="item in scope.costPrice" :key="item.skuId">
-                <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} : {{ item.costPrice}}</p>
-                <p v-else > {{ item.costPrice}}</p>
-              </div>
-            </template>
-            
-            <template slot="sellingPrice" slot-scope="scope">
-              <div class="editable-row-operations" v-for="item in scope.sellingPrice" :key="item.skuId">
-                <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} : {{ item.priceBeforeTax}}</p>
-                <p v-else > {{ item.priceBeforeTax}}</p>
+              <div class="editable-row-operations" v-for="(item,index) in scope.costPrice" :key="index">
+                <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} = {{ item.costPrice}}￥</p>
+                <p v-else > {{ item.costPrice}}￥</p>
               </div>
             </template>
 
             <template slot="sellingPrice" slot-scope="scope">
-              <div class="editable-row-operations" v-for="item in scope.sellingPrice" :key="item.skuId">
-                <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} : {{ item.priceBeforeTax}}</p>
-                <p v-else > {{ item.priceBeforeTax}}</p>
+              <div class="editable-row-operations" v-for="(item,index) in scope.sellingPrice" :key="index">
+                <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} = {{ item.priceBeforeTax}}￥</p>
+                <p v-else > {{ item.priceBeforeTax}}￥</p>
               </div>
             </template>
 
             <template slot="sellingPricepro" slot-scope="scope">
-              <div class="editable-row-operations" v-for="item in scope.sellingPrice" :key="item.skuId">
-                <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} : {{ item.priceBeforeTax}}</p>
-                <p v-else > {{ item.priceBeforeTax}}</p>
+              <div class="editable-row-operations" v-for="(item,index) in scope.sellingPrice" :key="index">
+                <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} = {{ item.priceBeforeTax}}￥</p>
+                <p v-else > {{ item.priceBeforeTax}}￥</p>
               </div>
             </template>
 
@@ -142,8 +133,8 @@ export default {
       scrollY: 100,
       selectArrstrain: [
         { id: '', name: '全部' },
-        { id: '1', name: '上架' },
-        { id: '2', name: '下架' },
+        { id: 1, name: '上架' },
+        { id: 0, name: '下架' },
       ],
       selectlist: [],
       sku: '',
@@ -228,20 +219,20 @@ export default {
         },
         {
           title: '成本价(数量=元)',
-          width: 100,
+          width: 160,
           key: 'costPrice',
           scopedSlots: { customRender: 'costPrice'}
         },
         {
           title: '税前销售价(数量=元)',
-          width: 120,
+          width: 160,
           key: 'sellingPrice',
           // dataIndex: 'beforeTaxSellingPrice',
           scopedSlots: { customRender: 'sellingPrice'}
         },
         {
           title: '税后销售价(数量=元)',
-          width: 120,
+          width: 160,
           // key: 'sellingPrice',
           // dataIndex: 'sellingPrice',
           scopedSlots: { customRender: 'sellingPricepro'}
@@ -267,7 +258,8 @@ export default {
     this.supplierlis() //供应商
     api.getCategoryTree().then(resp => {
       this.treeData = resp.data
-      this.treeData.unshift({ categoryCode: '', name: '全部' })
+      this.treeData.unshift({ categoryCode: '', name: '全部' });
+      console.log('treeData',this.treeData);
       // replaceFields
     })
     setTimeout(
@@ -276,13 +268,18 @@ export default {
     )
   },
   methods: {
+    reset(){
+      this.sku = null;
+      this.strain = null;
+      this.categoryId = '';
+    },
     onChange(value) {
       this.categoryId = value
     },
     supplierlis(value) {
       api
-        .getSupplierListByPager({
-          keyword: value ?? '',
+        .getSupplierListByPager2({
+          //keyword: value ?? '',
           pageNum: 1,
           pageSize: 100000,
         })
@@ -370,6 +367,10 @@ export default {
     .ant-form-item-control-wrapper {
       width: 400px !important;
     }
+  }
+
+  /deep/ .item-btns .item-btn {
+    margin-right: 20px;
   }
 
 }

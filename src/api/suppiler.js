@@ -6,6 +6,9 @@ let supplierDetailUrl = '/times-ec-tob-mall/admin/supplier/getSupplierDetail/'
 export const getSupplierListByPager = (data) => {
   return fetchApi(supplierListUrl, data, 'POST')
 }
+export const getSupplierListByPager2 = (data) => {
+  return fetchApi('/times-ec-tob-mall/admin/baseSupplier/getList', data, 'POST')
+}
 // 详情
 export const getSupplierDetail = (data) => {
   return fetchApi(supplierDetailUrl + data.id, {}, 'GET')

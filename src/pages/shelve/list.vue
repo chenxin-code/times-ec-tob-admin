@@ -86,8 +86,8 @@ export default {
       scrollY:100,
       selectArrstrain:[ //有bug
         {id: '', name: '全部'},
-        {id: -1, name: '上架'},
-        {id: -1, name: '下架'},
+        {id: true, name: '上架'},
+        {id: false, name: '下架'},
       ],
      treeData: [],
      categoryId:'',//下拉树
@@ -193,7 +193,7 @@ export default {
     }
   },
   created() {
-    api.getSupplierListByPager({"pageNum":1,"pageSize":10000}).then((res)=>{
+    api.getSupplierListByPager2({"pageNum":1,"pageSize":10000}).then((res)=>{
        this.selectlist = res.data.records;
        this.selectlist.unshift({id:'',supplierName:'全部'})
      })
