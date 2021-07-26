@@ -408,7 +408,6 @@ export default {
       this.$router.push({
         name: 'deliveryOrder',
         params: {
-          purchaseCode: row.purchaseCompanyCode,
           saleOrderNo: row.saleOrderNo
         }
       })

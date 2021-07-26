@@ -75,29 +75,22 @@
             </template>
                <template slot="costPrice" slot-scope="scope">
               <div class="editable-row-operations" v-for="item in scope.costPrice" :key="item.skuId">
-                <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} : {{ item.costPrice}}</p>
-                <p v-else > {{ item.costPrice}}</p>
+                <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} = {{ item.costPrice}}￥</p>
+                <p v-else > {{ item.costPrice}}￥</p>
               </div>
             </template>
             
             <template slot="sellingPrice" slot-scope="scope">
               <div class="editable-row-operations" v-for="item in scope.sellingPrice" :key="item.skuId">
-                <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} : {{ item.priceBeforeTax}}</p>
-                <p v-else > {{ item.priceBeforeTax}}</p>
-              </div>
-            </template>
-
-            <template slot="sellingPrice" slot-scope="scope">
-              <div class="editable-row-operations" v-for="item in scope.sellingPrice" :key="item.skuId">
-                <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} : {{ item.priceBeforeTax}}</p>
-                <p v-else > {{ item.priceBeforeTax}}</p>
+                <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} = {{ item.priceBeforeTax}}￥</p>
+                <p v-else > {{ item.priceBeforeTax}}￥</p>
               </div>
             </template>
 
             <template slot="sellingPricepro" slot-scope="scope">
               <div class="editable-row-operations" v-for="item in scope.sellingPrice" :key="item.skuId">
-                <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} : {{ item.priceBeforeTax}}</p>
-                <p v-else > {{ item.priceBeforeTax}}</p>
+                <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} = {{ item.priceBeforeTax}}￥</p>
+                <p v-else > {{ item.priceBeforeTax}}￥</p>
               </div>
             </template>
 
@@ -226,20 +219,20 @@ export default {
         },
         {
           title: '成本价(数量=元)',
-          width: 100,
+          width: 160,
           key: 'costPrice',
           scopedSlots: { customRender: 'costPrice'}
         },
         {
           title: '税前销售价(数量=元)',
-          width: 120,
+          width: 160,
           key: 'sellingPrice',
           // dataIndex: 'beforeTaxSellingPrice',
           scopedSlots: { customRender: 'sellingPrice'}
         },
         {
           title: '税后销售价(数量=元)',
-          width: 120,
+          width: 160,
           // key: 'sellingPrice',
           // dataIndex: 'sellingPrice',
           scopedSlots: { customRender: 'sellingPricepro'}
