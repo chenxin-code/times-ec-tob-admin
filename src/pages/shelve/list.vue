@@ -52,7 +52,7 @@
                 :loading="tableLoading"
                 style="margin-top: 8px;">
               <span slot="action" slot-scope="scope">
-                <a-button type="link" @click="$router.push({ name: 'commodityEdit', params: { id: scope.id ,typ: '1'}})">查看详情</a-button>
+                <a-button type="link" @click="$router.push({ name: 'shelveEdit', params: { id: scope.id ,typ: '1'}})">查看详情</a-button>
                 <a-button v-if="scope.selling" type="link" @click="updates(scope)">上架</a-button>
                 <a-button v-else type="link" @click="updates(scope)">下架</a-button>
               </span>

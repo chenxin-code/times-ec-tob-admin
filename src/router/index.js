@@ -59,6 +59,22 @@ let router = new Router({
           },
           component: () => import("../pages/shelve/list"),
         },
+        {
+          path: "/shelve/edit",
+          name: "shelveEdit",
+          menuKey: "shelve",
+          meta: {
+            menu: "/shelve",
+            authKeys: [""],
+            bread: [
+              { path: "/shelve", name: "商品上下架" },
+              { path: "shelve/edit", name: "商品上下架详情" },
+            ],
+            isUseCache: false,
+            keepAlive: false,
+          },
+          component: () => import("../pages/shelve/edit"),
+        },
         //负数单管理
         {
           path: "/negative",
@@ -310,6 +326,7 @@ let router = new Router({
           },
           component: () => import("../pages/commodity/edit"),
         },
+        
       ]
     },
     {
