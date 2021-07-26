@@ -174,7 +174,7 @@ export default {
             this.btnloading = true;
             api.addAccount(this.thisForm).then(resp => {
               if (resp.code === 200) {
-                this.$message.success('操作成功');
+                this.$message.success('添加成功');
                 this.$router.back();
               }
             }).finally(() => {
@@ -198,7 +198,7 @@ export default {
             this.btnloading = true;
             api.updateAccount(this.thisForm).then(resp => {
               if (resp.code === 200) {
-                this.$message.success('操作成功');
+                this.$message.success('保存成功');
                 this.$router.back();
               }
             }).finally(() => {

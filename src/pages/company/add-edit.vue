@@ -90,6 +90,12 @@ export default {
       } else {
         callback()
       }
+    }, checkMobileFormat = (rule, value, callback) => {
+      if (value && !/^1[3456789]\d{9}$/.test(value)) {
+        callback(new Error('手机号码格式不正确'))
+      } else {
+        callback()
+      }
     };
     return {
       showRedBorder: false,
@@ -122,12 +128,14 @@ export default {
         ],
         enterprisePhone: [
           {required: true, message: '请输入企业电话', trigger: 'blur'},
+          {validator: checkMobileFormat, trigger: 'blur'},
         ],
         concatPerson: [
           {required: true, message: '请输入联系人', trigger: 'blur'},
         ],
         concatPhone: [
           {required: true, message: '请输入联系电话', trigger: 'blur'},
+          {validator: checkMobileFormat, trigger: 'blur'},
         ],
         email: [
           {validator: checkEmailFormat, trigger: 'blur'},
@@ -244,7 +252,7 @@ export default {
             this.btnloading = true;
             api.addProject(this.thisForm).then(resp => {
               if (resp.code === 200) {
-                this.$message.success('操作成功');
+                this.$message.success('添加成功');
                 this.$router.back();
               }
             }).finally(() => {
@@ -267,7 +275,7 @@ export default {
             this.btnloading = true;
             api.updateProject(this.thisForm).then(resp => {
               if (resp.code === 200) {
-                this.$message.success('操作成功');
+                this.$message.success('保存成功');
                 this.$router.back();
               }
             }).finally(() => {
