@@ -28,6 +28,7 @@ export const getNegativeItems = data => fetchApi('/times-ec-tob-mall/admin/negat
 export const queryNegativeDetail = data => fetchApi('/times-ec-tob-mall/admin/negative/queryDetail/' + data.negativeNo, {}, 'GET');
 export const queryNegativeList = data => fetchApi('/times-ec-tob-mall/admin/negative/queryList', data, 'POST');
 export const updateNegative = data => fetchApi('/times-ec-tob-mall/admin/negative/updateNegative', data, 'POST');
+export const getOrderListByOrderNo = data => fetchApi('/times-ec-tob-mall/admin/negative/getOrderListByOrderNo/' + data.orderNo, {}, 'POST');
 
 //省 市 区 街道
 export const getAreaData = data => fetchApi('/times-ec-tob-mall/general/area/list', data, 'GET');

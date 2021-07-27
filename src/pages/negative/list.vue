@@ -6,12 +6,13 @@
       </a-form-model-item>
       <a-form-model-item class="item-btns">
         <a-button class="item-btn" type="primary" @click="getList()">查询</a-button>
+        <a-button class="item-btn" @click="reset()">重置</a-button>
         <a-button class="item-btn" @click="$router.push({path: '/negative/add'})" type="primary">新增</a-button>
       </a-form-model-item>
     </a-form-model>
     <div id="neighborhoodLife">
       <div class="content-main" ref="content_main">
-        <a-row style="padding: 20px;height: 100%;">
+        <a-row style="padding: 0 20px;height: 100%;">
           <a-col>
             <a-table
                 :columns="tableColumns"
@@ -19,12 +20,10 @@
                 :data-source="tableData"
                 :scroll="{ x: 1000 }"
                 :pagination="false"
-                :loading="tableLoading"
-                style="margin-top: 8px;">
+                :loading="tableLoading">
               <span slot="action" slot-scope="scope">
-                <a-button type="link"
-                          @click="$router.push({path: '/negative/show', query: {id: scope.id}})">查看详情</a-button>
-                <a-button type="link">删除</a-button>
+                <a-button type="link" @click="$router.push({path: '/negative/show', query: {id: scope.id,negativeNo: scope.negativeNo}})">查看详情</a-button>
+                <a-button type="link" @click="goDel(scope.negativeNo)">删除</a-button>
               </span>
             </a-table>
             <a-pagination
@@ -61,26 +60,31 @@ export default {
         {
           title: "负数单编号",
           dataIndex: "negativeNo",
-          width: 300,
+          align: "center",
+          width: 250,
         },
         {
           title: "订单编号",
           dataIndex: "saleOrderNo",
-          width: 300,
+          align: "center",
+          width: 250,
         },
         {
           title: "备注",
           dataIndex: "remark",
+          align: "center",
           width: 250,
         },
         {
           title: "创建人",
           dataIndex: "createUser",
+          align: "center",
           width: 200,
         },
         {
           title: "创建时间",
           dataIndex: "createTime",
+          align: "center",
           width: 200,
         },
         {
@@ -102,6 +106,12 @@ export default {
     this.getList();
   },
   methods: {
+    reset(){
+      this.thisForm.orderNo = null;
+      this.current = 1;
+      this.pageSize = 10;
+      this.getList();
+    },
     onShowSizeChange(current, pageSize) {
       this.current = current;
       this.pageSize = pageSize;
@@ -120,6 +130,26 @@ export default {
         }
       }).finally(() => {
         this.tableLoading = false;
+      });
+    },
+    goDel(negativeNo) {
+      this.$confirm({
+        title: `删除负数单`,
+        content: `您确定要删除该负数单吗？`,
+        centered: true,
+        okText: '确定',
+        cancelText: '取消',
+        onOk: () => {
+          this.tableLoading = true;
+          api.delNegativeBill({negativeNo: negativeNo}).then(resp => {
+            if (resp.code === 200) {
+              this.$message.success('删除成功');
+              this.getList();
+            }
+          }).finally(() => {
+            this.tableLoading = false;
+          });
+        }
       });
     },
   }
