@@ -83,20 +83,20 @@
         <div class="form-wrop">
           <div class="form-wrop-item">
             <a-form-model-item label="收货人" >
-              <span class="info">{{dataList.addressDto.receiverName}}</span>
+              <span class="info">{{dataList.addressDto ? dataList.addressDto.receiverName : ''}}</span>
             </a-form-model-item>
             <a-form-model-item label="收货地址">
-              <span class="info">{{dataList.addressDto.provinceName}}</span>
-              <span class="info">{{dataList.addressDto.cityName}}</span>
-              <span class="info">{{dataList.addressDto.districtName}}</span>
+              <span class="info">{{dataList.addressDto ? dataList.addressDto.provinceName : ''}}</span>
+              <span class="info">{{dataList.addressDto ? dataList.addressDto.cityName : ''}}</span>
+              <span class="info">{{dataList.addressDto ? dataList.addressDto.districtName : ''}}</span>
             </a-form-model-item>
             <a-form-model-item label="详细地址" >
-              <span class="info">{{dataList.addressDto.detailAddress}}</span>
+              <span class="info">{{dataList.addressDto ? dataList.addressDto.detailAddress : ''}}</span>
             </a-form-model-item>
           </div>
           <div class="form-wrop-item">
             <a-form-model-item label="收货人电话">
-              <span class="info">{{dataList.addressDto.receiverPhone}}</span>
+              <span class="info">{{dataList.addressDto ? dataList.addressDto.receiverPhone : ''}}</span>
             </a-form-model-item>
           </div>
         </div>
@@ -169,7 +169,7 @@
             title: "规格",
             dataIndex: "itemSpecs",
             key: "itemSpecs",
-            width: 120,
+            width: 250,
             ellipsis: true,
             align: 'center'
           },

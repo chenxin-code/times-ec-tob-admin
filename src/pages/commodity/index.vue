@@ -9,7 +9,7 @@
         />
       </a-form-model-item>
       <a-form-model-item label="状态" prop="b">
-        <a-select default-value="全部" @change="handleChangesataus">
+        <a-select default-value="全部" @change="(value)=>this.strain = value" v-model="strain">
           <a-select-option
             :value="v.id"
             v-for="(v, i) in selectArrstrain"
@@ -21,9 +21,12 @@
       </a-form-model-item>
       <a-form-model-item label="商品品类" prop="d">
         <a-tree-select
+          show-search
+          searchPlaceholder
+          treeNodeFilterProp="title"
           v-model="value"
           style="width: 100%"
-          :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+          :dropdown-style="{ maxHeight: '300px', overflow: 'auto' }"
           :tree-data="treeData"
           :replace-fields="{
             children: 'children',
@@ -38,9 +41,17 @@
         </a-tree-select>
       </a-form-model-item>
       <a-form-model-item label="所属供应商" prop="d">
-        <a-select default-value="全部" @change="handleChange">
+           <a-select
+                default-value="全部"
+                show-search
+                v-model="drstatus"
+                option-filter-prop="children"
+                :filter-option="filterOption"
+                @search="handleSearch"
+                @change="handleChange"
+              >
           <a-select-option
-            :value="item.id"
+            :value="item.supplierCode"
             v-for="item in selectlist"
             :key="item.id"
           >
@@ -50,7 +61,7 @@
       </a-form-model-item>
       <a-form-model-item class="item-btns">
         <a-button class="item-btn" type="primary" @click="quitList()">查询</a-button>
-        <a-button class="item-btn" @click="reset()">重置</a-button>
+        <a-button class="item-btn" type="primary" @click="reset()">重置</a-button>
       </a-form-model-item>
     </a-form-model>
     <div id="neighborhoodLife">
@@ -76,24 +87,39 @@
                <template slot="costPrice" slot-scope="scope">
               <div class="editable-row-operations" v-for="(item,index) in scope.costPrice" :key="index">
                 <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} = {{ item.costPrice}}￥</p>
-                <p v-else > {{ item.costPrice}}￥</p>
+                <p v-else > ￥{{ item.costPrice}}</p>
               </div>
             </template>
 
             <template slot="sellingPrice" slot-scope="scope">
               <div class="editable-row-operations" v-for="(item,index) in scope.sellingPrice" :key="index">
                 <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} = {{ item.priceBeforeTax}}￥</p>
-                <p v-else > {{ item.priceBeforeTax}}￥</p>
+                <p v-else > ￥{{ item.priceBeforeTax}}</p>
               </div>
             </template>
 
             <template slot="sellingPricepro" slot-scope="scope">
               <div class="editable-row-operations" v-for="(item,index) in scope.sellingPrice" :key="index">
                 <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} = {{ item.priceBeforeTax}}￥</p>
-                <p v-else > {{ item.priceBeforeTax}}￥</p>
+                <p v-else > ￥{{ item.priceBeforeTax}}</p>
               </div>
             </template>
 
+              <template slot="sellingPricepro" slot-scope="scope">
+                <div
+                  class="editable-row-operations"
+                  v-for="(item, index) in scope.sellingPrice"
+                  :key="index"
+                >
+                  <p v-if="scope.isTieredPricing">
+                    {{ item.minNum }}-{{
+                      item.maxNum ? item.maxNum : '无穷大'
+                    }}
+                    = {{ item.priceBeforeTax }}￥
+                  </p>
+                  <p v-else>￥{{ item.priceBeforeTax }}</p>
+                </div>
+              </template>
             </a-table>
             <a-pagination
               :total="total"
@@ -139,43 +165,50 @@ export default {
       selectlist: [],
       sku: '',
       status: '',
+      drstatus:'全部',//所属供应商默认值
       strain: '',
       categoryId: '',
       tableColumns: [
         {
-          title: "序号",
-          key: "index",
+          title: '序号',
+          key: 'index',
           width: 60,
-          fixed: "left",
-          customRender: (text,record,index) => `${index+1}`,
+          fixed: 'left',
+          align:'center',
+          customRender: (text, record, index) => `${index + 1}`,
         },
         {
           title: '商品名称',
           dataIndex: 'itemName',
           key: 'itemName',
+          align:'center',
           width: 200,
         },
         {
           title: 'SPU编码',
           dataIndex: 'itemCode',
           key: 'itemCode',
+          align:'center',
           width: 200,
         },
         {
           title: 'SKU名称',
           dataIndex: 'skuName',
           key: 'skuName',
+          align:'center',
           width: 200,
         },
         {
           title: 'SKU编码',
           dataIndex: 'skuCode',
           key: 'skuCode',
+          align:'center',
           width: 200,
         },
         {
           title: '商品品类',
-          dataIndex:'categoryName',
+          dataIndex: 'categoryName',
+          align:'center',
           // scopedSlots: { customRender: 'categoryName'},
           key: 'categoryName',
           width: 100,
@@ -184,68 +217,79 @@ export default {
           title: '单位',
           dataIndex: 'unit',
           key: 'unit',
+          align:'center',
           width: 60,
         },
         {
           title: '供应商',
           width: 200,
+          align:'center',
           dataIndex: 'supplierName',
           key: 'supplierName',
         },
         {
           title: '品牌',
           width: 200,
+          align:'center',
           dataIndex: 'brandName',
           key: 'brandName',
         },
         {
           title: '税率',
           width: 60,
+          align:'center',
           dataIndex: 'taxRate',
           key: 'taxRate',
         },
         {
           title: '库存',
           width: 80,
+          align:'center',
           dataIndex: 'stock',
           key: 'stock',
         },
         {
           title: '是否阶梯价',
           width: 80,
+          align:'center',
           key: 'isTieredPricing',
-          scopedSlots: { customRender: 'isTieredPricing'}
+          scopedSlots: { customRender: 'isTieredPricing' },
           // customRender:(isTieredPricing)=>isTieredPricing == 'true' ? '是':'否',
         },
         {
           title: '成本价(数量=元)',
           width: 160,
+          align:'center',
           key: 'costPrice',
-          scopedSlots: { customRender: 'costPrice'}
+          scopedSlots: { customRender: 'costPrice' },
         },
         {
           title: '税前销售价(数量=元)',
           width: 160,
+          align:'center',
           key: 'sellingPrice',
           // dataIndex: 'beforeTaxSellingPrice',
-          scopedSlots: { customRender: 'sellingPrice'}
+          scopedSlots: { customRender: 'sellingPrice' },
         },
         {
           title: '税后销售价(数量=元)',
           width: 160,
+          align:'center',
           // key: 'sellingPrice',
           // dataIndex: 'sellingPrice',
-          scopedSlots: { customRender: 'sellingPricepro'}
+          scopedSlots: { customRender: 'sellingPricepro' },
         },
         {
           title: '商品状态',
-          customRender:(selling)=>selling==1?'上架':'下架',
+          customRender: selling => (selling == 1 ? '上架' : '下架'),
           width: 90,
+          align:'center',
           dataIndex: 'selling',
         },
         {
           title: '操作',
           key: 'operation',
+          align:'center',
           fixed: 'right',
           width: 180,
           scopedSlots: { customRender: 'action' },
@@ -259,8 +303,6 @@ export default {
     api.getCategoryTree().then(resp => {
       this.treeData = resp.data
       this.treeData.unshift({ categoryCode: '', name: '全部' });
-      console.log('treeData',this.treeData);
-      // replaceFields
     })
     setTimeout(
       () => (this.scrollY = document.body.clientHeight - 310 + 'px'),
@@ -268,10 +310,22 @@ export default {
     )
   },
   methods: {
-    reset(){
-      this.sku = null;
-      this.strain = null;
-      this.categoryId = '';
+    reset(){//重置
+      this.sku = '';
+      this.strain = '';
+      this.value = '全部';
+      this.drstatus= '全部'; //默认值
+      this.status = ''; //传参
+    },
+     filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+      );
+    },
+    handleSearch(value) {
+      debounce(() => {
+        this.supplierlis(value);
+      }, 500);
     },
     onChange(value) {
       this.categoryId = value
@@ -290,9 +344,7 @@ export default {
     },
     handleChange(value) {
       this.status = value
-    },
-    handleChangesataus(value) {
-      this.strain = value
+      console.log(this.status);
     },
     edit(scope, typ) {
       console.log(typ)
@@ -365,13 +417,12 @@ export default {
     width: 250px !important;
 
     .ant-form-item-control-wrapper {
-      width: 400px !important;
+      width: 300px !important;
     }
   }
 
   /deep/ .item-btns .item-btn {
     margin-right: 20px;
   }
-
 }
 </style>

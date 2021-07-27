@@ -50,10 +50,15 @@
             </div>
           </template>
         </div>
-        <div class="item-list">
+        <div class="item-list" v-if="dataListDetail.approveStatus != 0">
           <span>签收单号：{{dataListDetail.receiveNo}}</span>
           <span>签收时间：{{dataListDetail.receiveTime}}</span>
-          <img src="" />
+          <div class="img-box">
+            <img 
+              v-for="item in dataListDetail.receiverProofImgs"
+              :key="item"
+              :src="item" />
+          </div>
         </div>
 			</template>
 		</a-modal>
@@ -137,7 +142,7 @@
             title: "操作",
             key: "operation",
             fixed: "right",
-            width: 250,
+            width: 200,
             scopedSlots: {customRender: "action"},
           }
         ],
@@ -199,15 +204,14 @@
       // 详情
       async detail(row) {
         this.isShowModal = true
-         this.dataListDetail = row
-        // try {
-        //   let params = {
-        //     deliveryNo: row.deliveryNo
-        //   }
-        //   let res = await api.marketQueryInfo(params)
-        //   this.dataListDetail = res.data.record
-        // } catch(e) {
-        // }
+        try {
+          let params = {
+            deliveryNo: row.deliveryNo
+          }
+          let res = await api.marketQueryInfo(params)
+          this.dataListDetail = res.data
+        } catch(e) {
+        }
       },
       // 签收
       signFor(row) {
@@ -219,8 +223,17 @@
           cancelText: '取消',
           onOk: () => {
             let params = {
-
+              deliveryNo: row.deliveryNo,
+              receiverProofImgs: row.receiverProofImgs ? row.receiverProofImgs : [],
+              itemList: []
             }
+            row.deliveryItemList.forEach(item => {
+              let opt = {
+                deliveryItemId: item.id,
+                num: item.receiveNum ? item.receiveNum : 0
+              }
+              params.itemList.push(opt)
+            })
             api.marketDeliveryOrderConfirm(params).then(res => {
               if(res.code == 200) {
                 this.$message.success('签收成功')
@@ -251,6 +264,14 @@
   span {
     padding-right: 10px;
     display: inline-block;
+  }
+}
+.img-box {
+  padding-top: 10px;
+  img {
+    width:auto;
+    height: 100px;
+    margin-right: 10px;
   }
 }
 </style>

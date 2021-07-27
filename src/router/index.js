@@ -1,411 +1,410 @@
-import Vue from "vue";
-import Router from "vue-router";
-import paramsStorage from "./ParamsStorage.js";
-import store from "@/store";
+import Vue from 'vue'
+import Router from 'vue-router'
+import paramsStorage from './ParamsStorage.js'
+import store from '@/store'
 
-Vue.use(Router);
+Vue.use(Router)
 //登录
-const Login = () => import("../pages/login/login");
+const Login = () => import('../pages/login/login')
 //获取token
-const Token = () => import("../pages/login/index");
+const Token = () => import('../pages/login/index')
 
-const Home = () => import("../components/home");
+const Home = () => import('../components/home')
 
 let router = new Router({
-  base: "/",
+  base: '/',
   routes: [
     {
-      path: "/",
+      path: '/',
       redirect: {
-        name: "shelve",
+        name: 'company',
       },
-      name: "home",
-      menuKey: "home",
+      name: 'home',
+      menuKey: 'home',
       component: Home,
       children: [
         //商品品类管理
         {
-          path: "/category",
-          name: "category",
-          menuKey: "category",
+          path: '/category',
+          name: 'category',
+          menuKey: 'category',
           meta: {
-            menu: "/category",
-            authKeys: [""],
+            menu: '/category',
+            authKeys: [''],
             bread: [
               {
-                path: "/category",
-                name: "商品品类管理",
+                path: '/category',
+                name: '商品品类管理',
               },
             ],
             // keepAlive: true
           },
-          component: () => import("../pages/category/list"),
+          component: () => import('../pages/category/list'),
         },
         //商品上下架
         {
-          path: "/shelve",
-          name: "shelve",
-          menuKey: "shelve",
+          path: '/shelve',
+          name: 'shelve',
+          menuKey: 'shelve',
           meta: {
-            menu: "/shelve",
-            authKeys: [""],
+            menu: '/shelve',
+            authKeys: [''],
             bread: [
               {
-                path: "/shelve",
-                name: "商品上下架",
+                path: '/shelve',
+                name: '商品上下架',
               },
             ],
             // keepAlive: true
           },
-          component: () => import("../pages/shelve/list"),
+          component: () => import('../pages/shelve/list'),
         },
         {
-          path: "/shelve/edit",
-          name: "shelveEdit",
-          menuKey: "shelve",
+          path: '/shelve/edit',
+          name: 'shelveEdit',
+          menuKey: 'shelve',
           meta: {
-            menu: "/shelve",
-            authKeys: [""],
+            menu: '/shelve',
+            authKeys: [''],
             bread: [
-              { path: "/shelve", name: "商品上下架" },
-              { path: "shelve/edit", name: "商品上下架详情" },
+              { path: '/shelve', name: '商品上下架' },
+              { path: 'shelve/edit', name: '商品上下架详情' },
             ],
             isUseCache: false,
             keepAlive: false,
           },
-          component: () => import("../pages/shelve/edit"),
+          component: () => import('../pages/shelve/edit'),
         },
         //负数单管理
         {
-          path: "/negative",
-          name: "negative",
-          menuKey: "negative",
+          path: '/negative',
+          name: 'negative',
+          menuKey: 'negative',
           meta: {
-            menu: "/negative",
-            authKeys: [""],
+            menu: '/negative',
+            authKeys: [''],
             bread: [
               {
-                path: "/negative",
-                name: "负数单管理",
+                path: '/negative',
+                name: '负数单管理',
               },
             ],
             // keepAlive: true
           },
-          component: () => import("../pages/negative/list"),
+          component: () => import('../pages/negative/list'),
         },
         {
-          path: "/negative/add",
-          name: "negativeAdd",
-          menuKey: "negative",
+          path: '/negative/add',
+          name: 'negativeAdd',
+          menuKey: 'negative',
           meta: {
-            menu: "/negative",
-            authKeys: [""],
+            menu: '/negative',
+            authKeys: [''],
             bread: [
-              { path: "/negative", name: "负数单管理" },
-              { path: "/negative/add", name: "新建负数单" },
+              { path: '/negative', name: '负数单管理' },
+              { path: '/negative/add', name: '新建负数单' },
             ],
           },
-          component: () => import("@/pages/negative/add-show"),
+          component: () => import('@/pages/negative/add-show'),
         },
         {
-          path: "/negative/show",
-          name: "negativeShow",
-          menuKey: "negative",
+          path: '/negative/show',
+          name: 'negativeShow',
+          menuKey: 'negative',
           meta: {
-            menu: "/negative",
-            authKeys: [""],
+            menu: '/negative',
+            authKeys: [''],
             bread: [
-              { path: "/negative", name: "负数单管理" },
-              { path: "/negative/show", name: "查看负数单" },
+              { path: '/negative', name: '负数单管理' },
+              { path: '/negative/show', name: '查看负数单' },
             ],
           },
-          component: () => import("@/pages/negative/add-show"),
+          component: () => import('@/pages/negative/add-show'),
         },
         //企业管理
         {
-          path: "/company",
-          name: "company",
-          menuKey: "company",
+          path: '/company',
+          name: 'company',
+          menuKey: 'company',
           meta: {
-            menu: "/company",
-            authKeys: [""],
+            menu: '/company',
+            authKeys: [''],
             bread: [
               {
-                path: "/company",
-                name: "企业管理",
+                path: '/company',
+                name: '企业管理',
               },
             ],
             // keepAlive: true
           },
-          component: () => import("../pages/company/list"),
+          component: () => import('../pages/company/list'),
         },
         {
-          path: "/company/add",
-          name: "companyAdd",
-          menuKey: "company",
+          path: '/company/add',
+          name: 'companyAdd',
+          menuKey: 'company',
           meta: {
-            menu: "/company",
-            authKeys: [""],
+            menu: '/company',
+            authKeys: [''],
             bread: [
-              { path: "/company", name: "企业管理" },
-              { path: "/company/add", name: "新建企业" },
+              { path: '/company', name: '企业管理' },
+              { path: '/company/add', name: '新建企业' },
             ],
           },
-          component: () => import("@/pages/company/add-edit"),
+          component: () => import('@/pages/company/add-edit'),
         },
         {
-          path: "/company/edit",
-          name: "companyEdit",
-          menuKey: "company",
+          path: '/company/edit',
+          name: 'companyEdit',
+          menuKey: 'company',
           meta: {
-            menu: "/company",
-            authKeys: [""],
+            menu: '/company',
+            authKeys: [''],
             bread: [
-              { path: "/company", name: "企业管理" },
-              { path: "/company/edit", name: "编辑企业" },
+              { path: '/company', name: '企业管理' },
+              { path: '/company/edit', name: '编辑企业' },
             ],
           },
-          component: () => import("@/pages/company/add-edit"),
+          component: () => import('@/pages/company/add-edit'),
         },
         //账号管理
         {
-          path: "/account",
-          name: "account",
-          menuKey: "account",
+          path: '/account',
+          name: 'account',
+          menuKey: 'account',
           meta: {
-            menu: "/account",
-            authKeys: [""],
+            menu: '/account',
+            authKeys: [''],
             bread: [
               {
-                path: "/account",
-                name: "账号管理",
+                path: '/account',
+                name: '账号管理',
               },
             ],
             // keepAlive: true
           },
-          component: () => import("../pages/account/list"),
+          component: () => import('../pages/account/list'),
         },
         {
-          path: "/account/add",
-          name: "accountAdd",
-          menuKey: "account",
+          path: '/account/add',
+          name: 'accountAdd',
+          menuKey: 'account',
           meta: {
-            menu: "/account",
-            authKeys: [""],
+            menu: '/account',
+            authKeys: [''],
             bread: [
-              { path: "/account", name: "账号管理" },
-              { path: "/account/add", name: "新建账号" },
+              { path: '/account', name: '账号管理' },
+              { path: '/account/add', name: '新建账号' },
             ],
           },
-          component: () => import("@/pages/account/add-edit"),
+          component: () => import('@/pages/account/add-edit'),
         },
         {
-          path: "/account/edit",
-          name: "accountEdit",
-          menuKey: "account",
+          path: '/account/edit',
+          name: 'accountEdit',
+          menuKey: 'account',
           meta: {
-            menu: "/account",
-            authKeys: [""],
+            menu: '/account',
+            authKeys: [''],
             bread: [
-              { path: "/account", name: "账号管理" },
-              { path: "/account/edit", name: "编辑账号" },
+              { path: '/account', name: '账号管理' },
+              { path: '/account/edit', name: '编辑账号' },
             ],
           },
-          component: () => import("@/pages/account/add-edit"),
+          component: () => import('@/pages/account/add-edit'),
         },
         {
-          path: "/market",
-          name: "market",
-          menuKey: "market",
+          path: '/market',
+          name: 'market',
+          menuKey: 'market',
           meta: {
-            menu: "/market",
-            authKeys: [""],
+            menu: '/market',
+            authKeys: [''],
             bread: [
               {
-                path: "/market",
-                name: "销售单管理",
+                path: '/market',
+                name: '销售单管理',
               },
             ],
             // keepAlive: true
           },
-          component: () => import("../pages/distribution/market/index"),
+          component: () => import('../pages/distribution/market/index'),
         },
         {
-          path: "/market/marketdetail",
-          name: "marketdetail",
-          menuKey: "marketdetail",
+          path: '/market/marketdetail',
+          name: 'marketdetail',
+          menuKey: 'marketdetail',
           meta: {
-            menu: "/market",
-            authKeys: [""],
+            menu: '/market',
+            authKeys: [''],
             bread: [
-              { path: "/market", name: "销售单管理" },
-              { path: "/market/marketdetail", name: "销售单详情" }
+              { path: '/market', name: '销售单管理' },
+              { path: '/market/marketdetail', name: '销售单详情' },
             ],
             // keepAlive: true
           },
-          component: () => import("../pages/distribution/market/detail"),
+          component: () => import('../pages/distribution/market/detail'),
         },
         {
-          path: "/market/deliveryOrder",
-          name: "deliveryOrder",
-          menuKey: "deliveryOrder",
+          path: '/market/deliveryOrder',
+          name: 'deliveryOrder',
+          menuKey: 'deliveryOrder',
           meta: {
-            menu: "/market",
-            authKeys: [""],
+            menu: '/market',
+            authKeys: [''],
             bread: [
-              { path: "/market", name: "销售单管理" },
-              { path: "/market/deliveryOrder", name: "配送单查询" }
+              { path: '/market', name: '销售单管理' },
+              { path: '/market/deliveryOrder', name: '配送单查询' },
             ],
             // keepAlive: true
           },
-          component: () => import("../pages/distribution/market/deliveryOrder"),
+          component: () => import('../pages/distribution/market/deliveryOrder'),
         },
         {
-          path: "/supplier",
-          name: "supplier",
-          menuKey: "supplier",
+          path: '/supplier',
+          name: 'supplier',
+          menuKey: 'supplier',
           meta: {
-            menu: "/supplier",
-            authKeys: [""],
+            menu: '/supplier',
+            authKeys: [''],
             bread: [
               {
-                path: "/supplier",
-                name: "供应商",
+                path: '/supplier',
+                name: '供应商',
               },
             ],
             // keepAlive: true
           },
-          component: () => import("../pages/distribution/supplier/index"),
+          component: () => import('../pages/distribution/supplier/index'),
         },
         {
-          path: "/supplier/supplierdetail",
-          name: "supplierdetail",
-          menuKey: "supplier",
+          path: '/supplier/supplierdetail',
+          name: 'supplierdetail',
+          menuKey: 'supplier',
           meta: {
-            menu: "/supplier",
-            authKeys: [""],
+            menu: '/supplier',
+            authKeys: [''],
             bread: [
-              { path: "/supplier", name: "供应商" },
-              { path: "supplier/supplierdetail", name: "供应商详情" },
+              { path: '/supplier', name: '供应商' },
+              { path: 'supplier/supplierdetail', name: '供应商详情' },
             ],
             isUseCache: false,
             keepAlive: false,
           },
-          component: () => import("../pages/distribution/supplier/detail"),
+          component: () => import('../pages/distribution/supplier/detail'),
         },
         {
-          path: "/commodity",
-          name: "commodity",
-          menuKey: "commodity",
+          path: '/commodity',
+          name: 'commodity',
+          menuKey: 'commodity',
           meta: {
-            menu: "/commodity",
-            authKeys: [""],
+            menu: '/commodity',
+            authKeys: [''],
             bread: [
               {
-                path: "/commodity",
-                name: "商品管理",
+                path: '/commodity',
+                name: '商品管理',
               },
             ],
             // keepAlive: true
           },
-          component: () => import("../pages/commodity/index"),
+          component: () => import('../pages/commodity/index'),
         },
         {
-          path: "/commodity/edit",
-          name: "commodityEdit",
-          menuKey: "commodity",
+          path: '/commodity/edit',
+          name: 'commodityEdit',
+          menuKey: 'commodity',
           meta: {
-            menu: "/commodity",
-            authKeys: [""],
+            menu: '/commodity',
+            authKeys: [''],
             bread: [
-              { path: "/commodity", name: "商品管理" },
-              { path: "commodity/edit", name: "商品管理详情" },
+              { path: '/commodity', name: '商品管理' },
+              { path: 'commodity/edit', name: '商品管理详情' },
             ],
             isUseCache: false,
             keepAlive: false,
           },
-          component: () => import("../pages/commodity/edit"),
+          component: () => import('../pages/commodity/edit'),
         },
-        
-      ]
+      ],
     },
     {
-      path: "/404",
-      component: () => import("../pages/exception/404"),
+      path: '/404',
+      component: () => import('../pages/exception/404'),
     },
     {
-      path: "/403",
-      component: () => import("../pages/exception/403"),
+      path: '/403',
+      component: () => import('../pages/exception/403'),
     },
     {
-      path: "/500",
-      component: () => import("../pages/exception/500"),
+      path: '/500',
+      component: () => import('../pages/exception/500'),
     },
     // {
     // 	path: '*',
     // 	redirect: '/404',
     // }
   ],
-  mode: "history",
+  mode: 'history',
   // mode: "hash",
-});
+})
 
 router.beforeEach((to, from, next) => {
-  if (!(to.meta.menu == from.meta.menu) && to.fullPath != "/login") {
-    sessionStorage.removeItem("listPageParams");
+  if (!(to.meta.menu == from.meta.menu) && to.fullPath != '/login') {
+    sessionStorage.removeItem('listPageParams')
   }
-  paramsStorage.clearPropsStorage(to, from);
+  paramsStorage.clearPropsStorage(to, from)
 
   if (to.matched.length === 0) {
     from.name
       ? next({
-        ...from,
+          ...from,
           name: from.name,
-          query:from.query
+          query: from.query,
         })
-      : next("/404");
+      : next('/404')
   } else {
     if (
-      sessionStorage.getItem("refreshflag") == "1" &&
-      sessionStorage.getItem("store")
+      sessionStorage.getItem('refreshflag') == '1' &&
+      sessionStorage.getItem('store')
     ) {
       store.replaceState(
         Object.assign(
           {},
           store.state,
-          JSON.parse(sessionStorage.getItem("store"))
+          JSON.parse(sessionStorage.getItem('store'))
         )
-      );
-      sessionStorage.setItem("refreshflag", "0");
+      )
+      sessionStorage.setItem('refreshflag', '0')
     }
     if (Object.keys(to.params).length === 0) {
       // 从store中取出付给params，此处注意路径未必完全吻合，以你的为准
-      Object.assign(to.params, store.state.paramMap[to.name] || {});
+      Object.assign(to.params, store.state.paramMap[to.name] || {})
     }
     // 存储一下params备用
-    store.commit("REFRESHPARAM", {
+    store.commit('REFRESHPARAM', {
       key: to.name,
       value: to.params,
-    });
-    next();
+    })
+    next()
   }
-});
+})
 
-router.onError((error) => {
-  const pattern = /Loading chunk +/g;
-  const pattern1 = /Unexpected token /g;
+router.onError(error => {
+  const pattern = /Loading chunk +/g
+  const pattern1 = /Unexpected token /g
   // const isChunkLoadFailed = error.message.match(pattern) ||  error.message.match(pattern1) ;
   if (error.message.match(pattern) || error.message.match(pattern1)) {
-    window.location.reload();
+    window.location.reload()
     // router.replace(router.history.pending.fullPath);
   } else {
-    console.log(error);
+    console.log(error)
   }
-});
+})
 
-const originalPush = Router.prototype.push;
+const originalPush = Router.prototype.push
 Router.prototype.push = function push(location) {
-  return originalPush.call(this, location).catch((err) => err);
-};
+  return originalPush.call(this, location).catch(err => err)
+}
 
-export default router;
+export default router

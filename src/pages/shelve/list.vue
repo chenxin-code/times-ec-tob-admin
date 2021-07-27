@@ -56,6 +56,44 @@
                 <a-button v-if="scope.selling" type="link" @click="updates(scope)">上架</a-button>
                 <a-button v-else type="link" @click="updates(scope)">下架</a-button>
               </span>
+
+              <template slot="costPrice" slot-scope="scope">
+              <div class="editable-row-operations" v-for="(item,index) in scope.costPrice" :key="index">
+                <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} = {{ item.costPrice}}￥</p>
+                <p v-else > ￥{{ item.costPrice}}</p>
+              </div>
+            </template>
+
+            <template slot="sellingPrice" slot-scope="scope">
+              <div class="editable-row-operations" v-for="(item,index) in scope.sellingPrice" :key="index">
+                <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} = {{ item.priceBeforeTax}}￥</p>
+                <p v-else > ￥{{ item.priceBeforeTax}}</p>
+              </div>
+            </template>
+
+            <template slot="sellingPricepro" slot-scope="scope">
+              <div class="editable-row-operations" v-for="(item,index) in scope.sellingPrice" :key="index">
+                <p v-if="scope.isTieredPricing">{{item.minNum}}-{{item.maxNum?item.maxNum:'无穷大'}} = {{ item.priceBeforeTax}}￥</p>
+                <p v-else > ￥{{ item.priceBeforeTax}}</p>
+              </div>
+            </template>
+
+              <template slot="sellingPricepro" slot-scope="scope">
+                <div
+                  class="editable-row-operations"
+                  v-for="(item, index) in scope.sellingPrice"
+                  :key="index"
+                >
+                  <p v-if="scope.isTieredPricing">
+                    {{ item.minNum }}-{{
+                      item.maxNum ? item.maxNum : '无穷大'
+                    }}
+                    = {{ item.priceBeforeTax }}￥
+                  </p>
+                  <p v-else>￥{{ item.priceBeforeTax }}</p>
+                </div>
+              </template>
+
             </a-table>
             <a-pagination
                 :total="total"
@@ -85,9 +123,9 @@ export default {
     return {
       scrollY:100,
       selectArrstrain:[ //有bug
-        {id: '', name: '全部'},
-        {id: true, name: '上架'},
-        {id: false, name: '下架'},
+        { id: '', name: '全部' },
+        { id: 1, name: '上架' },
+        { id: 0, name: '下架' },
       ],
      treeData: [],
      categoryId:'',//下拉树
@@ -102,6 +140,7 @@ export default {
           title: "序号",
           key: "index",
           width: 60,
+          align:'center',
           fixed: "left",
           customRender: (text,record,index) => `${index+1}`,
         },
@@ -109,66 +148,79 @@ export default {
           title: "商品名称",
           dataIndex: "itemName",
           key:"itemName",
+          align:'center',
           width: 200,
         },
         {
           title: "SPU编码",
           dataIndex: "itemCode",
           key:"itemCode",
+          align:'center',
           width: 200,
         },
         {
           title: "SKU名称",
           dataIndex: "skuName",
           key:"skuName",
+          align:'center',
           width: 200,
         },
         {
           title: "SKU编码",
           dataIndex: "skuCode",
           key:"skuCode",
+          align:'center',
           width: 200,
         },
         {
           title: "商品品类",
           dataIndex: "categoryName",
           key:"categoryName",
+          align:'center',
           width: 100,
         },
         {
           title: "供应商",
           width: 200,
+          align:'center',
           dataIndex: "supplierName",
           key:"supplierName",
         },
          {
           title: "库存",
           width: 100,
+          align:'center',
           dataIndex: "stock",
           key:"stock",
         },
        {
-          title: "成本价（数量=元）",
-          width: 200,
-          key:"costPrice",
-          dataIndex: "costPrice",
+          title: '成本价(数量=元)',
+          width: 160,
+          align:'center',
+          key: 'costPrice',
+          scopedSlots: { customRender: 'costPrice' },
         },
-       {
-          title: "税前销售价（数量=元）",
-          width: 200,
-          key:"beforeTaxSellingPrice",
-          dataIndex: "beforeTaxSellingPrice",
+        {
+          title: '税前销售价(数量=元)',
+          width: 160,
+          align:'center',
+          key: 'sellingPrice',
+          // dataIndex: 'beforeTaxSellingPrice',
+          scopedSlots: { customRender: 'sellingPrice' },
         },
-       {
-          title: "税后销售价（数量=元）",
-          width: 200,
-          key:"afterTaxSellingPrice",
-          dataIndex: "afterTaxSellingPrice",
+        {
+          title: '税后销售价(数量=元)',
+          width: 160,
+          align:'center',
+          // key: 'sellingPrice',
+          // dataIndex: 'sellingPrice',
+          scopedSlots: { customRender: 'sellingPricepro' },
         },
         {
           title: "操作",
           key: "operation",
           fixed: "right",
+          align:'center',
           width: 180,
           scopedSlots: {customRender: "action"},
         },
@@ -205,7 +257,7 @@ export default {
   mounted() {
     this.getList();
     const timer1 = setTimeout(() => {
-      this.scrollY = document.body.clientHeight - 290 + 'px';
+      this.scrollY = document.body.clientHeight - 310 + 'px';
     }, 0);
     this.$once('hook:beforeDestroy', () => {
       clearTimeout(timer1);
@@ -311,7 +363,7 @@ export default {
   }
 
   /deep/ .item-btns .item-btn {
-    margin-right: 20px;
+    margin-right: 18px;
   }
 }
 </style>
