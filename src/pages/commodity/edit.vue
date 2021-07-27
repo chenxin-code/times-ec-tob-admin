@@ -309,6 +309,7 @@ import api from '@/api'
 import moment from 'moment'
 import { debounce } from '@/utils/util'
 import { quillEditor } from 'vue-quill-editor'
+import quillConfig from '@/utils/quillConfig'
 
 export default {
   name: 'supplierEdit',
@@ -343,7 +344,7 @@ export default {
         { id: true, name: '上架' },
         { id: false, name: '下架' },
       ],
-      editorOption: {
+      editorOption: quillConfig ||  {
         placeholder: '请在这里输入',
         modules: {
           toolbar: [

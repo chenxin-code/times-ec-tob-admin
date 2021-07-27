@@ -1,3 +1,6 @@
+import { fetchApi } from '@/utils/ajax'
+import URL from '@/api/urlConfig'
+
 /*富文本编辑图片上传配置*/
 const uploadConfig = {
   action: 'common.uploadfile.single', // 必填参数 图片上传地址
@@ -101,26 +104,37 @@ const handlers = {
         let formData = new FormData()
         console.log(fileInput)
         // formData.append('file', fileInput.files[0]);
-        formData.append('filename', fileInput.files[0])
-        formData.append(
-          'token',
-          JSON.parse(localStorage.getItem('userInfo')).token
-        )
+        formData.append('file', fileInput.files[0])
+        // formData.append(
+        //   'token',
+        //   JSON.parse(localStorage.getItem('userInfo')).token
+        // )
         fileInput.value = ''
-        console.log(http)
+        // console.log(http)
         //这里 请求
-        http.post('/Uploadfile/uploadpic', formData).then(res => {
+        fetchApi(URL.ADMINOPERATOR.upload, formData, 'POST').then(res => {
           console.log(res)
-          if (res.data.code == 200) {
-            let imgUrl = res.data.result.file_url
-            let picPath = service.baseUrl + imgUrl
+          if (res.code == 200) {
+            let imgUrl = res.data
             let length = self.quill.getSelection(true).index
             //这里很重要，你图片上传成功后，img的src需要在这里添加，res.path就是你服务器返回的图片链接。
-            self.quill.insertEmbed(length, 'image', picPath)
+            self.quill.insertEmbed(length, 'image', imgUrl)
             self.quill.setSelection(length + 1)
             fileInput.value = ''
           }
         })
+        // http.post(ADMINOPERATOR.upload, formData).then(res => {
+        //   console.log(res)
+        //   if (res.data.code == 200) {
+        //     let imgUrl = res.data.result.file_url
+        //     let picPath = service.baseUrl + imgUrl
+        //     let length = self.quill.getSelection(true).index
+        //     //这里很重要，你图片上传成功后，img的src需要在这里添加，res.path就是你服务器返回的图片链接。
+        //     self.quill.insertEmbed(length, 'image', picPath)
+        //     self.quill.setSelection(length + 1)
+        //     fileInput.value = ''
+        //   }
+        // })
         // http.post('/Uploadfile/uploadpic', formData, function(resp) {
         //   console.log(resp);
         //   var path = resp.data.ftpPath;

@@ -19,5 +19,6 @@ export default {
   /** 运营用户管理接口 **/
   ADMINOPERATOR: {
     loginByOriginalToken: '/times-ec-tob-mall/admin/auth/loginByOriginalToken', //与一体化换token
+    upload: '/times-ec-tob-mall/admin/oss/file/upload',
   },
 }
