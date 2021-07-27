@@ -6,61 +6,92 @@
         >返回</span
       >
     </div>
-    <div class="content-main" style="height: calc(100% - 100px);margin-top: 0px;">
-      <a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" style="height: 100%;overflow: auto;"
-              autoComplete="off">
-        <a-form-item label="SKU名称" >
-          <a-input disabled  v-decorator="['skuName']"/>
-        </a-form-item>
-        <a-form-item label="SKU编码" >
-          <a-input disabled v-decorator="['skuCode']" />
-        </a-form-item>
-        <a-form-item label="SPU名称">
-          <a-input  disabled v-decorator="['itemName',]" />
-        </a-form-item>
-        <a-form-item label="SPU编码">
-          <a-input disabled v-decorator="['itemCode',]" />
-        </a-form-item>
-        <a-form-item label="商城SKU自编码">
-          <a-input :disabled="disbliend" v-decorator="['skuCodeInside']" placeholder="请输入SKU自编码" />
-        </a-form-item>
-        <a-form-item label="商品状态">
-          <a-select :disabled="disbliend" v-decorator="['selling', { rules: [{ required: true, message: '商品状态不能为空' }] } ]"
-                    default-value="全部" >
-            <a-select-option :value="v.id" v-for="(v,i) in selectArrstrain" :key="i">
-              {{ v.name }}
-            </a-select-option>
-          </a-select>
-        </a-form-item>
-        <a-form-item label="商品品类">
-          <a-tree-select :disabled="disbliend"
-              show-search
-              searchPlaceholder
-              treeNodeFilterProp="title"
-              v-decorator="['categoryId']"
-              style="width: 100%"
-              :dropdown-style="{ maxHeight: '260px', overflow: 'auto' }"
-              :tree-data="treeData"
-              :replace-fields="{
-            children: 'children',
-            key: 'categoryCode',
-            value: 'categoryId',
-            title: 'name',
-          }"
-              @change="onChange"
-              tree-default-expand-all
-          >
-          </a-tree-select>
-        </a-form-item>
-        <a-form-item label="所属品牌">
-          <a-input :disabled="disbliend"
-              v-decorator="['brandName', { rules: [{ required: true, message: '所属品牌不能为空' }] } ]"
-              placeholder="请输入所属品牌"
-          />
-        </a-form-item>
-        <a-form-item label="供应商">
-               <a-select
-               :disabled="disbliend"
+    <div
+      class="content-main"
+      style="height: calc(100% - 100px);margin-top: 12px;padding:20px 60px 20px 20px;"
+    >
+      <a-form
+        :form="form"
+        :labelCol="{ style: { width: '200px' } }"
+        :wrapperCol="{ style: { width: '60%' } }"
+        style="width:100%;"
+        autoComplete="off"
+      >
+        <div class="form-box-flex">
+          <div class="form-box">
+            <a-form-item label="SKU名称">
+              <a-input disabled v-decorator="['skuName']" />
+            </a-form-item>
+            <a-form-item label="SKU编码">
+              <a-input disabled v-decorator="['skuCode']" />
+            </a-form-item>
+            <a-form-item label="SPU名称">
+              <a-input disabled v-decorator="['itemName']" />
+            </a-form-item>
+            <a-form-item label="SPU编码">
+              <a-input disabled v-decorator="['itemCode']" />
+            </a-form-item>
+            <a-form-item label="商城SKU自编码">
+              <a-input
+                :disabled="disbliend"
+                v-decorator="['skuCodeInside']"
+                placeholder="请输入SKU自编码"
+              />
+            </a-form-item>
+            <a-form-item label="商品状态">
+              <a-select
+                :disabled="disbliend"
+                v-decorator="[
+                  'selling',
+                  { rules: [{ required: true, message: '商品状态不能为空' }] },
+                ]"
+                default-value="全部"
+              >
+                <a-select-option
+                  :value="v.id"
+                  v-for="(v, i) in selectArrstrain"
+                  :key="i"
+                >
+                  {{ v.name }}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+            <a-form-item label="商品品类">
+              <a-tree-select
+                :disabled="disbliend"
+                show-search
+                searchPlaceholder
+                treeNodeFilterProp="title"
+                v-decorator="['categoryId']"
+                style="width: 100%"
+                :dropdown-style="{ maxHeight: '300px', overflow: 'auto' }"
+                :tree-data="treeData"
+                :replace-fields="{
+                  children: 'children',
+                  key: 'categoryCode',
+                  value: 'categoryId',
+                  title: 'name',
+                }"
+                @change="onChange"
+                tree-default-expand-all
+              >
+              </a-tree-select>
+            </a-form-item>
+          </div>
+          <div class="form-box">
+            <a-form-item label="所属品牌">
+              <a-input
+                :disabled="disbliend"
+                v-decorator="[
+                  'brandName',
+                  { rules: [{ required: true, message: '所属品牌不能为空' }] },
+                ]"
+                placeholder="请输入所属品牌"
+              />
+            </a-form-item>
+            <a-form-item label="供应商">
+              <a-select
+                :disabled="disbliend"
                 show-search
                 placeholder="请选择供应商"
                 option-filter-prop="children"
