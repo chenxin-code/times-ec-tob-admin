@@ -227,7 +227,7 @@
                 :key="index"
               >
                 <span style="min-width: 45px;">数量：</span>
-                <span style="min-width: 20px;text-align:right;">{{ item.minNum }}</span
+                <span style="text-align:right;">{{ item.minNum }}</span
                 >~<a-input
                   :disabled="disbliend"
                   placeholder="无穷大"

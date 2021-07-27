@@ -228,7 +228,7 @@
                 :key="index"
               >
                 <span style="min-width: 45px;">数量：</span>
-                <span style="min-width: 20px;text-align:right;">{{
+                <span class="num" style="text-align:right;">{{
                   item.minNum
                 }}</span
                 >~<a-input
