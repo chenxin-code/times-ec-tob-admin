@@ -208,8 +208,8 @@ export default {
       height: calc(100% - 90px);
       margin: 10px 16px;
       background: #fff;
-      // overflow: auto;
-      overflow-y: scroll;
+      overflow: auto;
+      // overflow-y: scroll;
 
       .home-fail {
         padding: 20px;

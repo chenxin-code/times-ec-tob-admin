@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%;display: flex;">
+  <div style="display: flex;">
     <div style="width: 20%;overflow: auto;">
       <companyTree @onSelect="onSelect"/>
     </div>
