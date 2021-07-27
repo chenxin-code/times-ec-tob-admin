@@ -32,9 +32,12 @@
         </a-form-item>
         <a-form-item label="商品品类">
           <a-tree-select :disabled="disbliend"
-               v-decorator="['categoryId']"
+              show-search
+              searchPlaceholder
+              treeNodeFilterProp="title"
+              v-decorator="['categoryId']"
               style="width: 100%"
-              :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+              :dropdown-style="{ maxHeight: '260px', overflow: 'auto' }"
               :tree-data="treeData"
               :replace-fields="{
             children: 'children',

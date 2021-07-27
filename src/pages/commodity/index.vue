@@ -117,7 +117,7 @@
                     }}
                     = {{ item.priceBeforeTax }}￥
                   </p>
-                  <p v-else>{{ item.priceBeforeTax }}￥</p>
+                  <p v-else>￥{{ item.priceBeforeTax }}</p>
                 </div>
               </template>
             </a-table>
@@ -174,35 +174,41 @@ export default {
           key: 'index',
           width: 60,
           fixed: 'left',
+          align:'center',
           customRender: (text, record, index) => `${index + 1}`,
         },
         {
           title: '商品名称',
           dataIndex: 'itemName',
           key: 'itemName',
+          align:'center',
           width: 200,
         },
         {
           title: 'SPU编码',
           dataIndex: 'itemCode',
           key: 'itemCode',
+          align:'center',
           width: 200,
         },
         {
           title: 'SKU名称',
           dataIndex: 'skuName',
           key: 'skuName',
+          align:'center',
           width: 200,
         },
         {
           title: 'SKU编码',
           dataIndex: 'skuCode',
           key: 'skuCode',
+          align:'center',
           width: 200,
         },
         {
           title: '商品品类',
           dataIndex: 'categoryName',
+          align:'center',
           // scopedSlots: { customRender: 'categoryName'},
           key: 'categoryName',
           width: 100,
@@ -211,35 +217,41 @@ export default {
           title: '单位',
           dataIndex: 'unit',
           key: 'unit',
+          align:'center',
           width: 60,
         },
         {
           title: '供应商',
           width: 200,
+          align:'center',
           dataIndex: 'supplierName',
           key: 'supplierName',
         },
         {
           title: '品牌',
           width: 200,
+          align:'center',
           dataIndex: 'brandName',
           key: 'brandName',
         },
         {
           title: '税率',
           width: 60,
+          align:'center',
           dataIndex: 'taxRate',
           key: 'taxRate',
         },
         {
           title: '库存',
           width: 80,
+          align:'center',
           dataIndex: 'stock',
           key: 'stock',
         },
         {
           title: '是否阶梯价',
           width: 80,
+          align:'center',
           key: 'isTieredPricing',
           scopedSlots: { customRender: 'isTieredPricing' },
           // customRender:(isTieredPricing)=>isTieredPricing == 'true' ? '是':'否',
@@ -247,12 +259,14 @@ export default {
         {
           title: '成本价(数量=元)',
           width: 160,
+          align:'center',
           key: 'costPrice',
           scopedSlots: { customRender: 'costPrice' },
         },
         {
           title: '税前销售价(数量=元)',
           width: 160,
+          align:'center',
           key: 'sellingPrice',
           // dataIndex: 'beforeTaxSellingPrice',
           scopedSlots: { customRender: 'sellingPrice' },
@@ -260,6 +274,7 @@ export default {
         {
           title: '税后销售价(数量=元)',
           width: 160,
+          align:'center',
           // key: 'sellingPrice',
           // dataIndex: 'sellingPrice',
           scopedSlots: { customRender: 'sellingPricepro' },
@@ -268,11 +283,13 @@ export default {
           title: '商品状态',
           customRender: selling => (selling == 1 ? '上架' : '下架'),
           width: 90,
+          align:'center',
           dataIndex: 'selling',
         },
         {
           title: '操作',
           key: 'operation',
+          align:'center',
           fixed: 'right',
           width: 180,
           scopedSlots: { customRender: 'action' },
@@ -400,7 +417,7 @@ export default {
     width: 250px !important;
 
     .ant-form-item-control-wrapper {
-      width: 400px !important;
+      width: 300px !important;
     }
   }
 
