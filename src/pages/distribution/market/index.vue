@@ -125,6 +125,7 @@ export default {
         dataIndex: 'saleOrderNo',
         key: 'saleOrderNo',
         width: 250,
+        align: 'center'
       },
       {
         title: '采购公司(出账公司)',
@@ -168,48 +169,56 @@ export default {
         dataIndex: 'totalPretaxAmount',
         key: 'totalPretaxAmount',
         width: 200,
+        align: 'center'
       },
       {
         title: '税后订单总额（元）',
         dataIndex: 'totalAmount',
         key: 'totalAmount',
         width: 200,
+        align: 'center'
       },
       {
         title: '税前优惠总额（元）',
         dataIndex: 'totalPretaxReducedAmount',
         key: 'totalPretaxReducedAmount',
         width: 200,
+        align: 'center'
       },
       {
         title: '税后优惠总额（元）',
         dataIndex: 'totalReducedAmount',
         key: 'totalReducedAmount',
         width: 200,
+        align: 'center'
       },
       {
         title: '下单时间',
         dataIndex: 'orderTime',
         key: 'orderTime',
         width: 200,
+        align: 'center'
       },
       {
         title: '账套名称',
         dataIndex: 'financialAccounting',
         key: 'financialAccounting',
         width: 200,
+        align: 'center'
       },
       {
         title: '城市公司',
         dataIndex: 'cityCompany',
         key: 'cityCompany',
         width: 150,
+        align: 'center'
       },
       {
         title: '项目名称',
         dataIndex: 'projectName',
         key: 'projectName',
         width: 200,
+        align: 'center'
       },
       {
         title: '操作',
