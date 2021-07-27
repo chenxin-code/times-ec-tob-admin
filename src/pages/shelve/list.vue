@@ -238,6 +238,7 @@ export default {
           let that = this;
           that.beSelected = selectedRows.map((item)=>{
             return item.id
+            // return{id: item.id} //返回一个对象
           })
           this.disBtn = selectedRows.length === 0
         }

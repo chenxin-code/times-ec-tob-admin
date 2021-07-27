@@ -25,11 +25,39 @@
             <a-form-item label="SKU编码">
               <a-input disabled v-decorator="['skuCode']" />
             </a-form-item>
-            <a-form-item label="SPU名称">
-              <a-input disabled v-decorator="['itemName']" />
+             <a-form-item label="所属品牌">
+              <a-input
+                :disabled="disbliend"
+                v-decorator="[
+                  'brandName',
+                  { rules: [{ required: true, message: '所属品牌不能为空' }] },
+                ]"
+                placeholder="请输入所属品牌"
+              />
             </a-form-item>
-            <a-form-item label="SPU编码">
-              <a-input disabled v-decorator="['itemCode']" />
+             <a-form-item label="供应商">
+              <a-select
+                :disabled="disbliend"
+                show-search
+                placeholder="请选择供应商"
+                option-filter-prop="children"
+                :filter-option="filterOption"
+                @search="handleSearch"
+                @change="handleChange"
+                v-decorator="[
+                  'supplierName',
+                  { rules: [{ required: true, message: '请选择供应商' }] },
+                ]"
+              ><a-select-option
+                  v-for="item in supplierList"
+                  :key="item.id"
+                  :value="
+                    `${item.id}` +
+                      `:${item.supplierName}` +
+                      `:${item.companyId}`
+                  ">{{ item.supplierName }}
+                </a-select-option>
+              </a-select>
             </a-form-item>
             <a-form-item label="商城SKU自编码">
               <a-input
@@ -79,43 +107,13 @@
             </a-form-item>
           </div>
           <div class="form-box">
-            <a-form-item label="所属品牌">
-              <a-input
-                :disabled="disbliend"
-                v-decorator="[
-                  'brandName',
-                  { rules: [{ required: true, message: '所属品牌不能为空' }] },
-                ]"
-                placeholder="请输入所属品牌"
-              />
+            <a-form-item label="SPU名称">
+              <a-input disabled v-decorator="['itemName']" />
             </a-form-item>
-            <a-form-item label="供应商">
-              <a-select
-                :disabled="disbliend"
-                show-search
-                placeholder="请选择供应商"
-                option-filter-prop="children"
-                :filter-option="filterOption"
-                @search="handleSearch"
-                @change="handleChange"
-                v-decorator="[
-                  'supplierName',
-                  { rules: [{ required: true, message: '请选择供应商' }] },
-                ]"
-              >
-                <a-select-option
-                  v-for="item in supplierList"
-                  :key="item.id"
-                  :value="
-                    `${item.id}` +
-                      `:${item.supplierName}` +
-                      `:${item.companyId}`
-                  "
-                >
-                  {{ item.supplierName }}
-                </a-select-option>
-              </a-select>
+            <a-form-item label="SPU编码">
+              <a-input disabled v-decorator="['itemCode']" />
             </a-form-item>
+          
             <a-form-item label="税收分类编码">
               <a-input disabled v-decorator="['taxCategoryCode']" />
             </a-form-item>
@@ -570,6 +568,8 @@ export default {
 
 .butdb {
   float: right;
+  margin-bottom: 50px;
+  z-index: 0;
   // position: absolute;
   // left: 550px;
   // top: 0px;
