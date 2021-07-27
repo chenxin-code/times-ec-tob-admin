@@ -15,7 +15,7 @@
         <p v-show="showRedBorder" class="companySelectTip">请选择所属企业</p>
       </a-form-model-item>
       <a-form-model-item label="姓名" prop="accountName">
-        <a-input v-model="thisForm.accountName" :maxLength="10"/>
+        <a-input v-model="thisForm.accountName" :maxLength="10" autocomplete="off"/>
       </a-form-model-item>
       <a-form-model-item label="登录名" prop="loginName">
         <a-input v-model="thisForm.loginName" autocomplete="off" :maxLength="50" :disabled="isDisable"/>
@@ -33,10 +33,10 @@
         <a-input-password v-model="thisForm.confirmPassword" autocomplete="off"/>
       </a-form-model-item>
       <a-form-model-item label="电子邮箱" prop="email">
-        <a-input v-model="thisForm.email"/>
+        <a-input v-model="thisForm.email" autocomplete="off"/>
       </a-form-model-item>
       <a-form-model-item label="手机号码" prop="accountPhone">
-        <a-input v-model="thisForm.accountPhone"/>
+        <a-input v-model="thisForm.accountPhone" autocomplete="off"/>
       </a-form-model-item>
     </a-form-model>
     <a-modal title="选择所属企业" :visible="visible" @ok="handleOk" @cancel="visible = false" width="500px">
