@@ -54,26 +54,30 @@ export default {
         title: '供应商名称',
         dataIndex: 'supplierName',
         key: 'supplierName',
-        width: 250,
+        width: 200,
+        align: 'center',
       },
       {
         title: '供应商编码',
         width: 250,
         key: 'insideCode',
         dataIndex: 'insideCode',
+        align: 'center',
       },
       {
         title: '创建时间',
         width: 250,
         key: 'createTime',
         dataIndex: 'createTime',
+        align: 'center',
       },
       {
         title: '操作',
         key: 'operation',
         fixed: 'right',
-        width: 100,
+        width: 200,
         scopedSlots: { customRender: 'action' },
+        align: 'center',
       },
     ]
     let pageData = {
