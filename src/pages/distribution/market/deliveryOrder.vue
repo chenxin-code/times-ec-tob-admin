@@ -194,12 +194,15 @@
     methods: {
       ...mapActions(["FALLBACK"]),
       async getData(params) {
-        let res = await api.marketDeliveryOrderList(params);
-        this.dataList = res.data
+        try{
+          let res = await api.marketDeliveryOrderList(params);
+          this.dataList = res.data
+        } catch(e) {
+        }
       },
       // 取消
       handleCancel() {
-
+        this.isShowModal = false
       },
       // 详情
       async detail(row) {

@@ -11,7 +11,7 @@
       <a-form-model-item label="是否顶级企业">
         <a-switch v-model="isTop"/>
       </a-form-model-item>
-      <a-form-model-item label="选择父级企业" v-if="!isTop">
+      <a-form-model-item label="选择父级企业" prop="parentName" v-if="!isTop">
         <div :class="`companySelect ${showRedBorder && 'border-red'}`" @click="visible = true">
           {{ parentName }}
         </div>
@@ -96,6 +96,8 @@ export default {
       } else {
         callback()
       }
+    }, onlyForRedStar = (rule, value, callback) => {
+      callback()
     };
     return {
       showRedBorder: false,
@@ -123,6 +125,9 @@ export default {
         districtCode: null,//区
       },
       rules: {
+        parentName: [
+          {required: true, validator: onlyForRedStar, trigger: 'blur'},
+        ],
         enterpriseName: [
           {required: true, message: '请输入企业名称', trigger: 'blur'},
         ],

@@ -8,7 +8,7 @@
       <div class="common-title">
         <div class="common-title-content">账号信息</div>
       </div>
-      <a-form-model-item label="所属企业">
+      <a-form-model-item label="所属企业" prop="enterpriseName">
         <div :class="`companySelect ${showRedBorder && 'border-red'}`" @click="visible = true">
           {{ enterpriseName }}
         </div>
@@ -76,6 +76,8 @@ export default {
       } else {
         callback()
       }
+    }, onlyForRedStar = (rule, value, callback) => {
+      callback()
     };
     return {
       showRedBorder: false,
@@ -94,6 +96,9 @@ export default {
         accountPhone: null,
       },
       rules: {
+        enterpriseName: [
+          {required: true, validator: onlyForRedStar, trigger: 'blur'},
+        ],
         accountName: [
           {required: true, message: '请输入姓名', trigger: 'blur'},
         ],

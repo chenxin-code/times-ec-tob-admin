@@ -1,6 +1,6 @@
 import { fetchApi } from '@/utils/ajax'
-let supplierListUrl = '/times-ec-tob-mall/admin/supplier/getSupplierListByPager'
-let supplierDetailUrl = '/times-ec-tob-mall/admin/supplier/getSupplierDetail/'
+let supplierListUrl = '/times-ec-tob-mall/admin/baseSupplier/getSupplierListByPager'
+let supplierDetailUrl = '/times-ec-tob-mall/admin/baseSupplier/getSupplierDetail/'
 
 // 列表
 export const getSupplierListByPager = (data) => {
