@@ -9,7 +9,7 @@
         <div style="width:3px;height:16px;background: #4B7AFB;"></div>
         <span style="color:#666666;margin-left:5px;">供应商详情基础信息</span>
       </div>
-      <a-form-model :label-col="{ span: 4 }" :wrapper-col="{ span: 14 }" style="padding:0 10px;">
+      <a-form-model :label-col="{ span: 2 }" :wrapper-col="{ span: 12 }" style="padding:0 10px;">
         <a-form-model-item label="供应商名称">
           <span class="info">{{dataList.supplierName}}</span>
         </a-form-model-item>
