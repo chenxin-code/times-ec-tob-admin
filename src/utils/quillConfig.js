@@ -1,3 +1,5 @@
+import { fetchApi } from '@/utils/ajax'
+
 /*富文本编辑图片上传配置*/
 const uploadConfig = {
   action: 'common.uploadfile.single', // 必填参数 图片上传地址
