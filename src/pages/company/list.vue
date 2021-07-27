@@ -10,7 +10,7 @@
         </a-form-model-item>
         <a-form-model-item class="item-btns">
           <a-button class="item-btn" type="primary" @click="getList()">查询</a-button>
-          <a-button class="item-btn" @click="reset()">重置</a-button>
+          <a-button class="item-btn" type="primary" @click="reset()">重置</a-button>
           <a-button class="item-btn" @click="$router.push({path: '/company/add'})" type="primary">新增</a-button>
         </a-form-model-item>
       </a-form-model>
