@@ -188,6 +188,7 @@
                 @focus="onEditorFocus($event)"
                 class="editorted"
                 v-model="pcItemInfo"
+                :disabled="disbliend"
                 :options="editorOption"
               ></quill-editor>
             </a-form-item>
@@ -197,6 +198,7 @@
                 @focus="onEditorFocus($event)"
                 class="editorted"
                 v-model="appItemInfo"
+                :disabled="disbliend"
                 :options="editorOption"
               ></quill-editor>
             </a-form-item>
@@ -226,7 +228,9 @@
                 :key="index"
               >
                 <span style="min-width: 45px;">数量：</span>
-                <span style="min-width: 20px;text-align:right;">{{ item.minNum }}</span
+                <span style="min-width: 20px;text-align:right;">{{
+                  item.minNum
+                }}</span
                 >~<a-input
                   :disabled="disbliend"
                   placeholder="无穷大"
@@ -289,11 +293,10 @@
         </div>
       </a-form>
     </div>
-    <div class="content-footer">
+    <div class="content-footer" v-if="$route.params.typ === '2'">
       <a-button
         type="primary"
         size="large"
-        v-if="$route.params.typ === '2'"
         style="width: 120px;"
         :loading="loading"
         @click="onSubmit()"
@@ -342,6 +345,7 @@ export default {
         { id: false, name: '下架' },
       ],
       editorOption: {
+        readOnly:true,
         placeholder: '请在这里输入',
         modules: {
           toolbar: [
@@ -363,6 +367,7 @@ export default {
         },
       },
       treeData: [], //品类列表
+      disbliend: true,
     }
   },
   computed: {},
@@ -530,6 +535,7 @@ export default {
 .spshu {
   width: 40%;
   min-width: 85px;
+  width: 120px;
 }
 
 .intpudnum {
