@@ -25,6 +25,9 @@
 
       <a-form-model-item label="商品品类" prop="d">
         <a-tree-select
+          show-search
+          searchPlaceholder
+          treeNodeFilterProp="title"
           v-model="value"
           style="width: 100%"
           :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
