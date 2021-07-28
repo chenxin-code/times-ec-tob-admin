@@ -2,9 +2,22 @@
   <div style="height: 100%;margin-bottom: 0px;">
     <div class="content-header">
       {{ $route.params.typ === '1' ? '查看' : '编辑' }}商品基础信息
-      <span class="fallback" @click="$router.back()" style="cursor:pointer"
-        >返回</span
-      >
+      <span class="header-button fallback">
+        <a-button type="primary" :loading="loading" @click="onSubmit()"
+          >保存</a-button
+        >
+        <a-button
+          style="cursor:pointer;margin-left:12px;"
+          @click="$router.back()"
+          >返回</a-button
+        >
+        <!-- <span
+          class="back"
+          @click="$router.back()"
+          style="cursor:pointer;margin-left:12px;"
+          >返回</span
+        > -->
+      </span>
     </div>
     <div
       class="content-main"
@@ -291,7 +304,7 @@
         </div>
       </a-form>
     </div>
-    <div class="content-footer" v-if="$route.params.typ === '2'">
+    <!-- <div class="content-footer" v-if="$route.params.typ === '2'">
       <a-button
         type="primary"
         size="large"
@@ -300,7 +313,7 @@
         @click="onSubmit()"
         >保存</a-button
       >
-    </div>
+    </div> -->
   </div>
 </template>
 
