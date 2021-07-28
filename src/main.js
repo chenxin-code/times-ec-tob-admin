@@ -1,6 +1,12 @@
 import Vue from 'vue'
 // import VueCookies from 'vue-cookies'
 
+import VueQuillEditor from 'vue-quill-editor'
+// require styles
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
 import App from './App.vue'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.less'
@@ -9,12 +15,6 @@ import router from './router'
 import store from './store'
 import Vuex from "vuex"
 
-import VueQuillEditor from 'vue-quill-editor'
-
-// require styles
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
 
 Vue.use(VueQuillEditor)
 
