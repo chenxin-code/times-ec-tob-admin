@@ -15,7 +15,7 @@
       >
         <span slot="action" slot-scope="scope">
           <a-button type="link" @click="detail(scope)">查看</a-button>
-          <a-button type="link" @click="signFor(scope)">签收</a-button>
+          <a-button type="link" v-if="scope.approveStatus == 0" @click="signFor(scope)">签收</a-button>
         </span>
       </a-table>
     </div>
@@ -43,17 +43,17 @@
             :scroll="{ x: 800 }"
             :pagination="false"
             style="margin-top:8px;">
+            <template slot="noReceiveNum" slot-scope="scope">
+              <div>
+                <span>{{scope.deliveryNum - scope.receiveNum}}</span>
+              </div>
+            </template>
           </a-table>
-          <template>
-            <div slot="noReceiveNum" slot-scope="scope">
-              <span>{{scope.deliveryNum - scope.receiveNum}}</span>
-            </div>
-          </template>
         </div>
         <div class="item-list" v-if="dataListDetail.approveStatus != 0">
           <span>签收单号：{{dataListDetail.receiveNo}}</span>
           <span>签收时间：{{dataListDetail.receiveTime}}</span>
-          <div class="img-box">
+          <div class="img-box" v-if="dataListDetail.receiverProofImgs && dataListDetail.receiverProofImgs.length > 0">
             <img 
               v-for="item in dataListDetail.receiverProofImgs"
               :key="item"
@@ -125,7 +125,7 @@
                 case 0:
                   str = '未签收'
                   break
-                case 0:
+                case 1:
                   str = '全部签收'
                   break
                 case 2:
@@ -171,6 +171,7 @@
           {
             title: "未签收数量",
             width: 250,
+            ellipsis: true,
             scopedSlots: {customRender: "noReceiveNum"},
             align: 'center'
           },
@@ -228,12 +229,13 @@
             let params = {
               deliveryNo: row.deliveryNo,
               receiverProofImgs: row.receiverProofImgs ? row.receiverProofImgs : [],
+              receiveType: 0,
               itemList: []
             }
             row.deliveryItemList.forEach(item => {
               let opt = {
                 deliveryItemId: item.id,
-                num: item.receiveNum ? item.receiveNum : 0
+                num: item.deliveryNum ? item.deliveryNum : 0
               }
               params.itemList.push(opt)
             })
