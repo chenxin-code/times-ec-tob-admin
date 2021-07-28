@@ -284,13 +284,13 @@ export default {
           }
         }
       },
-      //8个总价
-      itemPriceDeduct: null,
+      //8个非输入框总价
       pretaxItemPriceDeduct: null,
+      itemPriceDeduct: null,
       pretaxReducedPriceDeduct: null,
       reducedPriceDeduct: null,
-      totalAmount: null,
       totalPretaxItemPrice: null,
+      totalAmount: null,
       totalPretaxReducedPrice: null,
       totalReducedPrice: null,
       //4个输入框总价
@@ -311,7 +311,35 @@ export default {
   methods: {
     add(){
       this.$refs.thisForm.validate(valid => {
-        
+        if(valid){
+          let itemList = JSON.parse(JSON.stringify(this.tableData));
+          itemList.forEach((item,index) => {
+            itemList[index].itemNumDeduct = item.set1;//覆盖
+            itemList[index].pretaxItemPrice = item.set2;//覆盖
+            itemList[index].itemPrice = item.set3;//覆盖
+            itemList[index].pretaxReducedPrice = item.set4;//覆盖
+            itemList[index].reducedPrice = item.set5;//覆盖
+          });
+          console.log(this.tableData);
+          api.addNegativeBill({
+            saleOrderNo: this.thisForm.saleOrderNo,
+            itemList: itemList,
+            //8个非输入框总价
+            pretaxItemPriceDeduct: this.pretaxItemPriceDeduct,
+            itemPriceDeduct: this.itemPriceDeduct,
+            pretaxReducedPriceDeduct: this.pretaxReducedPriceDeduct,
+            reducedPriceDeduct: this.reducedPriceDeduct,
+            totalPretaxItemPrice: this.totalPretaxItemPriceDeduct,//覆盖
+            totalAmount: this.totalAmountDeduct,//覆盖
+            totalPretaxReducedPrice: this.totalPretaxReducedPriceDeduct,//覆盖
+            totalReducedPrice: this.totalReducedPriceDeduct,//覆盖
+          }).then(resp => {
+            if (resp.code === 200) {
+              this.$message.success('添加成功');
+              this.$router.back();
+            }
+          });
+        }
       });
     },
     calc() {
@@ -351,13 +379,13 @@ export default {
             };
           });
           console.log(this.tableData);
-          //8个总价
-          this.itemPriceDeduct = resp.data.itemPriceDeduct;
+          //8个非输入框总价
           this.pretaxItemPriceDeduct = resp.data.pretaxItemPriceDeduct;
+          this.itemPriceDeduct = resp.data.itemPriceDeduct;
           this.pretaxReducedPriceDeduct = resp.data.pretaxReducedPriceDeduct;
           this.reducedPriceDeduct = resp.data.reducedPriceDeduct;
-          this.totalAmount = resp.data.totalAmount;
           this.totalPretaxItemPrice = resp.data.totalPretaxItemPrice;
+          this.totalAmount = resp.data.totalAmount;
           this.totalPretaxReducedPrice = resp.data.totalPretaxReducedPrice;
           this.totalReducedPrice = resp.data.totalReducedPrice;
         }
@@ -374,6 +402,15 @@ export default {
         });
       }
     },
+  },
+  mounted() {
+    if (this.$route.path === '/negative/show') {
+      api.queryNegativeDetail({negativeNo: this.$route.query.negativeNo}).then(resp => {
+        if (resp.code === 200) {
+
+        }
+      });
+    }
   },
 }
 </script>
