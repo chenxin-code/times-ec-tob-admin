@@ -1,14 +1,22 @@
 <template>
   <div style="height: 100%;">
     <a-form-model layout="inline" ref="thisForm" labelAlign="left">
-      <a-form-model-item label="SKU名称/SKU编码" prop="a">
+      <a-form-model-item
+        label="SKU名称/SKU编码"
+        prop="a"
+        :wrapperCol="{ style: { width: '250px' } }"
+      >
         <a-input
           v-model="sku"
           placeholder="请输入SKU名称或SKU编码"
           :maxLength="30"
         />
       </a-form-model-item>
-      <a-form-model-item label="状态" prop="b">
+      <a-form-model-item
+        label="状态"
+        prop="b"
+        :wrapperCol="{ style: { width: '250px' } }"
+      >
         <a-select
           default-value="全部"
           @change="value => (this.selling = value)"
@@ -23,7 +31,11 @@
         </a-select>
       </a-form-model-item>
 
-      <a-form-model-item label="商品品类" prop="d">
+      <a-form-model-item
+        label="商品品类"
+        prop="d"
+        :wrapperCol="{ style: { width: '250px' } }"
+      >
         <a-tree-select
           show-search
           searchPlaceholder
@@ -44,12 +56,20 @@
         >
         </a-tree-select>
       </a-form-model-item>
-      <a-form-model-item label="所属供应商" prop="d">
-        <a-select default-value="全部" @change="value => (this.status = value)">
+      <a-form-model-item
+        label="所属供应商"
+        prop="d"
+        :wrapperCol="{ style: { width: '250px' } }"
+      >
+        <a-select
+          v-model="status"
+          @change="value => (this.status = value)"
+          defaultValue="全部"
+        >
           <a-select-option
-            :value="item.id"
+            :value="item.supplierCode"
             v-for="item in selectlist"
-            :key="item.id"
+            :key="item.supplierCode"
           >
             {{ item.supplierName }}
           </a-select-option>
@@ -58,6 +78,9 @@
       <a-form-model-item class="item-btns">
         <a-button class="item-btn" type="primary" @click="getList()"
           >查询</a-button
+        >
+        <a-button class="item-btn" type="primary" @click="onReset()"
+          >重置</a-button
         >
         <a-button
           class="item-btn"
@@ -82,7 +105,7 @@
         <a-row style="padding: 4px;height: 100%;">
           <a-col>
             <a-table
-              :row-selection="rowSelection"
+              :row-selection="{ ...rowSelection, selectedRowKeys: selectedRowKeys }"
               :columns="tableColumns"
               :row-key="(r, i) => i"
               :data-source="tableData"
@@ -317,6 +340,7 @@ export default {
       piliangLoading: false,
       disBtn: true,
       beSelected: [],
+      selectedRowKeys:[],
       rowSelection: {
         onChange: (selectedRowKeys, selectedRows) => {
           let that = this
@@ -325,6 +349,7 @@ export default {
             // return{id: item.id} //返回一个对象
           })
           this.disBtn = selectedRows.length === 0
+          this.selectedRowKeys = selectedRowKeys
         },
       },
     }
@@ -332,7 +357,7 @@ export default {
   created() {
     api.getSupplierListByPager2({ pageNum: 1, pageSize: 10000 }).then(res => {
       this.selectlist = res.data.records
-      this.selectlist.unshift({ id: '', supplierName: '全部' })
+      this.selectlist.unshift({ supplierCode: '', supplierName: '全部' })
     })
     api.getCategoryTree().then(resp => {
       this.treeData = resp.data
@@ -349,6 +374,17 @@ export default {
     })
   },
   methods: {
+    //重置数据
+    onReset() {
+      this.categoryId = ''
+      this.sku = ''
+      this.selling = ''
+      this.status = ''
+      this.current = 1
+      this.beSelected = []
+      this.selectedRowKeys = []
+      this.getList()
+    },
     piliang(type) {
       //批量上下架
       if (type === 'on') this.updateseli(1)
@@ -371,6 +407,7 @@ export default {
                 `批量操作成功`
               )
               this.piliangLoading = false
+              this.selectedRowKeys = []
               this.getList()
             })
             .finally(() => {
@@ -438,26 +475,25 @@ export default {
 .ant-form {
   padding: 6px;
 
-  /deep/ .ant-form-item-control-wrapper {
-    width: 250px;
-  }
+  // /deep/ .ant-form-item-control-wrapper {
+  //   width: 250px;
+  // }
 
-  /deep/ .ant-calendar-picker-input {
-    width: 250px;
-  }
+  // /deep/ .ant-calendar-picker-input {
+  //   width: 250px;
+  // }
 
-  /deep/ .ant-form-item-label {
-    width: 130px;
-    text-align: right;
-  }
+  // /deep/ .ant-form-item-label {
+  //   width: 130px;
+  //   text-align: right;
+  // }
 
-  /deep/ .item-btns {
-    width: 300px !important;
-
-    .ant-form-item-control-wrapper {
-      width: 300px !important;
-    }
-  }
+  // /deep/ .item-btns {
+  //   width: 300px !important;
+  //   .ant-form-item-control-wrapper {
+  //     width: 300px !important;
+  //   }
+  // }
 
   /deep/ .item-btns .item-btn {
     margin-right: 18px;

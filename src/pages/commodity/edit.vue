@@ -3,14 +3,14 @@
     <div class="content-header">
       {{ $route.params.typ === '1' ? '查看' : '编辑' }}商品基础信息
       <span class="header-button fallback">
-        <a-button type="primary" :loading="loading" @click="onSubmit()"
+        <!-- <a-button type="primary" :loading="loading" @click="onSubmit()"
           >保存</a-button
-        >
+        > -->
         <a-button
           style="cursor:pointer;margin-left:12px;"
           @click="$router.back()"
           >返回</a-button
-        >      
+        >
       </span>
     </div>
     <div
@@ -229,6 +229,19 @@
               </div>
             </a-form-item>
             <a-form-item label="销售价" v-show="isTieredPricing == true">
+              <a-input
+                type="hidden"
+                v-decorator="[
+                  'sellingPriceList',
+                  {
+                    rules: [
+                      {
+                        validator: this.sellingPricevalidator,
+                      },
+                    ],
+                  },
+                ]"
+              />
               <div
                 class="intpud"
                 v-for="(item, index) in sellingPrice"
@@ -298,7 +311,7 @@
         </div>
       </a-form>
     </div>
-    <!-- <div class="content-footer" v-if="$route.params.typ === '2'">
+    <div class="content-footer" v-if="$route.params.typ === '2'">
       <a-button
         type="primary"
         size="large"
@@ -307,7 +320,7 @@
         @click="onSubmit()"
         >保存</a-button
       >
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -391,6 +404,19 @@ export default {
     next()
   },
   methods: {
+    //输入最大值
+    sellingPricevalidator(rule, value, callback) {
+      const isVaild = this.sellingPrice.every(item => {
+        return item.maxNum > item.minNum
+      })
+      if (isVaild) {
+        callback && callback()
+      } else {
+        callback &&
+          callback(new Error('销售价的结束的数量限制不能小于起始数量'))
+      }
+      return isVaild
+    },
     onEditorFocus(event) {
       if (this.$route.params.typ === '1') {
         event.enable(false)
@@ -487,6 +513,7 @@ export default {
               supplierName: data.supplierName, //供应商
               taxRate: data.taxRate, //税率
               stock: data.stock, //库存
+              sellingPriceList: this.sellingPricevalidator(),
             })
         }
       })
@@ -501,8 +528,14 @@ export default {
         )
           return this.$message.error('销售价必须大于成本价')
       }
+      this.form.validateFields(['sellingPriceList'], { force: true })
       debounce(() => {
-        this.form.validateFields((err, values) => {
+        this.form.validateFields((err, values, callback) => {
+          console.log('err--->', err, values, callback)
+          if (err.sellingPriceList) {
+            this.$message.error('销售价必须大于成本价')
+            return
+          }
           if (that.isTieredPricing == false)
             that.sellingPrice = that.sellingPrice[0]
           let data = {
