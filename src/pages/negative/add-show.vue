@@ -8,38 +8,32 @@
     </div>
     <a-form-model :model="thisForm" layout="inline" :rules="rules" ref="thisForm" labelAlign="left">
       <div class="common-title">
-        <div class="common-title-content">新增负数单</div>
+        <div class="common-title-content">{{$route.path === '/negative/add'?'新增':'查看'}}负数单</div>
       </div>
-      <a-form-model-item label="选择订单" prop="saleOrderNo">
+      <a-form-model-item label="选择销售单" prop="saleOrderNo" v-if="$route.path === '/negative/add'">
         <a-select
             show-search
             :value="thisForm.saleOrderNo"
-            placeholder="搜索订单编号"
+            placeholder="搜索销售单编号"
             :default-active-first-option="false"
             :show-arrow="false"
             :filter-option="false"
             :not-found-content="null"
             @search="handleSearch"
             @change="handleChange"
-            :disabled="isDisable">
+            style="width: 250px;">
           <a-select-option v-for="(item,index) in orderNoList" :value="item" :key="index">
             {{ item }}
           </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="负数单号">
-        <a-input v-model="aaa" :disabled="isDisable"/>
-      </a-form-model-item>
-      <a-form-model-item label="创建人">
-        <a-input v-model="aaa" :disabled="isDisable"/>
-      </a-form-model-item>
-      <a-form-model-item label="创建时间">
-        <a-input v-model="aaa" :disabled="isDisable"/>
-      </a-form-model-item>
+      <a-form-model-item label="销售单号" v-if="$route.path === '/negative/show'">{{saleOrderNo}}</a-form-model-item>
+      <a-form-model-item label="负数单号" v-if="$route.path === '/negative/show'">{{$route.query.negativeNo}}</a-form-model-item>
+      <a-form-model-item label="创建人" v-if="$route.path === '/negative/show'">{{createUser}}</a-form-model-item>
+      <a-form-model-item label="创建时间" v-if="$route.path === '/negative/show'">{{createTime}}</a-form-model-item>
       <div class="common-title">
         <div class="common-title-content">选择商品</div>
       </div>
-      <a-button style="margin-left: 20px;" :disabled="disBtn" @click="calc()" type="primary">计算总价</a-button>
       <a-table
           :row-selection="rowSelection"
           :columns="columns"
@@ -47,40 +41,78 @@
           :pagination="false"
           :loading="tableLoading"
           :rowKey="(r, i) => i"
-          :scroll="{ x: 2500, y: 400 }">
+          :scroll="{ x: 2500, y: 400 }" v-if="$route.path === '/negative/add'">
         <template slot="set1" slot-scope="scope">
           <a-form-model-item>
-            <a-input v-model="scope.set1" :disabled="isDisable"/>
+            <a-input v-model="scope.set1"/>
           </a-form-model-item>
         </template>
         <template slot="set2" slot-scope="scope">
           <a-form-model-item>
-            <a-input v-model="scope.set2" :disabled="isDisable"/>
+            <a-input v-model="scope.set2"/>
           </a-form-model-item>
         </template>
         <template slot="set3" slot-scope="scope">
           <a-form-model-item>
-            <a-input v-model="scope.set3" :disabled="isDisable"/>
+            <a-input v-model="scope.set3"/>
           </a-form-model-item>
         </template>
         <template slot="set4" slot-scope="scope">
           <a-form-model-item>
-            <a-input v-model="scope.set4" :disabled="isDisable"/>
+            <a-input v-model="scope.set4"/>
           </a-form-model-item>
         </template>
         <template slot="set5" slot-scope="scope">
           <a-form-model-item>
-            <a-input v-model="scope.set5" :disabled="isDisable"/>
+            <a-input v-model="scope.set5"/>
           </a-form-model-item>
         </template>
         <template slot="remark" slot-scope="scope">
           <a-form-model-item>
-            <a-input v-model="scope.remark" :disabled="isDisable" style="width: 200px !important;"/>
+            <a-input v-model="scope.remark" style="width: 200px !important;"/>
           </a-form-model-item>
         </template>
       </a-table>
+      <a-table
+          :columns="columns2"
+          :data-source="tableData2"
+          :pagination="false"
+          :loading="tableLoading2"
+          :rowKey="(r, i) => i"
+          :scroll="{ x: 2500, y: 400 }" v-else-if="$route.path === '/negative/show'">
+        <!--<template slot="itemNumDeduct" slot-scope="scope">
+          <a-form-model-item>
+            <a-input v-model="scope.itemNumDeduct" disabled/>
+          </a-form-model-item>
+        </template>
+        <template slot="pretaxItemPrice" slot-scope="scope">
+          <a-form-model-item>
+            <a-input v-model="scope.pretaxItemPrice" disabled/>
+          </a-form-model-item>
+        </template>
+        <template slot="itemPrice" slot-scope="scope">
+          <a-form-model-item>
+            <a-input v-model="scope.itemPrice" disabled/>
+          </a-form-model-item>
+        </template>
+        <template slot="pretaxReducedPrice" slot-scope="scope">
+          <a-form-model-item>
+            <a-input v-model="scope.pretaxReducedPrice" disabled/>
+          </a-form-model-item>
+        </template>
+        <template slot="reducedPrice" slot-scope="scope">
+          <a-form-model-item>
+            <a-input v-model="scope.reducedPrice" disabled/>
+          </a-form-model-item>
+        </template>
+        <template slot="remark" slot-scope="scope">
+          <a-form-model-item>
+            <a-input v-model="scope.remark" style="width: 200px !important;" disabled/>
+          </a-form-model-item>
+        </template>-->
+      </a-table>
       <div class="common-title">
-        <div class="common-title-content">订单总价</div>
+        <div class="common-title-content">销售单总价</div>
       </div>
       <div style="display: flex">
         <div style="flex: 1">
@@ -96,17 +128,17 @@
           <a-form-model-item label="已扣税后优惠总价">{{ totalReducedPrice }}</a-form-model-item>
         </div>
       </div>
-      <a-form-model-item label="税前扣减销售总价">
-        <a-input v-model="totalPretaxItemPriceDeduct" :disabled="isDisable2"/>
+      <a-form-model-item label="税前扣减销售总价" v-if="$route.path === '/negative/add'">
+        <a-input v-model="totalPretaxItemPriceDeduct" :disabled="!disInput"/>
       </a-form-model-item>
-      <a-form-model-item label="税后扣减销售总价">
-        <a-input v-model="totalAmountDeduct" :disabled="isDisable2"/>
+      <a-form-model-item label="税后扣减销售总价" v-if="$route.path === '/negative/add'">
+        <a-input v-model="totalAmountDeduct" :disabled="!disInput"/>
       </a-form-model-item>
-      <a-form-model-item label="税前扣减优惠总价">
-        <a-input v-model="totalPretaxReducedPriceDeduct" :disabled="isDisable2"/>
+      <a-form-model-item label="税前扣减优惠总价" v-if="$route.path === '/negative/add'">
+        <a-input v-model="totalPretaxReducedPriceDeduct" :disabled="!disInput"/>
       </a-form-model-item>
-      <a-form-model-item label="税后扣减优惠总价">
-        <a-input v-model="totalReducedPriceDeduct" :disabled="isDisable2"/>
+      <a-form-model-item label="税后扣减优惠总价" v-if="$route.path === '/negative/add'">
+        <a-input v-model="totalReducedPriceDeduct" :disabled="!disInput"/>
       </a-form-model-item>
     </a-form-model>
   </div>
@@ -119,18 +151,16 @@ import {debounce} from '../../utils/util';
 export default {
   data() {
     return {
-      aaa: null,
+      saleOrderNo: null,
+      createUser: null,
+      createTime: null,
       orderNoList: [],
       thisForm: {
-        a: null,
         saleOrderNo: null,
       },
       rules: {
         saleOrderNo: [
-          {required: true, message: '请选择订单', trigger: 'blur'},
-        ],
-        a: [
-          {required: true, message: '请选择订单', trigger: 'blur'},
+          {required: true, message: '请选择销售单', trigger: 'blur'},
         ],
       },
       btnloading: false,
@@ -139,134 +169,311 @@ export default {
           title: '商品名称',
           key: 'itemName',
           dataIndex: 'itemName',
-          width: 150,
+          align: "center",
+          width: 250,
         },
         {
           title: 'SKU名称',
           key: 'skuName',
           dataIndex: 'skuName',
-          width: 150,
+          align: "center",
+          width: 200,
         },
         {
           title: 'SKU编码',
           key: 'skuCode',
           dataIndex: 'skuCode',
-          width: 150,
+          align: "center",
+          width: 200,
         },
         {
           title: '规格',
           key: 'itemSpecsArray',
           dataIndex: 'itemSpecsArray',
+          align: "center",
           width: 150,
         },
         {
           title: '所属供应商',
           key: 'supplierName',
           dataIndex: 'supplierName',
-          width: 150,
+          align: "center",
+          width: 200,
         },
         {
           title: '购买数量',
           key: 'itemNum',
           dataIndex: 'itemNum',
+          align: "center",
           width: 150,
         },
         {
           title: '已扣减数量',
           key: 'itemNumDeduct',
           dataIndex: 'itemNumDeduct',
+          align: "center",
           width: 150,
         },
         {
           title: '税前销售价',
           key: 'pretaxItemPrice',
           dataIndex: 'pretaxItemPrice',
+          align: "center",
           width: 150,
         },
         {
           title: '已扣税前销售价',
           key: 'pretaxItemPriceDeduct',
           dataIndex: 'pretaxItemPriceDeduct',
+          align: "center",
           width: 150,
         },
         {
           title: '税后销售价',
           key: 'itemPrice',
           dataIndex: 'itemPrice',
+          align: "center",
           width: 150,
         },
         {
           title: '已扣税后销售价',
           key: 'itemPriceDeduct',
           dataIndex: 'itemPriceDeduct',
+          align: "center",
           width: 150,
         },
         {
           title: '税前优惠价',
           key: 'pretaxReducedPrice',
           dataIndex: 'pretaxReducedPrice',
+          align: "center",
           width: 150,
         },
         {
           title: '已扣税前优惠价',
           key: 'pretaxReducedPriceDeduct',
           dataIndex: 'pretaxReducedPriceDeduct',
+          align: "center",
           width: 150,
         },
         {
           title: '税后优惠价',
           key: 'reducedPrice',
           dataIndex: 'reducedPrice',
+          align: "center",
           width: 150,
         },
         {
           title: '已扣税后优惠价',
           key: 'reducedPriceDeduct',
           dataIndex: 'reducedPriceDeduct',
+          align: "center",
           width: 150,
         },
         {
           title: '设置扣减数量',//itemNumDeduct
           key: 'set1',
           scopedSlots: {customRender: 'set1'},
+          align: "center",
           width: 150,
         },
         {
           title: '设置税前销售价',//pretaxItemPrice
           key: 'set2',
           scopedSlots: {customRender: 'set2'},
+          align: "center",
           width: 150,
         },
         {
           title: '设置税后销售价',//itemPrice
           key: 'set3',
           scopedSlots: {customRender: 'set3'},
+          align: "center",
           width: 150,
         },
         {
           title: '设置税前优惠价',//pretaxReducedPrice
           key: 'set4',
           scopedSlots: {customRender: 'set4'},
+          align: "center",
           width: 150,
         },
         {
           title: '设置税后优惠价',//reducedPrice
           key: 'set5',
           scopedSlots: {customRender: 'set5'},
+          align: "center",
           width: 150,
         },
         {
           title: '备注',
           key: 'remark',
           scopedSlots: {customRender: 'remark'},
+          align: "center",
           width: 300,
         },
       ],
-      tableData: [
-        //{a: 1, set1: '设置1', set2: '设置2', set3: '设置3', set4: '设置4', set5: '设置5', remark: '...'},
+      columns2: [
+        {
+          title: '商品名称',
+          key: 'itemName',
+          dataIndex: 'itemName',
+          align: "center",
+          width: 250,
+        },
+        {
+          title: 'SKU名称',
+          key: 'skuName',
+          dataIndex: 'skuName',
+          align: "center",
+          width: 200,
+        },
+        {
+          title: 'SKU编码',
+          key: 'skuCode',
+          dataIndex: 'skuCode',
+          align: "center",
+          width: 200,
+        },
+        {
+          title: '规格',
+          key: 'itemSpecsArray',
+          dataIndex: 'itemSpecsArray',
+          align: "center",
+          width: 150,
+        },
+        {
+          title: '所属供应商',
+          key: 'supplierName',
+          dataIndex: 'supplierName',
+          align: "center",
+          width: 200,
+        },
+        {
+          title: '购买数量',
+          key: 'itemNum',
+          dataIndex: 'itemNum',
+          align: "center",
+          width: 150,
+        },
+        {
+          title: '已扣减数量',
+          key: 'itemNumDeduct',
+          dataIndex: 'itemNumDeduct',
+          align: "center",
+          width: 150,
+        },
+        {
+          title: '税前销售价',
+          key: 'pretaxItemPrice',
+          dataIndex: 'pretaxItemPrice',
+          align: "center",
+          width: 150,
+        },
+        {
+          title: '已扣税前销售价',
+          key: 'pretaxItemPriceDeduct',
+          dataIndex: 'pretaxItemPriceDeduct',
+          align: "center",
+          width: 150,
+        },
+        {
+          title: '税后销售价',
+          key: 'itemPrice',
+          dataIndex: 'itemPrice',
+          align: "center",
+          width: 150,
+        },
+        {
+          title: '已扣税后销售价',
+          key: 'itemPriceDeduct',
+          dataIndex: 'itemPriceDeduct',
+          align: "center",
+          width: 150,
+        },
+        {
+          title: '税前优惠价',
+          key: 'pretaxReducedPrice',
+          dataIndex: 'pretaxReducedPrice',
+          align: "center",
+          width: 150,
+        },
+        {
+          title: '已扣税前优惠价',
+          key: 'pretaxReducedPriceDeduct',
+          dataIndex: 'pretaxReducedPriceDeduct',
+          align: "center",
+          width: 150,
+        },
+        {
+          title: '税后优惠价',
+          key: 'reducedPrice',
+          dataIndex: 'reducedPrice',
+          align: "center",
+          width: 150,
+        },
+        {
+          title: '已扣税后优惠价',
+          key: 'reducedPriceDeduct',
+          dataIndex: 'reducedPriceDeduct',
+          align: "center",
+          width: 150,
+        },
+        {
+          title: '备注',
+          key: 'remark',
+          dataIndex: 'remark',
+          align: "center",
+          width: 300,
+        },
+        // {
+        //   title: '设置扣减数量',
+        //   key: 'itemNumDeduct',
+        //   scopedSlots: {customRender: 'itemNumDeduct'},
+        //   align: "center",
+        //   width: 150,
+        // },
+        // {
+        //   title: '设置税前销售价',
+        //   key: 'pretaxItemPrice',
+        //   scopedSlots: {customRender: 'pretaxItemPrice'},
+        //   align: "center",
+        //   width: 150,
+        // },
+        // {
+        //   title: '设置税后销售价',
+        //   key: 'itemPrice',
+        //   scopedSlots: {customRender: 'itemPrice'},
+        //   align: "center",
+        //   width: 150,
+        // },
+        // {
+        //   title: '设置税前优惠价',
+        //   key: 'pretaxReducedPrice',
+        //   scopedSlots: {customRender: 'pretaxReducedPrice'},
+        //   align: "center",
+        //   width: 150,
+        // },
+        // {
+        //   title: '设置税后优惠价',
+        //   key: 'reducedPrice',
+        //   scopedSlots: {customRender: 'reducedPrice'},
+        //   align: "center",
+        //   width: 150,
+        // },
+        // {
+        //   title: '备注',
+        //   key: 'remark',
+        //   scopedSlots: {customRender: 'remark'},
+        //   align: "center",
+        //   width: 300,
+        // },
       ],
+      tableData: [],
+      tableData2: [],
       tableLoading: false,
-      disBtn: true,
+      tableLoading2: false,
+      disInput: true,
       beSelected: [],
       rowSelection: {
         onChange: (selectedRowKeys, selectedRows) => {
@@ -274,8 +481,8 @@ export default {
           selectedRows.forEach(item => {
             this.beSelected.push(item);
           });
-          this.disBtn = selectedRows.length === 0;
-          if (!this.disBtn) {
+          this.disInput = selectedRows.length === 0;
+          if (!this.disInput) {
             //4个输入框总价
             this.totalPretaxItemPriceDeduct = null;
             this.totalAmountDeduct = null;
@@ -300,19 +507,12 @@ export default {
       totalReducedPriceDeduct: null,
     }
   },
-  computed: {
-    isDisable() {
-      return this.$route.path === '/negative/show'
-    },
-    isDisable2() {
-      return this.$route.path === '/negative/show' || !this.disBtn
-    },
-  },
+  computed: {},
   methods: {
     add(){
       this.$refs.thisForm.validate(valid => {
         if(valid){
-          let itemList = JSON.parse(JSON.stringify(this.tableData));
+          let itemList = JSON.parse(JSON.stringify(this.beSelected));
           itemList.forEach((item,index) => {
             itemList[index].itemNumDeduct = item.set1;//覆盖
             itemList[index].pretaxItemPrice = item.set2;//覆盖
@@ -320,7 +520,7 @@ export default {
             itemList[index].pretaxReducedPrice = item.set4;//覆盖
             itemList[index].reducedPrice = item.set5;//覆盖
           });
-          console.log(this.tableData);
+          console.log(this.beSelected);
           api.addNegativeBill({
             saleOrderNo: this.thisForm.saleOrderNo,
             itemList: itemList,
@@ -348,7 +548,7 @@ export default {
           totalAmountDeduct = 0,
           totalPretaxReducedPriceDeduct = 0,
           totalReducedPriceDeduct = 0;
-      this.tableData.forEach((item, index) => {
+      this.beSelected.forEach((item, index) => {
         totalPretaxItemPriceDeduct += item.set1 * item.set2;
         totalAmountDeduct += item.set1 * item.set3;
         totalPretaxReducedPriceDeduct += item.set1 * item.set4;
@@ -405,13 +605,39 @@ export default {
   },
   mounted() {
     if (this.$route.path === '/negative/show') {
+      this.tableLoading2 = true;
       api.queryNegativeDetail({negativeNo: this.$route.query.negativeNo}).then(resp => {
         if (resp.code === 200) {
-
+          this.saleOrderNo = resp.data.saleOrderNo;
+          this.createUser = resp.data.createUser;
+          this.createTime = resp.data.createTime;
+          this.tableData2 = resp.data.infoList;
+          //8个非输入框总价
+          this.pretaxItemPriceDeduct = resp.data.pretaxItemPriceDeduct;
+          this.itemPriceDeduct = resp.data.itemPriceDeduct;
+          this.pretaxReducedPriceDeduct = resp.data.pretaxReducedPriceDeduct;
+          this.reducedPriceDeduct = resp.data.reducedPriceDeduct;
+          this.totalPretaxItemPrice = resp.data.totalPretaxItemPrice;
+          this.totalAmount = resp.data.totalAmount;
+          this.totalPretaxReducedPrice = resp.data.totalPretaxReducedPrice;
+          this.totalReducedPrice = resp.data.totalReducedPrice;
         }
+      }).finally(() => {
+        this.tableLoading2 = false;
       });
     }
   },
+  watch: {
+    beSelected: {
+      handler() {
+        debounce(() => {
+          console.log('beSelected变化了');
+          this.calc();
+        }, 500);
+      },
+      deep: true
+    }
+  }
 }
 </script>
 
@@ -429,7 +655,7 @@ export default {
   }
 
   /deep/ .ant-form-item-control-wrapper {
-    width: 250px;
+    //width: 250px;
   }
 
   /deep/ .ant-form-item-label {
