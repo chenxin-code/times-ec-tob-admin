@@ -528,10 +528,12 @@ export default {
         )
           return this.$message.error('销售价必须大于成本价')
       }
+      this.form.validateFields(['sellingPriceList'], { force: true })
       debounce(() => {
-        this.form.validateFields((err, values) => {
-          console.log('err--->', err, values)
-          if (err) {
+        this.form.validateFields((err, values, callback) => {
+          console.log('err--->', err, values, callback)
+          if (err.sellingPriceList) {
+            this.$message.error('销售价必须大于成本价')
             return
           }
           if (that.isTieredPricing == false)
