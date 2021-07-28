@@ -38,18 +38,18 @@ export default [
     path: '/market',
   },
   {
-    title: "商品品类管理",
-    icon: require("@/assets/img/menu/icon_afterSales.png"),
-    menuKey: "category",
-    group: "distribution",
-    path: "/category",
+    title: '商品品类管理',
+    icon: require('@/assets/img/menu/icon_afterSales.png'),
+    menuKey: 'category',
+    group: 'distribution',
+    path: '/category',
   },
   {
-    title: "商品管理",
-    icon: require("@/assets/img/menu/icon_afterSales.png"),
-    menuKey: "market",
-    group: "distribution",
-    path: "/commodity",
+    title: '商品管理',
+    icon: require('@/assets/img/menu/icon_afterSales.png'),
+    menuKey: 'market',
+    group: 'distribution',
+    path: '/commodity',
   },
   {
     title: '商品上下架',
@@ -59,4 +59,4 @@ export default [
     group: 'distribution',
     path: '/shelve',
   },
-];
+]

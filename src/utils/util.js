@@ -181,6 +181,23 @@ export function isTruePhone(areaCode, phone) {
   }
 }
 
+/*
+ * {6,30}--》输入字符长度在6到30位之间
+ */
+export function vaildPassword(val) {
+  //精准校验：必须含有数字、字母、特殊字符，三个缺一不可
+  // let exp = new RegExp(
+  // 	"(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{6,30}"
+  // );
+
+  //-->数字+字母；字母+特殊字符，特殊字符+数字
+  // let exp = /^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{6,20}$/
+
+  //强密码(必须包含字母和数字的组合，可以使用特殊字符，长度在6-20之间)
+  let exp = /^(?=.*\d)(?=.*[a-zA-Z]).{6,}$/
+  return exp.test(val)
+}
+
 export function blob2Base64(blob, callback) {
   var reader = new FileReader()
   reader.onload = function(e) {
