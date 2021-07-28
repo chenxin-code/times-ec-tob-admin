@@ -10,13 +10,7 @@
           style="cursor:pointer;margin-left:12px;"
           @click="$router.back()"
           >返回</a-button
-        >
-        <!-- <span
-          class="back"
-          @click="$router.back()"
-          style="cursor:pointer;margin-left:12px;"
-          >返回</span
-        > -->
+        >      
       </span>
     </div>
     <div
