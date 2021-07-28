@@ -80,36 +80,36 @@
           :loading="tableLoading2"
           :rowKey="(r, i) => i"
           :scroll="{ x: 2500, y: 400 }" v-else-if="$route.path === '/negative/show'">
-        <!--<template slot="itemNumDeduct" slot-scope="scope">
+        <template slot="itemNumDeduct" slot-scope="scope">
           <a-form-model-item>
             <a-input v-model="scope.itemNumDeduct" disabled/>
           </a-form-model-item>
         </template>
-        <template slot="pretaxItemPrice" slot-scope="scope">
+        <template slot="pretaxItemPriceDeduct" slot-scope="scope">
           <a-form-model-item>
-            <a-input v-model="scope.pretaxItemPrice" disabled/>
+            <a-input v-model="scope.pretaxItemPriceDeduct" disabled/>
           </a-form-model-item>
         </template>
-        <template slot="itemPrice" slot-scope="scope">
+        <template slot="itemPriceDeduct" slot-scope="scope">
           <a-form-model-item>
-            <a-input v-model="scope.itemPrice" disabled/>
+            <a-input v-model="scope.itemPriceDeduct" disabled/>
           </a-form-model-item>
         </template>
-        <template slot="pretaxReducedPrice" slot-scope="scope">
+        <template slot="pretaxReducedPriceDeduct" slot-scope="scope">
           <a-form-model-item>
-            <a-input v-model="scope.pretaxReducedPrice" disabled/>
+            <a-input v-model="scope.pretaxReducedPriceDeduct" disabled/>
           </a-form-model-item>
         </template>
-        <template slot="reducedPrice" slot-scope="scope">
+        <template slot="reducedPriceDeduct" slot-scope="scope">
           <a-form-model-item>
-            <a-input v-model="scope.reducedPrice" disabled/>
+            <a-input v-model="scope.reducedPriceDeduct" disabled/>
           </a-form-model-item>
         </template>
         <template slot="remark" slot-scope="scope">
           <a-form-model-item>
             <a-input v-model="scope.remark" style="width: 200px !important;" disabled/>
           </a-form-model-item>
-        </template>-->
+        </template>
       </a-table>
       <div class="common-title">
         <div class="common-title-content">销售单总价</div>
@@ -278,28 +278,28 @@ export default {
           width: 150,
         },
         {
-          title: '设置税前销售价',//pretaxItemPrice
+          title: '设置税前销售价',//pretaxItemPriceDeduct
           key: 'set2',
           scopedSlots: {customRender: 'set2'},
           align: "center",
           width: 150,
         },
         {
-          title: '设置税后销售价',//itemPrice
+          title: '设置税后销售价',//itemPriceDeduct
           key: 'set3',
           scopedSlots: {customRender: 'set3'},
           align: "center",
           width: 150,
         },
         {
-          title: '设置税前优惠价',//pretaxReducedPrice
+          title: '设置税前优惠价',//pretaxReducedPriceDeduct
           key: 'set4',
           scopedSlots: {customRender: 'set4'},
           align: "center",
           width: 150,
         },
         {
-          title: '设置税后优惠价',//reducedPrice
+          title: '设置税后优惠价',//reducedPriceDeduct
           key: 'set5',
           scopedSlots: {customRender: 'set5'},
           align: "center",
@@ -420,54 +420,47 @@ export default {
           width: 150,
         },
         {
+          title: '设置扣减数量',
+          key: 'itemNumDeduct',
+          scopedSlots: {customRender: 'itemNumDeduct'},
+          align: "center",
+          width: 150,
+        },
+        {
+          title: '设置税前销售价',
+          key: 'pretaxItemPriceDeduct',
+          scopedSlots: {customRender: 'pretaxItemPriceDeduct'},
+          align: "center",
+          width: 150,
+        },
+        {
+          title: '设置税后销售价',
+          key: 'itemPriceDeduct',
+          scopedSlots: {customRender: 'itemPriceDeduct'},
+          align: "center",
+          width: 150,
+        },
+        {
+          title: '设置税前优惠价',
+          key: 'pretaxReducedPriceDeduct',
+          scopedSlots: {customRender: 'pretaxReducedPriceDeduct'},
+          align: "center",
+          width: 150,
+        },
+        {
+          title: '设置税后优惠价',
+          key: 'reducedPriceDeduct',
+          scopedSlots: {customRender: 'reducedPriceDeduct'},
+          align: "center",
+          width: 150,
+        },
+        {
           title: '备注',
           key: 'remark',
-          dataIndex: 'remark',
+          scopedSlots: {customRender: 'remark'},
           align: "center",
           width: 300,
         },
-        // {
-        //   title: '设置扣减数量',
-        //   key: 'itemNumDeduct',
-        //   scopedSlots: {customRender: 'itemNumDeduct'},
-        //   align: "center",
-        //   width: 150,
-        // },
-        // {
-        //   title: '设置税前销售价',
-        //   key: 'pretaxItemPrice',
-        //   scopedSlots: {customRender: 'pretaxItemPrice'},
-        //   align: "center",
-        //   width: 150,
-        // },
-        // {
-        //   title: '设置税后销售价',
-        //   key: 'itemPrice',
-        //   scopedSlots: {customRender: 'itemPrice'},
-        //   align: "center",
-        //   width: 150,
-        // },
-        // {
-        //   title: '设置税前优惠价',
-        //   key: 'pretaxReducedPrice',
-        //   scopedSlots: {customRender: 'pretaxReducedPrice'},
-        //   align: "center",
-        //   width: 150,
-        // },
-        // {
-        //   title: '设置税后优惠价',
-        //   key: 'reducedPrice',
-        //   scopedSlots: {customRender: 'reducedPrice'},
-        //   align: "center",
-        //   width: 150,
-        // },
-        // {
-        //   title: '备注',
-        //   key: 'remark',
-        //   scopedSlots: {customRender: 'remark'},
-        //   align: "center",
-        //   width: 300,
-        // },
       ],
       tableData: [],
       tableData2: [],
@@ -515,10 +508,10 @@ export default {
           let itemList = JSON.parse(JSON.stringify(this.beSelected));
           itemList.forEach((item,index) => {
             itemList[index].itemNumDeduct = item.set1;//覆盖
-            itemList[index].pretaxItemPrice = item.set2;//覆盖
-            itemList[index].itemPrice = item.set3;//覆盖
-            itemList[index].pretaxReducedPrice = item.set4;//覆盖
-            itemList[index].reducedPrice = item.set5;//覆盖
+            itemList[index].pretaxItemPriceDeduct = item.set2;//覆盖
+            itemList[index].itemPriceDeduct = item.set3;//覆盖
+            itemList[index].pretaxReducedPriceDeduct = item.set4;//覆盖
+            itemList[index].reducedPriceDeduct = item.set5;//覆盖
           });
           console.log(this.beSelected);
           api.addNegativeBill({
