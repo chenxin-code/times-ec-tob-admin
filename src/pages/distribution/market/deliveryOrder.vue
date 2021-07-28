@@ -52,10 +52,10 @@
         </div>
         <div class="item-list" v-if="dataListDetail.approveStatus != 0">
           <span>签收单号：{{dataListDetail.receiveNo}}</span>
-          <span>签收时间：{{dataListDetail.receiveTime}}</span>
-          <div class="img-box" v-if="dataListDetail.receiverProofImgs && dataListDetail.receiverProofImgs.length > 0">
+          <span>签收时间：{{dataListDetail.approveTime}}</span>
+          <div class="img-box" v-if="dataListDetail.receiverProofImgList && dataListDetail.receiverProofImgList.length > 0">
             <img 
-              v-for="item in dataListDetail.receiverProofImgs"
+              v-for="item in dataListDetail.receiverProofImgList"
               :key="item"
               :src="item" />
           </div>
@@ -108,8 +108,8 @@
           },
           {
             title: "签收时间",
-            dataIndex: "",
-            key: "",
+            dataIndex: "approveTime",
+            key: "approveTime",
             width: 120,
             ellipsis: true,
           },
