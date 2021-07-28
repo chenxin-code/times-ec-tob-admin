@@ -25,40 +25,11 @@
             <a-form-item label="SKU编码">
               <a-input disabled v-decorator="['skuCode']" />
             </a-form-item>
-            <a-form-item label="所属品牌">
-              <a-input
-                :disabled="disbliend"
-                v-decorator="[
-                  'brandName',
-                  { rules: [{ required: true, message: '所属品牌不能为空' }] },
-                ]"
-                placeholder="请输入所属品牌"
-              />
+            <a-form-item label="SPU名称">
+              <a-input disabled v-decorator="['itemName']" />
             </a-form-item>
-            <a-form-item label="供应商">
-              <a-select
-                :disabled="disbliend"
-                show-search
-                placeholder="请选择供应商"
-                option-filter-prop="children"
-                :filter-option="filterOption"
-                @search="handleSearch"
-                @change="handleChange"
-                v-decorator="[
-                  'supplierName',
-                  { rules: [{ required: true, message: '请选择供应商' }] },
-                ]"
-                ><a-select-option
-                  v-for="item in supplierList"
-                  :key="item.id"
-                  :value="
-                    `${item.id}` +
-                      `:${item.supplierName}` +
-                      `:${item.companyId}`
-                  "
-                  >{{ item.supplierName }}
-                </a-select-option>
-              </a-select>
+            <a-form-item label="SPU编码">
+              <a-input disabled v-decorator="['itemCode']" />
             </a-form-item>
             <a-form-item label="商城SKU自编码">
               <a-input
@@ -88,12 +59,9 @@
             <a-form-item label="商品品类">
               <a-tree-select
                 :disabled="disbliend"
-                show-search
-                searchPlaceholder
-                treeNodeFilterProp="title"
                 v-decorator="['categoryId']"
                 style="width: 100%"
-                :dropdown-style="{ maxHeight: '300px', overflow: 'auto' }"
+                :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
                 :tree-data="treeData"
                 :replace-fields="{
                   children: 'children',
@@ -108,13 +76,43 @@
             </a-form-item>
           </div>
           <div class="form-box">
-            <a-form-item label="SPU名称">
-              <a-input disabled v-decorator="['itemName']" />
+            <a-form-item label="所属品牌">
+              <a-input
+                :disabled="disbliend"
+                v-decorator="[
+                  'brandName',
+                  { rules: [{ required: true, message: '所属品牌不能为空' }] },
+                ]"
+                placeholder="请输入所属品牌"
+              />
             </a-form-item>
-            <a-form-item label="SPU编码">
-              <a-input disabled v-decorator="['itemCode']" />
+            <a-form-item label="供应商">
+              <a-select
+                :disabled="disbliend"
+                show-search
+                placeholder="请选择供应商"
+                option-filter-prop="children"
+                :filter-option="filterOption"
+                @search="handleSearch"
+                @change="handleChange"
+                v-decorator="[
+                  'supplierName',
+                  { rules: [{ required: true, message: '请选择供应商' }] },
+                ]"
+              >
+                <a-select-option
+                  v-for="item in supplierList"
+                  :key="item.id"
+                  :value="
+                    `${item.id}` +
+                      `:${item.supplierName}` +
+                      `:${item.companyId}`
+                  "
+                >
+                  {{ item.supplierName }}
+                </a-select-option>
+              </a-select>
             </a-form-item>
-
             <a-form-item label="税收分类编码">
               <a-input disabled v-decorator="['taxCategoryCode']" />
             </a-form-item>
@@ -190,6 +188,7 @@
                 @focus="onEditorFocus($event)"
                 class="editorted"
                 v-model="pcItemInfo"
+                :disabled="disbliend"
                 :options="editorOption"
               ></quill-editor>
             </a-form-item>
@@ -199,6 +198,7 @@
                 @focus="onEditorFocus($event)"
                 class="editorted"
                 v-model="appItemInfo"
+                :disabled="disbliend"
                 :options="editorOption"
               ></quill-editor>
             </a-form-item>
@@ -228,7 +228,9 @@
                 :key="index"
               >
                 <span style="min-width: 45px;">数量：</span>
-                <span style="text-align:right;">{{ item.minNum }}</span
+                <span class="num" style="text-align:right;">{{
+                  item.minNum
+                }}</span
                 >~<a-input
                   :disabled="disbliend"
                   placeholder="无穷大"
@@ -309,15 +311,13 @@ import api from '@/api'
 import moment from 'moment'
 import { debounce } from '@/utils/util'
 import { quillEditor } from 'vue-quill-editor'
-import quillConfig from '@/utils/quillConfig'
 
 export default {
-  name: 'supplierEdit',
+  name: 'shelveEdit',
   components: { quillEditor },
   data() {
     return {
       form: this.$form.createForm(this, { name: 'form' }),
-      disbliend: false, //禁用
       loading: false,
       value: undefined,
       isTieredPricing: true, //是否阶梯价
@@ -344,7 +344,8 @@ export default {
         { id: true, name: '上架' },
         { id: false, name: '下架' },
       ],
-      editorOption: quillConfig || {
+      editorOption: {
+        readOnly: true,
         placeholder: '请在这里输入',
         modules: {
           toolbar: [
@@ -366,6 +367,7 @@ export default {
         },
       },
       treeData: [], //品类列表
+      disbliend: true,
     }
   },
   computed: {},
@@ -375,9 +377,6 @@ export default {
     api.getCategoryTree().then(resp => {
       this.treeData = resp.data
     })
-  },
-  mounted() {
-    if (this.$route.params.typ == 1) this.disbliend = true
   },
   beforeRouteLeave(to, from, next) {
     to.meta.keepAlive = false
@@ -391,13 +390,6 @@ export default {
         event.enable(true)
       }
     },
-    filterOption(input, option) {
-      return (
-        option.componentOptions.children[0].text
-          .toLowerCase()
-          .indexOf(input.toLowerCase()) >= 0
-      )
-    },
     isTieredPricingchange(value) {
       console.log(value)
       this.isTieredPricing = value
@@ -410,11 +402,11 @@ export default {
     handleSearch(value) {
       debounce(() => {
         this.supplier(value)
-      }, 500)
+      }, 300)
     },
     supplier(value) {
       api
-        .getSupplierListByPager2({ keyword: value, pageNum: 1, pageSize: 1000 })
+        .getSupplierListByPager({ keyword: value, pageNum: 1, pageSize: 10 })
         .then(res => {
           this.supplierList = res.data.records
         })
@@ -430,10 +422,8 @@ export default {
       //加
       if (this.sellingPrice[this.sellingPrice.length - 1].maxNum) {
         this.sellingPrice.push({
-          minNum:
-            Number(this.sellingPrice[this.sellingPrice.length - 1].maxNum) + 1,
-          maxNum:
-            Number(this.sellingPrice[this.sellingPrice.length - 1].maxNum) + 1,
+          minNum: this.sellingPrice[this.sellingPrice.length - 1].maxNum,
+          maxNum: this.sellingPrice[this.sellingPrice.length - 1].maxNum,
           priceBeforeTax: this.sellingPrice[this.sellingPrice.length - 1]
             .priceBeforeTax,
           priceAfterTax: this.sellingPrice[this.sellingPrice.length - 1]
@@ -487,17 +477,12 @@ export default {
     //保存
     onSubmit() {
       let that = this
-      for (let i = 0; i < that.sellingPrice.length; i++) {
-        if (
-          that.costPrice[0].costPrice > that.sellingPrice[i].priceAfterTax ||
-          that.costPrice[0].costPrice > that.sellingPrice[i].priceBeforeTax
-        )
-          return this.$message.error('销售价必须大于成本价')
-      }
       debounce(() => {
         this.form.validateFields((err, values) => {
-          if (that.isTieredPricing == false)
+          this.loading = true
+          if (that.isTieredPricing == false) {
             that.sellingPrice = that.sellingPrice[0]
+          }
           let data = {
             id: that.$route.params.id ?? '',
             categoryId: that.categoryId, //所属类目id
@@ -522,7 +507,7 @@ export default {
             taxRate: Number(values.taxRate), //税率
             stock: Number(values.stock), //库存
           }
-          this.loading = true
+          console.log(data)
           api
             .updateProduct(data)
             .then(res => {
@@ -545,32 +530,28 @@ export default {
 .cbintpudnum {
   margin: 0 20px 0 0;
   width: 40%;
-  // width: 300px;
 }
 
 .spshu {
-  // width: 40%;
+  width: 40%;
   min-width: 85px;
-  width: 80px;
+  width: 120px;
 }
 
 .intpudnum {
   margin: 0 20px 0 0;
-  width: 40%;
-  // width: 300px;
+  width: 70%;
 }
 
 .intpud {
   display: flex;
-  // justify-content: space-around;
+  justify-content: space-around;
   align-items: center;
   position: relative;
 }
 
 .butdb {
   float: right;
-  margin-bottom: 50px;
-  z-index: 0;
   // position: absolute;
   // left: 550px;
   // top: 0px;

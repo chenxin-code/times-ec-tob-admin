@@ -228,12 +228,13 @@
             let params = {
               deliveryNo: row.deliveryNo,
               receiverProofImgs: row.receiverProofImgs ? row.receiverProofImgs : [],
+              receiveType: 0,
               itemList: []
             }
             row.deliveryItemList.forEach(item => {
               let opt = {
                 deliveryItemId: item.id,
-                num: item.receiveNum ? item.receiveNum : 0
+                num: item.deliveryNum ? item.deliveryNum : 0
               }
               params.itemList.push(opt)
             })

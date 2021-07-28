@@ -24,7 +24,7 @@ export default [
     path: '/account',
   },
   {
-    title: '供应商',
+    title: '供应商管理',
     icon: require('@/assets/img/menu/icon_afterSales.png'),
     menuKey: 'supplier',
     group: 'distribution',
