@@ -25,7 +25,7 @@
           <span class="info">{{ dataList.supplierName }}</span>
         </a-form-model-item>
         <a-form-model-item label="供应商编码">
-          <span class="info">{{ dataList.insideCode }}</span>
+          <span class="info">{{ dataList.outsideCode }}</span>
         </a-form-model-item>
         <a-form-model-item label="创建人">
           <span class="info">{{ dataList.createUser }}</span>
