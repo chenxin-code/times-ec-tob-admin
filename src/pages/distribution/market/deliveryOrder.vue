@@ -228,6 +228,7 @@
             let params = {
               deliveryNo: row.deliveryNo,
               receiverProofImgs: row.receiverProofImgs ? row.receiverProofImgs : [],
+              receiveType: 0,
               itemList: []
             }
             row.deliveryItemList.forEach(item => {
