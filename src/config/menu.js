@@ -23,13 +23,6 @@ export default [
     path: '/supplier',
   },
   {
-    title: '销售单管理',
-    icon: require('@/assets/img/menu/icon_order.png'),
-    menuKey: 'market',
-    group: 'distribution',
-    path: '/market',
-  },
-  {
     title: '商品品类管理',
     icon: require('@/assets/img/menu/icon_order.png'),
     menuKey: 'category',
@@ -50,6 +43,13 @@ export default [
     menuKey: 'shelve',
     group: 'distribution',
     path: '/shelve',
+  },
+  {
+    title: '销售单管理',
+    icon: require('@/assets/img/menu/icon_order.png'),
+    menuKey: 'market',
+    group: 'distribution',
+    path: '/market',
   },
   {
     title: '负数单管理',
