@@ -127,7 +127,7 @@
                   >查看详情</a-button
                 >
                 <a-button
-                  v-if="scope.selling"
+                  v-if="!scope.selling"
                   type="link"
                   @click="updates(scope)"
                   >上架</a-button
