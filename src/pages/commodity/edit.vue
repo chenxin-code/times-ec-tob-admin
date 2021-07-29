@@ -247,15 +247,18 @@
                 v-for="(item, index) in sellingPrice"
                 :key="index"
               >
-                <span style="min-width: 45px;">数量：</span>
-                <span style="text-align:right;">{{ item.minNum }}</span
-                >~<a-input
-                  :disabled="disbliend"
-                  placeholder="无穷大"
-                  v-model="item.maxNum"
-                  class="intpudnum"
-                  type="number"
-                />
+                <span class="intNum">
+                  <span style="min-width: 45px;">数量：</span>
+                  <span style="text-align:right;">{{ item.minNum }}</span
+                  >~<a-input
+                    :disabled="disbliend"
+                    placeholder="无穷大"
+                    v-model="item.maxNum"
+                    class="intpudnum"
+                    type="number"
+                    style="flex:1;"
+                  />
+                </span>
                 <span class="spshu">税前销售价:</span>
                 <a-input
                   placeholder="请输入"
@@ -680,5 +683,11 @@ export default {
 .editable-row-operations button {
   margin-right: 10px;
   padding: 0;
+}
+
+.intNum {
+  width: 400px;
+  display: flex;
+  align-items: center;
 }
 </style>
