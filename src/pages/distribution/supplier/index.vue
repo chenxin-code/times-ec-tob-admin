@@ -60,8 +60,8 @@ export default {
       {
         title: '供应商编码',
         width: 250,
-        key: 'insideCode',
-        dataIndex: 'insideCode',
+        key: 'supplierCode',
+        dataIndex: 'supplierCode',
         align: 'center',
       },
       {
@@ -196,7 +196,10 @@ export default {
       this.$router.push({
         name: 'supplierdetail',
         params: {
-          id: record.id,
+          id: record.supplierCode,
+        },
+        query: {
+          id: record.supplierCode,
         },
       })
     },
