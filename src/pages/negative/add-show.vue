@@ -140,6 +140,18 @@
       <a-form-model-item label="税后扣减优惠总价" v-if="$route.path === '/negative/add'">
         <a-input v-model="totalReducedPriceDeduct" :disabled="!disInput"/>
       </a-form-model-item>
+      <a-form-model-item label="税前扣减销售总价" v-if="$route.path === '/negative/show'">
+        <a-input v-model="totalPretaxItemPrice" disabled/>
+      </a-form-model-item>
+      <a-form-model-item label="税后扣减销售总价" v-if="$route.path === '/negative/show'">
+        <a-input v-model="totalAmount" disabled/>
+      </a-form-model-item>
+      <a-form-model-item label="税前扣减优惠总价" v-if="$route.path === '/negative/show'">
+        <a-input v-model="totalPretaxReducedPrice" disabled/>
+      </a-form-model-item>
+      <a-form-model-item label="税后扣减优惠总价" v-if="$route.path === '/negative/show'">
+        <a-input v-model="totalReducedPrice" disabled/>
+      </a-form-model-item>
     </a-form-model>
   </div>
 </template>
