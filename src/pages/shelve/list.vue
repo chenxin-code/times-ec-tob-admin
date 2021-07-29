@@ -84,7 +84,6 @@
         >
         <a-button
           class="item-btn"
-          :disabled="disBtn"
           @click="piliang('on')"
           :loading="piliangLoading"
           type="primary"
@@ -92,7 +91,6 @@
         >
         <a-button
           class="item-btn"
-          :disabled="disBtn"
           @click="piliang('off')"
           :loading="piliangLoading"
           type="primary"
@@ -105,7 +103,10 @@
         <a-row style="padding: 4px;height: 100%;">
           <a-col>
             <a-table
-              :row-selection="{ ...rowSelection, selectedRowKeys: selectedRowKeys }"
+              :row-selection="{
+                ...rowSelection,
+                selectedRowKeys: selectedRowKeys,
+              }"
               :columns="tableColumns"
               :row-key="(r, i) => i"
               :data-source="tableData"
@@ -340,7 +341,7 @@ export default {
       piliangLoading: false,
       disBtn: true,
       beSelected: [],
-      selectedRowKeys:[],
+      selectedRowKeys: [],
       rowSelection: {
         onChange: (selectedRowKeys, selectedRows) => {
           let that = this
@@ -386,6 +387,9 @@ export default {
       this.getList()
     },
     piliang(type) {
+      if (this.beSelected.length == 0) {
+        return this.$message.error(`请选择需要操作的数据`)
+      }
       //批量上下架
       if (type === 'on') this.updateseli(1)
       else this.updateseli(0)
