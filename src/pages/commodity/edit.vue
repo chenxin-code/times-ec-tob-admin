@@ -462,15 +462,18 @@ export default {
     addlis() {
       //加
       if (this.sellingPrice[this.sellingPrice.length - 1].maxNum) {
+        let minNum =
+          Number(this.sellingPrice[this.sellingPrice.length - 1].maxNum) + 1
+        let maxNum = minNum + 1
+        let priceBeforeTax = this.sellingPrice[this.sellingPrice.length - 1]
+          .priceBeforeTax
+        let priceAfterTax = this.sellingPrice[this.sellingPrice.length - 1]
+          .priceAfterTax
         this.sellingPrice.push({
-          minNum:
-            Number(this.sellingPrice[this.sellingPrice.length - 1].maxNum) + 1,
-          maxNum:
-            Number(this.sellingPrice[this.sellingPrice.length - 1].maxNum) + 1,
-          priceBeforeTax: this.sellingPrice[this.sellingPrice.length - 1]
-            .priceBeforeTax,
-          priceAfterTax: this.sellingPrice[this.sellingPrice.length - 1]
-            .priceAfterTax,
+          minNum,
+          maxNum,
+          priceBeforeTax,
+          priceAfterTax,
         })
       } else {
         this.$message.error('请填写上一条的最大值')
