@@ -14,7 +14,7 @@
         <a-input
           placeholder="请输入供应商编码"
           class="iw250"
-          v-model="searchData.insideCode"
+          v-model="searchData.supplierCode"
         />
       </div>
       <div class="search-list-item" style="margin-left:30px">
@@ -97,7 +97,7 @@ export default {
       pageData,
       searchData: {
         supplierName: '', // 供应商名称
-        insideCode: '', // 供应商编码
+        supplierCode: '', // 供应商编码
       },
       loading: false,
       dataList: [],
@@ -112,7 +112,7 @@ export default {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         supplierName: this.searchData.supplierName, // 供应商名称
-        insideCode: this.searchData.insideCode, // 供应商编码
+        supplierCode: this.searchData.supplierCode, // 供应商编码
       }
       this.getData(params)
     },
@@ -123,7 +123,7 @@ export default {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         supplierName: this.searchData.supplierName, // 供应商名称
-        insideCode: this.searchData.insideCode, // 供应商编码
+        supplierCode: this.searchData.supplierCode, // 供应商编码
       }
       this.getData(params)
     }
@@ -145,7 +145,7 @@ export default {
           pageNum: this.pageData.pageNum, // 第几页
           pageSize: this.pageData.pageSize, // 每页多少条
           supplierName: this.searchData.supplierName, // 供应商名称
-          insideCode: this.searchData.insideCode, // 供应商编码
+          supplierCode: this.searchData.supplierCode, // 供应商编码
         }
       }
       try {
@@ -161,7 +161,7 @@ export default {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         supplierName: this.searchData.supplierName, // 供应商名称
-        insideCode: this.searchData.insideCode, // 供应商编码
+        supplierCode: this.searchData.supplierCode, // 供应商编码
       }
       this.getData(params)
     },
@@ -181,13 +181,13 @@ export default {
     toReset() {
       this.searchData = {
         supplierName: '', // 供应商名称
-        insideCode: '', // 供应商编码
+        supplierCode: '', // 供应商编码
       }
       let params = {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         supplierName: this.searchData.supplierName, // 供应商名称
-        insideCode: this.searchData.insideCode, // 供应商编码
+        supplierCode: this.searchData.supplierCode, // 供应商编码
       }
       this.getData(params)
     },
