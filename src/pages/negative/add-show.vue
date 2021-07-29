@@ -116,16 +116,16 @@
       </div>
       <div style="display: flex">
         <div style="flex: 1">
-          <a-form-model-item label="税前销售总价">{{ pretaxItemPriceDeduct }}</a-form-model-item>
-          <a-form-model-item label="税后销售总价">{{ itemPriceDeduct }}</a-form-model-item>
-          <a-form-model-item label="税前优惠总价">{{ pretaxReducedPriceDeduct }}</a-form-model-item>
-          <a-form-model-item label="税后优惠总价">{{ reducedPriceDeduct }}</a-form-model-item>
+          <a-form-model-item label="税前销售总价">{{ totalPretaxItemPrice }}</a-form-model-item>
+          <a-form-model-item label="税后销售总价">{{ totalAmount }}</a-form-model-item>
+          <a-form-model-item label="税前优惠总价">{{ totalPretaxReducedPrice }}</a-form-model-item>
+          <a-form-model-item label="税后优惠总价">{{ totalReducedPrice }}</a-form-model-item>
         </div>
         <div style="flex: 1">
-          <a-form-model-item label="已扣税前销售总价">{{ totalPretaxItemPrice }}</a-form-model-item>
-          <a-form-model-item label="已扣税后销售总价">{{ totalAmount }}</a-form-model-item>
-          <a-form-model-item label="已扣税前优惠总价">{{ totalPretaxReducedPrice }}</a-form-model-item>
-          <a-form-model-item label="已扣税后优惠总价">{{ totalReducedPrice }}</a-form-model-item>
+          <a-form-model-item label="已扣税前销售总价">{{ pretaxItemPriceDeduct }}</a-form-model-item>
+          <a-form-model-item label="已扣税后销售总价">{{ itemPriceDeduct }}</a-form-model-item>
+          <a-form-model-item label="已扣税前优惠总价">{{ pretaxReducedPriceDeduct }}</a-form-model-item>
+          <a-form-model-item label="已扣税后优惠总价">{{ reducedPriceDeduct }}</a-form-model-item>
         </div>
       </div>
       <a-form-model-item label="税前扣减销售总价" v-if="$route.path === '/negative/add'">
@@ -504,14 +504,14 @@ export default {
         }
       },
       //8个非输入框总价
-      pretaxItemPriceDeduct: null,
-      itemPriceDeduct: null,
-      pretaxReducedPriceDeduct: null,
-      reducedPriceDeduct: null,
       totalPretaxItemPrice: null,
       totalAmount: null,
       totalPretaxReducedPrice: null,
       totalReducedPrice: null,
+      pretaxItemPriceDeduct: null,
+      itemPriceDeduct: null,
+      pretaxReducedPriceDeduct: null,
+      reducedPriceDeduct: null,
       //4个输入框总价
       totalPretaxItemPriceDeduct: null,
       totalAmountDeduct: null,
@@ -536,15 +536,16 @@ export default {
           api.addNegativeBill({
             saleOrderNo: this.thisForm.saleOrderNo,
             itemList: itemList,
-            //8个非输入框总价
-            pretaxItemPriceDeduct: this.pretaxItemPriceDeduct,
-            itemPriceDeduct: this.itemPriceDeduct,
-            pretaxReducedPriceDeduct: this.pretaxReducedPriceDeduct,
-            reducedPriceDeduct: this.reducedPriceDeduct,
-            totalPretaxItemPrice: this.totalPretaxItemPriceDeduct,//覆盖
-            totalAmount: this.totalAmountDeduct,//覆盖
-            totalPretaxReducedPrice: this.totalPretaxReducedPriceDeduct,//覆盖
-            totalReducedPrice: this.totalReducedPriceDeduct,//覆盖
+            //4个非输入框总价
+            totalPretaxItemPrice: this.totalPretaxItemPrice,
+            totalAmount: this.totalAmount,
+            totalPretaxReducedPrice: this.totalPretaxReducedPrice,
+            totalReducedPrice: this.totalReducedPrice,
+            //4个输入框总价
+            totalPretaxItemPriceDeduct: this.totalPretaxItemPriceDeduct,
+            totalAmountDeduct: this.totalAmountDeduct,
+            totalPretaxReducedPriceDeduct: this.totalPretaxReducedPriceDeduct,
+            totalReducedPriceDeduct: this.totalReducedPriceDeduct,
           }).then(resp => {
             if (resp.code === 200) {
               this.$message.success('添加成功');
@@ -592,14 +593,14 @@ export default {
           });
           console.log(this.tableData);
           //8个非输入框总价
-          this.pretaxItemPriceDeduct = resp.data.pretaxItemPriceDeduct;
-          this.itemPriceDeduct = resp.data.itemPriceDeduct;
-          this.pretaxReducedPriceDeduct = resp.data.pretaxReducedPriceDeduct;
-          this.reducedPriceDeduct = resp.data.reducedPriceDeduct;
           this.totalPretaxItemPrice = resp.data.totalPretaxItemPrice;
           this.totalAmount = resp.data.totalAmount;
           this.totalPretaxReducedPrice = resp.data.totalPretaxReducedPrice;
           this.totalReducedPrice = resp.data.totalReducedPrice;
+          this.pretaxItemPriceDeduct = resp.data.pretaxItemPriceDeduct;
+          this.itemPriceDeduct = resp.data.itemPriceDeduct;
+          this.pretaxReducedPriceDeduct = resp.data.pretaxReducedPriceDeduct;
+          this.reducedPriceDeduct = resp.data.reducedPriceDeduct;
         }
       }).finally(() => {
         this.tableLoading = false;
@@ -625,14 +626,14 @@ export default {
           this.createTime = resp.data.createTime;
           this.tableData2 = resp.data.infoList;
           //8个非输入框总价
-          this.pretaxItemPriceDeduct = resp.data.pretaxItemPriceDeduct;
-          this.itemPriceDeduct = resp.data.itemPriceDeduct;
-          this.pretaxReducedPriceDeduct = resp.data.pretaxReducedPriceDeduct;
-          this.reducedPriceDeduct = resp.data.reducedPriceDeduct;
           this.totalPretaxItemPrice = resp.data.totalPretaxItemPrice;
           this.totalAmount = resp.data.totalAmount;
           this.totalPretaxReducedPrice = resp.data.totalPretaxReducedPrice;
           this.totalReducedPrice = resp.data.totalReducedPrice;
+          this.pretaxItemPriceDeduct = resp.data.pretaxItemPriceDeduct;
+          this.itemPriceDeduct = resp.data.itemPriceDeduct;
+          this.pretaxReducedPriceDeduct = resp.data.pretaxReducedPriceDeduct;
+          this.reducedPriceDeduct = resp.data.reducedPriceDeduct;
         }
       }).finally(() => {
         this.tableLoading2 = false;
