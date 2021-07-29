@@ -150,6 +150,13 @@ import {debounce} from '../../utils/util';
 
 export default {
   data() {
+    let checkAmountFormat = (rule, value, callback) => {
+      if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
+        callback(new Error('金额格式不正确'));
+      } else {
+        callback();
+      }
+    };
     return {
       saleOrderNo: null,
       createUser: null,
