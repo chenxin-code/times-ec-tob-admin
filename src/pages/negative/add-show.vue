@@ -80,27 +80,27 @@
           :loading="tableLoading2"
           :rowKey="(r, i) => i"
           :scroll="{ x: 2500, y: 400 }" v-else-if="$route.path === '/negative/show'">
-        <template slot="itemNumDeduct" slot-scope="scope">
+        <template slot="itemNumDeduct2" slot-scope="scope">
           <a-form-model-item>
             <a-input v-model="scope.itemNumDeduct" disabled/>
           </a-form-model-item>
         </template>
-        <template slot="pretaxItemPriceDeduct" slot-scope="scope">
+        <template slot="pretaxItemPriceDeduct2" slot-scope="scope">
           <a-form-model-item>
             <a-input v-model="scope.pretaxItemPriceDeduct" disabled/>
           </a-form-model-item>
         </template>
-        <template slot="itemPriceDeduct" slot-scope="scope">
+        <template slot="itemPriceDeduct2" slot-scope="scope">
           <a-form-model-item>
             <a-input v-model="scope.itemPriceDeduct" disabled/>
           </a-form-model-item>
         </template>
-        <template slot="pretaxReducedPriceDeduct" slot-scope="scope">
+        <template slot="pretaxReducedPriceDeduct2" slot-scope="scope">
           <a-form-model-item>
             <a-input v-model="scope.pretaxReducedPriceDeduct" disabled/>
           </a-form-model-item>
         </template>
-        <template slot="reducedPriceDeduct" slot-scope="scope">
+        <template slot="reducedPriceDeduct2" slot-scope="scope">
           <a-form-model-item>
             <a-input v-model="scope.reducedPriceDeduct" disabled/>
           </a-form-model-item>
@@ -141,16 +141,16 @@
         <a-input v-model="totalReducedPriceDeduct" :disabled="!disInput"/>
       </a-form-model-item>
       <a-form-model-item label="税前扣减销售总价" v-if="$route.path === '/negative/show'">
-        <a-input v-model="totalPretaxItemPrice" disabled/>
+        <a-input v-model="pretaxItemPriceDeduct" disabled/>
       </a-form-model-item>
       <a-form-model-item label="税后扣减销售总价" v-if="$route.path === '/negative/show'">
-        <a-input v-model="totalAmount" disabled/>
+        <a-input v-model="itemPriceDeduct" disabled/>
       </a-form-model-item>
       <a-form-model-item label="税前扣减优惠总价" v-if="$route.path === '/negative/show'">
-        <a-input v-model="totalPretaxReducedPrice" disabled/>
+        <a-input v-model="pretaxReducedPriceDeduct" disabled/>
       </a-form-model-item>
       <a-form-model-item label="税后扣减优惠总价" v-if="$route.path === '/negative/show'">
-        <a-input v-model="totalReducedPrice" disabled/>
+        <a-input v-model="reducedPriceDeduct" disabled/>
       </a-form-model-item>
     </a-form-model>
   </div>
@@ -440,36 +440,31 @@ export default {
         },
         {
           title: '设置扣减数量',
-          key: 'itemNumDeduct',
-          scopedSlots: {customRender: 'itemNumDeduct'},
+          scopedSlots: {customRender: 'itemNumDeduct2'},
           align: "center",
           width: 150,
         },
         {
           title: '设置税前销售价',
-          key: 'pretaxItemPriceDeduct',
-          scopedSlots: {customRender: 'pretaxItemPriceDeduct'},
+          scopedSlots: {customRender: 'pretaxItemPriceDeduct2'},
           align: "center",
           width: 150,
         },
         {
           title: '设置税后销售价',
-          key: 'itemPriceDeduct',
-          scopedSlots: {customRender: 'itemPriceDeduct'},
+          scopedSlots: {customRender: 'itemPriceDeduct2'},
           align: "center",
           width: 150,
         },
         {
           title: '设置税前优惠价',
-          key: 'pretaxReducedPriceDeduct',
-          scopedSlots: {customRender: 'pretaxReducedPriceDeduct'},
+          scopedSlots: {customRender: 'pretaxReducedPriceDeduct2'},
           align: "center",
           width: 150,
         },
         {
           title: '设置税后优惠价',
-          key: 'reducedPriceDeduct',
-          scopedSlots: {customRender: 'reducedPriceDeduct'},
+          scopedSlots: {customRender: 'reducedPriceDeduct2'},
           align: "center",
           width: 150,
         },
@@ -630,10 +625,10 @@ export default {
           this.totalAmount = resp.data.totalAmount;
           this.totalPretaxReducedPrice = resp.data.totalPretaxReducedPrice;
           this.totalReducedPrice = resp.data.totalReducedPrice;
-          this.pretaxItemPriceDeduct = resp.data.pretaxItemPriceDeduct;
-          this.itemPriceDeduct = resp.data.itemPriceDeduct;
-          this.pretaxReducedPriceDeduct = resp.data.pretaxReducedPriceDeduct;
-          this.reducedPriceDeduct = resp.data.reducedPriceDeduct;
+          this.pretaxItemPriceDeduct = resp.data.totalPretaxItemPriceDeduct;
+          this.itemPriceDeduct = resp.data.totalAmountDeduct;
+          this.pretaxReducedPriceDeduct = resp.data.totalPretaxReducedPriceDeduct;
+          this.reducedPriceDeduct = resp.data.totalReducedPriceDeduct;
         }
       }).finally(() => {
         this.tableLoading2 = false;
@@ -718,5 +713,9 @@ export default {
   button {
     margin-left: 20px;
   }
+}
+
+.ant-input[disabled] {
+  color: rgba(0, 0, 0, 0.65);
 }
 </style>
