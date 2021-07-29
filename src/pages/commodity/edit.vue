@@ -247,7 +247,7 @@
                 v-for="(item, index) in sellingPrice"
                 :key="index"
               >
-                <span class="intNum" style="width:400px;display:flex;align-items:center;">
+                <span class="intNum">
                   <span style="min-width: 45px;">数量：</span>
                   <span style="text-align:right;">{{ item.minNum }}</span
                   >~<a-input
@@ -683,5 +683,11 @@ export default {
 .editable-row-operations button {
   margin-right: 10px;
   padding: 0;
+}
+
+.intNum {
+  width: 400px;
+  display: flex;
+  align-items: center;
 }
 </style>
