@@ -541,9 +541,11 @@ export default {
       debounce(() => {
         this.form.validateFields((err, values, callback) => {
           console.log('err--->', err, values, callback)
-          if (err.sellingPriceList && this.isTieredPricing) {
-            this.$message.error('销售价的结束的数量限制不能小于起始数量')
-            return
+          if(this.isTieredPricing){
+            if (err.sellingPriceList) {
+              this.$message.error('销售价的结束的数量限制不能小于起始数量')
+              return
+            }
           }
           if (that.isTieredPricing == false)
             that.sellingPrice = that.sellingPrice[0]
