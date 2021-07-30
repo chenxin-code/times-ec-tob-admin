@@ -42,6 +42,9 @@
           :loading="tableLoading"
           :rowKey="(r, i) => i"
           :scroll="{ x: 2500, y: 400 }" v-if="$route.path === '/negative/add'">
+        <template slot="itemSpecs" slot-scope="scope">
+          <span v-html="itemSpecsParse(scope.itemSpecs)"></span>
+        </template>
         <template slot="set1" slot-scope="scope">
           <a-form-model-item>
             <a-input v-model="scope.set1"/>
@@ -80,6 +83,9 @@
           :loading="tableLoading2"
           :rowKey="(r, i) => i"
           :scroll="{ x: 2500, y: 400 }" v-else-if="$route.path === '/negative/show'">
+        <template slot="itemSpecs" slot-scope="scope">
+          <span v-html="itemSpecsParse(scope.itemSpecs)"></span>
+        </template>
         <template slot="itemNumDeduct2" slot-scope="scope">
           <a-form-model-item>
             <a-input v-model="scope.itemNumDeduct" disabled/>
@@ -207,8 +213,7 @@ export default {
         },
         {
           title: '规格',
-          key: 'itemSpecsArray',
-          dataIndex: 'itemSpecsArray',
+          scopedSlots: {customRender: 'itemSpecs'},
           align: "center",
           width: 150,
         },
@@ -356,8 +361,7 @@ export default {
         },
         {
           title: '规格',
-          key: 'itemSpecsArray',
-          dataIndex: 'itemSpecsArray',
+          scopedSlots: {customRender: 'itemSpecs'},
           align: "center",
           width: 150,
         },
@@ -514,7 +518,13 @@ export default {
       totalReducedPriceDeduct: null,
     }
   },
-  computed: {},
+  computed: {
+    itemSpecsParse() {
+      return param => {
+        return JSON.parse(param)['规格'].join();
+      }
+    },
+  },
   methods: {
     add(){
       this.$refs.thisForm.validate(valid => {
