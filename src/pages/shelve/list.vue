@@ -412,6 +412,7 @@ export default {
               )
               this.piliangLoading = false
               this.selectedRowKeys = []
+              this.beSelected = []
               this.getList()
             })
             .finally(() => {
@@ -434,6 +435,13 @@ export default {
             .updateSellingById(scope.id)
             .then(res => {
               this.$message.success(`${scope.selling ? '上架' : '下架'}成功`)
+              const findIndex = this.beSelected.findIndex(
+                item => item == scope.id
+              )
+              if (findIndex !== -1) {
+                this.selectedRowKeys.splice(findIndex, 1)
+                this.beSelected.splice(findIndex, 1)
+              }
               this.getList()
             })
             .finally(() => {
@@ -446,6 +454,8 @@ export default {
       //分页
       this.current = current
       this.pageSize = pageSize
+      this.selectedRowKeys = []
+      this.beSelected = []
       this.getList()
     },
     getList() {

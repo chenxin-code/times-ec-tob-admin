@@ -32,8 +32,11 @@
 		>
 			<template>
         <div class="item-list">
-          <span>配送单号：{{dataListDetail.deliveryNo}}</span>
-          <span>配送时间：{{dataListDetail.deliveryTime}}</span>
+          <div>
+            <span>配送单号：{{dataListDetail.deliveryNo}}</span>
+            <span>配送时间：{{dataListDetail.deliveryTime}}</span>
+          </div>
+          <p>{{statusStr(dataListDetail.approveStatus)}}</p>
         </div>
         <div>
           <a-table
@@ -51,13 +54,15 @@
           </a-table>
         </div>
         <div class="item-list" v-if="dataListDetail.approveStatus != 0">
-          <span>签收单号：{{dataListDetail.receiveNo}}</span>
-          <span>签收时间：{{dataListDetail.approveTime}}</span>
-          <div class="img-box" v-if="dataListDetail.receiverProofImgList && dataListDetail.receiverProofImgList.length > 0">
-            <img 
-              v-for="item in dataListDetail.receiverProofImgList"
-              :key="item"
-              :src="item" />
+          <div>
+            <span>签收单号：{{dataListDetail.receiveNo}}</span>
+            <span>签收时间：{{dataListDetail.approveTime}}</span>
+            <div class="img-box" v-if="dataListDetail.receiverProofImgList && dataListDetail.receiverProofImgList.length > 0">
+              <img 
+                v-for="item in dataListDetail.receiverProofImgList"
+                :key="item"
+                :src="item" />
+            </div>
           </div>
         </div>
 			</template>
@@ -71,6 +76,28 @@
   import { debounce } from "@/utils/util"
   export default {
     name: "deliveryOrder",
+    computed: {
+      statusStr() {
+        return function (approveStatus) {
+          let str = ''
+          switch (approveStatus) {
+            case 0:
+              str = '进行中'
+              break
+            case 1:
+              str = '已完成'
+              break
+            case 2:
+              str = '进行中'
+              break
+            default:
+              ''
+              break
+          }
+          return str
+        }
+      }
+    },
     data() {
       return {
         saleOrderNo: '',
@@ -123,13 +150,13 @@
               let str = ''
               switch (record.approveStatus) {
                 case 0:
-                  str = '未签收'
+                  str = '进行中'
                   break
                 case 1:
-                  str = '全部签收'
+                  str = '已完成'
                   break
                 case 2:
-                  str = '部分签收'
+                  str = '进行中'
                   break
                 default:
                   ''
@@ -265,10 +292,17 @@
   align-items: center;
 }
 .item-list {
+  display: flex;
+  justify-content: space-between;
   padding: 10px 0;
   span {
     padding-right: 10px;
     display: inline-block;
+  }
+  p {
+    color: #D9001B;
+    font-weight: 600;
+    margin-right: 30px;
   }
 }
 .img-box {
