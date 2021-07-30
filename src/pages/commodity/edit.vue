@@ -527,19 +527,22 @@ export default {
     //保存
     onSubmit() {
       let that = this
-      for (let i = 0; i < that.sellingPrice.length; i++) {
-        if (
-          that.costPrice[0].costPrice > that.sellingPrice[i].priceAfterTax ||
-          that.costPrice[0].costPrice > that.sellingPrice[i].priceBeforeTax
-        )
-          return this.$message.error('销售价必须大于成本价')
+      //是否是阶梯价
+      if (this.isTieredPricing) {
+        for (let i = 0; i < that.sellingPrice.length; i++) {
+          if (
+            that.costPrice[0].costPrice > that.sellingPrice[i].priceAfterTax ||
+            that.costPrice[0].costPrice > that.sellingPrice[i].priceBeforeTax
+          )
+            return this.$message.error('销售价必须大于成本价')
+        }
+        this.form.validateFields(['sellingPriceList'], { force: true })
       }
-      this.form.validateFields(['sellingPriceList'], { force: true })
       debounce(() => {
         this.form.validateFields((err, values, callback) => {
           console.log('err--->', err, values, callback)
-          if (err.sellingPriceList) {
-            this.$message.error('销售价必须大于成本价')
+          if (err.sellingPriceList && this.isTieredPricing) {
+            this.$message.error('销售价的结束的数量限制不能小于起始数量')
             return
           }
           if (that.isTieredPricing == false)
