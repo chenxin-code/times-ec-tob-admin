@@ -91,6 +91,7 @@ export default {
           title: "操作",
           key: "operation",
           fixed: "right",
+          align: "center",
           width: 200,
           scopedSlots: {customRender: "action"},
         },
