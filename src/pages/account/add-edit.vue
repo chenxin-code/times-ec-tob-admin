@@ -51,7 +51,7 @@
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="密码" prop="password" v-if="!isDisable">
-        <a-input-password v-model="thisForm.password" autocomplete="off" />
+        <a-input-password v-model="thisForm.password" autocomplete="new-password" />
       </a-form-model-item>
       <a-form-model-item
         label="确认密码"
@@ -60,7 +60,7 @@
       >
         <a-input-password
           v-model="thisForm.confirmPassword"
-          autocomplete="off"
+          autocomplete="new-password"
         />
       </a-form-model-item>
       <a-form-model-item label="电子邮箱" prop="email">

@@ -23,34 +23,52 @@
       <a-form-model-item label="是否顶级企业">
         <a-switch v-model="isTop" />
       </a-form-model-item>
-      <a-form-model-item label="选择父级企业" prop="parentName" v-if="!isTop">
-        <div
-          :class="`companySelect ${showRedBorder && 'border-red'}`"
-          @click="visible = true"
-        >
-          {{ parentName }}
+      <div style="display: flex">
+        <div style="flex: 1">
+          <a-form-model-item label="企业名称" prop="enterpriseName">
+            <a-input v-model="thisForm.enterpriseName" />
+          </a-form-model-item>
         </div>
-        <p v-show="showRedBorder" class="companySelectTip">请选择父级企业</p>
-      </a-form-model-item>
-      <a-form-model-item label="企业名称" prop="enterpriseName">
-        <a-input v-model="thisForm.enterpriseName" />
-      </a-form-model-item>
-      <a-form-model-item label="企业编码" prop="enterpriseCode">
-        <a-input v-model="thisForm.enterpriseCode" />
-      </a-form-model-item>
-      <a-form-model-item label="企业人数" prop="employeeNum">
-        <a-input v-model="thisForm.employeeNum" />
-      </a-form-model-item>
+        <div style="flex: 1">
+          <a-form-model-item label="选择父级企业" prop="parentName" v-if="!isTop">
+            <div
+                :class="`companySelect ${showRedBorder && 'border-red'}`"
+                @click="visible = true"
+            >
+              {{ parentName }}
+            </div>
+            <p v-show="showRedBorder" class="companySelectTip">请选择父级企业</p>
+          </a-form-model-item>
+        </div>
+      </div>
+      <div style="display: flex">
+        <div style="flex: 1">
+          <a-form-model-item label="企业编码" prop="enterpriseCode">
+            <a-input v-model="thisForm.enterpriseCode" />
+          </a-form-model-item>
+        </div>
+        <div style="flex: 1">
+          <a-form-model-item label="企业人数" prop="employeeNum">
+            <a-input v-model="thisForm.employeeNum" />
+          </a-form-model-item>
+        </div>
+      </div>
       <div class="common-title">
         <div class="common-title-content">企业信息</div>
       </div>
-      <a-form-model-item label="经营范围" prop="businessScope">
-        <a-input v-model="thisForm.businessScope" />
-      </a-form-model-item>
-      <a-form-model-item label="信用等级" prop="creditLevel">
-        <a-input v-model="thisForm.creditLevel" />
-      </a-form-model-item>
-      <a-form-model-item label="所在地区">
+      <div style="display: flex">
+        <div style="flex: 1">
+          <a-form-model-item label="经营范围" prop="businessScope">
+            <a-input v-model="thisForm.businessScope" />
+          </a-form-model-item>
+        </div>
+        <div style="flex: 1">
+          <a-form-model-item label="信用等级" prop="creditLevel">
+            <a-input v-model="thisForm.creditLevel" />
+          </a-form-model-item>
+        </div>
+      </div>
+      <a-form-model-item label="所在地区" class="one-line">
         <a-cascader
           :options="areaData"
           :show-search="{ filter }"
@@ -62,42 +80,52 @@
             children: 'list',
           }"
           @change="onChange"
-          style="width: 500px;"
           v-if="showCascader"
         />
       </a-form-model-item>
-      <a-form-model-item label="通讯地址" prop="mailAddress">
+      <a-form-model-item label="通讯地址" class="one-line" prop="mailAddress">
         <a-textarea v-model="thisForm.mailAddress" />
       </a-form-model-item>
-      <a-form-model-item label="公司地址" prop="detailAddress">
+      <a-form-model-item label="公司地址" class="one-line" prop="detailAddress">
         <a-textarea v-model="thisForm.detailAddress" />
       </a-form-model-item>
-      <a-form-model-item label="备注" prop="remark">
+      <a-form-model-item label="备注" class="one-line" prop="remark">
         <a-textarea v-model="thisForm.remark" />
       </a-form-model-item>
       <div class="common-title">
         <div class="common-title-content">联系方式</div>
       </div>
-      <a-form-model-item label="企业电话" prop="enterprisePhone">
-        <a-input v-model="thisForm.enterprisePhone" />
-      </a-form-model-item>
-      <a-form-model-item label="电子邮箱" prop="email">
-        <a-input v-model="thisForm.email" />
-      </a-form-model-item>
-      <a-form-model-item label="联系人" prop="concatPerson">
-        <a-input v-model="thisForm.concatPerson" />
-      </a-form-model-item>
-      <a-form-model-item label="联系电话" prop="concatPhone">
-        <a-input v-model="thisForm.concatPhone" />
-      </a-form-model-item>
+      <div style="display: flex">
+        <div style="flex: 1">
+          <a-form-model-item label="企业电话" prop="enterprisePhone">
+            <a-input v-model="thisForm.enterprisePhone" />
+          </a-form-model-item>
+        </div>
+        <div style="flex: 1">
+          <a-form-model-item label="电子邮箱" prop="email">
+            <a-input v-model="thisForm.email" />
+          </a-form-model-item>
+        </div>
+      </div>
+      <div style="display: flex">
+        <div style="flex: 1">
+          <a-form-model-item label="联系人" prop="concatPerson">
+            <a-input v-model="thisForm.concatPerson" />
+          </a-form-model-item>
+        </div>
+        <div style="flex: 1">
+          <a-form-model-item label="联系电话" prop="concatPhone">
+            <a-input v-model="thisForm.concatPhone" />
+          </a-form-model-item>
+        </div>
+      </div>
     </a-form-model>
     <a-modal
       title="选择父级企业"
       :visible="visible"
       @ok="handleOk"
       @cancel="visible = false"
-      width="500px"
-    >
+      width="500px">
       <companyTree @onSelect="onSelect" />
     </a-modal>
   </div>
@@ -358,7 +386,8 @@ export default {
   padding: 20px;
 
   .ant-form-item {
-    width: 1000px;
+    width: 350px;
+    display: flex;
     margin: 10px 0 10px 50px;
   }
 
@@ -367,11 +396,12 @@ export default {
   }
 
   /deep/ .ant-form-item-control-wrapper {
-    width: 500px;
+    width: 300px;
   }
 
   /deep/ .ant-form-item-label {
-    width: 110px;
+    width: 150px;
+    text-align: right;
   }
 
   /deep/ .item-btns {
@@ -427,5 +457,12 @@ export default {
 
 .border-red {
   border-color: #f5222d;
+}
+
+.one-line.ant-form-item {
+  width: 500px;
+}
+.one-line /deep/ .ant-form-item-control-wrapper {
+  width: 500px;
 }
 </style>
