@@ -123,13 +123,13 @@
               let str = ''
               switch (record.approveStatus) {
                 case 0:
-                  str = '未签收'
+                  str = '进行中'
                   break
                 case 1:
-                  str = '全部签收'
+                  str = '已完成'
                   break
                 case 2:
-                  str = '部分签收'
+                  str = '进行中'
                   break
                 default:
                   ''
