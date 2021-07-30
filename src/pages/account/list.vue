@@ -66,7 +66,7 @@
                   "
                   >编辑</a-button
                 >
-                <!-- <a-button type="link" @click="updatePwd(scope.loginName)">修改密码</a-button> -->
+                 <a-button type="link" @click="updatePwd(scope.loginName)">修改密码</a-button>
                 <a-button type="link" @click="goDel(scope.loginName)"
                   >删除</a-button
                 >
