@@ -8,7 +8,7 @@
               :data-source="categoryData"
               :loading="tableLoading"
               row-key="categoryId"
-              indentSize="35"
+              :indentSize="35"
               :pagination="false">
             <template slot="children" slot-scope="scope">
               <div class="editable-row-operations">
