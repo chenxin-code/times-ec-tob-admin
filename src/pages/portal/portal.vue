@@ -175,9 +175,6 @@ export default {
         width: 156px;
         height: 44px;
 
-        .time-logo{
-
-        }
       }
 
       .user-content{

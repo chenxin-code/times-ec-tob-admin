@@ -53,13 +53,27 @@ export default {
         autoExpandParent: true,
       });
     },
+    //冒泡排序
+    bubbleSort(arr) {
+      for (let i = 0; i < arr.length; i++) {
+        for (let j = 0; j < arr.length - 1 - i; j++) {
+          if (arr[j].updateTime < arr[j + 1].updateTime) {
+            let temp = arr[j + 1];
+            arr[j + 1] = arr[j];
+            arr[j] = temp;
+            if (arr[j].children) {
+              this.bubbleSort(arr[j].children);
+            }
+          }
+        }
+      }
+      return arr;
+    },
     generateList(data) {
       for (let i = 0; i < data.length; i++) {
-        const node = data[i];
-        const key = node.key;
-        this.dataList.push({key: node.key, title: node.title});
-        if (node.children) {
-          this.generateList(node.children);
+        this.dataList.push({key: data[i].key, title: data[i].title});
+        if (data[i].children) {
+          this.generateList(data[i].children);
         }
       }
     },
@@ -88,6 +102,7 @@ export default {
         respData.forEach((item, index) => {
           respData[index].key = item.id;
           respData[index].title = item.enterpriseName;
+          respData[index].updateTime = new Date(item.updateTime).getTime();//转时间戳排序
           respData[index].scopedSlots = {title: 'title'};
         });
         this.treeData = respData.filter((parent) => {
@@ -99,6 +114,7 @@ export default {
           }
           return parent['parentId'] === '-1';
         });
+        this.treeData = this.bubbleSort(this.treeData);
         this.generateList(this.treeData);
       }
     });

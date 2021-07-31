@@ -94,3 +94,21 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 - 配送信息需要在erp后台操作发货，才有发货信息流转到案场订单信息的配送信息
 - 配送信息的通过/挂起操作，通过即等于确认收货操作，挂起后仍可以通过
 
+##### ant-design-vue 强制调用校验规则
+
+```
+const _this = this
+      getUserPage({ username: userName }).then(res => {
+        const { records } = res
+        if (records.length > 0) {
+          this.$nextTick(() => {
+            _this.isRepeat = true
+            _this.form.validateFields(['username'], { force: true })  //手动调用字段校验
+          })
+        } else {
+          _this.isRepeat = false
+          _this.form.validateFields(['username'], { force: true })
+        }
+      })
+
+```

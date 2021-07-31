@@ -111,7 +111,7 @@ export default {
 
 			rolevalue: '',
 			roleList: [
-				{id: 1, roleName: 'test'}
+				// {id: 1, roleName: 'test'}
 			],
 			form: this.$form.createForm(this, { name: "afterSaleApproveModal" }),
 		}

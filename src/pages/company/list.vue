@@ -1,24 +1,28 @@
 <template>
-  <div style="height: 100%;display: flex;">
+  <div style="display: flex;">
     <div style="width: 20%;overflow: auto;">
       <companyTree @onSelect="onSelect" />
     </div>
     <div style="width: 80%;">
-      <a-form-model layout="inline">
+      <a-form-model :model="thisForm" layout="inline" ref="thisForm" labelAlign="left">
+        <a-form-model-item label="企业名称" prop="enterpriseName">
+          <a-input v-model="thisForm.enterpriseName" placeholder="请输入企业名称" :maxLength='30'/>
+        </a-form-model-item>
         <a-form-model-item class="item-btns">
+          <a-button class="item-btn" type="primary" @click="getList()">查询</a-button>
+          <a-button class="item-btn" type="primary" @click="reset()">重置</a-button>
           <a-button class="item-btn" @click="$router.push({path: '/company/add'})" type="primary">新增</a-button>
         </a-form-model-item>
       </a-form-model>
-      <a-row style="padding: 20px;height: 100%;">
+      <a-row style="padding: 0 20px;height: 100%;">
         <a-col>
           <a-table
               :columns="tableColumns"
               :row-key="(r,i) => i"
               :data-source="tableData"
-              :scroll="{ x: 1000 }"
+              :scroll="{ x: 1000, y:scrollY}"
               :pagination="false"
-              :loading="tableLoading"
-              style="margin-top: 8px;">
+              :loading="tableLoading">
             <template slot="statusStr" slot-scope="scope">
               <div class="editable-row-operations">
                 <span v-html="statusStrParse(scope.status)"></span>
@@ -50,18 +54,18 @@
         <a-button key="back" @click="showTokenModal = false">关闭</a-button>
       </template>
       <a-form layout="inline">
-        <a-form-item style="font-size: 18px;">
-          <div style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
-            <div style="width: 100px;margin-right: 10px;display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
+        <a-form-item style="font-size: 18px;" class="token-modal">
+          <div>
+            <span style="margin-right: 10px;">
               <span>账号：</span>
-            </div>
-            <span style="width: 267px;color: #a1a1a1;">{{accountNumber}}</span>
+            </span>
+            <span style="color: #a1a1a1;">{{accountNumber}}</span>
           </div>
-          <div style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
-            <div style="width: 100px;margin-right: 10px;display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
+          <div>
+            <span style="margin-right: 10px;">
               <span>密钥：</span>
-            </div>
-            <span style="width: 267px;color: #a1a1a1;">{{password}}</span>
+            </span>
+            <span style="color: #a1a1a1;">{{password}}</span>
           </div>
         </a-form-item>
       </a-form>
@@ -80,37 +84,47 @@ export default {
       password: null,
       showTokenModal: false,
       parentId: null,
+      scrollY:100,
+      thisForm: {
+        enterpriseName: null
+      },
       tableColumns: [
         {
           title: "企业名称",
           dataIndex: "enterpriseName",
+          align: "center",
           width: 200,
         },
         {
           title: "父企业名称",
           dataIndex: "parentName",
+          align: "center",
           width: 200,
         },
         {
           title: "企业编码",
           dataIndex: "enterpriseCode",
+          align: "center",
           width: 200,
         },
         {
           title: "企业状态",
           key: 'statusStr',
           scopedSlots: { customRender: 'statusStr' },
-          width: 200,
+          align: "center",
+          width: 100,
         },
         {
           title: "经营范围",
           dataIndex: "businessScope",
-          width: 200,
+          align: "center",
+          width: 250,
         },
         {
           title: "操作",
-          key: "operation",
+          key: "action",
           fixed: "right",
+          align: "center",
           width: 200,
           scopedSlots: {customRender: "action"},
         },
@@ -137,8 +151,16 @@ export default {
   },
   mounted() {
     this.getList();
+    setTimeout(() => this.scrollY = document.body.clientHeight - 320 + 'px', 0);
   },
   methods: {
+    reset(){
+      this.parentId = null;
+      this.thisForm.enterpriseName = null;
+      this.current = 1;
+      this.pageSize = 10;
+      this.getList();
+    },
     showToken(accountNumber,password){
       console.log(accountNumber,password);
       this.accountNumber = accountNumber;
@@ -160,6 +182,7 @@ export default {
     getList() {
       this.tableLoading = true;
       api.getProjectList({
+        ...this.thisForm,
         pageNum: this.current,
         pageSize: this.pageSize,
         parentId: this.parentId,
@@ -189,19 +212,27 @@ export default {
     width: 250px;
   }
 
+  > .token-modal {
+    width: 500px;
+    /deep/ .ant-form-item-control-wrapper {
+      width: 500px;
+    }
+  }
+
   /deep/ .ant-calendar-picker-input {
     width: 250px;
   }
 
   /deep/ .ant-form-item-label {
-    width: 100px;
+    width: 80px;
+    text-align: right;
   }
 
   /deep/ .item-btns {
-    width: 500px !important;
+    width: 300px !important;
 
     .ant-form-item-control-wrapper {
-      width: 400px !important;
+      width: 300px !important;
     }
   }
 

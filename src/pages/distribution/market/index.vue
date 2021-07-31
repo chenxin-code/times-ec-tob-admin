@@ -17,31 +17,12 @@
         />
       </div>
       <div class="search-list-item">
-        <span class="label-text">开始时间：</span>
-        <a-date-picker
+        <span class="label-text">下单时间：</span>
+        <a-range-picker
           class="iw250"
-          v-model="searchData.orderTimeStart"
-          :disabled-date="disabledStartDate"
+          v-model="searchData.dateTime"
           show-time
-          format="YYYY-MM-DD HH:mm:ss"
-          placeholder="下单开始时间"
-          @openChange="handleStartOpenChange"
-          @change="onStartDateChange"
-        />
-      </div>
-      <div class="search-list-item">
-        <span class="label-text">结束时间：</span>
-
-        <a-date-picker
-          class="iw250"
-          v-model="searchData.orderTimeEnd"
-          :disabled-date="disabledEndDate"
-          show-time
-          format="YYYY-MM-DD HH:mm:ss"
-          placeholder="下单结束时间"
-          :open="endOpen"
-          @openChange="handleEndOpenChange"
-          @change="onEndDateChange"
+          format="YYYY-MM-DD"
         />
       </div>
       <div class="search-list-item">
@@ -101,18 +82,20 @@
         :loading="loading"
         @change="tableChange"
       >
-        <div slot="addressDto" slot-scope="text, record">
-          <div>
-            <!-- <p>姓名：{{record.addressDto.receiverName}}</p>
+        <!-- <div slot="addressDto" slot-scope="text, record">
+          <div> -->
+        <!-- <p>姓名：{{record.addressDto.receiverName}}</p>
 						<p>电话：{{record.addressDto.receiverPhone}}}</p>
 						<p>地址：{{record.addressDto.detailAddress}}}</p> -->
-          </div>
-        </div>
+        <!-- </div>
+        </div> -->
         <!-- 操作 -->
         <span slot="action" slot-scope="text, record">
           <a @click="applyAfterSale(record)">修改城市公司</a>
           <a-divider type="vertical" />
           <a @click="checkDetails(record)">查看</a>
+          <a-divider type="vertical" />
+          <a @click="checkDeliveryOrder(record)">查看配送订单</a>
         </span>
       </a-table>
     </div>
@@ -126,6 +109,7 @@
 
 <script>
 import AfterSaleApproveModal from './afterSaleApproveModal'
+import moment from 'moment'
 import api from '@/api'
 import { mapState } from 'vuex'
 export default {
@@ -134,53 +118,38 @@ export default {
     AfterSaleApproveModal,
   },
   data() {
-    let orderStatusListSelect = [
-      {
-        id: '0',
-        name: '全部',
-      },
-      {
-        id: '1',
-        name: '待发货',
-      },
-      {
-        id: '2',
-        name: '已发货',
-      },
-      {
-        id: '3',
-        name: '已完成',
-      },
-      {
-        id: '4',
-        name: '已关闭',
-      },
-    ]
+    let orderStatusListSelect = []
     let columns = [
       {
         title: '订单编号',
         dataIndex: 'saleOrderNo',
         key: 'saleOrderNo',
         width: 250,
+        align: 'center'
       },
       {
         title: '采购公司(出账公司)',
         width: 250,
+        align: 'center',
         key: 'purchaseCompany',
         dataIndex: 'purchaseCompany',
+        align: 'center'
       },
       {
         title: '收货信息',
         width: 250,
+        align: 'center',
         scopedSlots: { customRender: 'addressDto' },
+        align: 'center'
       },
       {
         title: '支付方式',
         width: 100,
+        align: 'center',
         key: 'payWay',
         customRender: (text, record, index) => {
           let str = ''
-          switch (text) {
+          switch (record.payWay) {
             case 'ONLINE':
               str = '线上'
               break
@@ -188,67 +157,78 @@ export default {
               str = '线下'
               break
             default:
-              '22'
+              ''
               break
           }
           return str
         },
+        align: 'center'
       },
       {
         title: '税前订单总额（元）',
         dataIndex: 'totalPretaxAmount',
         key: 'totalPretaxAmount',
         width: 200,
+        align: 'center'
       },
       {
         title: '税后订单总额（元）',
         dataIndex: 'totalAmount',
         key: 'totalAmount',
         width: 200,
+        align: 'center'
       },
       {
         title: '税前优惠总额（元）',
         dataIndex: 'totalPretaxReducedAmount',
         key: 'totalPretaxReducedAmount',
         width: 200,
+        align: 'center'
       },
       {
         title: '税后优惠总额（元）',
         dataIndex: 'totalReducedAmount',
         key: 'totalReducedAmount',
         width: 200,
+        align: 'center'
       },
       {
         title: '下单时间',
         dataIndex: 'orderTime',
         key: 'orderTime',
         width: 200,
+        align: 'center'
       },
       {
         title: '账套名称',
         dataIndex: 'financialAccounting',
         key: 'financialAccounting',
         width: 200,
+        align: 'center'
       },
       {
         title: '城市公司',
         dataIndex: 'cityCompany',
         key: 'cityCompany',
         width: 150,
+        align: 'center'
       },
       {
         title: '项目名称',
         dataIndex: 'projectName',
         key: 'projectName',
         width: 200,
+        align: 'center'
       },
       {
         title: '操作',
         key: 'operation',
         fixed: 'right',
-        width: 200,
+        width: 300,
+        align: 'center',
         scopedSlots: { customRender: 'action' },
-      },
+        align: 'center'
+      }
     ]
     let pageData = {
       pageNum: 1,
@@ -267,6 +247,7 @@ export default {
       pageData,
       searchData: {
         saleOrderNo: '', // 订单编号
+        dateTime: [], // 时间
         orderTimeStart: '', // 开始时间
         orderTimeEnd: '', // 结束时间
         purchaseCompany: '', // 采购公司
@@ -277,7 +258,7 @@ export default {
       loading: false,
       dataList: [],
       cityCompanyList: [],
-      orderStatusValue: '0', // 采购公司 城市公司
+      orderStatusValue: '', // 采购公司 城市公司
       orderStatusListSelect,
       afterVisible: false,
       endOpen: false,
@@ -294,8 +275,14 @@ export default {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         saleOrderNo: this.searchData.saleOrderNo, // 订单编号
-        orderTimeStart: this.searchData.orderTimeStart, // 开始时间
-        orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
+        orderTimeStart:
+          this.searchData.dateTime.length > 0
+            ? this.parseDate(this.searchData.dateTime[0])
+            : '', // 开始时间
+        orderTimeEnd:
+          this.searchData.dateTime.length > 0
+            ? this.parseDate(this.searchData.dateTime[1])
+            : '', // 结束时间
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
         receiver: this.searchData.receiver, // 收货人 模糊查询
         cityCompany: this.searchData.cityCompany, // 城市公司
@@ -327,8 +314,14 @@ export default {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         saleOrderNo: this.searchData.saleOrderNo, // 订单编号
-        orderTimeStart: this.searchData.orderTimeStart, // 开始时间
-        orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
+        orderTimeStart:
+          this.searchData.dateTime.length > 0
+            ? this.parseDate(this.searchData.dateTime[0])
+            : '', // 开始时间
+        orderTimeEnd:
+          this.searchData.dateTime.length > 0
+            ? this.parseDate(this.searchData.dateTime[1])
+            : '', // 结束时间
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
         receiver: this.searchData.receiver, // 收货人 模糊查询
         cityCompany: this.searchData.cityCompany, // 城市公司
@@ -339,7 +332,7 @@ export default {
   },
   created() {
     const timer1 = setTimeout(() => {
-      this.scrollY = document.body.clientHeight - 370 + 'px'
+      this.scrollY = document.body.clientHeight - 366 + 'px'
     }, 0)
     this.$once('hook:beforeDestroy', () => {
       clearTimeout(timer1)
@@ -355,8 +348,14 @@ export default {
           pageNum: this.pageData.pageNum, // 第几页
           pageSize: this.pageData.pageSize, // 每页多少条
           saleOrderNo: this.searchData.saleOrderNo, // 订单编号
-          orderTimeStart: this.searchData.orderTimeStart, // 开始时间
-          orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
+          orderTimeStart:
+            this.searchData.dateTime.length > 0
+              ? this.parseDate(this.searchData.dateTime[0])
+              : '', // 开始时间
+          orderTimeEnd:
+            this.searchData.dateTime.length > 0
+              ? this.parseDate(this.searchData.dateTime[1])
+              : '', // 结束时间
           purchaseCompany: this.searchData.purchaseCompany, // 采购公司
           receiver: this.searchData.receiver, // 收货人 模糊查询
           cityCompany: this.searchData.cityCompany, // 城市公司
@@ -376,13 +375,32 @@ export default {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         saleOrderNo: this.searchData.saleOrderNo, // 订单编号
-        orderTimeStart: this.searchData.orderTimeStart, // 开始时间
-        orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
+        orderTimeStart:
+          this.searchData.dateTime.length > 0
+            ? this.parseDate(this.searchData.dateTime[0])
+            : '', // 开始时间
+        orderTimeEnd:
+          this.searchData.dateTime.length > 0
+            ? this.parseDate(this.searchData.dateTime[1])
+            : '', // 结束时间
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
         receiver: this.searchData.receiver, // 收货人 模糊查询
         cityCompany: this.searchData.cityCompany, // 城市公司
       }
       this.getData(params)
+    },
+    parseDate(date) {
+      let str = undefined
+      if (date) {
+        let oDate = new Date(date)
+        str =
+          oDate.getFullYear() +
+          '-' +
+          (oDate.getMonth() + 1) +
+          '-' +
+          oDate.getDate()
+      }
+      return str
     },
     tableChange(e) {
       let { pageSize, current } = e
@@ -400,6 +418,7 @@ export default {
     toReset() {
       this.searchData = {
         saleOrderNo: '', // 订单编号
+        dateTime: [],
         orderTimeStart: '', // 开始时间
         orderTimeEnd: '', // 结束时间
         purchaseCompany: '', // 采购公司
@@ -411,8 +430,8 @@ export default {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         saleOrderNo: this.searchData.saleOrderNo, // 订单编号
-        orderTimeStart: this.searchData.orderTimeStart, // 开始时间
-        orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
+        orderTimeStart: this.parseDate(this.searchData.orderTimeStart), // 开始时间
+        orderTimeEnd: this.parseDate(this.searchData.orderTimeEnd), // 结束时间
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
         receiver: this.searchData.receiver, // 收货人 模糊查询
         cityCompany: this.searchData.cityCompany, // 城市公司
@@ -420,11 +439,20 @@ export default {
       this.getData(params)
     },
     // 查看详情
-    checkDetails(record) {
+    checkDetails(row) {
       this.$router.push({
         name: 'marketdetail',
         params: {
-          saleOrderNo: record.saleOrderNo,
+          saleOrderNo: row.saleOrderNo,
+        },
+      })
+    },
+    // 查看配送订单
+    checkDeliveryOrder(row) {
+      this.$router.push({
+        name: 'deliveryOrder',
+        params: {
+          saleOrderNo: row.saleOrderNo,
         },
       })
     },
@@ -457,8 +485,14 @@ export default {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         saleOrderNo: this.searchData.saleOrderNo, // 订单编号
-        orderTimeStart: this.searchData.orderTimeStart, // 开始时间
-        orderTimeEnd: this.searchData.orderTimeEnd, // 结束时间
+        orderTimeStart:
+          this.searchData.dateTime.length > 0
+            ? this.parseDate(this.searchData.dateTime[0])
+            : '', // 开始时间
+        orderTimeEnd:
+          this.searchData.dateTime.length > 0
+            ? this.parseDate(this.searchData.dateTime[1])
+            : '', // 结束时间
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
         receiver: this.searchData.receiver, // 收货人 模糊查询
         cityCompany: this.searchData.cityCompany, // 城市公司
@@ -467,34 +501,6 @@ export default {
     },
     changeHandle() {
       this.afterVisible = false
-    },
-    disabledStartDate(orderTimeStart) {
-      const orderTimeEnd = this.searchData.orderTimeEnd
-      if (!orderTimeStart || !orderTimeEnd) {
-        return false
-      }
-      return orderTimeStart.valueOf() > orderTimeEnd.valueOf()
-    },
-    disabledEndDate(orderTimeEnd) {
-      const orderTimeStart = this.searchData.orderTimeStart
-      if (!orderTimeEnd || !orderTimeStart) {
-        return false
-      }
-      return orderTimeStart.valueOf() >= orderTimeEnd.valueOf()
-    },
-    handleStartOpenChange(open) {
-      if (!open) {
-        this.endOpen = true
-      }
-    },
-    handleEndOpenChange(open) {
-      this.endOpen = open
-    },
-    onStartDateChange(date, dateString) {
-      this.orderTimeStart = dateString
-    },
-    onEndDateChange(date, dateString) {
-      this.orderTimeEnd = dateString
     },
   },
 }
