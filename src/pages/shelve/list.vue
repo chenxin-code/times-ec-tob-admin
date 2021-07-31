@@ -244,14 +244,14 @@ export default {
       selling: '', //山下架
       supplier: '',
       tableColumns: [
-        {
-          title: '序号',
-          key: 'index',
-          width: 60,
-          align: 'center',
-          fixed: 'left',
-          customRender: (text, record, index) => `${index + 1}`,
-        },
+        // {
+        //   title: '序号',
+        //   key: 'index',
+        //   width: 60,
+        //   align: 'center',
+        //   fixed: 'left',
+        //   customRender: (text, record, index) => `${index + 1}`,
+        // },
         {
           title: '商品名称',
           dataIndex: 'itemName',
