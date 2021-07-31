@@ -48,11 +48,15 @@
         <a-select
           default-value="全部"
           show-search
-          v-model="drstatus"
+          allowClear
+          v-model="status"
           option-filter-prop="children"
           :filter-option="filterOption"
           @search="handleSearch"
           @change="handleChange"
+          :default-active-first-option="false"
+          :show-arrow="false"
+          :not-found-content="null"
         >
           <a-select-option
             :value="item.supplierCode"
@@ -178,7 +182,7 @@
 
 <script>
 import api from '@/api'
-import {debounce} from '../../utils/util';
+import { debounce } from '../../utils/util'
 
 export default {
   name: 'commodity',
@@ -335,7 +339,7 @@ export default {
   },
   created() {
     this.getList() //列表
-    this.supplierlis() //供应商
+    // this.supplierlis() //供应商
     api.getCategoryTree().then(resp => {
       this.treeData = resp.data
       this.treeData.unshift({ categoryCode: '', name: '全部' })
@@ -375,12 +379,12 @@ export default {
     supplierlis(value) {
       api
         .getSupplierListByPager2({
-          //keyword: value ?? '',
+          keyword: value ?? '',
           pageNum: 1,
-          pageSize: 100000,
+          pageSize: 100,
         })
         .then(res => {
-          this.selectlist = res.data.records
+          this.selectlist = res.data.records.slice(0,50)
           this.selectlist.unshift({ id: '', supplierName: '全部' })
         })
     },

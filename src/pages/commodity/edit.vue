@@ -228,7 +228,7 @@
                 />
               </div>
             </a-form-item>
-            <a-form-item label="销售价" v-show="isTieredPricing == true">
+            <a-form-item label="销售价" v-show="false">
               <a-input
                 type="hidden"
                 v-decorator="[
@@ -242,6 +242,8 @@
                   },
                 ]"
               />
+            </a-form-item>
+            <a-form-item label="销售价" v-show="isTieredPricing == true">
               <div
                 class="intpud"
                 v-for="(item, index) in sellingPrice"
@@ -324,7 +326,11 @@
         >保存</a-button
       >
     </div> -->
-    <FormSubmitButton :isShow="true" :isShowSubmit="$route.params.typ === '2'"  @submit="onSubmit"/>
+    <FormSubmitButton
+      :isShow="true"
+      :isShowSubmit="$route.params.typ === '2'"
+      @submit="onSubmit"
+    />
   </div>
 </template>
 
@@ -543,7 +549,7 @@ export default {
         this.form.validateFields((err, values, callback) => {
           console.log('err--->', err, values, callback)
           if (this.isTieredPricing) {
-            if (err.sellingPriceList) {
+            if (err && err.sellingPriceList) {
               this.$message.error('销售价的结束的数量限制不能小于起始数量')
               return
             }
