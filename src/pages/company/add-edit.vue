@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%;">
+  <div>
     <!-- <div class="btns">
       <a-button
         class="item-btn"
@@ -12,7 +12,7 @@
     </div> -->
      <div
       class="content-main"
-      style="height: calc(100% - 100px);margin-top: 12px;padding:20px 60px 60px 20px;"
+      style="height: calc(100% - 100px);margin-top: 12px;padding:20px 60px 120px 20px;"
       >
       <a-form-model
         :model="thisForm"
