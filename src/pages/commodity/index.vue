@@ -49,7 +49,7 @@
           default-value="全部"
           show-search
           allowClear
-          v-model="drstatus"
+          v-model="status"
           option-filter-prop="children"
           :filter-option="filterOption"
           @search="handleSearch"
