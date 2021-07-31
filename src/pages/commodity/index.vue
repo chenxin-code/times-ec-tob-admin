@@ -48,7 +48,8 @@
         <a-select
           default-value="全部"
           show-search
-          v-model="drstatus"
+          allowClear
+          v-model="status"
           option-filter-prop="children"
           :filter-option="filterOption"
           @search="handleSearch"
@@ -378,9 +379,9 @@ export default {
     supplierlis(value) {
       api
         .getSupplierListByPager2({
-          //keyword: value ?? '',
+          keyword: value ?? '',
           pageNum: 1,
-          pageSize: 100000,
+          pageSize: 100,
         })
         .then(res => {
           this.selectlist = res.data.records.slice(0,50)
