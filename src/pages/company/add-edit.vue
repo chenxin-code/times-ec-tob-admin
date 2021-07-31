@@ -10,10 +10,10 @@
       >
       <a-button class="item-btn" @click="$router.back()">返回</a-button>
     </div> -->
-    <div
+     <div
       class="content-main"
-      style="height: calc(100% - 100px);margin-top: 12px;padding:20px 60px 20px 20px;"
-    >
+      style="height: calc(100% - 100px);margin-top: 12px;padding:20px 60px 60px 20px;"
+      >
       <a-form-model
         :model="thisForm"
         layout="inline"

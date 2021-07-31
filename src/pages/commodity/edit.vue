@@ -324,7 +324,7 @@
         >保存</a-button
       >
     </div> -->
-    <FormSubmitButton :isShow="$route.params.typ === '2'" @submit="onSubmit"/>
+    <FormSubmitButton :isShow="true" :isShowSubmit="$route.params.typ === '2'"  @submit="onSubmit"/>
   </div>
 </template>
 
