@@ -101,7 +101,13 @@ export default {
       total: 0,
       pageSize: 10,
       current: 1,
+      scrollY: 100
     }
+  },
+  created() {
+    const timer1 = setTimeout(() => {
+      this.scrollY = document.body.clientHeight - 290 + 'px'
+    }, 0)
   },
   mounted() {
     this.getList();
