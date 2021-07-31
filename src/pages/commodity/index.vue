@@ -178,6 +178,7 @@
 
 <script>
 import api from '@/api'
+import {debounce} from '../../utils/util';
 
 export default {
   name: 'commodity',
