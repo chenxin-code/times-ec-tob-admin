@@ -349,7 +349,7 @@ export default {
       supplierName: '', //供应商名称
       costPrice: [], //成本价
       marketPrice: [], //市场价
-      categoryId: null, //	所属类目id
+      categoryId: null, //  所属类目id
       categoryName: '', //所属类目名称
       sellingPrice: [
         { minNum: 1, maxNum: null, priceBeforeTax: null, priceAfterTax: null },
@@ -541,7 +541,7 @@ export default {
       debounce(() => {
         this.form.validateFields((err, values, callback) => {
           console.log('err--->', err, values, callback)
-          if(this.isTieredPricing){
+          if (this.isTieredPricing) {
             if (err.sellingPriceList) {
               this.$message.error('销售价的结束的数量限制不能小于起始数量')
               return
