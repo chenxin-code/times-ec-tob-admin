@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div class="btns">
+   <!--  <div class="btns">
       <a-button class="item-btn" :loading="btnloading" type="primary" @click="add()"
                 v-if="$route.path === '/negative/add'">保存
       </a-button>
       <a-button class="item-btn" @click="$router.back()">返回</a-button>
-    </div>
+    </div> -->
     <a-form-model :model="thisForm" layout="inline" :rules="rules" ref="thisForm" labelAlign="left">
       <div class="common-title">
         <div class="common-title-content">{{$route.path === '/negative/add'?'新增':'查看'}}负数单</div>
@@ -174,6 +174,7 @@
         <a-button type="primary" @click="showErrorTable = false">我知道了，返回处理</a-button>
       </template>
     </a-modal>
+     <FormSubmitButton :isShow="true" :isShowSubmit="$route.path === '/negative/add'" @submit="add()" />
   </div>
 </template>
 
