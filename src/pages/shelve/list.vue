@@ -61,7 +61,7 @@
         prop="d"
         :wrapperCol="{ style: { width: '250px' } }"
       >
-        <a-select
+        <!--  <a-select
           v-model="status"
           @change="value => (this.status = value)"
           defaultValue="全部"
@@ -70,6 +70,26 @@
             :value="item.supplierCode"
             v-for="item in selectlist"
             :key="item.supplierCode"
+          >
+            {{ item.supplierName }}
+          </a-select-option>
+        </a-select> -->
+        <a-select
+          default-value="全部"
+          show-search
+          v-model="drstatus"
+          option-filter-prop="children"
+          :filter-option="filterOption"
+          @search="handleSearch"
+          @change="handleChange"
+          :default-active-first-option="false"
+          :show-arrow="false"
+          :not-found-content="null"
+        >
+          <a-select-option
+            :value="item.supplierCode"
+            v-for="item in selectlist"
+            :key="item.id"
           >
             {{ item.supplierName }}
           </a-select-option>
@@ -223,11 +243,13 @@
 
 <script>
 import api from './../../api'
+import { debounce } from '../../utils/util'
 
 export default {
   components: {},
   data() {
     return {
+      drstatus: '全部', //所属供应商默认值
       scrollY: 100,
       selectArrstrain: [
         //有bug
@@ -356,10 +378,10 @@ export default {
     }
   },
   created() {
-    api.getSupplierListByPager2({ pageNum: 1, pageSize: 10000 }).then(res => {
-      this.selectlist = res.data.records
-      this.selectlist.unshift({ supplierCode: '', supplierName: '全部' })
-    })
+    // api.getSupplierListByPager2({ pageNum: 1, pageSize: 10000 }).then(res => {
+    //   this.selectlist = res.data.records
+    //   this.selectlist.unshift({ supplierCode: '', supplierName: '全部' })
+    // })
     api.getCategoryTree().then(resp => {
       this.treeData = resp.data
       this.treeData.unshift({ categoryId: '', name: '全部' })
@@ -367,6 +389,7 @@ export default {
   },
   mounted() {
     this.getList()
+    // this.supplierlis()
     const timer1 = setTimeout(() => {
       this.scrollY = document.body.clientHeight - 310 + 'px'
     }, 0)
@@ -375,6 +398,30 @@ export default {
     })
   },
   methods: {
+    supplierlis(value) {
+      api
+        .getSupplierListByPager2({
+          keyword: value || '',
+          pageNum: 1,
+          pageSize: 100000,
+        })
+        .then(res => {
+          this.selectlist = res.data.records.slice(0, 50)
+          this.selectlist.unshift({ id: '', supplierName: '全部' })
+        })
+    },
+    handleSearch(value) {
+      debounce(() => {
+        this.supplierlis(value)
+      }, 500)
+    },
+    filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text
+          .toLowerCase()
+          .indexOf(input.toLowerCase()) >= 0
+      )
+    },
     //重置数据
     onReset() {
       this.categoryId = ''

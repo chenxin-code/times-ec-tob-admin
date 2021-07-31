@@ -53,6 +53,9 @@
           :filter-option="filterOption"
           @search="handleSearch"
           @change="handleChange"
+          :default-active-first-option="false"
+          :show-arrow="false"
+          :not-found-content="null"
         >
           <a-select-option
             :value="item.supplierCode"
@@ -178,7 +181,7 @@
 
 <script>
 import api from '@/api'
-import {debounce} from '../../utils/util';
+import { debounce } from '../../utils/util'
 
 export default {
   name: 'commodity',
@@ -335,7 +338,7 @@ export default {
   },
   created() {
     this.getList() //列表
-    this.supplierlis() //供应商
+    // this.supplierlis() //供应商
     api.getCategoryTree().then(resp => {
       this.treeData = resp.data
       this.treeData.unshift({ categoryCode: '', name: '全部' })
@@ -380,7 +383,7 @@ export default {
           pageSize: 100000,
         })
         .then(res => {
-          this.selectlist = res.data.records
+          this.selectlist = res.data.records.slice(0,50)
           this.selectlist.unshift({ id: '', supplierName: '全部' })
         })
     },
