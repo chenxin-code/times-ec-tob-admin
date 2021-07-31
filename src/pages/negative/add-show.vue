@@ -1,16 +1,5 @@
 <template>
   <div>
-    <div class="btns">
-      <a-button
-        class="item-btn"
-        :loading="btnloading"
-        type="primary"
-        @click="add()"
-        v-if="$route.path === '/negative/add'"
-        >保存
-      </a-button>
-      <a-button class="item-btn" @click="$router.back()">返回</a-button>
-    </div>
     <a-form-model
       :model="thisForm"
       layout="inline"
@@ -248,6 +237,17 @@
         <a-input v-model="reducedPriceDeduct" disabled />
       </a-form-model-item>
     </a-form-model>
+    <div class="btns">
+      <a-button
+        class="item-btn"
+        :loading="btnloading"
+        type="primary"
+        @click="add()"
+        v-if="$route.path === '/negative/add'"
+        >保存
+      </a-button>
+      <a-button class="item-btn" @click="$router.back()">返回</a-button>
+    </div>
     <a-modal
       :centered="true"
       v-model="showErrorTable"
@@ -993,7 +993,7 @@ export default {
 .btns {
   display: flex;
   justify-content: flex-end;
-  padding: 20px 20px 0 0;
+  padding: 20px 20px 30px 0;
 
   button {
     margin-left: 20px;
