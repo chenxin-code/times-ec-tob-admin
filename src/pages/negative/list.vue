@@ -77,7 +77,7 @@ export default {
         },
         {
           title: "创建人",
-          dataIndex: "createUser",
+          dataIndex: "createUserName",
           align: "center",
           width: 200,
         },
