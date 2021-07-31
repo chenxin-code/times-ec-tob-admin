@@ -1,6 +1,6 @@
 <template>
-	<div class="content-floor">
-		<div class="content-footer" v-if="$route.params.typ === '2'">
+	<div class="content-floor" v-if="isShow">
+		<div class="content-footer" >
 			<a-button
 				type="primary"
 				size="large"
@@ -8,6 +8,13 @@
 				:loading="loading"
 				@click="onSubmit()"
 				>保存</a-button
+			>
+				<a-button
+				type="primary"
+				size="large"
+				style="width: 120px;"		
+				@click="onBack()"
+				>返回</a-button
 			>
 		</div>
 	</div>
@@ -21,18 +28,30 @@ export default {
 		return {}
 	},
 	props: {
-		formList: {
+		isShow: {
 			type: Boolean,
 			default: false,
 		},
+		loading:{
+			type: Boolean,
+			default: false,
+		}
 	},
 	computed: {},
-	methods: {},
+	methods: {
+		onSubmit(){
+			this.$emit('submit')
+		},
+		onBack(){
+			this.$router.back()
+			this.$emit('back')
+		}
+	},
 	created() {},
 	mounted() {},
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .content-footer {
 	display: flex;
 	justify-content: flex-end;

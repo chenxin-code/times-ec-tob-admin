@@ -6,11 +6,11 @@
         <!-- <a-button type="primary" :loading="loading" @click="onSubmit()"
           >保存</a-button
         > -->
-        <a-button
+       <!--  <a-button
           style="cursor:pointer;margin-left:12px;"
           @click="$router.back()"
           >返回</a-button
-        >
+        > -->
       </span>
     </div>
     <div
@@ -314,7 +314,7 @@
         </div>
       </a-form>
     </div>
-    <div class="content-footer" v-if="$route.params.typ === '2'">
+    <!-- <div class="content-footer" v-if="$route.params.typ === '2'">
       <a-button
         type="primary"
         size="large"
@@ -323,7 +323,8 @@
         @click="onSubmit()"
         >保存</a-button
       >
-    </div>
+    </div> -->
+    <FormSubmitButton :isShow="$route.params.typ === '2'"/>
   </div>
 </template>
 

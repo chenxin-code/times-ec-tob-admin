@@ -26,6 +26,10 @@ Object.keys(filters).forEach((key) => {
 import Print from 'vue-print-nb'
 Vue.use(Print);
 
+//底部的公共返回保存按鈕
+import FormSubmitButton from './components/FormSubmitButton/index.js'
+Vue.use(FormSubmitButton)
+
 Vue.use(Vuex);
 console.log(window.location)
 // Vue.use(VueCookies);
