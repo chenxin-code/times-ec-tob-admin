@@ -8,7 +8,7 @@
               :data-source="categoryData"
               :loading="tableLoading"
               row-key="categoryId"
-              indentSize="35"
+              :indentSize="35"
               :pagination="false">
             <template slot="children" slot-scope="scope">
               <div class="editable-row-operations">
@@ -50,7 +50,7 @@ export default {
   computed: {
     childrenParse() {
       return param => {
-        if (param.length === 0) {
+        if (!param || param.length === 0) {
           return '是';
         } else {
           return '否';
@@ -75,7 +75,7 @@ export default {
       if (resp.code === 200) {
         this.categoryData = resp.data;
         console.log(this.categoryData);
-        //this.delChild(this.categoryData);
+        this.delChild(this.categoryData);
       }
     }).finally(() => {
       this.tableLoading = false;
