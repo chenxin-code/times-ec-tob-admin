@@ -696,10 +696,10 @@ export default {
         totalPretaxReducedPriceDeduct += item.set1 * item.set4;
         totalReducedPriceDeduct += item.set1 * item.set5;
       });
-      this.totalPretaxItemPriceDeduct = totalPretaxItemPriceDeduct;
-      this.totalAmountDeduct = totalAmountDeduct;
-      this.totalPretaxReducedPriceDeduct = totalPretaxReducedPriceDeduct;
-      this.totalReducedPriceDeduct = totalReducedPriceDeduct;
+      this.totalPretaxItemPriceDeduct = totalPretaxItemPriceDeduct.toFixed(2);
+      this.totalAmountDeduct = totalAmountDeduct.toFixed(2);
+      this.totalPretaxReducedPriceDeduct = totalPretaxReducedPriceDeduct.toFixed(2);
+      this.totalReducedPriceDeduct = totalReducedPriceDeduct.toFixed(2);
     },
     handleSearch(value) {
       debounce(() => {
