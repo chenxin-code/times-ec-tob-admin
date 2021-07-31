@@ -332,7 +332,7 @@ export default {
   },
   created() {
     const timer1 = setTimeout(() => {
-      this.scrollY = document.body.clientHeight - 360 + 'px'
+      this.scrollY = document.body.clientHeight - 366 + 'px'
     }, 0)
     this.$once('hook:beforeDestroy', () => {
       clearTimeout(timer1)

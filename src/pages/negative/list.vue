@@ -18,7 +18,7 @@
                 :columns="tableColumns"
                 :row-key="(r,i) => i"
                 :data-source="tableData"
-                :scroll="{ x: 1000 }"
+                :scroll="{ x: 1300, y: scrollY }"
                 :pagination="false"
                 :loading="tableLoading">
               <span slot="action" slot-scope="scope">
