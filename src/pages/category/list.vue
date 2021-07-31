@@ -8,6 +8,7 @@
               :data-source="categoryData"
               :loading="tableLoading"
               row-key="categoryId"
+              indentSize="35"
               :pagination="false">
             <template slot="children" slot-scope="scope">
               <div class="editable-row-operations">
@@ -38,6 +39,9 @@ export default {
           title: '是否末级',
           key: 'children',
           scopedSlots: {customRender: 'children'},
+          align: 'center',
+          width: 800,
+          fixed: 'right',
         },
       ],
       tableLoading: false,
@@ -54,12 +58,24 @@ export default {
       }
     },
   },
+  methods: {
+    delChild(data) {
+      for (let i = 0; i < data.length; i++) {
+        if(data[i].children.length === 0){
+          delete data[i].children;
+        }else{
+          this.delChild(data[i].children);
+        }
+      }
+    },
+  },
   mounted() {
     this.tableLoading = true;
     api.getCategoryTree({}).then(resp => {
       if (resp.code === 200) {
         this.categoryData = resp.data;
         console.log(this.categoryData);
+        //this.delChild(this.categoryData);
       }
     }).finally(() => {
       this.tableLoading = false;

@@ -310,7 +310,7 @@ export default {
         },
         {
           title: '税前销售价(数量=元)',
-          width: 160,
+          width: 200,
           align: 'center',
           key: 'sellingPrice',
           // dataIndex: 'beforeTaxSellingPrice',
@@ -318,7 +318,7 @@ export default {
         },
         {
           title: '税后销售价(数量=元)',
-          width: 160,
+          width: 200,
           align: 'center',
           // key: 'sellingPrice',
           // dataIndex: 'sellingPrice',
