@@ -159,6 +159,21 @@
         <a-input v-model="reducedPriceDeduct" disabled/>
       </a-form-model-item>
     </a-form-model>
+    <a-modal :centered="true" v-model="showErrorTable" title="错误提示" width="1000px" :maskClosable="false">
+      <a-table :columns="errorTableColumns" :row-key="(r, i) => i" :data-source="errorArr" :pagination="false" :showHeader="true">
+        <template slot="column23" slot-scope="scope">
+          {{scope.column2}}
+          <span style="color: dodgerblue">{{scope.column3}}</span>
+        </template>
+        <template slot="column4" slot-scope="scope">
+          不能大于
+          <span style="color: red">{{scope.column4}}</span>
+        </template>
+      </a-table>
+      <template slot="footer">
+        <a-button type="primary" @click="showErrorTable = false">我知道了，返回处理</a-button>
+      </template>
+    </a-modal>
   </div>
 </template>
 
@@ -502,6 +517,26 @@ export default {
           }
         }
       },
+      showErrorTable: false,
+      errorArr: [],
+      errorTableColumns: [
+        {
+          key: 'column1',
+          dataIndex: 'column1',
+          align: "center",
+          width: 250,
+        },
+        {
+          scopedSlots: {customRender: 'column23'},
+          align: "center",
+          width: 200,
+        },
+        {
+          scopedSlots: {customRender: 'column4'},
+          align: "center",
+          width: 200,
+        },
+      ],
       //8个非输入框总价
       totalPretaxItemPrice: null,
       totalAmount: null,
@@ -529,6 +564,95 @@ export default {
     add(){
       this.$refs.thisForm.validate(valid => {
         if(valid){
+          let errorArr = [];
+          this.beSelected.forEach((item, index) => {
+            let set1_limit = item.itemNum - item.itemNumDeduct,
+                set2_limit = item.pretaxItemPrice - item.pretaxItemPriceDeduct,
+                set3_limit = item.itemPrice - item.itemPriceDeduct,
+                set4_limit = item.pretaxReducedPrice - item.pretaxReducedPriceDeduct,
+                set5_limit = item.reducedPrice - item.reducedPriceDeduct;
+            if(item.set1 > set1_limit){
+              errorArr.push({
+                column1: '已选商品【' + item.itemName + '】',
+                column2: '设置扣减数量',
+                column3: item.set1,
+                column4: set1_limit,
+              });
+            }
+            if(item.set2 > set2_limit){
+              errorArr.push({
+                column1: '已选商品【' + item.itemName + '】',
+                column2: '设置税前销售价',
+                column3: item.set2,
+                column4: set2_limit,
+              });
+            }
+            if(item.set3 > set3_limit){
+              errorArr.push({
+                column1: '已选商品【' + item.itemName + '】',
+                column2: '设置税后销售价',
+                column3: item.set3,
+                column4: set3_limit,
+              });
+            }
+            if(item.set4 > set4_limit){
+              errorArr.push({
+                column1: '已选商品【' + item.itemName + '】',
+                column2: '设置税前优惠价',
+                column3: item.set4,
+                column4: set4_limit,
+              });
+            }
+            if(item.set5 > set5_limit){
+              errorArr.push({
+                column1: '已选商品【' + item.itemName + '】',
+                column2: '设置税后优惠价',
+                column3: item.set5,
+                column4: set5_limit,
+              });
+            }
+          });
+          let total1_limit = this.totalPretaxItemPrice - this.pretaxItemPriceDeduct,
+              total2_limit = this.totalAmount - this.itemPriceDeduct,
+              total3_limit = this.totalPretaxReducedPrice - this.pretaxReducedPriceDeduct,
+              total4_limit = this.totalReducedPrice - this.reducedPriceDeduct;
+          if(this.totalPretaxItemPriceDeduct > total1_limit){
+            errorArr.push({
+              column1: '销售单总价',
+              column2: '税前扣减销售总价',
+              column3: this.totalPretaxItemPriceDeduct,
+              column4: total1_limit,
+            });
+          }
+          if(this.totalAmountDeduct > total2_limit){
+            errorArr.push({
+              column1: '销售单总价',
+              column2: '税后扣减销售总价',
+              column3: this.totalAmountDeduct,
+              column4: total2_limit,
+            });
+          }
+          if(this.totalPretaxReducedPriceDeduct > total3_limit){
+            errorArr.push({
+              column1: '销售单总价',
+              column2: '税前扣减优惠总价',
+              column3: this.totalPretaxReducedPriceDeduct,
+              column4: total3_limit,
+            });
+          }
+          if(this.totalReducedPriceDeduct > total4_limit){
+            errorArr.push({
+              column1: '销售单总价',
+              column2: '税后扣减优惠总价',
+              column3: this.totalReducedPriceDeduct,
+              column4: total4_limit,
+            });
+          }
+          if(errorArr.length > 0){
+            this.showErrorTable = true;
+            this.errorArr = errorArr;
+            return;
+          }
           let itemList = JSON.parse(JSON.stringify(this.beSelected));
           itemList.forEach((item,index) => {
             itemList[index].itemNumDeduct = item.set1;//覆盖

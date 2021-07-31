@@ -449,19 +449,6 @@ export default {
     width: 250px;
   }
 
-  /deep/ .ant-form-item-label {
-    width: 120px;
-    text-align: right;
-  }
-
-  /deep/ .item-btns {
-    width: 250px !important;
-
-    .ant-form-item-control-wrapper {
-      width: 300px !important;
-    }
-  }
-
   /deep/ .item-btns .item-btn {
     margin-right: 20px;
   }
