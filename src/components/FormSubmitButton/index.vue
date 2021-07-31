@@ -2,6 +2,7 @@
 	<div class="content-floor" v-if="isShow">
 		<div class="content-footer" >
 			<a-button
+				v-if="isShowSubmit"
 				type="primary"
 				size="large"
 				style="width: 120px;"
@@ -10,7 +11,7 @@
 				>保存</a-button
 			>
 				<a-button
-				type="primary"
+				v-if="isShowCancel"
 				size="large"
 				style="width: 120px;"		
 				@click="onBack()"
@@ -35,7 +36,15 @@ export default {
 		loading:{
 			type: Boolean,
 			default: false,
-		}
+		},
+		isShowSubmit:{
+			type: Boolean,
+			default: true,
+		},
+		isShowCancel:{
+			type: Boolean,
+			default: true,
+		},
 	},
 	computed: {},
 	methods: {

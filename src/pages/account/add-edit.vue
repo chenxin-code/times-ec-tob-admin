@@ -1,66 +1,71 @@
 <template>
   <div style="height: 100%;">
-    <a-form-model
-      :model="thisForm"
-      layout="inline"
-      :rules="rules"
-      ref="thisForm"
-      labelAlign="left"
+     <div
+      class="content-main"
+      style="height: calc(100% - 100px);margin-top: 12px;padding:20px 60px 20px 20px;"
     >
-      <div class="common-title">
-        <div class="common-title-content">账号信息</div>
-      </div>
-      <a-form-model-item label="所属企业" prop="enterpriseName">
-        <div
-          :class="`companySelect ${showRedBorder && 'border-red'}`"
-          @click="visible = true"
-        >
-          {{ enterpriseName }}
-        </div>
-        <p v-show="showRedBorder" class="companySelectTip">请选择所属企业</p>
-      </a-form-model-item>
-      <a-form-model-item label="姓名" prop="accountName">
-        <a-input
-          v-model="thisForm.accountName"
-          :maxLength="10"
-          autocomplete="off"
-        />
-      </a-form-model-item>
-      <a-form-model-item label="登录名" prop="loginName">
-        <a-input
-          v-model="thisForm.loginName"
-          autocomplete="off"
-          :maxLength="50"
-          :disabled="isDisable"
-        />
-      </a-form-model-item>
-      <a-form-model-item label="状态">
-        <a-select v-model="thisForm.accountState">
-          <a-select-option value="NORMAL">正常</a-select-option>
-          <a-select-option value="DISABLED">禁用</a-select-option>
-        </a-select>
-      </a-form-model-item>
-      <a-form-model-item label="密码" prop="password" v-if="!isDisable">
-        <a-input-password v-model="thisForm.password" autocomplete="new-password" />
-      </a-form-model-item>
-      <a-form-model-item
-        label="确认密码"
-        prop="confirmPassword"
-        v-if="!isDisable"
+      <a-form-model
+        :model="thisForm"
+        layout="inline"
+        :rules="rules"
+        ref="thisForm"
+        labelAlign="left"
       >
-        <a-input-password
-          v-model="thisForm.confirmPassword"
-          autocomplete="new-password"
-        />
-      </a-form-model-item>
-      <a-form-model-item label="电子邮箱" prop="email">
-        <a-input v-model="thisForm.email" autocomplete="off" />
-      </a-form-model-item>
-      <a-form-model-item label="手机号码" prop="accountPhone">
-        <a-input v-model="thisForm.accountPhone" autocomplete="off" />
-      </a-form-model-item>
-    </a-form-model>
-    <div class="btns">
+        <div class="common-title">
+          <div class="common-title-content">账号信息</div>
+        </div>
+        <a-form-model-item label="所属企业" prop="enterpriseName">
+          <div
+            :class="`companySelect ${showRedBorder && 'border-red'}`"
+            @click="visible = true"
+          >
+            {{ enterpriseName }}
+          </div>
+          <p v-show="showRedBorder" class="companySelectTip">请选择所属企业</p>
+        </a-form-model-item>
+        <a-form-model-item label="姓名" prop="accountName">
+          <a-input
+            v-model="thisForm.accountName"
+            :maxLength="10"
+            autocomplete="off"
+          />
+        </a-form-model-item>
+        <a-form-model-item label="登录名" prop="loginName">
+          <a-input
+            v-model="thisForm.loginName"
+            autocomplete="off"
+            :maxLength="50"
+            :disabled="isDisable"
+          />
+        </a-form-model-item>
+        <a-form-model-item label="状态">
+          <a-select v-model="thisForm.accountState">
+            <a-select-option value="NORMAL">正常</a-select-option>
+            <a-select-option value="DISABLED">禁用</a-select-option>
+          </a-select>
+        </a-form-model-item>
+        <a-form-model-item label="密码" prop="password" v-if="!isDisable">
+          <a-input-password v-model="thisForm.password" autocomplete="new-password" />
+        </a-form-model-item>
+        <a-form-model-item
+          label="确认密码"
+          prop="confirmPassword"
+          v-if="!isDisable"
+        >
+          <a-input-password
+            v-model="thisForm.confirmPassword"
+            autocomplete="new-password"
+          />
+        </a-form-model-item>
+        <a-form-model-item label="电子邮箱" prop="email">
+          <a-input v-model="thisForm.email" autocomplete="off" />
+        </a-form-model-item>
+        <a-form-model-item label="手机号码" prop="accountPhone">
+          <a-input v-model="thisForm.accountPhone" autocomplete="off" />
+        </a-form-model-item>
+      </a-form-model>
+    </div>
+   <!--  <div class="btns">
       <a-button
         class="item-btn"
         :loading="btnloading"
@@ -69,7 +74,8 @@
         >保存</a-button
       >
       <a-button class="item-btn" @click="$router.back()">返回</a-button>
-    </div>
+    </div> -->
+    <FormSubmitButton :isShow="true" @submit="addEdit"/>
     <a-modal
       title="选择所属企业"
       :visible="visible"
