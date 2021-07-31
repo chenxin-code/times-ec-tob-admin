@@ -19,9 +19,10 @@
         </span>
       </a-table>
     </div>
-    <div class="content-footer">
+    <!-- <div class="content-footer">
      <a-button type="primary" size="large" style="width: 120px; margin-right: 10px;" @click="FALLBACK">返回</a-button>
-    </div>
+    </div> -->
+    <FormSubmitButton :isShow="true" :isShowSubmit="false"/>
     <a-modal
 			v-model="isShowModal"
 			title=""

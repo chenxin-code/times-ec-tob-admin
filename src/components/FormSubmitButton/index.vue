@@ -13,6 +13,7 @@
 				<a-button
 				v-if="isShowCancel"
 				size="large"
+				type="primary"
 				style="width: 120px;"		
 				@click="onBack()"
 				>返回</a-button

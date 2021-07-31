@@ -2,9 +2,9 @@
   <div id="distributorAudit">
     <div class="content-header">
       供应商详情
-      <span class="fallback" @click="FALLBACK" style="cursor:pointer"
+    <!--   <span class="fallback" @click="FALLBACK" style="cursor:pointer"
         >返回</span
-      >
+      > -->
     </div>
     <div
       class="content-main"
@@ -35,6 +35,7 @@
         </a-form-model-item>
       </a-form-model>
     </div>
+    <FormSubmitButton :isShow="true" :isShowSubmit="false"/>
   </div>
 </template>
 
