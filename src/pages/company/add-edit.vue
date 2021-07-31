@@ -446,7 +446,7 @@ export default {
 .btns {
   display: flex;
   justify-content: flex-end;
-  padding: 20px 20px 0 0;
+  padding: 20px 20px 30px 0;
 
   button {
     margin-left: 20px;
