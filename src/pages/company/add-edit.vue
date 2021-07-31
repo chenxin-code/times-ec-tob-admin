@@ -116,8 +116,8 @@
             </a-form-model-item>
           </div>
           <div style="flex: 1">
-            <a-form-model-item label="电子邮箱" prop="email">
-              <a-input v-model="thisForm.email" />
+            <a-form-model-item label="电子邮箱" prop="eMail">
+              <a-input v-model="thisForm.eMail" />
             </a-form-model-item>
           </div>
         </div>
@@ -193,7 +193,7 @@ export default {
         detailAddress: null,
         remark: null,
         enterprisePhone: null,
-        email: null,
+        eMail: null,
         concatPerson: null,
         concatPhone: null,
         provinceCode: null, //省
@@ -218,7 +218,7 @@ export default {
           { required: true, message: '请输入联系电话', trigger: 'blur' },
           { validator: checkMobileFormat, trigger: 'blur' },
         ],
-        email: [{ validator: checkEmailFormat, trigger: 'blur' }],
+        eMail: [{ validator: checkEmailFormat, trigger: 'blur' }],
       },
       btnloading: false,
       areaData: [],
@@ -263,7 +263,7 @@ export default {
               this.thisForm.detailAddress = resp.data.detailAddress
               this.thisForm.remark = resp.data.remark
               this.thisForm.enterprisePhone = resp.data.enterprisePhone
-              this.thisForm.email = resp.data.email
+              this.thisForm.eMail = resp.data.eMail
               this.thisForm.concatPerson = resp.data.concatPerson
               this.thisForm.concatPhone = resp.data.concatPhone
               this.thisForm.provinceCode = resp.data.provinceCode //省
