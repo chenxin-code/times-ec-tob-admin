@@ -209,7 +209,7 @@ export default {
         ],
         enterprisePhone: [
           { required: true, message: '请输入企业电话', trigger: 'blur' },
-          { validator: checkMobileFormat, trigger: 'blur' },
+          //{ validator: aaaaaaaaaaa, trigger: 'blur' },
         ],
         concatPerson: [
           { required: true, message: '请输入联系人', trigger: 'blur' },
