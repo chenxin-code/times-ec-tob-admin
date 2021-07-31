@@ -33,7 +33,7 @@
         </a-form-model-item>
         <a-form-model-item label="销售单号" v-if="$route.path === '/negative/show'">{{saleOrderNo}}</a-form-model-item>
         <a-form-model-item label="负数单号" v-if="$route.path === '/negative/show'">{{$route.query.negativeNo}}</a-form-model-item>
-        <a-form-model-item label="创建人" v-if="$route.path === '/negative/show'">{{createUser}}</a-form-model-item>
+        <a-form-model-item label="创建人" v-if="$route.path === '/negative/show'">{{createUserName}}</a-form-model-item>
         <a-form-model-item label="创建时间" v-if="$route.path === '/negative/show'">{{createTime}}</a-form-model-item>
         <div class="common-title">
           <div class="common-title-content">选择商品</div>
@@ -132,10 +132,14 @@
             <a-form-model-item label="税后优惠总价">{{ totalReducedPrice }}</a-form-model-item>
           </div>
           <div style="flex: 1">
-            <a-form-model-item label="已扣税前销售总价">{{ pretaxItemPriceDeduct }}</a-form-model-item>
-            <a-form-model-item label="已扣税后销售总价">{{ itemPriceDeduct }}</a-form-model-item>
-            <a-form-model-item label="已扣税前优惠总价">{{ pretaxReducedPriceDeduct }}</a-form-model-item>
-            <a-form-model-item label="已扣税后优惠总价">{{ reducedPriceDeduct }}</a-form-model-item>
+            <a-form-model-item label="已扣税前销售总价" v-if="$route.path === '/negative/add'">{{ pretaxItemPriceDeduct }}</a-form-model-item>
+            <a-form-model-item label="已扣税后销售总价" v-if="$route.path === '/negative/add'">{{ itemPriceDeduct }}</a-form-model-item>
+            <a-form-model-item label="已扣税前优惠总价" v-if="$route.path === '/negative/add'">{{ pretaxReducedPriceDeduct }}</a-form-model-item>
+            <a-form-model-item label="已扣税后优惠总价" v-if="$route.path === '/negative/add'">{{ reducedPriceDeduct }}</a-form-model-item>
+            <a-form-model-item label="已扣税前销售总价" v-if="$route.path === '/negative/show'">{{ totalPretaxItemPriceDeduct }}</a-form-model-item>
+            <a-form-model-item label="已扣税后销售总价" v-if="$route.path === '/negative/show'">{{ totalAmountDeduct }}</a-form-model-item>
+            <a-form-model-item label="已扣税前优惠总价" v-if="$route.path === '/negative/show'">{{ totalPretaxReducedPriceDeduct }}</a-form-model-item>
+            <a-form-model-item label="已扣税后优惠总价" v-if="$route.path === '/negative/show'">{{ totalReducedPriceDeduct }}</a-form-model-item>
           </div>
         </div>
         <a-form-model-item label="税前扣减销售总价" v-if="$route.path === '/negative/add'">
@@ -198,7 +202,7 @@ export default {
     };
     return {
       saleOrderNo: null,
-      createUser: null,
+      createUserName: null,
       createTime: null,
       orderNoList: [],
       thisForm: {
@@ -757,7 +761,7 @@ export default {
       api.queryNegativeDetail({negativeNo: this.$route.query.negativeNo}).then(resp => {
         if (resp.code === 200) {
           this.saleOrderNo = resp.data.saleOrderNo;
-          this.createUser = resp.data.createUser;
+          this.createUserName = resp.data.createUserName;
           this.createTime = resp.data.createTime;
           this.tableData2 = resp.data.infoList;
           //8个非输入框总价
@@ -765,10 +769,15 @@ export default {
           this.totalAmount = resp.data.totalAmount;
           this.totalPretaxReducedPrice = resp.data.totalPretaxReducedPrice;
           this.totalReducedPrice = resp.data.totalReducedPrice;
-          this.pretaxItemPriceDeduct = resp.data.totalPretaxItemPriceDeduct;
-          this.itemPriceDeduct = resp.data.totalAmountDeduct;
-          this.pretaxReducedPriceDeduct = resp.data.totalPretaxReducedPriceDeduct;
-          this.reducedPriceDeduct = resp.data.totalReducedPriceDeduct;
+          this.totalPretaxItemPriceDeduct = resp.data.totalPretaxItemPriceDeduct;
+          this.totalAmountDeduct = resp.data.totalAmountDeduct;
+          this.totalPretaxReducedPriceDeduct = resp.data.totalPretaxReducedPriceDeduct;
+          this.totalReducedPriceDeduct = resp.data.totalReducedPriceDeduct;
+          //4个输入框总价
+          this.pretaxItemPriceDeduct = resp.data.pretaxItemPriceDeduct;
+          this.itemPriceDeduct = resp.data.itemPriceDeduct;
+          this.pretaxReducedPriceDeduct = resp.data.pretaxReducedPriceDeduct;
+          this.reducedPriceDeduct = resp.data.reducedPriceDeduct;
         }
       }).finally(() => {
         this.tableLoading2 = false;
