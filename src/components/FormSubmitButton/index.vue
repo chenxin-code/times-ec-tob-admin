@@ -20,9 +20,10 @@
 			>
 		</div>
 	</div>
-</div>
 </template>
 <script type="text/javascript">
+import {debounce} from "../../utils/util";
+
 export default {
 	name: 'FormSubmitButton',
 	components: {},
@@ -50,7 +51,9 @@ export default {
 	computed: {},
 	methods: {
 		onSubmit(){
-			this.$emit('submit')
+      debounce(() => {
+        this.$emit('submit');
+      }, 500);
 		},
 		onBack(){
 			this.$router.back()
