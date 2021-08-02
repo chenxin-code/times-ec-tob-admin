@@ -180,35 +180,35 @@
             dataIndex: "itemName",
             key: "itemName",
             ellipsis: true,
-            align: 'center'
+            align: 'left'
           },
           {
             title: "配送数量",
             key: "deliveryNum",
             dataIndex: 'deliveryNum',
             ellipsis: true,
-            align: 'center'
+            align: 'left'
           },
           {
             title: "签收数量",
             key: "receiveNum",
             dataIndex: "receiveNum",
             ellipsis: true,
-            align: 'center'
+            align: 'left'
           },
           {
             title: "未签收数量",
             width: 250,
             ellipsis: true,
             scopedSlots: {customRender: "noReceiveNum"},
-            align: 'center'
+            align: 'left'
           },
           {
             title: "备注",
             key: "payBillMark",
             dataIndex: "payBillMark",
             ellipsis: true,
-            align: 'center'
+            align: 'left'
           }
         ]
       }
