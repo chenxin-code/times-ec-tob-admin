@@ -156,7 +156,7 @@
         </template>
       </a-table>
     </div>
-    <div class="content-footer">
+    <!-- <div class="content-footer">
       <a-button
         type="primary"
         size="large"
@@ -164,7 +164,11 @@
         @click="FALLBACK"
         >返回</a-button
       >
-    </div>
+    </div> -->
+    <FormSubmitButton
+      :isShow="true"
+      :isShowSubmit="false"
+    />
   </div>
 </template>
 
