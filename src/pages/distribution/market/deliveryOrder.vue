@@ -57,9 +57,9 @@
         <div class="item-list">
           <div>
             <div class="img-box" v-if="dataListDetail.deliveryProofImgList && dataListDetail.deliveryProofImgList.length > 0">
+              <div class="item-title">配送凭证：</div>
               <img 
                 v-for="item in dataListDetail.deliveryProofImgList"
-                :key="item"
                 :src="item"
                 @click="seeImgItem(item)" />
             </div>
@@ -70,9 +70,9 @@
             <span>签收单号：{{dataListDetail.receiveNo}}</span>
             <span>签收时间：{{dataListDetail.approveTime}}</span>
             <div class="img-box" v-if="dataListDetail.receiverProofImgList && dataListDetail.receiverProofImgList.length > 0">
+              <div class="item-title">签收凭证：</div>
               <img 
                 v-for="item in dataListDetail.receiverProofImgList"
-                :key="item"
                 :src="item"
                 @click="seeImgItem(item)" />
             </div>
@@ -344,10 +344,14 @@
 }
 .img-box {
   padding-top: 10px;
+  .item-title {
+    padding-bottom: 10px;
+  }
   img {
     width:auto;
-    height: 100px;
+    height: 50px;
     margin-right: 10px;
+    margin-bottom: 10px;
     cursor: pointer;
   }
 }
