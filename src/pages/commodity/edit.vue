@@ -545,8 +545,7 @@ export default {
         }
         this.form.validateFields(['sellingPriceList'], { force: true })
       }
-      debounce(() => {
-        this.form.validateFields((err, values, callback) => {
+      this.form.validateFields((err, values, callback) => {
           console.log('err--->', err, values, callback)
           if (this.isTieredPricing) {
             if (err && err.sellingPriceList) {
@@ -593,7 +592,6 @@ export default {
               this.loading = false
             })
         })
-      })
     },
   },
 }
