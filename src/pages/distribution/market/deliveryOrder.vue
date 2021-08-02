@@ -53,6 +53,17 @@
             </template>
           </a-table>
         </div>
+        <div class="item-list">
+          <div>
+            <div class="img-box" v-if="dataListDetail.deliveryProofImgList && dataListDetail.deliveryProofImgList.length > 0">
+              <img 
+                v-for="item in dataListDetail.deliveryProofImgList"
+                :key="item"
+                :src="item"
+                @click="seeImgItem(item)" />
+            </div>
+          </div>
+        </div>
         <div class="item-list" v-if="dataListDetail.approveStatus != 0">
           <div>
             <span>签收单号：{{dataListDetail.receiveNo}}</span>
@@ -61,11 +72,25 @@
               <img 
                 v-for="item in dataListDetail.receiverProofImgList"
                 :key="item"
-                :src="item" />
+                :src="item"
+                @click="seeImgItem(item)" />
             </div>
           </div>
         </div>
 			</template>
+		</a-modal>
+    <a-modal
+			:visible="previewVisible"
+			:dialog-style="{ top: '30px' }"
+			:footer="null"
+			@cancel="handleCancelPreview">
+			<div class="preview-visible-img">
+				<img 
+					alt="example"
+					style="width: 100%"
+					:src="imgUrl"
+				/>
+			</div>
 		</a-modal>
   </div>
 </template>
@@ -100,6 +125,8 @@
     },
     data() {
       return {
+        previewVisible: false,
+        imgUrl: '',
         saleOrderNo: '',
         pageData: {
           pageNum: 1,
@@ -232,6 +259,15 @@
       handleCancel() {
         this.isShowModal = false
       },
+      // 取消
+      handleCancelPreview() {
+        this.previewVisible = false;
+        this.imgUrl = '';
+      },
+      seeImgItem(item){
+			  this.imgUrl = item;
+			  this.previewVisible = true;
+      },
       // 详情
       async detail(row) {
         this.isShowModal = true
@@ -311,6 +347,13 @@
     width:auto;
     height: 100px;
     margin-right: 10px;
+    cursor: pointer;
   }
+}
+.preview-visible-img{
+	padding-top: 10px;
+	img{
+		margin-top: 10px;
+	}
 }
 </style>
