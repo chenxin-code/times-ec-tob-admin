@@ -68,9 +68,7 @@ export default {
 .content-floor {
 	position: fixed;
 	bottom:12px;
-	right:12px;
-	background-color:#fff;
-}
+	right:12px;}
 .content-footer-view {
 	display: flex;
 	justify-content: flex-end;

@@ -455,8 +455,7 @@ export default {
             .updateSelling({ ids: this.beSelected, selling: type })
             .then(res => {
               this.$message.success(
-                // `${type == 0 ? '批量下架' : '批量上架'}成功`
-                `批量操作成功`
+                `${type == 0 ? '批量下架' : '批量上架'}成功`                
               )
               this.piliangLoading = false
               this.selectedRowKeys = []
@@ -482,7 +481,7 @@ export default {
           api
             .updateSellingById(scope.id)
             .then(res => {
-              this.$message.success(`${scope.selling ? '上架' : '下架'}成功`)
+              this.$message.success(`${scope.selling ? '下架' : '上架'}成功`)
               const findIndex = this.beSelected.findIndex(
                 item => item == scope.id
               )
