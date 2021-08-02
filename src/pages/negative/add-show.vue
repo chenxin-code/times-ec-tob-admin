@@ -240,7 +240,7 @@ export default {
           title: '规格',
           scopedSlots: {customRender: 'itemSpecs'},
           align: "center",
-          width: 150,
+          width: 200,
         },
         {
           title: '所属供应商',
@@ -388,7 +388,7 @@ export default {
           title: '规格',
           scopedSlots: {customRender: 'itemSpecs'},
           align: "center",
-          width: 150,
+          width: 200,
         },
         {
           title: '所属供应商',
@@ -566,7 +566,11 @@ export default {
   computed: {
     itemSpecsParse() {
       return param => {
-        return JSON.parse(param)['规格'].join();
+        if(param){
+          return JSON.parse(param)['规格'].join();
+        }else{
+          return null;
+        }
       }
     },
   },
