@@ -135,6 +135,7 @@ export default {
     this.$once('hook:beforeDestroy', () => {
       clearTimeout(timer1)
     })
+    this.handleSearch()
   },
   methods: {
     // 获取列表数据
