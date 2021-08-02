@@ -137,9 +137,11 @@ export default {
       },
       {
         title: '收货信息',
-        width: 250,
+        width: 300,
         align: 'left',
-        scopedSlots: { customRender: 'receiverAddress' },
+        key: 'receiverAddress',
+        dataIndex: 'receiverAddress',
+        // scopedSlots: { customRender: 'receiverAddress' },
         align: 'left',
       },
       {
