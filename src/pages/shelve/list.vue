@@ -473,7 +473,7 @@ export default {
       //单独上下架
       this.$confirm({
         title: `状态更改`,
-        content: `您确定要执行${scope.selling ? '上架' : '下架'}？`,
+        content: `您确定要执行${scope.selling ? '下架' : '上架'}？`,
         centered: true,
         okText: '确定',
         cancelText: '取消',
