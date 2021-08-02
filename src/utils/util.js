@@ -187,7 +187,7 @@ export function isTruePhone(areaCode, phone) {
 export function vaildPassword(val) {
   //精准校验：必须含有数字、字母、特殊字符，三个缺一不可
   // let exp = new RegExp(
-  // 	"(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{6,30}"
+  //  "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{6,30}"
   // );
 
   //-->数字+字母；字母+特殊字符，特殊字符+数字
@@ -288,4 +288,20 @@ export async function returnBaseCms(res) {
       window.location.href = baseCmsWebsite
     }
   }, 2000)
+}
+
+//格式化开始和结束时间
+export function parseDate(date, isEnd) {
+  let str = undefined
+  if (date) {
+    let oDate = new Date(date)
+    str =
+      oDate.getFullYear() + '-' + (oDate.getMonth() + 1) + '-' + oDate.getDate()
+  }
+  if (!isEnd) {
+    str = str + ' 00:00:00'
+  } else {
+    str = str + ' 23:59:59'
+  }
+  return str
 }
