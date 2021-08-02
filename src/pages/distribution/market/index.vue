@@ -139,7 +139,7 @@ export default {
         title: '收货信息',
         width: 250,
         align: 'left',
-        scopedSlots: { customRender: 'addressDto' },
+        scopedSlots: { customRender: 'receiverAddress' },
         align: 'left'
       },
       {
@@ -337,6 +337,7 @@ export default {
     this.$once('hook:beforeDestroy', () => {
       clearTimeout(timer1)
     })
+    this.handleSearch()
   },
   methods: {
     // 获取列表数据
