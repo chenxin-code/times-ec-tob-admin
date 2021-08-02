@@ -185,7 +185,7 @@ export default {
           title: '序号',
           customRender: (text, record, index) => `${index + 1}`,
           width: 110,
-          align: 'center',
+          align: 'left',
         },
         {
           title: '商品名称',
@@ -193,7 +193,7 @@ export default {
           key: 'itemName',
           width: 200,
           ellipsis: true,
-          align: 'center',
+          align: 'left',
         },
         {
           title: 'SKU名称',
@@ -201,7 +201,7 @@ export default {
           dataIndex: 'skuName',
           width: 200,
           ellipsis: true,
-          align: 'center',
+          align: 'left',
         },
         {
           title: 'SKU编码',
@@ -209,13 +209,13 @@ export default {
           dataIndex: 'skuCode',
           width: 200,
           ellipsis: true,
-          align: 'center',
+          align: 'left',
         },
         {
           title: '规格',
           width: 250,
           ellipsis: true,
-          align: 'center',
+          align: 'left',
           dataIndex: 'itemSpecs',
           // key: 'itemSpecs',
           scopedSlots: { customRender: 'itemSpecs' },
@@ -226,7 +226,7 @@ export default {
           dataIndex: 'supplierName',
           width: 200,
           ellipsis: true,
-          align: 'center',
+          align: 'left',
         },
         {
           title: '购买数量',
@@ -234,7 +234,7 @@ export default {
           dataIndex: 'itemNum',
           width: 150,
           ellipsis: true,
-          align: 'center',
+          align: 'left',
         },
         {
           title: '税前销售价',
@@ -242,7 +242,7 @@ export default {
           dataIndex: 'pretaxItemPrice',
           width: 150,
           ellipsis: true,
-          align: 'center',
+          align: 'left',
         },
         {
           title: '税后销售价',
@@ -250,7 +250,7 @@ export default {
           dataIndex: 'itemPrice',
           width: 150,
           ellipsis: true,
-          align: 'center',
+          align: 'left',
         },
         {
           title: '税前优惠价',
@@ -258,7 +258,7 @@ export default {
           dataIndex: 'pretaxReducedPrice',
           width: 150,
           ellipsis: true,
-          align: 'center',
+          align: 'left',
         },
         {
           title: '税后优惠价',
@@ -266,7 +266,7 @@ export default {
           dataIndex: 'reducedPrice',
           width: 150,
           ellipsis: true,
-          align: 'center',
+          align: 'left',
         },
         {
           title: '税率',
@@ -274,7 +274,7 @@ export default {
           dataIndex: 'taxRate',
           width: 150,
           ellipsis: true,
-          align: 'center',
+          align: 'left',
         },
         {
           title: '备注',
@@ -282,7 +282,7 @@ export default {
           dataIndex: 'remark',
           width: 200,
           ellipsis: true,
-          align: 'center',
+          align: 'left',
         },
       ],
     }

@@ -55,21 +55,21 @@ export default {
         dataIndex: 'supplierName',
         key: 'supplierName',
         width: 200,
-        align: 'center',
+        align: 'left',
       },
       {
         title: '供应商编码',
         width: 250,
         key: 'supplierCode',
         dataIndex: 'supplierCode',
-        align: 'center',
+        align: 'left',
       },
       {
         title: '创建时间',
         width: 250,
         key: 'createTime',
         dataIndex: 'createTime',
-        align: 'center',
+        align: 'left',
       },
       {
         title: '操作',
@@ -77,7 +77,7 @@ export default {
         fixed: 'right',
         width: 200,
         scopedSlots: { customRender: 'action' },
-        align: 'center',
+        align: 'left',
       },
     ]
     let pageData = {
@@ -135,6 +135,7 @@ export default {
     this.$once('hook:beforeDestroy', () => {
       clearTimeout(timer1)
     })
+    this.handleSearch()
   },
   methods: {
     // 获取列表数据

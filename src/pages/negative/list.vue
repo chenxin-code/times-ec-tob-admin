@@ -1,13 +1,27 @@
 <template>
   <div style="height: 100%;">
-    <a-form-model :model="thisForm" layout="inline" ref="thisForm" labelAlign="left">
+    <a-form-model
+      :model="thisForm"
+      layout="inline"
+      ref="thisForm"
+      labelAlign="left"
+    >
       <a-form-model-item label="订单编号" prop="orderNo">
-        <a-input v-model="thisForm.orderNo" placeholder="请输入订单编号"/>
+        <a-input v-model="thisForm.orderNo" placeholder="请输入订单编号" />
       </a-form-model-item>
       <a-form-model-item class="item-btns">
-        <a-button class="item-btn" type="primary" @click="getList()">查询</a-button>
-        <a-button class="item-btn" type="primary" @click="reset()">重置</a-button>
-        <a-button class="item-btn" @click="$router.push({path: '/negative/add'})" type="primary">新增</a-button>
+        <a-button class="item-btn" type="primary" @click="getList()"
+          >查询</a-button
+        >
+        <a-button class="item-btn" type="primary" @click="reset()"
+          >重置</a-button
+        >
+        <a-button
+          class="item-btn"
+          @click="$router.push({ path: '/negative/add' })"
+          type="primary"
+          >新增</a-button
+        >
       </a-form-model-item>
     </a-form-model>
     <div id="neighborhoodLife">
@@ -15,29 +29,41 @@
         <a-row style="padding: 0 20px;height: 100%;">
           <a-col>
             <a-table
-                :columns="tableColumns"
-                :row-key="(r,i) => i"
-                :data-source="tableData"
-                :scroll="{ x: 1300, y: scrollY }"
-                :pagination="false"
-                :loading="tableLoading">
+              :columns="tableColumns"
+              :row-key="(r, i) => i"
+              :data-source="tableData"
+              :scroll="{ x: 1300, y: scrollY }"
+              :pagination="false"
+              :loading="tableLoading"
+            >
               <span slot="action" slot-scope="scope">
-                <a-button type="link" @click="$router.push({path: '/negative/show', query: {id: scope.id,negativeNo: scope.negativeNo}})">查看详情</a-button>
-                <a-button type="link" @click="goDel(scope.negativeNo)">删除</a-button>
+                <a-button
+                  type="link"
+                  @click="
+                    $router.push({
+                      path: '/negative/show',
+                      query: { id: scope.id, negativeNo: scope.negativeNo },
+                    })
+                  "
+                  >查看详情</a-button
+                >
+                <a-button type="link" @click="goDel(scope.negativeNo)"
+                  >删除</a-button
+                >
               </span>
             </a-table>
             <a-pagination
-                :total="total"
-                :show-total="total => `共 ${total} 条`"
-                show-quick-jumper
-                show-size-changer
-                v-model="current"
-                :default-current="current"
-                :page-size.sync="pageSize"
-                :pageSizeOptions="['1','10','20','50','100']"
-                @change="onShowSizeChange"
-                @showSizeChange="onShowSizeChange"
-                style="margin-top:30px;width:100%;text-align: right;"
+              :total="total"
+              :show-total="total => `共 ${total} 条`"
+              show-quick-jumper
+              show-size-changer
+              v-model="current"
+              :default-current="current"
+              :page-size.sync="pageSize"
+              :pageSizeOptions="['1', '10', '20', '50', '100']"
+              @change="onShowSizeChange"
+              @showSizeChange="onShowSizeChange"
+              style="margin-top:30px;width:100%;text-align: right;"
             />
           </a-col>
         </a-row>
@@ -47,53 +73,53 @@
 </template>
 
 <script>
-import api from "./../../api";
+import api from './../../api'
 
 export default {
   components: {},
   data() {
     return {
       thisForm: {
-        orderNo: null
+        orderNo: null,
       },
       tableColumns: [
         {
-          title: "负数单编号",
-          dataIndex: "negativeNo",
-          align: "center",
+          title: '负数单编号',
+          dataIndex: 'negativeNo',
+          align: 'center',
           width: 250,
         },
         {
-          title: "订单编号",
-          dataIndex: "saleOrderNo",
-          align: "center",
+          title: '订单编号',
+          dataIndex: 'saleOrderNo',
+          align: 'center',
           width: 250,
         },
         {
-          title: "备注",
-          dataIndex: "remark",
-          align: "center",
+          title: '备注',
+          dataIndex: 'remark',
+          align: 'center',
           width: 250,
         },
         {
-          title: "创建人",
-          dataIndex: "createUser",
-          align: "center",
+          title: '创建人',
+          dataIndex: 'createUserName',
+          align: 'center',
           width: 200,
         },
         {
-          title: "创建时间",
-          dataIndex: "createTime",
-          align: "center",
+          title: '创建时间',
+          dataIndex: 'createTime',
+          align: 'center',
           width: 200,
         },
         {
-          title: "操作",
-          key: "operation",
-          fixed: "right",
-          align: "center",
+          title: '操作',
+          key: 'operation',
+          fixed: 'right',
+          align: 'center',
           width: 200,
-          scopedSlots: {customRender: "action"},
+          scopedSlots: { customRender: 'action' },
         },
       ],
       tableData: [],
@@ -101,7 +127,7 @@ export default {
       total: 0,
       pageSize: 10,
       current: 1,
-      scrollY: 100
+      scrollY: 100,
     }
   },
   created() {
@@ -110,34 +136,37 @@ export default {
     }, 0)
   },
   mounted() {
-    this.getList();
+    this.getList()
   },
   methods: {
-    reset(){
-      this.thisForm.orderNo = null;
-      this.current = 1;
-      this.pageSize = 10;
-      this.getList();
+    reset() {
+      this.thisForm.orderNo = null
+      this.current = 1
+      this.pageSize = 10
+      this.getList()
     },
     onShowSizeChange(current, pageSize) {
-      this.current = current;
-      this.pageSize = pageSize;
-      this.getList();
+      this.current = current
+      this.pageSize = pageSize
+      this.getList()
     },
     getList() {
-      this.tableLoading = true;
-      api.queryNegativeList({
-        ...this.thisForm,
-        pageNum: this.current,
-        pageSize: this.pageSize,
-      }).then(resp => {
-        if (resp.code === 200) {
-          this.tableData = resp.data.records;
-          this.total = Number(resp.data.total);
-        }
-      }).finally(() => {
-        this.tableLoading = false;
-      });
+      this.tableLoading = true
+      api
+        .queryNegativeList({
+          ...this.thisForm,
+          pageNum: this.current,
+          pageSize: this.pageSize,
+        })
+        .then(resp => {
+          if (resp.code === 200) {
+            this.tableData = resp.data.records
+            this.total = Number(resp.data.total)
+          }
+        })
+        .finally(() => {
+          this.tableLoading = false
+        })
     },
     goDel(negativeNo) {
       this.$confirm({
@@ -147,19 +176,22 @@ export default {
         okText: '确定',
         cancelText: '取消',
         onOk: () => {
-          this.tableLoading = true;
-          api.delNegativeBill({negativeNo: negativeNo}).then(resp => {
-            if (resp.code === 200) {
-              this.$message.success('删除成功');
-              this.getList();
-            }
-          }).finally(() => {
-            this.tableLoading = false;
-          });
-        }
-      });
+          this.tableLoading = true
+          api
+            .delNegativeBill({ negativeNo: negativeNo })
+            .then(resp => {
+              if (resp.code === 200) {
+                this.$message.success('删除成功')
+                this.getList()
+              }
+            })
+            .finally(() => {
+              this.tableLoading = false
+            })
+        },
+      })
     },
-  }
+  },
 }
 </script>
 

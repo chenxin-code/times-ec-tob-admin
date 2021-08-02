@@ -2,16 +2,16 @@
   <div style="height: 100%;margin-bottom: 0px;">
     <div class="content-header">
       {{ $route.params.typ === '1' ? '查看' : '编辑' }}商品基础信息
-      <span class="header-button fallback">
-        <!-- <a-button type="primary" :loading="loading" @click="onSubmit()"
+      <!--  <span class="header-button fallback">
+        <a-button type="primary" :loading="loading" @click="onSubmit()"
           >保存</a-button
-        > -->
-       <!--  <a-button
+        >
+        <a-button
           style="cursor:pointer;margin-left:12px;"
           @click="$router.back()"
           >返回</a-button
-        > -->
-      </span>
+        >
+      </span> -->
     </div>
     <div
       class="content-main"
@@ -228,7 +228,7 @@
                 />
               </div>
             </a-form-item>
-            <a-form-item label="销售价" v-show="isTieredPricing == true">
+            <a-form-item label="销售价" v-show="false">
               <a-input
                 type="hidden"
                 v-decorator="[
@@ -242,6 +242,8 @@
                   },
                 ]"
               />
+            </a-form-item>
+            <a-form-item label="销售价" v-show="isTieredPricing == true">
               <div
                 class="intpud"
                 v-for="(item, index) in sellingPrice"
@@ -324,7 +326,11 @@
         >保存</a-button
       >
     </div> -->
-    <FormSubmitButton :isShow="$route.params.typ === '2'"/>
+    <FormSubmitButton
+      :isShow="true"
+      :isShowSubmit="$route.params.typ === '2'"
+      @submit="onSubmit"
+    />
   </div>
 </template>
 
@@ -543,7 +549,7 @@ export default {
         this.form.validateFields((err, values, callback) => {
           console.log('err--->', err, values, callback)
           if (this.isTieredPricing) {
-            if (err.sellingPriceList) {
+            if (err && err.sellingPriceList) {
               this.$message.error('销售价的结束的数量限制不能小于起始数量')
               return
             }

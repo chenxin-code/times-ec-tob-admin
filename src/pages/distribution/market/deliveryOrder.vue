@@ -19,9 +19,10 @@
         </span>
       </a-table>
     </div>
-    <div class="content-footer">
+    <!-- <div class="content-footer">
      <a-button type="primary" size="large" style="width: 120px; margin-right: 10px;" @click="FALLBACK">返回</a-button>
-    </div>
+    </div> -->
+    <FormSubmitButton :isShow="true" :isShowSubmit="false"/>
     <a-modal
 			v-model="isShowModal"
 			title=""
@@ -206,35 +207,35 @@
             dataIndex: "itemName",
             key: "itemName",
             ellipsis: true,
-            align: 'center'
+            align: 'left'
           },
           {
             title: "配送数量",
             key: "deliveryNum",
             dataIndex: 'deliveryNum',
             ellipsis: true,
-            align: 'center'
+            align: 'left'
           },
           {
             title: "签收数量",
             key: "receiveNum",
             dataIndex: "receiveNum",
             ellipsis: true,
-            align: 'center'
+            align: 'left'
           },
           {
             title: "未签收数量",
             width: 250,
             ellipsis: true,
             scopedSlots: {customRender: "noReceiveNum"},
-            align: 'center'
+            align: 'left'
           },
           {
             title: "备注",
             key: "payBillMark",
             dataIndex: "payBillMark",
             ellipsis: true,
-            align: 'center'
+            align: 'left'
           }
         ]
       }
