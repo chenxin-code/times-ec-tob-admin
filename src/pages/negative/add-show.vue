@@ -598,7 +598,7 @@ export default {
                 column1: '已选商品【' + item.itemName + '】',
                 column2: '设置税前销售价',
                 column3: item.set2,
-                column4: set2_limit,
+                column4: set2_limit.toFixed(2),
               });
             }
             if(item.set3 > set3_limit){
@@ -606,7 +606,7 @@ export default {
                 column1: '已选商品【' + item.itemName + '】',
                 column2: '设置税后销售价',
                 column3: item.set3,
-                column4: set3_limit,
+                column4: set3_limit.toFixed(2),
               });
             }
             if(item.set4 > set4_limit){
@@ -614,7 +614,7 @@ export default {
                 column1: '已选商品【' + item.itemName + '】',
                 column2: '设置税前优惠价',
                 column3: item.set4,
-                column4: set4_limit,
+                column4: set4_limit.toFixed(2),
               });
             }
             if(item.set5 > set5_limit){
@@ -622,7 +622,7 @@ export default {
                 column1: '已选商品【' + item.itemName + '】',
                 column2: '设置税后优惠价',
                 column3: item.set5,
-                column4: set5_limit,
+                column4: set5_limit.toFixed(2),
               });
             }
           });
@@ -635,7 +635,7 @@ export default {
               column1: '销售单总价',
               column2: '税前扣减销售总价',
               column3: this.totalPretaxItemPriceDeduct,
-              column4: total1_limit,
+              column4: total1_limit.toFixed(2),
             });
           }
           if(this.totalAmountDeduct > total2_limit){
@@ -643,7 +643,7 @@ export default {
               column1: '销售单总价',
               column2: '税后扣减销售总价',
               column3: this.totalAmountDeduct,
-              column4: total2_limit,
+              column4: total2_limit.toFixed(2),
             });
           }
           if(this.totalPretaxReducedPriceDeduct > total3_limit){
@@ -651,7 +651,7 @@ export default {
               column1: '销售单总价',
               column2: '税前扣减优惠总价',
               column3: this.totalPretaxReducedPriceDeduct,
-              column4: total3_limit,
+              column4: total3_limit.toFixed(2),
             });
           }
           if(this.totalReducedPriceDeduct > total4_limit){
@@ -659,7 +659,7 @@ export default {
               column1: '销售单总价',
               column2: '税后扣减优惠总价',
               column3: this.totalReducedPriceDeduct,
-              column4: total4_limit,
+              column4: total4_limit.toFixed(2),
             });
           }
           if(errorArr.length > 0){
@@ -716,10 +716,9 @@ export default {
       this.totalReducedPriceDeduct = totalReducedPriceDeduct.toFixed(2);
     },
     handleSearch(value) {
-      // debounce(() => {
-      //   this.getOrderListByOrderNo(value);
-      // }, 500);
-      this.getOrderListByOrderNo(value);
+      debounce(() => {
+        this.getOrderListByOrderNo(value);
+      }, 500);
     },
     handleChange(value) {
       this.thisForm.saleOrderNo = value;
