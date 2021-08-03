@@ -175,8 +175,11 @@
           <span style="color: dodgerblue">{{scope.column3}}</span>
         </template>
         <template slot="column4" slot-scope="scope">
-          不能大于
-          <span style="color: red">{{scope.column4}}</span>
+          <span v-if="scope.column4 > 0">
+            不能大于
+            <span style="color: red">{{scope.column4}}</span>
+          </span>
+          <span style="color: red" v-else>已扣减完</span>
         </template>
       </a-table>
       <template slot="footer">
@@ -533,17 +536,17 @@ export default {
         {
           key: 'column1',
           dataIndex: 'column1',
-          align: 'left',
+          align: 'center',
           width: 250,
         },
         {
           scopedSlots: {customRender: 'column23'},
-          align: 'left',
+          align: 'center',
           width: 200,
         },
         {
           scopedSlots: {customRender: 'column4'},
-          align: 'left',
+          align: 'center',
           width: 200,
         },
       ],
