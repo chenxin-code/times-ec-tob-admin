@@ -131,21 +131,34 @@ export function getBase64Img(imgUrl, callback) {
 /***
  * 防抖
  */
-let timer = null
+// let timer = null
 
-export function debounce(fn, delay = 100) {
-  // if (typeof fn !== 'function') {
-  //   throw new Error('必须传入函数')
-  // }
-  // if (timer !== null) {
-  //   clearTimeout(timer)
-  // }
-  // timer = setTimeout(function() {
-  //   fn()
-  //   clearTimeout(timer)
-  //   timer = null
-  // }, delay)
-  fn()
+// export function debounce(fn, delay = 100) {
+//   // if (typeof fn !== 'function') {
+//   //   throw new Error('必须传入函数')
+//   // }
+//   // if (timer !== null) {
+//   //   clearTimeout(timer)
+//   // }
+//   // timer = setTimeout(function() {
+//   //   fn()
+//   //   clearTimeout(timer)
+//   //   timer = null
+//   // }, delay)
+//   fn()
+// }
+
+let delayBounceContainer
+export const debounce = function(action, idle = 500) {
+  function delayBounces() {
+    let ctx = this,
+      args = arguments
+    clearTimeout(delayBounceContainer)
+    delayBounceContainer = setTimeout(function() {
+      action.apply(ctx, args)
+    }, idle)
+  }
+  return delayBounces()
 }
 
 export function isTruePhone(areaCode, phone) {
