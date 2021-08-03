@@ -716,9 +716,10 @@ export default {
       this.totalReducedPriceDeduct = totalReducedPriceDeduct.toFixed(2);
     },
     handleSearch(value) {
-      debounce(() => {
-        this.getOrderListByOrderNo(value);
-      }, 500);
+      // debounce(() => {
+      //   this.getOrderListByOrderNo(value);
+      // }, 500);
+      this.getOrderListByOrderNo(value);
     },
     handleChange(value) {
       this.thisForm.saleOrderNo = value;
