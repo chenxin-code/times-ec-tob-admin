@@ -134,17 +134,18 @@ export function getBase64Img(imgUrl, callback) {
 let timer = null
 
 export function debounce(fn, delay = 100) {
-  if (typeof fn !== 'function') {
-    throw new Error('必须传入函数')
-  }
-  if (timer !== null) {
-    clearTimeout(timer)
-  }
-  timer = setTimeout(function() {
-    fn()
-    clearTimeout(timer)
-    timer = null
-  }, delay)
+  // if (typeof fn !== 'function') {
+  //   throw new Error('必须传入函数')
+  // }
+  // if (timer !== null) {
+  //   clearTimeout(timer)
+  // }
+  // timer = setTimeout(function() {
+  //   fn()
+  //   clearTimeout(timer)
+  //   timer = null
+  // }, delay)
+  fn()
 }
 
 export function isTruePhone(areaCode, phone) {
