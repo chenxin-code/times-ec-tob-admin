@@ -251,14 +251,14 @@
               >
                 <span class="intNum">
                   <span style="min-width: 45px;">数量：</span>
-                  <span style="text-align:right;">{{ item.minNum }}</span
+                  <span class="intMinNum">{{ item.minNum }}</span
                   >~<a-input
                     :disabled="disbliend"
                     placeholder="无穷大"
                     v-model="item.maxNum"
                     class="intpudnum"
                     type="number"
-                    style="flex:1;"
+                    style="flex:1;margin-left:20px;"
                   />
                 </span>
                 <span class="spshu">税前销售价:</span>
@@ -417,7 +417,7 @@ export default {
     //输入最大值
     sellingPricevalidator(rule, value, callback) {
       const isVaild = this.sellingPrice.every(item => {
-        return item.maxNum > item.minNum
+        return  !item.maxNum || item.maxNum > item.minNum
       })
       if (isVaild) {
         callback && callback()
@@ -702,5 +702,11 @@ export default {
   width: 400px;
   display: flex;
   align-items: center;
+  .intMinNum{
+    display: inline-block;
+    min-width: 50px;
+    text-align: center;
+    margin-right: 12px;
+  }
 }
 </style>
