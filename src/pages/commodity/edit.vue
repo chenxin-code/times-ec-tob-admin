@@ -533,19 +533,21 @@ export default {
     },
     //保存
     onSubmit() {
-      let that = this
-      //是否是阶梯价
-      if (this.isTieredPricing) {
-        for (let i = 0; i < that.sellingPrice.length; i++) {
-          if (
-            that.costPrice[0].costPrice > that.sellingPrice[i].priceAfterTax ||
-            that.costPrice[0].costPrice > that.sellingPrice[i].priceBeforeTax
-          )
-            return this.$message.error('销售价必须大于成本价')
+      debounce(() => {
+        let that = this
+        //是否是阶梯价
+        if (this.isTieredPricing) {
+          for (let i = 0; i < that.sellingPrice.length; i++) {
+            if (
+              that.costPrice[0].costPrice >
+                that.sellingPrice[i].priceAfterTax ||
+              that.costPrice[0].costPrice > that.sellingPrice[i].priceBeforeTax
+            )
+              return this.$message.error('销售价必须大于成本价')
+          }
+          this.form.validateFields(['sellingPriceList'], { force: true })
         }
-        this.form.validateFields(['sellingPriceList'], { force: true })
-      }
-      this.form.validateFields((err, values, callback) => {
+        this.form.validateFields((err, values, callback) => {
           console.log('err--->', err, values, callback)
           if (this.isTieredPricing) {
             if (err && err.sellingPriceList) {
@@ -592,6 +594,7 @@ export default {
               this.loading = false
             })
         })
+      }, 300)
     },
   },
 }
