@@ -214,7 +214,7 @@
                 <span style="width: 50px;">数量:</span>
                 <a-input
                   placeholder="请输入"
-                  :disabled="disbliend"
+                  disabled
                   :value="item.minNum"
                   class="cbintpudnum"
                   type="number"
