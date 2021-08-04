@@ -3,7 +3,7 @@
     <a-form-model layout="inline" ref="thisForm" labelAlign="left">
       <a-form-model-item label="SKU名称/编码" prop="a">
         <a-input
-          v-model="sku"
+          v-model.trim="sku"
           placeholder="请输入SKU名称或编码"
           :maxLength="30"
         />
@@ -209,46 +209,46 @@ export default {
       strain: '',
       categoryId: '',
       tableColumns: [
-        {
-          title: '序号',
-          key: 'index',
-          width: 60,
-          fixed: 'left',
-          align: 'center',
-          customRender: (text, record, index) => `${index + 1}`,
-        },
+        // {
+        //   title: '序号',
+        //   key: 'index',
+        //   width: 60,
+        //   fixed: 'left',
+        //   align: 'left',
+        //   customRender: (text, record, index) => `${index + 1}`,
+        // },
         {
           title: '商品名称',
           dataIndex: 'itemName',
           key: 'itemName',
-          align: 'center',
+          align: 'left',
           width: 200,
         },
         {
           title: 'SPU编码',
           dataIndex: 'itemCode',
           key: 'itemCode',
-          align: 'center',
+          align: 'left',
           width: 200,
         },
         {
           title: 'SKU名称',
           dataIndex: 'skuName',
           key: 'skuName',
-          align: 'center',
+          align: 'left',
           width: 200,
         },
         {
           title: 'SKU编码',
           dataIndex: 'skuCode',
           key: 'skuCode',
-          align: 'center',
+          align: 'left',
           width: 200,
         },
         {
           title: '商品品类',
           dataIndex: 'categoryName',
-          align: 'center',
+          align: 'left',
           // scopedSlots: { customRender: 'categoryName'},
           key: 'categoryName',
           width: 100,
@@ -257,41 +257,41 @@ export default {
           title: '单位',
           dataIndex: 'unit',
           key: 'unit',
-          align: 'center',
+          align: 'left',
           width: 60,
         },
         {
           title: '供应商',
           width: 200,
-          align: 'center',
+          align: 'left',
           dataIndex: 'supplierName',
           key: 'supplierName',
         },
         {
           title: '品牌',
           width: 200,
-          align: 'center',
+          align: 'left',
           dataIndex: 'brandName',
           key: 'brandName',
         },
         {
           title: '税率',
           width: 60,
-          align: 'center',
+          align: 'left',
           dataIndex: 'taxRate',
           key: 'taxRate',
         },
         {
           title: '库存',
           width: 80,
-          align: 'center',
+          align: 'left',
           dataIndex: 'stock',
           key: 'stock',
         },
         {
           title: '是否阶梯价',
           width: 80,
-          align: 'center',
+          align: 'left',
           key: 'isTieredPricing',
           scopedSlots: { customRender: 'isTieredPricing' },
           // customRender:(isTieredPricing)=>isTieredPricing == 'true' ? '是':'否',
@@ -299,14 +299,14 @@ export default {
         {
           title: '成本价(数量=元)',
           width: 160,
-          align: 'center',
+          align: 'left',
           key: 'costPrice',
           scopedSlots: { customRender: 'costPrice' },
         },
         {
           title: '税前销售价(数量=元)',
           width: 200,
-          align: 'center',
+          align: 'left',
           key: 'sellingPrice',
           // dataIndex: 'beforeTaxSellingPrice',
           scopedSlots: { customRender: 'sellingPrice' },
@@ -314,7 +314,7 @@ export default {
         {
           title: '税后销售价(数量=元)',
           width: 200,
-          align: 'center',
+          align: 'left',
           // key: 'sellingPrice',
           // dataIndex: 'sellingPrice',
           scopedSlots: { customRender: 'sellingPricepro' },
@@ -323,13 +323,13 @@ export default {
           title: '商品状态',
           customRender: selling => (selling == 1 ? '上架' : '下架'),
           width: 90,
-          align: 'center',
+          align: 'left',
           dataIndex: 'selling',
         },
         {
           title: '操作',
           key: 'operation',
-          align: 'center',
+          align: 'left',
           fixed: 'right',
           width: 180,
           scopedSlots: { customRender: 'action' },
@@ -384,7 +384,7 @@ export default {
           pageSize: 100,
         })
         .then(res => {
-          this.selectlist = res.data.records.slice(0,50)
+          this.selectlist = res.data.records.slice(0, 50)
           this.selectlist.unshift({ id: '', supplierName: '全部' })
         })
     },

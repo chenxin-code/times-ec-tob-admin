@@ -12,14 +12,14 @@
       >
         <a-form-model-item label="所属企业" prop="enterpriseName">
           <a-input
-            v-model="thisForm.enterpriseName"
+            v-model.trim="thisForm.enterpriseName"
             placeholder="请输入企业名称"
             :maxLength="30"
           />
         </a-form-model-item>
         <a-form-model-item label="姓名" prop="accountName">
           <a-input
-            v-model="thisForm.accountName"
+            v-model.trim="thisForm.accountName"
             placeholder="请输入姓名"
             :maxLength="30"
           />
@@ -208,45 +208,45 @@ export default {
         {
           title: '姓名',
           dataIndex: 'accountName',
-          align: 'center',
+          align: 'left',
           width: 130,
         },
         {
           title: '登录名',
           dataIndex: 'loginName',
-          align: 'center',
+          align: 'left',
           width: 150,
         },
         {
           title: '所属企业',
           dataIndex: 'enterpriseName',
-          align: 'center',
+          align: 'left',
           width: 200,
         },
         {
           title: '手机号码',
           dataIndex: 'accountPhone',
-          align: 'center',
+          align: 'left',
           width: 200,
         },
         {
           title: '电子邮箱',
           dataIndex: 'email',
-          align: 'center',
+          align: 'left',
           width: 250,
         },
         {
           title: '用户状态',
           key: 'accountState',
           scopedSlots: { customRender: 'accountState' },
-          align: 'center',
+          align: 'left',
           width: 200,
         },
         {
           title: '操作',
           key: 'action',
           fixed: 'right',
-          align: 'center',
+          align: 'left',
           width: 250,
           scopedSlots: { customRender: 'action' },
         },

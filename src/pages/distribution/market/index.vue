@@ -85,8 +85,8 @@
         <!-- <div slot="addressDto" slot-scope="text, record">
           <div> -->
         <!-- <p>姓名：{{record.addressDto.receiverName}}</p>
-						<p>电话：{{record.addressDto.receiverPhone}}}</p>
-						<p>地址：{{record.addressDto.detailAddress}}}</p> -->
+            <p>电话：{{record.addressDto.receiverPhone}}}</p>
+            <p>地址：{{record.addressDto.detailAddress}}}</p> -->
         <!-- </div>
         </div> -->
         <!-- 操作 -->
@@ -125,27 +125,29 @@ export default {
         dataIndex: 'saleOrderNo',
         key: 'saleOrderNo',
         width: 250,
-        align: 'center'
+        align: 'left',
       },
       {
         title: '采购公司(出账公司)',
         width: 250,
-        align: 'center',
+        align: 'left',
         key: 'purchaseCompany',
         dataIndex: 'purchaseCompany',
-        align: 'center'
+        align: 'left',
       },
       {
         title: '收货信息',
-        width: 250,
-        align: 'center',
-        scopedSlots: { customRender: 'addressDto' },
-        align: 'center'
+        width: 300,
+        align: 'left',
+        key: 'receiverAddress',
+        dataIndex: 'receiverAddress',
+        // scopedSlots: { customRender: 'receiverAddress' },
+        align: 'left',
       },
       {
         title: '支付方式',
         width: 100,
-        align: 'center',
+        align: 'left',
         key: 'payWay',
         customRender: (text, record, index) => {
           let str = ''
@@ -162,73 +164,73 @@ export default {
           }
           return str
         },
-        align: 'center'
+        align: 'left',
       },
       {
         title: '税前订单总额（元）',
         dataIndex: 'totalPretaxAmount',
         key: 'totalPretaxAmount',
         width: 200,
-        align: 'center'
+        align: 'left',
       },
       {
         title: '税后订单总额（元）',
         dataIndex: 'totalAmount',
         key: 'totalAmount',
         width: 200,
-        align: 'center'
+        align: 'left',
       },
       {
         title: '税前优惠总额（元）',
         dataIndex: 'totalPretaxReducedAmount',
         key: 'totalPretaxReducedAmount',
         width: 200,
-        align: 'center'
+        align: 'left',
       },
       {
         title: '税后优惠总额（元）',
         dataIndex: 'totalReducedAmount',
         key: 'totalReducedAmount',
         width: 200,
-        align: 'center'
+        align: 'left',
       },
       {
         title: '下单时间',
         dataIndex: 'orderTime',
         key: 'orderTime',
         width: 200,
-        align: 'center'
+        align: 'left',
       },
       {
         title: '账套名称',
         dataIndex: 'financialAccounting',
         key: 'financialAccounting',
         width: 200,
-        align: 'center'
+        align: 'left',
       },
       {
         title: '城市公司',
         dataIndex: 'cityCompany',
         key: 'cityCompany',
         width: 150,
-        align: 'center'
+        align: 'left',
       },
       {
         title: '项目名称',
         dataIndex: 'projectName',
         key: 'projectName',
         width: 200,
-        align: 'center'
+        align: 'left',
       },
       {
         title: '操作',
         key: 'operation',
         fixed: 'right',
         width: 300,
-        align: 'center',
+        align: 'left',
         scopedSlots: { customRender: 'action' },
-        align: 'center'
-      }
+        align: 'left',
+      },
     ]
     let pageData = {
       pageNum: 1,
@@ -281,7 +283,7 @@ export default {
             : '', // 开始时间
         orderTimeEnd:
           this.searchData.dateTime.length > 0
-            ? this.parseDate(this.searchData.dateTime[1])
+            ? this.parseDate(this.searchData.dateTime[1],true)
             : '', // 结束时间
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
         receiver: this.searchData.receiver, // 收货人 模糊查询
@@ -320,7 +322,7 @@ export default {
             : '', // 开始时间
         orderTimeEnd:
           this.searchData.dateTime.length > 0
-            ? this.parseDate(this.searchData.dateTime[1])
+            ? this.parseDate(this.searchData.dateTime[1],true)
             : '', // 结束时间
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
         receiver: this.searchData.receiver, // 收货人 模糊查询
@@ -337,6 +339,7 @@ export default {
     this.$once('hook:beforeDestroy', () => {
       clearTimeout(timer1)
     })
+    this.handleSearch()
   },
   methods: {
     // 获取列表数据
@@ -354,7 +357,7 @@ export default {
               : '', // 开始时间
           orderTimeEnd:
             this.searchData.dateTime.length > 0
-              ? this.parseDate(this.searchData.dateTime[1])
+              ? this.parseDate(this.searchData.dateTime[1],true)
               : '', // 结束时间
           purchaseCompany: this.searchData.purchaseCompany, // 采购公司
           receiver: this.searchData.receiver, // 收货人 模糊查询
@@ -381,7 +384,7 @@ export default {
             : '', // 开始时间
         orderTimeEnd:
           this.searchData.dateTime.length > 0
-            ? this.parseDate(this.searchData.dateTime[1])
+            ? this.parseDate(this.searchData.dateTime[1],true)
             : '', // 结束时间
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
         receiver: this.searchData.receiver, // 收货人 模糊查询
@@ -389,7 +392,7 @@ export default {
       }
       this.getData(params)
     },
-    parseDate(date) {
+    parseDate(date, isEnd) {
       let str = undefined
       if (date) {
         let oDate = new Date(date)
@@ -399,6 +402,11 @@ export default {
           (oDate.getMonth() + 1) +
           '-' +
           oDate.getDate()
+      }
+      if (!isEnd) {
+        str = str + ' 00:00:00'
+      } else {
+        str = str + ' 23:59:59'
       }
       return str
     },

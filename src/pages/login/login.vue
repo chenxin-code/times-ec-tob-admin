@@ -16,7 +16,7 @@
           <a-tabs
             class="tab"
             :activeKey="customActiveKey"
-            :tabBarStyle="{ textAlign: 'center', borderBottom: 'unset' }"
+            :tabBarStyle="{ textalign: 'left', borderBottom: 'unset' }"
             @change="handleTabClick"
           >
             <a-tab-pane key="tab1" tab="手机号登录">

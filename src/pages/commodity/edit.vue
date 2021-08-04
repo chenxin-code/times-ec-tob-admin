@@ -15,7 +15,7 @@
     </div>
     <div
       class="content-main"
-      style="height: calc(100% - 100px);margin-top: 12px;padding:20px 60px 20px 20px;"
+      style="height: 100%;margin-top: 12px;padding:20px 60px 60px 20px;"
     >
       <a-form
         :form="form"
@@ -251,14 +251,14 @@
               >
                 <span class="intNum">
                   <span style="min-width: 45px;">数量：</span>
-                  <span style="text-align:right;">{{ item.minNum }}</span
+                  <span class="intMinNum">{{ item.minNum }}</span
                   >~<a-input
                     :disabled="disbliend"
                     placeholder="无穷大"
                     v-model="item.maxNum"
                     class="intpudnum"
                     type="number"
-                    style="flex:1;"
+                    style="flex:1;margin-left:20px;"
                   />
                 </span>
                 <span class="spshu">税前销售价:</span>
@@ -417,7 +417,7 @@ export default {
     //输入最大值
     sellingPricevalidator(rule, value, callback) {
       const isVaild = this.sellingPrice.every(item => {
-        return item.maxNum > item.minNum
+        return !item.maxNum || item.maxNum > item.minNum
       })
       if (isVaild) {
         callback && callback()
@@ -474,7 +474,7 @@ export default {
       if (this.sellingPrice[this.sellingPrice.length - 1].maxNum) {
         let minNum =
           Number(this.sellingPrice[this.sellingPrice.length - 1].maxNum) + 1
-        let maxNum = minNum + 1
+        let maxNum = null //minNum + 1
         let priceBeforeTax = this.sellingPrice[this.sellingPrice.length - 1]
           .priceBeforeTax
         let priceAfterTax = this.sellingPrice[this.sellingPrice.length - 1]
@@ -533,19 +533,20 @@ export default {
     },
     //保存
     onSubmit() {
-      let that = this
-      //是否是阶梯价
-      if (this.isTieredPricing) {
-        for (let i = 0; i < that.sellingPrice.length; i++) {
-          if (
-            that.costPrice[0].costPrice > that.sellingPrice[i].priceAfterTax ||
-            that.costPrice[0].costPrice > that.sellingPrice[i].priceBeforeTax
-          )
-            return this.$message.error('销售价必须大于成本价')
-        }
-        this.form.validateFields(['sellingPriceList'], { force: true })
-      }
       debounce(() => {
+        let that = this
+        //是否是阶梯价
+        if (this.isTieredPricing) {
+          for (let i = 0; i < that.sellingPrice.length; i++) {
+            if (
+              that.costPrice[0].costPrice >
+                that.sellingPrice[i].priceAfterTax ||
+              that.costPrice[0].costPrice > that.sellingPrice[i].priceBeforeTax
+            )
+              return this.$message.error('销售价必须大于成本价')
+          }
+          this.form.validateFields(['sellingPriceList'], { force: true })
+        }
         this.form.validateFields((err, values, callback) => {
           console.log('err--->', err, values, callback)
           if (this.isTieredPricing) {
@@ -593,7 +594,7 @@ export default {
               this.loading = false
             })
         })
-      })
+      }, 300)
     },
   },
 }
@@ -701,5 +702,11 @@ export default {
   width: 400px;
   display: flex;
   align-items: center;
+  .intMinNum {
+    display: inline-block;
+    min-width: 50px;
+    text-align: center;
+    margin-right: 12px;
+  }
 }
 </style>

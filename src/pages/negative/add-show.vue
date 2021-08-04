@@ -33,7 +33,7 @@
         </a-form-model-item>
         <a-form-model-item label="销售单号" v-if="$route.path === '/negative/show'">{{saleOrderNo}}</a-form-model-item>
         <a-form-model-item label="负数单号" v-if="$route.path === '/negative/show'">{{$route.query.negativeNo}}</a-form-model-item>
-        <a-form-model-item label="创建人" v-if="$route.path === '/negative/show'">{{createUser}}</a-form-model-item>
+        <a-form-model-item label="创建人" v-if="$route.path === '/negative/show'">{{createUserName}}</a-form-model-item>
         <a-form-model-item label="创建时间" v-if="$route.path === '/negative/show'">{{createTime}}</a-form-model-item>
         <div class="common-title">
           <div class="common-title-content">选择商品</div>
@@ -132,10 +132,14 @@
             <a-form-model-item label="税后优惠总价">{{ totalReducedPrice }}</a-form-model-item>
           </div>
           <div style="flex: 1">
-            <a-form-model-item label="已扣税前销售总价">{{ pretaxItemPriceDeduct }}</a-form-model-item>
-            <a-form-model-item label="已扣税后销售总价">{{ itemPriceDeduct }}</a-form-model-item>
-            <a-form-model-item label="已扣税前优惠总价">{{ pretaxReducedPriceDeduct }}</a-form-model-item>
-            <a-form-model-item label="已扣税后优惠总价">{{ reducedPriceDeduct }}</a-form-model-item>
+            <a-form-model-item label="已扣税前销售总价" v-if="$route.path === '/negative/add'">{{ pretaxItemPriceDeduct }}</a-form-model-item>
+            <a-form-model-item label="已扣税后销售总价" v-if="$route.path === '/negative/add'">{{ itemPriceDeduct }}</a-form-model-item>
+            <a-form-model-item label="已扣税前优惠总价" v-if="$route.path === '/negative/add'">{{ pretaxReducedPriceDeduct }}</a-form-model-item>
+            <a-form-model-item label="已扣税后优惠总价" v-if="$route.path === '/negative/add'">{{ reducedPriceDeduct }}</a-form-model-item>
+            <a-form-model-item label="已扣税前销售总价" v-if="$route.path === '/negative/show'">{{ totalPretaxItemPriceDeduct }}</a-form-model-item>
+            <a-form-model-item label="已扣税后销售总价" v-if="$route.path === '/negative/show'">{{ totalAmountDeduct }}</a-form-model-item>
+            <a-form-model-item label="已扣税前优惠总价" v-if="$route.path === '/negative/show'">{{ totalPretaxReducedPriceDeduct }}</a-form-model-item>
+            <a-form-model-item label="已扣税后优惠总价" v-if="$route.path === '/negative/show'">{{ totalReducedPriceDeduct }}</a-form-model-item>
           </div>
         </div>
         <a-form-model-item label="税前扣减销售总价" v-if="$route.path === '/negative/add'">
@@ -171,8 +175,11 @@
           <span style="color: dodgerblue">{{scope.column3}}</span>
         </template>
         <template slot="column4" slot-scope="scope">
-          不能大于
-          <span style="color: red">{{scope.column4}}</span>
+          <span v-if="scope.column4 > 0">
+            不能大于
+            <span style="color: red">{{scope.column4}}</span>
+          </span>
+          <span style="color: red" v-else>已扣减完</span>
         </template>
       </a-table>
       <template slot="footer">
@@ -198,7 +205,7 @@ export default {
     };
     return {
       saleOrderNo: null,
-      createUser: null,
+      createUserName: null,
       createTime: null,
       orderNoList: [],
       thisForm: {
@@ -215,146 +222,146 @@ export default {
           title: '商品名称',
           key: 'itemName',
           dataIndex: 'itemName',
-          align: "center",
+          align: 'left',
           width: 250,
         },
         {
           title: 'SKU名称',
           key: 'skuName',
           dataIndex: 'skuName',
-          align: "center",
+          align: 'left',
           width: 200,
         },
         {
           title: 'SKU编码',
           key: 'skuCode',
           dataIndex: 'skuCode',
-          align: "center",
+          align: 'left',
           width: 200,
         },
         {
           title: '规格',
           scopedSlots: {customRender: 'itemSpecs'},
-          align: "center",
-          width: 150,
+          align: 'left',
+          width: 200,
         },
         {
           title: '所属供应商',
           key: 'supplierName',
           dataIndex: 'supplierName',
-          align: "center",
+          align: 'left',
           width: 200,
         },
         {
           title: '购买数量',
           key: 'itemNum',
           dataIndex: 'itemNum',
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '已扣减数量',
           key: 'itemNumDeduct',
           dataIndex: 'itemNumDeduct',
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '税前销售价',
           key: 'pretaxItemPrice',
           dataIndex: 'pretaxItemPrice',
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '已扣税前销售价',
           key: 'pretaxItemPriceDeduct',
           dataIndex: 'pretaxItemPriceDeduct',
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '税后销售价',
           key: 'itemPrice',
           dataIndex: 'itemPrice',
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '已扣税后销售价',
           key: 'itemPriceDeduct',
           dataIndex: 'itemPriceDeduct',
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '税前优惠价',
           key: 'pretaxReducedPrice',
           dataIndex: 'pretaxReducedPrice',
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '已扣税前优惠价',
           key: 'pretaxReducedPriceDeduct',
           dataIndex: 'pretaxReducedPriceDeduct',
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '税后优惠价',
           key: 'reducedPrice',
           dataIndex: 'reducedPrice',
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '已扣税后优惠价',
           key: 'reducedPriceDeduct',
           dataIndex: 'reducedPriceDeduct',
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '设置扣减数量',//itemNumDeduct
           key: 'set1',
           scopedSlots: {customRender: 'set1'},
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '设置税前销售价',//pretaxItemPriceDeduct
           key: 'set2',
           scopedSlots: {customRender: 'set2'},
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '设置税后销售价',//itemPriceDeduct
           key: 'set3',
           scopedSlots: {customRender: 'set3'},
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '设置税前优惠价',//pretaxReducedPriceDeduct
           key: 'set4',
           scopedSlots: {customRender: 'set4'},
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '设置税后优惠价',//reducedPriceDeduct
           key: 'set5',
           scopedSlots: {customRender: 'set5'},
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '备注',
           key: 'remark',
           scopedSlots: {customRender: 'remark'},
-          align: "center",
+          align: 'left',
           width: 300,
         },
       ],
@@ -363,141 +370,141 @@ export default {
           title: '商品名称',
           key: 'itemName',
           dataIndex: 'itemName',
-          align: "center",
+          align: 'left',
           width: 250,
         },
         {
           title: 'SKU名称',
           key: 'skuName',
           dataIndex: 'skuName',
-          align: "center",
+          align: 'left',
           width: 200,
         },
         {
           title: 'SKU编码',
           key: 'skuCode',
           dataIndex: 'skuCode',
-          align: "center",
+          align: 'left',
           width: 200,
         },
         {
           title: '规格',
           scopedSlots: {customRender: 'itemSpecs'},
-          align: "center",
-          width: 150,
+          align: 'left',
+          width: 200,
         },
         {
           title: '所属供应商',
           key: 'supplierName',
           dataIndex: 'supplierName',
-          align: "center",
+          align: 'left',
           width: 200,
         },
         {
           title: '购买数量',
           key: 'itemNum',
           dataIndex: 'itemNum',
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '已扣减数量',
           key: 'itemNumDeduct',
           dataIndex: 'itemNumDeduct',
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '税前销售价',
           key: 'pretaxItemPrice',
           dataIndex: 'pretaxItemPrice',
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '已扣税前销售价',
           key: 'pretaxItemPriceDeduct',
           dataIndex: 'pretaxItemPriceDeduct',
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '税后销售价',
           key: 'itemPrice',
           dataIndex: 'itemPrice',
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '已扣税后销售价',
           key: 'itemPriceDeduct',
           dataIndex: 'itemPriceDeduct',
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '税前优惠价',
           key: 'pretaxReducedPrice',
           dataIndex: 'pretaxReducedPrice',
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '已扣税前优惠价',
           key: 'pretaxReducedPriceDeduct',
           dataIndex: 'pretaxReducedPriceDeduct',
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '税后优惠价',
           key: 'reducedPrice',
           dataIndex: 'reducedPrice',
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '已扣税后优惠价',
           key: 'reducedPriceDeduct',
           dataIndex: 'reducedPriceDeduct',
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '设置扣减数量',
           scopedSlots: {customRender: 'itemNumDeduct2'},
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '设置税前销售价',
           scopedSlots: {customRender: 'pretaxItemPriceDeduct2'},
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '设置税后销售价',
           scopedSlots: {customRender: 'itemPriceDeduct2'},
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '设置税前优惠价',
           scopedSlots: {customRender: 'pretaxReducedPriceDeduct2'},
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '设置税后优惠价',
           scopedSlots: {customRender: 'reducedPriceDeduct2'},
-          align: "center",
+          align: 'left',
           width: 150,
         },
         {
           title: '备注',
           key: 'remark',
           scopedSlots: {customRender: 'remark'},
-          align: "center",
+          align: 'left',
           width: 300,
         },
       ],
@@ -529,17 +536,17 @@ export default {
         {
           key: 'column1',
           dataIndex: 'column1',
-          align: "center",
+          align: 'center',
           width: 250,
         },
         {
           scopedSlots: {customRender: 'column23'},
-          align: "center",
+          align: 'center',
           width: 200,
         },
         {
           scopedSlots: {customRender: 'column4'},
-          align: "center",
+          align: 'center',
           width: 200,
         },
       ],
@@ -562,7 +569,11 @@ export default {
   computed: {
     itemSpecsParse() {
       return param => {
-        return JSON.parse(param)['规格'].join();
+        if(param){
+          return JSON.parse(param)['规格'].join();
+        }else{
+          return null;
+        }
       }
     },
   },
@@ -590,7 +601,7 @@ export default {
                 column1: '已选商品【' + item.itemName + '】',
                 column2: '设置税前销售价',
                 column3: item.set2,
-                column4: set2_limit,
+                column4: set2_limit.toFixed(2),
               });
             }
             if(item.set3 > set3_limit){
@@ -598,7 +609,7 @@ export default {
                 column1: '已选商品【' + item.itemName + '】',
                 column2: '设置税后销售价',
                 column3: item.set3,
-                column4: set3_limit,
+                column4: set3_limit.toFixed(2),
               });
             }
             if(item.set4 > set4_limit){
@@ -606,7 +617,7 @@ export default {
                 column1: '已选商品【' + item.itemName + '】',
                 column2: '设置税前优惠价',
                 column3: item.set4,
-                column4: set4_limit,
+                column4: set4_limit.toFixed(2),
               });
             }
             if(item.set5 > set5_limit){
@@ -614,7 +625,7 @@ export default {
                 column1: '已选商品【' + item.itemName + '】',
                 column2: '设置税后优惠价',
                 column3: item.set5,
-                column4: set5_limit,
+                column4: set5_limit.toFixed(2),
               });
             }
           });
@@ -627,7 +638,7 @@ export default {
               column1: '销售单总价',
               column2: '税前扣减销售总价',
               column3: this.totalPretaxItemPriceDeduct,
-              column4: total1_limit,
+              column4: total1_limit.toFixed(2),
             });
           }
           if(this.totalAmountDeduct > total2_limit){
@@ -635,7 +646,7 @@ export default {
               column1: '销售单总价',
               column2: '税后扣减销售总价',
               column3: this.totalAmountDeduct,
-              column4: total2_limit,
+              column4: total2_limit.toFixed(2),
             });
           }
           if(this.totalPretaxReducedPriceDeduct > total3_limit){
@@ -643,7 +654,7 @@ export default {
               column1: '销售单总价',
               column2: '税前扣减优惠总价',
               column3: this.totalPretaxReducedPriceDeduct,
-              column4: total3_limit,
+              column4: total3_limit.toFixed(2),
             });
           }
           if(this.totalReducedPriceDeduct > total4_limit){
@@ -651,7 +662,7 @@ export default {
               column1: '销售单总价',
               column2: '税后扣减优惠总价',
               column3: this.totalReducedPriceDeduct,
-              column4: total4_limit,
+              column4: total4_limit.toFixed(2),
             });
           }
           if(errorArr.length > 0){
@@ -757,7 +768,7 @@ export default {
       api.queryNegativeDetail({negativeNo: this.$route.query.negativeNo}).then(resp => {
         if (resp.code === 200) {
           this.saleOrderNo = resp.data.saleOrderNo;
-          this.createUser = resp.data.createUser;
+          this.createUserName = resp.data.createUserName;
           this.createTime = resp.data.createTime;
           this.tableData2 = resp.data.infoList;
           //8个非输入框总价
@@ -765,10 +776,15 @@ export default {
           this.totalAmount = resp.data.totalAmount;
           this.totalPretaxReducedPrice = resp.data.totalPretaxReducedPrice;
           this.totalReducedPrice = resp.data.totalReducedPrice;
-          this.pretaxItemPriceDeduct = resp.data.totalPretaxItemPriceDeduct;
-          this.itemPriceDeduct = resp.data.totalAmountDeduct;
-          this.pretaxReducedPriceDeduct = resp.data.totalPretaxReducedPriceDeduct;
-          this.reducedPriceDeduct = resp.data.totalReducedPriceDeduct;
+          this.totalPretaxItemPriceDeduct = resp.data.totalPretaxItemPriceDeduct;
+          this.totalAmountDeduct = resp.data.totalAmountDeduct;
+          this.totalPretaxReducedPriceDeduct = resp.data.totalPretaxReducedPriceDeduct;
+          this.totalReducedPriceDeduct = resp.data.totalReducedPriceDeduct;
+          //4个输入框总价
+          this.pretaxItemPriceDeduct = resp.data.pretaxItemPriceDeduct;
+          this.itemPriceDeduct = resp.data.itemPriceDeduct;
+          this.pretaxReducedPriceDeduct = resp.data.pretaxReducedPriceDeduct;
+          this.reducedPriceDeduct = resp.data.reducedPriceDeduct;
         }
       }).finally(() => {
         this.tableLoading2 = false;

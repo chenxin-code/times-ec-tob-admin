@@ -1,6 +1,6 @@
 <template>
 	<div class="content-floor" v-if="isShow">
-		<div class="content-footer" >
+		<div class="content-footer-view">
 			<a-button
 				v-if="isShowSubmit"
 				type="primary"
@@ -10,19 +10,20 @@
 				@click="onSubmit()"
 				>保存</a-button
 			>
-				<a-button
+			<a-button
 				v-if="isShowCancel"
 				size="large"
 				type="primary"
-				style="width: 120px;"		
+				style="width: 120px;"
 				@click="onBack()"
 				>返回</a-button
 			>
 		</div>
 	</div>
-</div>
 </template>
 <script type="text/javascript">
+import { debounce } from '../../utils/util'
+
 export default {
 	name: 'FormSubmitButton',
 	components: {},
@@ -34,38 +35,45 @@ export default {
 			type: Boolean,
 			default: false,
 		},
-		loading:{
+		loading: {
 			type: Boolean,
 			default: false,
 		},
-		isShowSubmit:{
+		isShowSubmit: {
 			type: Boolean,
 			default: true,
 		},
-		isShowCancel:{
+		isShowCancel: {
 			type: Boolean,
 			default: true,
 		},
 	},
 	computed: {},
 	methods: {
-		onSubmit(){
-			this.$emit('submit')
+		onSubmit() {
+			debounce(() => {
+				this.$emit('submit')
+			}, 500)
 		},
-		onBack(){
+		onBack() {
 			this.$router.back()
 			this.$emit('back')
-		}
+		},
 	},
 	created() {},
 	mounted() {},
 }
 </script>
 <style lang="less" scoped>
-.content-footer {
+.content-floor {
+	position: fixed;
+	bottom:12px;
+	right:12px;}
+.content-footer-view {
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
+	padding: 20px;
 
 	& > *:not(.last-child) {
 		margin-right: 10px;

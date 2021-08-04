@@ -39,7 +39,7 @@ export default {
           title: '是否末级',
           key: 'children',
           scopedSlots: {customRender: 'children'},
-          align: 'center',
+          align: 'left',
           width: 800,
           fixed: 'right',
         },

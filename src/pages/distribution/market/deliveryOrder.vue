@@ -54,19 +54,44 @@
             </template>
           </a-table>
         </div>
+        <div class="item-list">
+          <div>
+            <div class="img-box" v-if="dataListDetail.deliveryProofImgList && dataListDetail.deliveryProofImgList.length > 0">
+              <div class="item-title">配送凭证：</div>
+              <img 
+                v-for="item in dataListDetail.deliveryProofImgList"
+                :src="item"
+                @click="seeImgItem(item)" />
+            </div>
+          </div>
+        </div>
         <div class="item-list" v-if="dataListDetail.approveStatus != 0">
           <div>
             <span>签收单号：{{dataListDetail.receiveNo}}</span>
             <span>签收时间：{{dataListDetail.approveTime}}</span>
             <div class="img-box" v-if="dataListDetail.receiverProofImgList && dataListDetail.receiverProofImgList.length > 0">
+              <div class="item-title">签收凭证：</div>
               <img 
                 v-for="item in dataListDetail.receiverProofImgList"
-                :key="item"
-                :src="item" />
+                :src="item"
+                @click="seeImgItem(item)" />
             </div>
           </div>
         </div>
 			</template>
+		</a-modal>
+    <a-modal
+			:visible="previewVisible"
+			:dialog-style="{ top: '30px' }"
+			:footer="null"
+			@cancel="handleCancelPreview">
+			<div class="preview-visible-img">
+				<img 
+					alt="example"
+					style="width: 100%"
+					:src="imgUrl"
+				/>
+			</div>
 		</a-modal>
   </div>
 </template>
@@ -101,6 +126,8 @@
     },
     data() {
       return {
+        previewVisible: false,
+        imgUrl: '',
         saleOrderNo: '',
         pageData: {
           pageNum: 1,
@@ -180,35 +207,35 @@
             dataIndex: "itemName",
             key: "itemName",
             ellipsis: true,
-            align: 'center'
+            align: 'left'
           },
           {
             title: "配送数量",
             key: "deliveryNum",
             dataIndex: 'deliveryNum',
             ellipsis: true,
-            align: 'center'
+            align: 'left'
           },
           {
             title: "签收数量",
             key: "receiveNum",
             dataIndex: "receiveNum",
             ellipsis: true,
-            align: 'center'
+            align: 'left'
           },
           {
             title: "未签收数量",
             width: 250,
             ellipsis: true,
             scopedSlots: {customRender: "noReceiveNum"},
-            align: 'center'
+            align: 'left'
           },
           {
             title: "备注",
             key: "payBillMark",
             dataIndex: "payBillMark",
             ellipsis: true,
-            align: 'center'
+            align: 'left'
           }
         ]
       }
@@ -232,6 +259,15 @@
       // 取消
       handleCancel() {
         this.isShowModal = false
+      },
+      // 取消
+      handleCancelPreview() {
+        this.previewVisible = false;
+        this.imgUrl = '';
+      },
+      seeImgItem(item){
+			  this.imgUrl = item;
+			  this.previewVisible = true;
       },
       // 详情
       async detail(row) {
@@ -308,10 +344,21 @@
 }
 .img-box {
   padding-top: 10px;
+  .item-title {
+    padding-bottom: 10px;
+  }
   img {
     width:auto;
-    height: 100px;
+    height: 50px;
     margin-right: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
   }
+}
+.preview-visible-img{
+	padding-top: 10px;
+	img{
+		margin-top: 10px;
+	}
 }
 </style>

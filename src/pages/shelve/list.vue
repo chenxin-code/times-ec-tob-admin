@@ -7,7 +7,7 @@
         :wrapperCol="{ style: { width: '250px' } }"
       >
         <a-input
-          v-model="sku"
+          v-model.trim="sku"
           placeholder="请输入SKU名称或SKU编码"
           :maxLength="30"
         />
@@ -271,7 +271,7 @@ export default {
         //   title: '序号',
         //   key: 'index',
         //   width: 60,
-        //   align: 'center',
+        //   align: 'left',
         //   fixed: 'left',
         //   customRender: (text, record, index) => `${index + 1}`,
         // },
@@ -279,62 +279,62 @@ export default {
           title: '商品名称',
           dataIndex: 'itemName',
           key: 'itemName',
-          align: 'center',
+          align: 'left',
           width: 200,
         },
         {
           title: 'SPU编码',
           dataIndex: 'itemCode',
           key: 'itemCode',
-          align: 'center',
+          align: 'left',
           width: 200,
         },
         {
           title: 'SKU名称',
           dataIndex: 'skuName',
           key: 'skuName',
-          align: 'center',
+          align: 'left',
           width: 200,
         },
         {
           title: 'SKU编码',
           dataIndex: 'skuCode',
           key: 'skuCode',
-          align: 'center',
+          align: 'left',
           width: 200,
         },
         {
           title: '商品品类',
           dataIndex: 'categoryName',
           key: 'categoryName',
-          align: 'center',
+          align: 'left',
           width: 100,
         },
         {
           title: '供应商',
           width: 200,
-          align: 'center',
+          align: 'left',
           dataIndex: 'supplierName',
           key: 'supplierName',
         },
         {
           title: '库存',
           width: 100,
-          align: 'center',
+          align: 'left',
           dataIndex: 'stock',
           key: 'stock',
         },
         {
           title: '成本价(数量=元)',
           width: 160,
-          align: 'center',
+          align: 'left',
           key: 'costPrice',
           scopedSlots: { customRender: 'costPrice' },
         },
         {
           title: '税前销售价(数量=元)',
           width: 200,
-          align: 'center',
+          align: 'left',
           key: 'sellingPrice',
           // dataIndex: 'beforeTaxSellingPrice',
           scopedSlots: { customRender: 'sellingPrice' },
@@ -342,7 +342,7 @@ export default {
         {
           title: '税后销售价(数量=元)',
           width: 200,
-          align: 'center',
+          align: 'left',
           // key: 'sellingPrice',
           // dataIndex: 'sellingPrice',
           scopedSlots: { customRender: 'sellingPricepro' },
@@ -351,7 +351,7 @@ export default {
           title: '操作',
           key: 'operation',
           fixed: 'right',
-          align: 'center',
+          align: 'left',
           width: 180,
           scopedSlots: { customRender: 'action' },
         },
@@ -455,8 +455,7 @@ export default {
             .updateSelling({ ids: this.beSelected, selling: type })
             .then(res => {
               this.$message.success(
-                // `${type == 0 ? '批量下架' : '批量上架'}成功`
-                `批量操作成功`
+                `${type == 0 ? '批量下架' : '批量上架'}成功`
               )
               this.piliangLoading = false
               this.selectedRowKeys = []
@@ -473,7 +472,7 @@ export default {
       //单独上下架
       this.$confirm({
         title: `状态更改`,
-        content: `您确定要执行${scope.selling ? '上架' : '下架'}？`,
+        content: `您确定要执行${scope.selling ? '下架' : '上架'}？`,
         centered: true,
         okText: '确定',
         cancelText: '取消',
@@ -482,7 +481,7 @@ export default {
           api
             .updateSellingById(scope.id)
             .then(res => {
-              this.$message.success(`${scope.selling ? '上架' : '下架'}成功`)
+              this.$message.success(`${scope.selling ? '下架' : '上架'}成功`)
               const findIndex = this.beSelected.findIndex(
                 item => item == scope.id
               )

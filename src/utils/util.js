@@ -131,20 +131,33 @@ export function getBase64Img(imgUrl, callback) {
 /***
  * 防抖
  */
-let timer = null
+// let timer = null
 
-export function debounce(fn, delay = 100) {
-  if (typeof fn !== 'function') {
-    throw new Error('必须传入函数')
+// export function debounce(fn, delay = 100) {
+//   if (typeof fn !== 'function') {
+//     throw new Error('必须传入函数')
+//   }
+//   if (timer !== null) {
+//     clearTimeout(timer)
+//   }
+//   timer = setTimeout(function() {
+//     fn()
+//     clearTimeout(timer)
+//     timer = null
+//   }, delay)
+// }
+
+let delayBounceContainer
+export const debounce = function(action, idle = 500) {
+  function delayBounces() {
+    let ctx = this,
+      args = arguments
+    clearTimeout(delayBounceContainer)
+    delayBounceContainer = setTimeout(function() {
+      action.apply(ctx, args)
+    }, idle)
   }
-  if (timer !== null) {
-    clearTimeout(timer)
-  }
-  timer = setTimeout(function() {
-    fn()
-    clearTimeout(timer)
-    timer = null
-  }, delay)
+  return delayBounces()
 }
 
 export function isTruePhone(areaCode, phone) {
@@ -187,7 +200,7 @@ export function isTruePhone(areaCode, phone) {
 export function vaildPassword(val) {
   //精准校验：必须含有数字、字母、特殊字符，三个缺一不可
   // let exp = new RegExp(
-  // 	"(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{6,30}"
+  //  "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{6,30}"
   // );
 
   //-->数字+字母；字母+特殊字符，特殊字符+数字
@@ -288,4 +301,20 @@ export async function returnBaseCms(res) {
       window.location.href = baseCmsWebsite
     }
   }, 2000)
+}
+
+//格式化开始和结束时间
+export function parseDate(date, isEnd) {
+  let str = undefined
+  if (date) {
+    let oDate = new Date(date)
+    str =
+      oDate.getFullYear() + '-' + (oDate.getMonth() + 1) + '-' + oDate.getDate()
+  }
+  if (!isEnd) {
+    str = str + ' 00:00:00'
+  } else {
+    str = str + ' 23:59:59'
+  }
+  return str
 }
