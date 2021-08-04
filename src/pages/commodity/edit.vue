@@ -67,11 +67,11 @@
                 </a-select-option>
               </a-select>
             </a-form-item>
-            <a-form-item label="商城SKU自编码">
+            <a-form-item label="SKU外部编码">
               <a-input
                 :disabled="disbliend"
-                v-decorator="['skuCodeInside']"
-                placeholder="请输入SKU自编码"
+                v-decorator="['skuOutsideCode']"
+                placeholder="请输入SKU外部编码"
               />
             </a-form-item>
             <a-form-item label="商品状态">
@@ -513,7 +513,7 @@ export default {
             (this.categoryName = data.categoryName), //所属类目名称
             (this.isTieredPricing = data.isTieredPricing), //价格类型
             this.form.setFieldsValue({
-              skuCodeInside: data.skuCodeInside, //商品sku自编码
+              skuOutsideCode: data.skuOutsideCode, //商品sku自编码
               categoryId: data.categoryName, //所属类目id
               taxCategoryCode: data.taxCategoryCode, //税收分类编码
               skuName: data.skuName, //sku名称
@@ -573,7 +573,7 @@ export default {
             skuName: values.skuName, //sku名称
             skuCode: values.skuCode, //sku编码
             itemCode: values.itemCode, //spu编码
-            skuCodeInside: values.skuCodeInside, //商品sku自编码
+            skuOutsideCode: values.skuOutsideCode, //商品sku自编码
             itemName: values.itemName, //spu名称
             selling: values.selling == '上架' ? true : false, //商品状态 上下架
             brandName: values.brandName, //所属品牌
