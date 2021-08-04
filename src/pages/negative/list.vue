@@ -7,7 +7,7 @@
       labelAlign="left"
     >
       <a-form-model-item label="订单编号" prop="orderNo">
-        <a-input v-model="thisForm.orderNo" placeholder="请输入订单编号" />
+        <a-input v-model.trim="thisForm.orderNo" placeholder="请输入订单编号" />
       </a-form-model-item>
       <a-form-model-item class="item-btns">
         <a-button class="item-btn" type="primary" @click="getList()"

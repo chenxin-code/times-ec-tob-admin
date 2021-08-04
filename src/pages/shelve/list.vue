@@ -7,7 +7,7 @@
         :wrapperCol="{ style: { width: '250px' } }"
       >
         <a-input
-          v-model="sku"
+          v-model.trim="sku"
           placeholder="请输入SKU名称或SKU编码"
           :maxLength="30"
         />
@@ -334,7 +334,7 @@ export default {
         {
           title: '税前销售价(数量=元)',
           width: 200,
-           align: 'left',
+          align: 'left',
           key: 'sellingPrice',
           // dataIndex: 'beforeTaxSellingPrice',
           scopedSlots: { customRender: 'sellingPrice' },
@@ -455,7 +455,7 @@ export default {
             .updateSelling({ ids: this.beSelected, selling: type })
             .then(res => {
               this.$message.success(
-                `${type == 0 ? '批量下架' : '批量上架'}成功`                
+                `${type == 0 ? '批量下架' : '批量上架'}成功`
               )
               this.piliangLoading = false
               this.selectedRowKeys = []

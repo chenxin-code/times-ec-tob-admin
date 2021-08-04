@@ -3,7 +3,7 @@
     <a-form-model layout="inline" ref="thisForm" labelAlign="left">
       <a-form-model-item label="SKU名称/编码" prop="a">
         <a-input
-          v-model="sku"
+          v-model.trim="sku"
           placeholder="请输入SKU名称或编码"
           :maxLength="30"
         />
@@ -384,7 +384,7 @@ export default {
           pageSize: 100,
         })
         .then(res => {
-          this.selectlist = res.data.records.slice(0,50)
+          this.selectlist = res.data.records.slice(0, 50)
           this.selectlist.unshift({ id: '', supplierName: '全部' })
         })
     },
