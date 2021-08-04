@@ -12,14 +12,14 @@
       >
         <a-form-model-item label="所属企业" prop="enterpriseName">
           <a-input
-            v-model="thisForm.enterpriseName"
+            v-model.trim="thisForm.enterpriseName"
             placeholder="请输入企业名称"
             :maxLength="30"
           />
         </a-form-model-item>
         <a-form-model-item label="姓名" prop="accountName">
           <a-input
-            v-model="thisForm.accountName"
+            v-model.trim="thisForm.accountName"
             placeholder="请输入姓名"
             :maxLength="30"
           />
