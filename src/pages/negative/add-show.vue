@@ -51,27 +51,27 @@
           </template>
           <template slot="set1" slot-scope="scope">
             <a-form-model-item>
-              <a-input v-model="scope.set1"/>
+              <a-input v-model="scope.set1" @blur="scope.set1 = naturalFormat(scope.set1)"/>
             </a-form-model-item>
           </template>
           <template slot="set2" slot-scope="scope">
             <a-form-model-item>
-              <a-input v-model="scope.set2"/>
+              <a-input v-model="scope.set2" @blur="scope.set2 = amountFormat(scope.set2)"/>
             </a-form-model-item>
           </template>
           <template slot="set3" slot-scope="scope">
             <a-form-model-item>
-              <a-input v-model="scope.set3"/>
+              <a-input v-model="scope.set3" @blur="scope.set3 = amountFormat(scope.set3)"/>
             </a-form-model-item>
           </template>
           <template slot="set4" slot-scope="scope">
             <a-form-model-item>
-              <a-input v-model="scope.set4"/>
+              <a-input v-model="scope.set4" @blur="scope.set4 = amountFormat(scope.set4)"/>
             </a-form-model-item>
           </template>
           <template slot="set5" slot-scope="scope">
             <a-form-model-item>
-              <a-input v-model="scope.set5"/>
+              <a-input v-model="scope.set5" @blur="scope.set5 = amountFormat(scope.set5)"/>
             </a-form-model-item>
           </template>
           <template slot="remark" slot-scope="scope">
@@ -143,16 +143,16 @@
           </div>
         </div>
         <a-form-model-item label="税前扣减销售总价" v-if="$route.path === '/negative/add'">
-          <a-input v-model="totalPretaxItemPriceDeduct" :disabled="!disInput"/>
+          <a-input v-model="totalPretaxItemPriceDeduct" @blur="totalPretaxItemPriceDeduct = amountFormat(totalPretaxItemPriceDeduct)" :disabled="!disInput"/>
         </a-form-model-item>
         <a-form-model-item label="税后扣减销售总价" v-if="$route.path === '/negative/add'">
-          <a-input v-model="totalAmountDeduct" :disabled="!disInput"/>
+          <a-input v-model="totalAmountDeduct" @blur="totalAmountDeduct = amountFormat(totalAmountDeduct)" :disabled="!disInput"/>
         </a-form-model-item>
         <a-form-model-item label="税前扣减优惠总价" v-if="$route.path === '/negative/add'">
-          <a-input v-model="totalPretaxReducedPriceDeduct" :disabled="!disInput"/>
+          <a-input v-model="totalPretaxReducedPriceDeduct" @blur="totalPretaxReducedPriceDeduct = amountFormat(totalPretaxReducedPriceDeduct)" :disabled="!disInput"/>
         </a-form-model-item>
         <a-form-model-item label="税后扣减优惠总价" v-if="$route.path === '/negative/add'">
-          <a-input v-model="totalReducedPriceDeduct" :disabled="!disInput"/>
+          <a-input v-model="totalReducedPriceDeduct" @blur="totalReducedPriceDeduct = amountFormat(totalReducedPriceDeduct)" :disabled="!disInput"/>
         </a-form-model-item>
         <a-form-model-item label="税前扣减销售总价" v-if="$route.path === '/negative/show'">
           <a-input v-model="pretaxItemPriceDeduct" disabled/>
@@ -165,6 +165,9 @@
         </a-form-model-item>
         <a-form-model-item label="税后扣减优惠总价" v-if="$route.path === '/negative/show'">
           <a-input v-model="reducedPriceDeduct" disabled/>
+        </a-form-model-item>
+        <a-form-model-item label="备注">
+          <a-textarea v-model="remark" style="width: 280px;" :disabled="$route.path === '/negative/show'"/>
         </a-form-model-item>
       </a-form-model>
     </div>
@@ -564,6 +567,8 @@ export default {
       totalAmountDeduct: null,
       totalPretaxReducedPriceDeduct: null,
       totalReducedPriceDeduct: null,
+      //备注
+      remark: null,
     }
   },
   computed: {
@@ -578,6 +583,24 @@ export default {
     },
   },
   methods: {
+    naturalFormat(val) {
+      if (val) {
+        if (/^([0]|[1-9][0-9]*)$/.test(val)) {
+          return val;
+        } else {
+          return '';
+        }
+      }
+    },
+    amountFormat(val) {
+      if (val) {
+        if (/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(val)) {
+          return val;
+        } else {
+          return '';
+        }
+      }
+    },
     add(){
       this.$refs.thisForm.validate(valid => {
         if(valid){
@@ -692,6 +715,8 @@ export default {
             totalAmountDeduct: this.totalAmountDeduct,
             totalPretaxReducedPriceDeduct: this.totalPretaxReducedPriceDeduct,
             totalReducedPriceDeduct: this.totalReducedPriceDeduct,
+            //备注
+            remark: this.remark,
           }).then(resp => {
             if (resp.code === 200) {
               this.$message.success('添加成功');
@@ -785,6 +810,8 @@ export default {
           this.itemPriceDeduct = resp.data.itemPriceDeduct;
           this.pretaxReducedPriceDeduct = resp.data.pretaxReducedPriceDeduct;
           this.reducedPriceDeduct = resp.data.reducedPriceDeduct;
+          //备注
+          this.remark = resp.data.remark;
         }
       }).finally(() => {
         this.tableLoading2 = false;
