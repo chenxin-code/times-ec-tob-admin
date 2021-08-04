@@ -128,8 +128,8 @@ export default {
         }
       }
       //正式环境隐藏对应菜单 暂时
-      const { NODE_ENV } = process.env
-      if (NODE_ENV == 'production') {
+      const { ENV } = process.env
+      if (ENV == 'production') {
         filteredMenus = filteredMenus.filter(item => {
           return ['account', 'supplier'].indexOf(item.menuKey) < 0
         })
