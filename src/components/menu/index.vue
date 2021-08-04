@@ -43,11 +43,11 @@
 </template>
 
 <script>
-import MENU_ROUTES from "../../config/menu";
-import { hasRangeAuthorityWithoutProject } from "@/utils/authority";
+import MENU_ROUTES from '../../config/menu'
+import { hasRangeAuthorityWithoutProject } from '@/utils/authority'
 
 export default {
-  name: "Menu",
+  name: 'Menu',
   props: {
     msg: String,
   },
@@ -55,67 +55,65 @@ export default {
     return {
       menus: [],
       openKeys: [
-        this.$route.path.split("/")[2] ? this.$route.path.split("/")[2] : "",
+        this.$route.path.split('/')[2] ? this.$route.path.split('/')[2] : '',
       ],
-      rootPath: "",
+      rootPath: '',
       collapsed: false,
-    };
+    }
   },
   watch: {
-    $route: "setMenus",
+    $route: 'setMenus',
   },
   created() {
-    this.setMenus();
+    this.setMenus()
   },
   methods: {
     checkKeys(openKeys) {
-      this.openKeys = openKeys;
+      this.openKeys = openKeys
       // this.openKeys = openKeys;
-      this.$forceUpdate();
-      console.log(this.openKeys);
+      this.$forceUpdate()
+      console.log(this.openKeys)
     },
     onClickMenuChid(path) {
-      this.$router.push({ path: path });
-      console.log(this.openKeys);
+      this.$router.push({ path: path })
+      console.log(this.openKeys)
     },
     onClickMenu(path) {
-      this.openKeys = [""];
-      this.$forceUpdate();
-      this.$router.push({ path: path });
-      console.log("this.openKeys", this.openKeys);
+      this.openKeys = ['']
+      this.$forceUpdate()
+      this.$router.push({ path: path })
+      console.log('this.openKeys', this.openKeys)
     },
     hasRangeAuthorityWithoutProject(authKeys) {
-      return hasRangeAuthorityWithoutProject(authKeys);
+      return hasRangeAuthorityWithoutProject(authKeys)
     },
     setMenus() {
-      const pathname = this.$route.path;
-      const matchedMenu = MENU_ROUTES.find((x) => x.path === pathname) || {
-        group: "",
-      };
-      let filteredMenus = [];
-      const groupMenus = MENU_ROUTES.filter(
-        (x) => x.group === matchedMenu.group
-      );
+      const pathname = this.$route.path
+      const matchedMenu = MENU_ROUTES.find(x => x.path === pathname) || {
+        group: '',
+      }
+      let filteredMenus = []
+      const groupMenus = MENU_ROUTES.filter(x => x.group === matchedMenu.group)
 
       if (groupMenus.length > 0) {
-        filteredMenus = groupMenus;
+        filteredMenus = groupMenus
       } else {
-        if (pathname.split("/").length > 0) {
-          const pathParams = pathname.split("/");
-          console.log(MENU_ROUTES);
-          const newMatchedMenu = MENU_ROUTES.find((x) =>
+        if (pathname.split('/').length > 0) {
+          const pathParams = pathname.split('/')
+          console.log(MENU_ROUTES)
+          const newMatchedMenu = MENU_ROUTES.find(x =>
             x.hasChild
               ? x.hasChild ===
-                (pathParams[1] === "advertise" ? pathParams[1] : pathParams[1])
+                (pathParams[1] === 'advertise' ? pathParams[1] : pathParams[1])
               : x.path ===
-                "/" +
-                  (pathParams[1] === "user" ||
-                  pathParams[1] === "advertise" ||
-                  pathParams[1] === "operationsManagement" ||
-                  pathParams[1] === "project"
-                    ? pathParams[1] + "/" + pathParams[2]
+                '/' +
+                  (pathParams[1] === 'user' ||
+                  pathParams[1] === 'advertise' ||
+                  pathParams[1] === 'operationsManagement' ||
+                  pathParams[1] === 'project'
+                    ? pathParams[1] + '/' + pathParams[2]
                     : pathParams[1])
-          );
+          )
 
           // const newMatchedMenu = MENU_ROUTES.find(x =>
           // x.path ===
@@ -123,18 +121,26 @@ export default {
 
           if (newMatchedMenu) {
             const newGroupMenus = MENU_ROUTES.filter(
-              (x) => x.group === newMatchedMenu.group
-            );
-            filteredMenus = newGroupMenus || [];
+              x => x.group === newMatchedMenu.group
+            )
+            filteredMenus = newGroupMenus || []
           }
         }
       }
+      //正式环境隐藏对应菜单 暂时
+      const { NODE_ENV } = process.env
+      if (NODE_ENV == 'production') {
+        filteredMenus = filteredMenus.filter(item => {
+          return ['account', 'supplier'].indexOf(item.menuKey) < 0
+        })
+      }
       // debugger
-      this.rootPath = pathname;
-      this.menus = filteredMenus;
+      this.rootPath = pathname
+      this.menus = filteredMenus
+      console.log('filteredMenus--->', filteredMenus)
     },
   },
-};
+}
 </script>
 <style>
 .ant-layout-sider-children {

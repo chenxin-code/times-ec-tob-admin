@@ -417,7 +417,7 @@ export default {
     //输入最大值
     sellingPricevalidator(rule, value, callback) {
       const isVaild = this.sellingPrice.every(item => {
-        return  !item.maxNum || item.maxNum > item.minNum
+        return !item.maxNum || item.maxNum > item.minNum
       })
       if (isVaild) {
         callback && callback()
@@ -474,7 +474,7 @@ export default {
       if (this.sellingPrice[this.sellingPrice.length - 1].maxNum) {
         let minNum =
           Number(this.sellingPrice[this.sellingPrice.length - 1].maxNum) + 1
-        let maxNum = null//minNum + 1
+        let maxNum = null //minNum + 1
         let priceBeforeTax = this.sellingPrice[this.sellingPrice.length - 1]
           .priceBeforeTax
         let priceAfterTax = this.sellingPrice[this.sellingPrice.length - 1]
@@ -702,7 +702,7 @@ export default {
   width: 400px;
   display: flex;
   align-items: center;
-  .intMinNum{
+  .intMinNum {
     display: inline-block;
     min-width: 50px;
     text-align: center;
