@@ -318,3 +318,12 @@ export function parseDate(date, isEnd) {
   }
   return str
 }
+
+//批量挂载文件
+export function importAll(r) {
+  const routerList = []
+  r.keys().forEach(key => {
+    routerList.push(r(key).default)
+  })
+  return routerList[0]
+}
