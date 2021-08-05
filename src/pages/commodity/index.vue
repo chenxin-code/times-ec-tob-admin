@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%;">
+  <div class="commodity">
     <a-form-model layout="inline" ref="thisForm" labelAlign="left">
       <a-form-model-item label="SKU名称/编码" prop="a">
         <a-input
@@ -209,14 +209,6 @@ export default {
       strain: '',
       categoryId: '',
       tableColumns: [
-        // {
-        //   title: '序号',
-        //   key: 'index',
-        //   width: 60,
-        //   fixed: 'left',
-        //   align: 'left',
-        //   customRender: (text, record, index) => `${index + 1}`,
-        // },
         {
           title: '商品名称',
           dataIndex: 'itemName',
@@ -439,15 +431,16 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.commodity {
+  padding: 20px;
+  height: 100%;
+}
 .ant-form {
   padding: 6px;
 
-  // > div {
-  //   width: 400px;
-  // }
-
   /deep/ .ant-form-item-control-wrapper {
     width: 250px;
+    margin-bottom: 10px;
   }
 
   /deep/ .ant-calendar-picker-input {
