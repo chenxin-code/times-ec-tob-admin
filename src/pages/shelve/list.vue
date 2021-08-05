@@ -416,6 +416,10 @@ export default {
         this.supplierlis(value)
       }, 500)
     },
+    handleChange(value) {
+      this.status = value
+      console.log(this.status)
+    },
     filterOption(input, option) {
       return (
         option.componentOptions.children[0].text
