@@ -511,7 +511,7 @@ export default {
         receiver: this.searchData.receiver, // 收货人 模糊查询
         cityCompany: this.searchData.cityCompany, // 城市公司
       }
-      console.log()
+      this.pageData.current = 1
       this.getData(params)
     },
     changeHandle() {
