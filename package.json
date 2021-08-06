@@ -29,7 +29,9 @@
     "vue-router": "^3.0.1",
     "vue-template-compiler": "^2.6.11",
     "vuex": "^3.5.1",
-    "vxe-table": "^3.3.10"
+    "vxe-table": "^3.3.10",
+    "vxe-table-plugin-virtual-tree": "^0.6.10",
+    "xe-utils": "^3.3.1"
   },
   "devDependencies": {
     "@vue/babel-helper-vue-jsx-merge-props": "^1.0.0",

@@ -8615,6 +8615,11 @@ vuex@^3.5.1:
   resolved "https://registry.yarnpkg.com/vuex/-/vuex-3.6.0.tgz#95efa56a58f7607c135b053350833a09e01aa813"
   integrity sha512-W74OO2vCJPs9/YjNjW8lLbj+jzT24waTo2KShI8jLvJW8OaIkgb3wuAMA7D+ZiUxDOx3ubwSZTaJBip9G8a3aQ==
 
+vxe-table-plugin-virtual-tree@^0.6.10:
+  version "0.6.10"
+  resolved "https://registry.yarnpkg.com/vxe-table-plugin-virtual-tree/-/vxe-table-plugin-virtual-tree-0.6.10.tgz#f6258336983a6c27f10daeaca3dace28c3d44dc5"
+  integrity sha512-tYM/8mPypM0V7C20Yn7iVzZF53L3oK7HboJfhB0AMe/jbxUghP6HRkZsag2GKqrpgBXranLel81/UJOQaKBL6A==
+
 vxe-table@^3.3.10:
   version "3.3.10"
   resolved "https://registry.yarnpkg.com/vxe-table/-/vxe-table-3.3.10.tgz#83e4e2b91fcc5657119c070e0f2763671d1018b5"
@@ -8884,6 +8889,11 @@ ws@^6.0.0, ws@^6.2.1:
   integrity sha512-GIyAXC2cB7LjvpgMt9EKS2ldqr0MTrORaleiOno6TweZ6r3TKtoFQWay/2PceJ3RuBasOHzXNn5Lrw1X0bEjqA==
   dependencies:
     async-limiter "~1.0.0"
+
+xe-utils@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/xe-utils/-/xe-utils-3.3.1.tgz#77af254b12d5ae2d4d3f32c3df7e3a5ccde1fad8"
+  integrity sha512-OdQgl9WPV9dK3/djneFPrGX8z1M4neX+VOkzra5oONjoNsCKQhwdiut99WlxceNMQ5vXDv4EQ/wKA2fux3Gdug==
 
 xtend@^4.0.0, xtend@~4.0.1:
   version "4.0.2"
