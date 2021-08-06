@@ -23,3 +23,4 @@ yarn.lock
 *.sln
 *.sw?
 webstorm.config.js
+yarn.lock
