@@ -11,16 +11,14 @@ const Token = () => import('../pages/login/index')
 
 const Home = () => import('../components/home')
 
-const children = importAll(
+let children = importAll(
   require.context(
     './module',
-    true, 
+    true,
     // 匹配基础文件名的正则表达式
     /\.js$/
   )
 )
-
-console.log('children--->',children)
 
 let router = new Router({
   base: '/',
@@ -33,9 +31,7 @@ let router = new Router({
       name: 'home',
       menuKey: 'home',
       component: Home,
-      children: [
-        ...children
-      ],
+      children: [...children],
     },
     {
       path: '/404',

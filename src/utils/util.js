@@ -324,6 +324,7 @@ export function importAll(r) {
   const routerList = []
   r.keys().forEach(key => {
     routerList.push(r(key).default)
-  })
-  return routerList[0]
+  })  
+  //拉平数组维度
+  return routerList.flat()
 }
