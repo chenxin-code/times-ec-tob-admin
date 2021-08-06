@@ -7,6 +7,7 @@
       </a-layout-sider>
       <a-layout>
         <a-layout-header style="background: #fff; padding: 0 20px">
+          <!-- <HeardNav class="heardNav" /> -->
           <Breadcrumb class="breadcrumb" />
           <div class="logout-btn">
             <a-dropdown>
@@ -58,6 +59,7 @@ import Breadcrumb from './breadcrumb'
 import { hasRangeAuthorityWithoutProject } from '@/utils/authority'
 import { mapGetters } from 'vuex'
 import { returnBaseCms } from '../utils/util'
+import HeardNav from './heardNav'
 
 const defaultAvatar = require('@/assets/img/user/avatar.png')
 
@@ -76,6 +78,7 @@ export default {
   components: {
     Menu,
     Breadcrumb,
+    HeardNav,
   },
   props: {
     authKeys: {

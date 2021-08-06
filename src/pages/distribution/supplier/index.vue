@@ -26,7 +26,7 @@
     </div>
     <div class="order-table">
       <a-table
-        :rowKey="record => record.id"
+        :rowKey="record => record.supplierCode"
         :columns="columns"
         :data-source="dataList"
         :scroll="{ x: 1300, y: scrollY }"

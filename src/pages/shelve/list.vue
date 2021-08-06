@@ -83,7 +83,7 @@
           </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item class="item-btns">
+      <a-form-model-item class="btnRow item-btns">
         <a-button class="item-btn" type="primary" @click="getList()"
           >查询</a-button
         >
@@ -535,7 +535,12 @@ export default {
   //     width: 300px !important;
   //   }
   // }
-
+  //   .btnRow {
+  //     display: flex;
+  //     flex-direction: row;
+  //     justify-content: flex-start;
+  //     align-items: center;
+  //   }
   /deep/ .item-btns .item-btn {
     margin-right: 18px;
   }
