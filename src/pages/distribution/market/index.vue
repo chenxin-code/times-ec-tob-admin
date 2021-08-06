@@ -505,12 +505,13 @@ export default {
             : '', // 开始时间
         orderTimeEnd:
           this.searchData.dateTime.length > 0
-            ? this.parseDate(this.searchData.dateTime[1])
+            ? this.parseDate(this.searchData.dateTime[1], true)
             : '', // 结束时间
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
         receiver: this.searchData.receiver, // 收货人 模糊查询
         cityCompany: this.searchData.cityCompany, // 城市公司
       }
+      console.log()
       this.getData(params)
     },
     changeHandle() {
