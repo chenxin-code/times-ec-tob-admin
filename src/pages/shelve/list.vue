@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%;">
+  <div class="shelve">
     <a-form-model layout="inline" ref="thisForm" labelAlign="left">
       <a-form-model-item
         label="SKU名称/SKU编码"
@@ -61,19 +61,6 @@
         prop="d"
         :wrapperCol="{ style: { width: '250px' } }"
       >
-        <!--  <a-select
-          v-model="status"
-          @change="value => (this.status = value)"
-          defaultValue="全部"
-        >
-          <a-select-option
-            :value="item.supplierCode"
-            v-for="item in selectlist"
-            :key="item.supplierCode"
-          >
-            {{ item.supplierName }}
-          </a-select-option>
-        </a-select> -->
         <a-select
           default-value="全部"
           show-search
@@ -96,7 +83,7 @@
           </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item class="item-btns">
+      <a-form-model-item class="btnRow item-btns">
         <a-button class="item-btn" type="primary" @click="getList()"
           >查询</a-button
         >
@@ -267,14 +254,6 @@ export default {
       selling: '', //山下架
       supplier: '',
       tableColumns: [
-        // {
-        //   title: '序号',
-        //   key: 'index',
-        //   width: 60,
-        //   align: 'left',
-        //   fixed: 'left',
-        //   customRender: (text, record, index) => `${index + 1}`,
-        // },
         {
           title: '商品名称',
           dataIndex: 'itemName',
@@ -351,7 +330,7 @@ export default {
           title: '操作',
           key: 'operation',
           fixed: 'right',
-          align: 'left',
+          align: 'center',
           width: 180,
           scopedSlots: { customRender: 'action' },
         },
@@ -370,7 +349,6 @@ export default {
           let that = this
           that.beSelected = selectedRows.map(item => {
             return item.id
-            // return{id: item.id} //返回一个对象
           })
           this.disBtn = selectedRows.length === 0
           this.selectedRowKeys = selectedRowKeys
@@ -379,10 +357,6 @@ export default {
     }
   },
   created() {
-    // api.getSupplierListByPager2({ pageNum: 1, pageSize: 10000 }).then(res => {
-    //   this.selectlist = res.data.records
-    //   this.selectlist.unshift({ supplierCode: '', supplierName: '全部' })
-    // })
     api.getCategoryTree().then(resp => {
       this.treeData = resp.data
       this.treeData.unshift({ categoryId: '', name: '全部' })
@@ -415,6 +389,10 @@ export default {
       debounce(() => {
         this.supplierlis(value)
       }, 500)
+    },
+    handleChange(value) {
+      this.status = value
+      console.log(this.status)
     },
     filterOption(input, option) {
       return (
@@ -533,12 +511,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.shelve {
+  padding: 20px;
+  height: 100%;
+}
 .ant-form {
-  padding: 6px;
-
-  // /deep/ .ant-form-item-control-wrapper {
-  //   width: 250px;
-  // }
+  /deep/ .ant-form-item-control-wrapper {
+    margin-bottom: 10px;
+  }
 
   // /deep/ .ant-calendar-picker-input {
   //   width: 250px;
@@ -555,7 +535,12 @@ export default {
   //     width: 300px !important;
   //   }
   // }
-
+  //   .btnRow {
+  //     display: flex;
+  //     flex-direction: row;
+  //     justify-content: flex-start;
+  //     align-items: center;
+  //   }
   /deep/ .item-btns .item-btn {
     margin-right: 18px;
   }

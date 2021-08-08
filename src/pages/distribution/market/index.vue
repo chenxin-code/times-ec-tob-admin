@@ -82,14 +82,6 @@
         :loading="loading"
         @change="tableChange"
       >
-        <!-- <div slot="addressDto" slot-scope="text, record">
-          <div> -->
-        <!-- <p>姓名：{{record.addressDto.receiverName}}</p>
-            <p>电话：{{record.addressDto.receiverPhone}}}</p>
-            <p>地址：{{record.addressDto.detailAddress}}}</p> -->
-        <!-- </div>
-        </div> -->
-        <!-- 操作 -->
         <span slot="action" slot-scope="text, record">
           <a @click="applyAfterSale(record)">修改城市公司</a>
           <a-divider type="vertical" />
@@ -283,7 +275,7 @@ export default {
             : '', // 开始时间
         orderTimeEnd:
           this.searchData.dateTime.length > 0
-            ? this.parseDate(this.searchData.dateTime[1],true)
+            ? this.parseDate(this.searchData.dateTime[1], true)
             : '', // 结束时间
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
         receiver: this.searchData.receiver, // 收货人 模糊查询
@@ -322,7 +314,7 @@ export default {
             : '', // 开始时间
         orderTimeEnd:
           this.searchData.dateTime.length > 0
-            ? this.parseDate(this.searchData.dateTime[1],true)
+            ? this.parseDate(this.searchData.dateTime[1], true)
             : '', // 结束时间
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
         receiver: this.searchData.receiver, // 收货人 模糊查询
@@ -334,7 +326,7 @@ export default {
   },
   created() {
     const timer1 = setTimeout(() => {
-      this.scrollY = document.body.clientHeight - 366 + 'px'
+      this.scrollY = document.body.clientHeight - 390 + 'px'
     }, 0)
     this.$once('hook:beforeDestroy', () => {
       clearTimeout(timer1)
@@ -357,7 +349,7 @@ export default {
               : '', // 开始时间
           orderTimeEnd:
             this.searchData.dateTime.length > 0
-              ? this.parseDate(this.searchData.dateTime[1],true)
+              ? this.parseDate(this.searchData.dateTime[1], true)
               : '', // 结束时间
           purchaseCompany: this.searchData.purchaseCompany, // 采购公司
           receiver: this.searchData.receiver, // 收货人 模糊查询
@@ -384,12 +376,13 @@ export default {
             : '', // 开始时间
         orderTimeEnd:
           this.searchData.dateTime.length > 0
-            ? this.parseDate(this.searchData.dateTime[1],true)
+            ? this.parseDate(this.searchData.dateTime[1], true)
             : '', // 结束时间
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
         receiver: this.searchData.receiver, // 收货人 模糊查询
         cityCompany: this.searchData.cityCompany, // 城市公司
       }
+      this.pageData.current = 1
       this.getData(params)
     },
     parseDate(date, isEnd) {
@@ -416,10 +409,22 @@ export default {
       this.pageData.pageSize = pageSize
       this.pageData.current = e.current * 1
       this.pageData.total = e.total * 1
-
       let params = {
-        pageNum: this.pageData.current,
-        pageSize: this.pageData.pageSize,
+        orderState: this.orderState, // 订单状态 进行中 已完成
+        pageNum: this.pageData.current, // 第几页
+        pageSize: this.pageData.pageSize, // 每页多少条
+        saleOrderNo: this.searchData.saleOrderNo, // 订单编号
+        orderTimeStart:
+          this.searchData.dateTime.length > 0
+            ? this.parseDate(this.searchData.dateTime[0])
+            : '', // 开始时间
+        orderTimeEnd:
+          this.searchData.dateTime.length > 0
+            ? this.parseDate(this.searchData.dateTime[1], true)
+            : '', // 结束时间
+        purchaseCompany: this.searchData.purchaseCompany, // 采购公司
+        receiver: this.searchData.receiver, // 收货人 模糊查询
+        cityCompany: this.searchData.cityCompany, // 城市公司
       }
       this.getData(params)
     },
@@ -438,12 +443,13 @@ export default {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         saleOrderNo: this.searchData.saleOrderNo, // 订单编号
-        orderTimeStart: this.parseDate(this.searchData.orderTimeStart), // 开始时间
-        orderTimeEnd: this.parseDate(this.searchData.orderTimeEnd), // 结束时间
+        orderTimeStart: '', // 开始时间
+        orderTimeEnd: '', // 结束时间
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
         receiver: this.searchData.receiver, // 收货人 模糊查询
         cityCompany: this.searchData.cityCompany, // 城市公司
       }
+      this.pageData.current = 1
       this.getData(params)
     },
     // 查看详情
@@ -499,12 +505,13 @@ export default {
             : '', // 开始时间
         orderTimeEnd:
           this.searchData.dateTime.length > 0
-            ? this.parseDate(this.searchData.dateTime[1])
+            ? this.parseDate(this.searchData.dateTime[1], true)
             : '', // 结束时间
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
         receiver: this.searchData.receiver, // 收货人 模糊查询
         cityCompany: this.searchData.cityCompany, // 城市公司
       }
+      this.pageData.current = 1
       this.getData(params)
     },
     changeHandle() {
