@@ -1,17 +1,7 @@
 <template>
   <div style="height: 100%;margin-bottom: 0px;">
     <div class="content-header">
-      {{ $route.params.typ === '1' ? '查看' : '编辑' }}商品基础信息
-      <!--  <span class="header-button fallback">
-        <a-button type="primary" :loading="loading" @click="onSubmit()"
-          >保存</a-button
-        >
-        <a-button
-          style="cursor:pointer;margin-left:12px;"
-          @click="$router.back()"
-          >返回</a-button
-        >
-      </span> -->
+      {{ $route.params.typ === '1' ? '查看' : '编辑' }}商品基础信息     
     </div>
     <div
       class="content-main"
@@ -81,7 +71,6 @@
                   'selling',
                   { rules: [{ required: true, message: '商品状态不能为空' }] },
                 ]"
-                default-value="全部"
               >
                 <a-select-option
                   :value="v.id"
@@ -242,6 +231,7 @@
                   },
                 ]"
               />
+              <a-input type="hidden" v-decorator="['time']" />
             </a-form-item>
             <a-form-item label="销售价" v-show="isTieredPricing == true">
               <div
@@ -504,8 +494,8 @@ export default {
           const data = res.data
           this.supplierId = data.supplierId //供应商id
           this.supplierName = data.supplierName
-          this.pcItemInfo = data.pcItemInfo //pc详情
-          this.appItemInfo = data.appItemInfo //app详情
+          this.pcItemInfo = data.pcItemInfo || '' //pc详情
+          this.appItemInfo = data.appItemInfo || '' //app详情
           this.costPrice = data.costPrice //成本价
           this.marketPrice = data.marketPrice //市场价
           this.sellingPrice =
@@ -526,8 +516,8 @@ export default {
               itemName: data.itemName, //spu名称
               brandName: data.brandName, //所属品牌
               supplierName: data.supplierName, //供应商
-              taxRate: data.taxRate, //税率
-              stock: data.stock, //库存
+              taxRate: Number(data.taxRate), //税率
+              stock: Number(data.stock), //库存
               sellingPriceList: this.sellingPricevalidator(),
             })
         }
@@ -566,8 +556,8 @@ export default {
             supplierId: that.supplierId, //供应商id
             supplierName: that.supplierName, //供应商名称
             isTieredPricing: that.isTieredPricing, //价格类型
-            pcItemInfo: that.pcItemInfo, //pc详情
-            appItemInfo: that.appItemInfo, //app详情
+            pcItemInfo: that.pcItemInfo || '', //pc详情
+            appItemInfo: that.appItemInfo || '', //app详情
             costPrice: that.costPrice, //成本价
             marketPrice: that.marketPrice, //市场价
             sellingPrice: that.sellingPrice, //销售价
