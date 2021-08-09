@@ -1,6 +1,6 @@
 <template>
   <div id="neighborhoodLife">
-    <div class="content-main" ref="content_main">
+    <!-- <div class="content-main" ref="content_main">
       <a-row style="padding: 20px;height: 100%;">
         <a-col>
           <a-table
@@ -19,16 +19,22 @@
           </a-table>
         </a-col>
       </a-row>
-    </div>
+    </div> -->
+    <virtualTree :tableColumns="tableColumn" :tableDatas="categoryData">
+    </virtualTree>
   </div>
 </template>
 
 <script>
 import api from './../../api'
-
+import virtualTree from '@/components/virtual-tree'
 export default {
   data() {
     return {
+      tableColumn: [
+        { field: 'name', title: '名称', treeNode: true },
+        { field: 'isChildren', title: '是否末级' },
+      ],
       categoryData: [],
       columns: [
         {
@@ -50,20 +56,21 @@ export default {
       tableLoading: false,
     }
   },
-  computed: {
-    childrenParse() {
-      return param => {
-        if (!param || param.length === 0) {
-          return '是'
-        } else {
-          return '否'
-        }
+  components: {
+    virtualTree,
+  },
+  computed: {},
+  methods: {
+    childrenParse(param) {
+      if (!param || param.length === 0) {
+        return '是'
+      } else {
+        return '否'
       }
     },
-  },
-  methods: {
     delChild(data) {
       for (let i = 0; i < data.length; i++) {
+        data[i].isChildren = this.childrenParse(data[i].children)
         if (data[i].children.length === 0) {
           delete data[i].children
         } else {
@@ -78,7 +85,11 @@ export default {
       .getCategoryTree({})
       .then(resp => {
         if (resp.code === 200) {
-          this.categoryData = resp.data
+          this.categoryData = resp.data.map(item => {
+            return {
+              ...item,       
+            }
+          })
           console.log(this.categoryData)
           this.delChild(this.categoryData)
         }

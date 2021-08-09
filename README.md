@@ -112,3 +112,6 @@ const _this = this
       })
 
 ```
+
+#### 新增大数据展示
+- [vxe-table] https://xuliangzhan_admin.gitee.io/vxe-table/#/table/start/use 
