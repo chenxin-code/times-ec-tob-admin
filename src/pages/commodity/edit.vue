@@ -340,7 +340,7 @@ import moment from 'moment'
 import { debounce } from '@/utils/util'
 import { quillEditor } from 'vue-quill-editor'
 import quillConfig from '@/utils/quillConfig'
-
+import { fetchApi } from '@/utils/ajax'
 export default {
   name: 'supplierEdit',
   components: { quillEditor },
@@ -508,7 +508,9 @@ export default {
           this.appItemInfo = data.appItemInfo //app详情
           this.costPrice = data.costPrice //成本价
           this.marketPrice = data.marketPrice //市场价
-          this.sellingPrice = data.sellingPrice //销售价
+          this.sellingPrice =
+            (data.sellingPrice.length > 0 && data.sellingPrice) ||
+            this.sellingPrice //销售价
           ;(this.categoryId = data.categoryId), //所属类目id
             (this.categoryName = data.categoryName), //所属类目名称
             (this.isTieredPricing = data.isTieredPricing), //价格类型

@@ -86,7 +86,7 @@ const toolOptions = [
 const handlers = {
   image: function image() {
     var self = this
-
+    //捕获上传图片按钮
     var fileInput = this.container.querySelector('input.ql-image[type=file]')
     if (fileInput === null) {
       fileInput = document.createElement('input')
@@ -105,10 +105,7 @@ const handlers = {
         console.log(fileInput)
         // formData.append('file', fileInput.files[0]);
         formData.append('file', fileInput.files[0])
-        // formData.append(
-        //   'token',
-        //   JSON.parse(localStorage.getItem('userInfo')).token
-        // )
+        // formData.append( 'token', JSON.parse(localStorage.getItem('userInfo')).token)
         fileInput.value = ''
         // console.log(http)
         //这里 请求
@@ -122,34 +119,12 @@ const handlers = {
             self.quill.setSelection(length + 1)
             fileInput.value = ''
           }
-        })
-        // http.post(ADMINOPERATOR.upload, formData).then(res => {
-        //   console.log(res)
-        //   if (res.data.code == 200) {
-        //     let imgUrl = res.data.result.file_url
-        //     let picPath = service.baseUrl + imgUrl
-        //     let length = self.quill.getSelection(true).index
-        //     //这里很重要，你图片上传成功后，img的src需要在这里添加，res.path就是你服务器返回的图片链接。
-        //     self.quill.insertEmbed(length, 'image', picPath)
-        //     self.quill.setSelection(length + 1)
-        //     fileInput.value = ''
-        //   }
-        // })
-        // http.post('/Uploadfile/uploadpic', formData, function(resp) {
-        //   console.log(resp);
-        //   var path = resp.data.ftpPath;
-        //   var picPath = process.env.FTP_URL + path;
-        //   let length = self.quill.getSelection(true).index;
-        //   //这里很重要，你图片上传成功后，img的src需要在这里添加，res.path就是你服务器返回的图片链接。
-        //   self.quill.insertEmbed(length, 'image', picPath);
-        //   self.quill.setSelection(length + 1)
-        //   fileInput.value = ''
-        // }, formData);
+        })       
       })
       console.log(fileInput)
       this.container.appendChild(fileInput)
     }
-    fileInput.click()
+    fileInput.click()    
   },
 }
 
