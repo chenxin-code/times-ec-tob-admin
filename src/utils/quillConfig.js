@@ -1,6 +1,10 @@
 import { fetchApi } from '@/utils/ajax'
 import URL from '@/api/urlConfig'
 
+import Quill from 'quill'
+import QuillImageDropAndPaste from 'quill-image-drop-and-paste'
+Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste)
+
 /*富文本编辑图片上传配置*/
 const uploadConfig = {
   action: 'common.uploadfile.single', // 必填参数 图片上传地址
@@ -119,13 +123,63 @@ const handlers = {
             self.quill.setSelection(length + 1)
             fileInput.value = ''
           }
-        })       
+        })
       })
       console.log(fileInput)
       this.container.appendChild(fileInput)
     }
-    fileInput.click()    
+    fileInput.click()
   },
+}
+
+/**
+ * Do something to our dropped or pasted image
+ * @param.imageDataUrl {string} - image's dataURL
+ * @param.type {string} - image's mime type
+ * @param.imageData {object} - provided more functions to handle the image
+ *   - imageData.toBlob() {function} - convert image to a BLOB Object
+ *   - imageData.toFile(filename) {function} - convert image to a File Object
+ *   - imageData.minify(options) {function)- minify the image, return a promise
+ *      - options.maxWidth {number} - specify the max width of the image, default is 800
+ *      - options.maxHeight {number} - specify the max height of the image, default is 800
+ *      - options.quality {number} - specify the quality of the image, default is 0.8
+ */
+function imageHandler(imageDataUrl, type, imageData) {
+  var self = this
+  var filename = 'my_cool_image.png'
+  var blob = imageData.toBlob()
+  var file = imageData.toFile(filename)
+  // generate a form data
+  var formData = new FormData()
+  // append blob data
+  formData.append('filename', filename)
+  // formData.append('file', blob)
+  // or just append the file
+  formData.append('file', file)
+  // upload image to your server
+  // callUploadAPI(your_upload_url, formData, (err, res) => {
+  //   if (err) return
+  //   // success? you should return the uploaded image's url
+  //   // then insert into the quill editor
+  //   let index = (quill.getSelection() || {}).index
+  //   if (index === undefined || index < 0) index = quill.getLength()
+  //   quill.insertEmbed(index, 'image', res.data.image_url, 'user')
+  // })
+  //这里 请求
+  fetchApi(URL.ADMINOPERATOR.upload, formData, 'POST').then(res => {
+    console.log(res)
+    if (res.code == 200) {
+      let imgUrl = res.data
+      let length = self.quill.getSelection(true).index
+      //这里很重要，你图片上传成功后，img的src需要在这里添加，res.path就是你服务器返回的图片链接。
+      self.quill.insertEmbed(length, 'image', imgUrl)
+      self.quill.setSelection(length + 1)
+      // fileInput.value = ''
+      // let index = (quill.getSelection() || {}).index
+      // if (index === undefined || index < 0) index = quill.getLength()
+      // quill.insertEmbed(index, 'image', imgUrl, 'user')
+    }
+  })
 }
 
 export default {
@@ -135,6 +189,10 @@ export default {
     toolbar: {
       container: toolOptions, // 工具栏选项
       handlers: handlers, // 事件重写
+    },
+    imageDropAndPaste: {
+      // add an custom image handler
+      handler: imageHandler,
     },
   },
 }
