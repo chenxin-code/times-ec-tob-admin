@@ -184,7 +184,7 @@
        -->
       <a-form
         :form="form"
-        style="overflow: auto;width:100%;"
+        style="overflow: auto;width:100%;padding-bottom:100px;"
         autoComplete="off"
         :labelCol="{ style: { width: '200px' } }"
         :wrapperCol="{ style: { width: '80%' } }"
@@ -708,5 +708,15 @@ export default {
     text-align: center;
     margin-right: 12px;
   }
+}
+/deep/.quill-editor .ql-container {
+  height: 320px;
+}
+.content-floor {
+  background: #fff;
+  width: 100%;
+  bottom: 0px;
+  right: 0px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 </style>
