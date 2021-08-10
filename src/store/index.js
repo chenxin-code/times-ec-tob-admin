@@ -21,7 +21,24 @@ const store = new Vuex.Store({
         access_channel: 'mgmt',
         Access_Token: '',
       },
-      menus: [],
+      menus: [
+        //   {
+        //     "id":"222",
+        //     "permCode":null,
+        //     "permIcon":null,
+        //     "permName":"菜单管理",
+        //     "permType":null,
+        //     "permUrl":"/menuManagement"
+        // },
+        // {
+        //     "id":"111",
+        //     "permCode":"ACCOUNT_MANAGE",
+        //     "permIcon":null,
+        //     "permName":"账号列表",
+        //     "permType":"MANAGEMENT",
+        //     "permUrl":"/accountList"
+        // },
+      ],
     }
   },
   mutations: {
