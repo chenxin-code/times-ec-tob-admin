@@ -39,6 +39,7 @@ const store = new Vuex.Store({
         //     "permUrl":"/accountList"
         // },
       ],
+      menuRouteLoaded:false
     }
   },
   mutations: {
