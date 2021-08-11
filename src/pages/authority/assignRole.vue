@@ -309,6 +309,7 @@ export default {
           }
         })
         this.tableData = newArray
+        //选项置空
         this.leftSelect = []
         this.rightSelect = []
         this.selectedLeft = []
@@ -333,6 +334,7 @@ export default {
           }
         })
         this.tableDataed = newArray
+        //选项置空
         this.leftSelect = []
         this.rightSelect = []
         this.selectedLeft = []
