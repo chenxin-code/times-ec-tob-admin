@@ -1,7 +1,8 @@
 import { fetchApi } from '@/utils/ajax'
 
-const { VUE_APP_BASE_API } = process.env
-const URL_PREFIX = VUE_APP_BASE_API + '/times-ec-tob-mall/admin/menu'
+const { VUE_APP_BASE_ERP_API } = process.env
+const URL_PREFIX = '/times-ec-tob-mall/admin/menu'
+let getPermListByLoginUrl = '/times-ec-tob-mall/admin/role/getPermListByLogin'
 
 // 获取菜单
 /**
