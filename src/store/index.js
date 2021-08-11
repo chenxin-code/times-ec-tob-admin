@@ -30,15 +30,8 @@ const store = new Vuex.Store({
         //     "permType":null,
         //     "permUrl":"/menuManagement"
         // },
-        // {
-        //     "id":"111",
-        //     "permCode":"ACCOUNT_MANAGE",
-        //     "permIcon":null,
-        //     "permName":"账号列表",
-        //     "permType":"MANAGEMENT",
-        //     "permUrl":"/accountList"
-        // },
       ],
+      menuRouteLoaded: false,
     }
   },
   mutations: {
@@ -68,6 +61,9 @@ const store = new Vuex.Store({
       })
       state.menus = menus
     },
+  },
+  menuRouteLoaded(state, Loaded) {
+    state.menuRouteLoaded = Loaded
   },
 })
 

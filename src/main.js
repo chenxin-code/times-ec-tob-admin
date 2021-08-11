@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-07-14 17:14:05
+ * @LastEditTime: 2021-08-10 14:23:26
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \times-ec-tob-admin\src\main.js
+ */
 import Vue from 'vue'
 // import VueCookies from 'vue-cookies'
 
@@ -36,6 +44,11 @@ console.log(window.location)
 Vue.config.productionTip = false
 Vue.use(Antd)
 
+import * as directives from './directive'//import directive fn
+
+Object.keys(directives).forEach(key => {
+  Vue.directive(key, directives[key])
+})
 
 new Vue({
   router,
