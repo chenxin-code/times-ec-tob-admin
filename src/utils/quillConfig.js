@@ -2,8 +2,11 @@ import { fetchApi } from '@/utils/ajax'
 import URL from '@/api/urlConfig'
 
 import Quill from 'quill'
-import QuillImageDropAndPaste from 'quill-image-drop-and-paste'
-Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste)
+// import QuillImageDropAndPaste from 'quill-image-drop-and-paste'
+// Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste)
+
+import { container, ImageExtend, QuillWatch } from "./quill-image-super-solution-module";
+Quill.register("modules/ImageExtend", ImageExtend);
 
 /*富文本编辑图片上传配置*/
 const uploadConfig = {
@@ -16,62 +19,7 @@ const uploadConfig = {
 }
 
 // toolbar工具栏的工具选项（默认展示全部）
-const toolOptions = [
-  ['bold', 'italic', 'underline', 'strike'],
-  ['blockquote', 'code-block'],
-  [
-    {
-      header: 1,
-    },
-    {
-      header: 2,
-    },
-  ],
-  [
-    {
-      list: 'ordered',
-    },
-    {
-      list: 'bullet',
-    },
-  ],
-  [
-    {
-      script: 'sub',
-    },
-    {
-      script: 'super',
-    },
-  ],
-  [
-    {
-      indent: '-1',
-    },
-    {
-      indent: '+1',
-    },
-  ],
-  [
-    {
-      direction: 'rtl',
-    },
-  ],
-  [
-    {
-      color: [],
-    },
-    {
-      background: [],
-    },
-  ],
-  [
-    {
-      align: [],
-    },
-  ],
-  ['clean'],
-  ['link', 'image', 'video'],
-]
+const toolOptions = container
 const handlers = {
   image: function image() {
     var self = this
@@ -171,13 +119,13 @@ export default {
   placeholder: '',
   theme: 'snow', // 主题
   modules: {
-    toolbar: {
-      container: toolOptions, // 工具栏选项
-      handlers: handlers, // 事件重写
-    },
-    imageDropAndPaste: {
-      // add an custom image handler
-      handler: imageHandler,
-    },
+    // toolbar: {
+    //   container: toolOptions, // 工具栏选项
+    //   handlers: handlers, // 事件重写
+    // },
+    // imageDropAndPaste: {
+    //   // add an custom image handler
+    //   handler: imageHandler,
+    // },
   },
 }
