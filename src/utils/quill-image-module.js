@@ -97,7 +97,7 @@ export class ImageExtend {
         if (!this.checkPicSize()) {
           return
         }
-        if (this.config.action) {
+        if (this.config.action || this.config.upload) {
           this.uploadImg()
         } else {
           this.toBase64()
@@ -140,7 +140,7 @@ export class ImageExtend {
       return
     }
     self.file = e.dataTransfer.files[0] // 获取到第一个上传的文件对象
-    if (this.config.action) {
+    if (this.config.action || this.config.upload) {
       self.uploadImg()
     } else {
       self.toBase64()
@@ -235,7 +235,7 @@ export class ImageExtend {
     }
     //新增的一个监听回调函数方法
     if (self.config.upload) {
-      xhr.upload.onloadstart()
+      QuillWatch.active.uploading()
       self.imgURL = await this.config.upload(self)
       QuillWatch.active.uploadSuccess()
       self.insertImg()
@@ -321,7 +321,7 @@ export function imgHandler() {
       if (!self.checkPicSize()) {
         return
       }
-      if (self.config.action) {
+      if (self.config.action || self.config.upload) {
         self.uploadImg()
       } else {
         self.toBase64()
