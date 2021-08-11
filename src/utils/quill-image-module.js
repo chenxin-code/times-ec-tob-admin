@@ -1,6 +1,7 @@
 /**
  *@description 观察者模式 全局监听富文本编辑器
  */
+
 export const QuillWatch = {
   watcher: {}, // 登记编辑器信息
   active: null, // 当前触发的编辑器
@@ -35,6 +36,7 @@ export class ImageExtend {
     this.config = config
     this.file = '' // 要上传的图片
     this.imgURL = '' // 图片地址
+    this.QuillWatch = QuillWatch
     quill.root.addEventListener('paste', this.pasteHandle.bind(this), false)
     quill.root.addEventListener('drop', this.dropHandle.bind(this), false)
     quill.root.addEventListener(
@@ -150,7 +152,7 @@ export class ImageExtend {
    */
   toBase64() {
     const self = this
-    const reader = new FileReader()
+    const reader = new FileReader()   
     reader.onload = e => {
       // 返回base64
       self.imgURL = e.target.result
@@ -166,6 +168,10 @@ export class ImageExtend {
     const self = this
     let quillLoading = self.quillLoading
     let config = self.config
+    if (this.config.upload) {
+      this.config.upload(self)
+      return
+    }
     // 构造表单
     let formData = new FormData()
     formData.append(config.name, self.file)
@@ -330,11 +336,13 @@ export const container = [
   [{ script: 'sub' }, { script: 'super' }],
   [{ indent: '-1' }, { indent: '+1' }],
   [{ direction: 'rtl' }],
-  [{ size: ['small', false, 'large', 'huge'] }],
-  [{ header: [1, 2, 3, 4, 5, 6, false] }],
+  // [{ size: ['small', false, 'large', 'huge'] }],
+  // [{ header: [1, 2, 3, 4, 5, 6, false] }],
   [{ color: [] }, { background: [] }],
-  [{ font: [] }],
+  // [{ font: [] }],
   [{ align: [] }],
   ['clean'],
   ['link', 'image', 'video'],
 ]
+
+
