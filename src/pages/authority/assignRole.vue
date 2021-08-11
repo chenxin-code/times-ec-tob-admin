@@ -27,10 +27,12 @@
                 <div class="">
                   <a-table
                     :columns="tableColumns"
-                    :row-key="(r, i) => i"
                     :data-source="tableData"
                     :scroll="{ y: 600 }"
-                    :row-selection="rowSelection"
+                    :row-selection="{
+                      ...rowSelection,
+                      selectedRowKeys: selectedLeft,
+                    }"
                     :loading="tableLoading"
                     :pagination="false"
                   >
@@ -61,7 +63,10 @@
                   :scroll="{ y: 600 }"
                   :pagination="false"
                   :loading="tableLoadinged"
-                  :row-selection="rowSelectionRight"
+                  :row-selection="{
+                    ...rowSelectionRight,
+                    selectedRowKeys: selectedRight,
+                  }"
                   ><template slot="operation" slot-scope="record">
                     <div class="editable-row-operations">
                       <a @click="del(record)">删除</a>
@@ -116,7 +121,7 @@ export default {
     //左边的checkbox配置
     const rowSelection = {
       onChange: this.leftTableChange,
-      selectedRowKeys: this.selectedLeft,
+      // selectedRowKeys: this.selectedLeft,
     }
     //右边的checkbox配置
     const rowSelectionRight = {
@@ -279,10 +284,12 @@ export default {
     //左边checkbox选择
     leftTableChange(selectedRowKeys, selectedRows) {
       this.leftSelect = selectedRows
+      this.selectedLeft = selectedRowKeys
     },
     //右边checkbox选择
     rightTableChange(selectedRowKeys, selectedRows) {
       this.rightSelect = selectedRows
+      this.selectedRight = selectedRowKeys
     },
     //左边数据移除到右边
     toRight() {
@@ -302,8 +309,9 @@ export default {
           }
         })
         this.tableData = newArray
-        this.selectedLeft = []
         this.leftSelect = []
+        this.selectedLeft = []
+        this.selectedRight = []
       }
     },
     //右边数据移除到左边
@@ -326,6 +334,7 @@ export default {
         this.tableDataed = newArray
         this.selectedRight = []
         this.rightSelect = []
+        this.leftSelect = []
       }
     },
   },
