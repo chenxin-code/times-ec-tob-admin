@@ -21,7 +21,6 @@
     "postcss-loader": "^6.1.1",
     "qrcodejs2": "0.0.2",
     "qs": "^6.9.4",
-    "quill-image-drop-and-paste": "^1.2.3",
     "shelljs": "^0.8.4",
     "vue": "^2.6.11",
     "vue-cropper": "^0.5.5",

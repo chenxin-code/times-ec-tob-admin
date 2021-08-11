@@ -9,7 +9,7 @@ export default [
         permUrl: '/company',
     },
     {
-        permName: '账号管理',
+        permName: '企业账号管理',
         authKeys: [''],
         permIcon: require('@/assets/img/menu/icon_account.png'),
         permCode: 'account',
