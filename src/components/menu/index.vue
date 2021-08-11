@@ -45,6 +45,7 @@
 <script>
 import MENU_ROUTES from '../../config/menu'
 import { hasRangeAuthorityWithoutProject } from '@/utils/authority'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Menu',
@@ -61,6 +62,7 @@ export default {
       collapsed: false,
     }
   },
+  // computed: mapState(['menus']),
   watch: {
     $route: 'setMenus',
   },
@@ -137,7 +139,9 @@ export default {
       // debugger
       this.rootPath = pathname
       this.menus = filteredMenus
-      console.log('filteredMenus--->', filteredMenus)
+      //打印menus
+      const menus = this.$store.state.menus
+      console.log('filteredMenus--->', filteredMenus, menus)
     },
   },
 }

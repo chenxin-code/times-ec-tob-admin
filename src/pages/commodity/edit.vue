@@ -1,7 +1,7 @@
 <template>
   <div style="height: 100%;margin-bottom: 0px;">
     <div class="content-header">
-      {{ $route.params.typ === '1' ? '查看' : '编辑' }}商品基础信息     
+      {{ $route.params.typ === '1' ? '查看' : '编辑' }}商品基础信息
     </div>
     <div
       class="content-main"
@@ -318,6 +318,7 @@
     </div> -->
     <FormSubmitButton
       :isShow="true"
+      :loading="loading"
       :isShowSubmit="$route.params.typ === '2'"
       @submit="onSubmit"
     />
@@ -525,6 +526,7 @@ export default {
     },
     //保存
     onSubmit() {
+      this.loading = true
       debounce(() => {
         let that = this
         //是否是阶梯价
@@ -573,7 +575,7 @@ export default {
             taxRate: Number(values.taxRate), //税率
             stock: Number(values.stock), //库存
           }
-          this.loading = true
+
           api
             .updateProduct(data)
             .then(res => {

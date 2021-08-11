@@ -10,19 +10,19 @@ export default {
   FALLBACK() {
     router.go(-1)
   },
-  EXCHANGE_TOKEN(context) {
+  async EXCHANGE_TOKEN(context) {
+    // 获取token
     let getQueryString = name => {
       var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i')
       var r = window.location.search.substr(1).match(reg)
       if (r != null) return unescape(r[2])
       return null
     }
-
-    const SD_ACCESS_TOKEN = localStorage.getItem('SD_ACCESS_TOKEN')
-    const token = getQueryString('token') || SD_ACCESS_TOKEN
-
-    window.localStorage.setItem('SD_ACCESS_TOKEN', token)
-
+    if (getQueryString('token')) {
+      window.localStorage.setItem('SD_ACCESS_TOKEN', getQueryString('token'))
+    }
+    const token =
+      getQueryString('token') || window.localStorage.getItem('SD_ACCESS_TOKEN')
     const para = {
       originalToken: token,
     }
@@ -30,16 +30,29 @@ export default {
       if (res.code === 200) {
         let Access_Token = 'Bearer ' + res.data.newToken
         window.localStorage.setItem('Case_Access_Token', Access_Token)
+        // window.localStorage.setItem('SmAuthorization', Access_Token)
         context.commit('SET_CASE_TOKEN', Access_Token)
+        context.commit('SET_CASE_HEADERS', Access_Token)
+        context.dispatch('GET_MENU_LIST')
       }
-      //判断如果没有一体化token就跳转
-      if (res.code == 500) {
-        // setTimeout(function() {
-        //   window.location.href = process.env.VUE_APP_BASE_CMS_WEBSITE
-        // }, 2000)
-        returnBaseCms()
-      }
-      console.log('loginByOriginalToken--->', res)
+      return Promise.resolve()
     })
+  },
+  async GET_MENU_LIST(context) {
+    try {
+      let res = await api.getPermListByLogin()
+      // console.log(res, '---------')
+      const menus = res.data.permList
+      context.commit('SET_MENUS_LIST', menus)
+    } catch (error) {}
+  },
+  //获取菜单的目录
+  async GET_MENU_LIST(context) {
+    try {
+      let res = await api.getPermListByLogin()
+      // console.log(res, '---------')
+      const menus = res.data.permList
+      context.commit('SET_MENUS_LIST', menus)
+    } catch (error) {}
   },
 }

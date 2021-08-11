@@ -3,6 +3,7 @@ import * as portal from "./portal";
 import * as cmsManagement from "./cmsManagement";
 import * as market from "./market";
 import * as suppiler from "./suppiler";
+import * as menu from "./menu";
 
 // 由一体化携带的token，当天有效- 4/25
 let SmAuthorization =
@@ -14,5 +15,6 @@ export default {
   ...cmsManagement,
   ...market,
   ...suppiler,
+  ...menu,
   SmAuthorization,
 };

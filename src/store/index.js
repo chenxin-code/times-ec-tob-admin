@@ -16,6 +16,22 @@ const store = new Vuex.Store({
     return {
       paramMap: {},
       Case_Access_Token: null,
+      headers: {
+        Authorization: '',
+        access_channel: 'mgmt',
+        Access_Token: '',
+      },
+      menus: [
+        //   {
+        //     "id":"222",
+        //     "permCode":null,
+        //     "permIcon":null,
+        //     "permName":"菜单管理",
+        //     "permType":null,
+        //     "permUrl":"/menuManagement"
+        // },
+      ],
+      menuRouteLoaded: false,
     }
   },
   mutations: {
@@ -26,6 +42,28 @@ const store = new Vuex.Store({
     SET_CASE_TOKEN(state, token) {
       state.Case_Access_Token = token
     },
+    //设置默认的header头部
+    SET_CASE_HEADERS(state, token) {
+      state.headers = {
+        Authorization: token,
+        access_channel: 'mgmt',
+        Access_Token: token,
+      }
+    },
+    SET_MENUS_LIST(state, menus) {
+      menus.unshift({
+        id: '',
+        permCode: '',
+        permIcon: null,
+        permName: '首页',
+        permType: 'HOME',
+        permUrl: '/home',
+      })
+      state.menus = menus
+    },
+  },
+  menuRouteLoaded(state, Loaded) {
+    state.menuRouteLoaded = Loaded
   },
 })
 
