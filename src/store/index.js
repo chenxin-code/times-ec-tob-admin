@@ -21,16 +21,7 @@ const store = new Vuex.Store({
         access_channel: 'mgmt',
         Access_Token: '',
       },
-      menus: [
-        //   {
-        //     "id":"222",
-        //     "permCode":null,
-        //     "permIcon":null,
-        //     "permName":"菜单管理",
-        //     "permType":null,
-        //     "permUrl":"/menuManagement"
-        // },
-      ],
+      menus: [],
       menuRouteLoaded: false,
     }
   },

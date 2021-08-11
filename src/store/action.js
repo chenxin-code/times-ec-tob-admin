@@ -38,19 +38,11 @@ export default {
       return Promise.resolve()
     })
   },
-  async GET_MENU_LIST(context) {
-    try {
-      let res = await api.getPermListByLogin()
-      // console.log(res, '---------')
-      const menus = res.data.permList
-      context.commit('SET_MENUS_LIST', menus)
-    } catch (error) {}
-  },
   //获取菜单的目录
   async GET_MENU_LIST(context) {
     try {
-      let res = await api.getPermListByLogin()
-      // console.log(res, '---------')
+      let res = await api.getMenuTreeData()
+      console.log(res, '---------')
       const menus = res.data.permList
       context.commit('SET_MENUS_LIST', menus)
     } catch (error) {}

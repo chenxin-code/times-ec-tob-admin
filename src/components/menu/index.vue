@@ -9,31 +9,31 @@
   >
     <template v-for="menu in menus">
       <template v-if="menu.children">
-        <a-sub-menu :key="menu.name">
+        <a-sub-menu :key="menu.permCode">
           <span slot="title"
-            ><img :src="menu.icon" class="menu-icon" /><span
+            ><img :src="menu.permIcon" class="menu-icon" /><span
               class="menu-title"
-              >{{ menu.title }}</span
+              >{{ menu.permName }}</span
             ></span
           >
           <template v-for="menuChildren in menu.children">
             <template>
               <a-menu-item
-                :key="menuChildren.path"
-                @click="onClickMenuChid(menuChildren.path)"
+                :key="menuChildren.permUrl"
+                @click="onClickMenuChid(menuChildren.permUrl)"
               >
-                {{ menuChildren.title }}
+                {{ menuChildren.permName }}
               </a-menu-item>
             </template>
           </template>
         </a-sub-menu>
       </template>
       <template v-else>
-        <a-menu-item :key="menu.path" @click="onClickMenu(menu.path)">
+        <a-menu-item :key="menu.permUrl" @click="onClickMenu(menu.permUrl)">
           <span
-            ><img :src="menu.icon" class="menu-icon" /><span
+            ><img :src="menu.permIcon" class="menu-icon" /><span
               class="menu-title"
-              >{{ menu.title }}</span
+              >{{ menu.permName }}</span
             ></span
           >
         </a-menu-item>
@@ -62,7 +62,7 @@ export default {
       collapsed: false,
     }
   },
-  // computed: mapState(['menus']),
+  //   computed: mapState(['menus']),
   watch: {
     $route: 'setMenus',
   },
@@ -72,31 +72,26 @@ export default {
   methods: {
     checkKeys(openKeys) {
       this.openKeys = openKeys
-      // this.openKeys = openKeys;
       this.$forceUpdate()
-      console.log(this.openKeys)
     },
     onClickMenuChid(path) {
       this.$router.push({ path: path })
-      console.log(this.openKeys)
     },
     onClickMenu(path) {
       this.openKeys = ['']
       this.$forceUpdate()
       this.$router.push({ path: path })
-      console.log('this.openKeys', this.openKeys)
     },
     hasRangeAuthorityWithoutProject(authKeys) {
       return hasRangeAuthorityWithoutProject(authKeys)
     },
     setMenus() {
       const pathname = this.$route.path
-      const matchedMenu = MENU_ROUTES.find(x => x.path === pathname) || {
+      const matchedMenu = MENU_ROUTES.find(x => x.permUrl === pathname) || {
         group: '',
       }
       let filteredMenus = []
       const groupMenus = MENU_ROUTES.filter(x => x.group === matchedMenu.group)
-
       if (groupMenus.length > 0) {
         filteredMenus = groupMenus
       } else {
@@ -107,7 +102,7 @@ export default {
             x.hasChild
               ? x.hasChild ===
                 (pathParams[1] === 'advertise' ? pathParams[1] : pathParams[1])
-              : x.path ===
+              : x.permUrl ===
                 '/' +
                   (pathParams[1] === 'user' ||
                   pathParams[1] === 'advertise' ||
@@ -133,7 +128,7 @@ export default {
       const { ENV } = process.env
       if (ENV == 'production') {
         filteredMenus = filteredMenus.filter(item => {
-          return ['account', 'supplier'].indexOf(item.menuKey) < 0
+          return ['account', 'supplier'].indexOf(item.permCode) < 0
         })
       }
       // debugger
@@ -152,7 +147,7 @@ export default {
 }
 .menuslis {
   height: 90%;
-  width: 110%;
+  width: 100%;
   overflow-y: auto;
 }
 .menu-icon {
