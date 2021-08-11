@@ -168,6 +168,7 @@ export class ImageExtend {
     const self = this
     let quillLoading = self.quillLoading
     let config = self.config
+    //新增的一个监听回调函数方法
     if (this.config.upload) {
       this.config.upload(self)
       return
