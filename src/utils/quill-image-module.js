@@ -152,7 +152,7 @@ export class ImageExtend {
    */
   toBase64() {
     const self = this
-    const reader = new FileReader()   
+    const reader = new FileReader()
     reader.onload = e => {
       // 返回base64
       self.imgURL = e.target.result
@@ -164,15 +164,10 @@ export class ImageExtend {
   /**
    * @description 上传图片到服务器
    */
-  uploadImg() {
+  async uploadImg() {
     const self = this
     let quillLoading = self.quillLoading
     let config = self.config
-    //新增的一个监听回调函数方法
-    if (this.config.upload) {
-      this.config.upload(self)
-      return
-    }
     // 构造表单
     let formData = new FormData()
     formData.append(config.name, self.file)
@@ -238,6 +233,17 @@ export class ImageExtend {
         config.end()
       }
     }
+    //新增的一个监听回调函数方法
+    if (self.config.upload) {
+      xhr.upload.onloadstart()
+      self.imgURL = await this.config.upload(self)
+      QuillWatch.active.uploadSuccess()
+      self.insertImg()
+      if (self.config.success) {
+        self.config.success()
+      }
+      return
+    }
     xhr.send(formData)
   }
 
@@ -255,9 +261,9 @@ export class ImageExtend {
    * @description 显示上传的进度
    */
   progress(pro) {
-    pro = '[' + 'uploading' + pro + ']'
+    pro = '[' + '上传中' + pro + ']'
     QuillWatch.active.quill.root.innerHTML = QuillWatch.active.quill.root.innerHTML.replace(
-      /\[uploading.*?\]/,
+      /\[上传中.*?\]/,
       pro
     )
   }
@@ -270,8 +276,8 @@ export class ImageExtend {
     QuillWatch.active.cursorIndex = length
     QuillWatch.active.quill.insertText(
       QuillWatch.active.cursorIndex,
-      '[uploading...]',
-      { color: 'red' },
+      '[上传中...]',
+      { color: '#333' },
       true
     )
   }
@@ -281,14 +287,14 @@ export class ImageExtend {
    */
   uploadError() {
     QuillWatch.active.quill.root.innerHTML = QuillWatch.active.quill.root.innerHTML.replace(
-      /\[uploading.*?\]/,
-      '[upload error]'
+      /\[上传中.*?\]/,
+      '[上传失败]'
     )
   }
 
   uploadSuccess() {
     QuillWatch.active.quill.root.innerHTML = QuillWatch.active.quill.root.innerHTML.replace(
-      /\[uploading.*?\]/,
+      /\[上传中.*?\]/,
       ''
     )
   }
@@ -345,5 +351,3 @@ export const container = [
   ['clean'],
   ['link', 'image', 'video'],
 ]
-
-

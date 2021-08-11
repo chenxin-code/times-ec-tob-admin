@@ -75,17 +75,22 @@ export default {
       action: URL.ADMINOPERATOR.upload,
       //新增的回调函数
       upload: function(self) {
-        let formData = new FormData()
-        formData.append('file', self.file)
-        fetchApi(URL.ADMINOPERATOR.upload, formData, 'POST').then(res => {
-          console.log(res)
-          if (res.code == 200) {
-            let imgUrl = res.data
-            let length = self.quill.getSelection(true).index
-            //这里很重要，你图片上传成功后，img的src需要在这里添加，res.path就是你服务器返回的图片链接。
-            self.quill.insertEmbed(length, 'image', imgUrl)
-            self.quill.setSelection(length + 1)          
-          }
+        return new Promise((resolve, reject) => {
+          let formData = new FormData()
+          formData.append('file', self.file)
+          fetchApi(URL.ADMINOPERATOR.upload, formData, 'POST').then(res => {
+            console.log(res)
+            if (res.code == 200) {
+              let imgUrl = res.data
+              // let length = self.quill.getSelection(true).index
+              // //这里很重要，你图片上传成功后，img的src需要在这里添加，res.path就是你服务器返回的图片链接。
+              // self.quill.insertEmbed(length, 'image', imgUrl)
+              // self.quill.setSelection(length + 1)
+              resolve(imgUrl)
+            }else{
+              reject()
+            }
+          })
         })
       },
     },
@@ -100,6 +105,6 @@ export default {
           QuillWatch.emit(this.quill.id)
         },
       },
-    },    
+    },
   },
 }
