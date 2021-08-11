@@ -310,6 +310,7 @@ export default {
         })
         this.tableData = newArray
         this.leftSelect = []
+        this.rightSelect = []
         this.selectedLeft = []
         this.selectedRight = []
       }
@@ -332,9 +333,10 @@ export default {
           }
         })
         this.tableDataed = newArray
-        this.selectedRight = []
-        this.rightSelect = []
         this.leftSelect = []
+        this.rightSelect = []
+        this.selectedLeft = []
+        this.selectedRight = []
       }
     },
   },
