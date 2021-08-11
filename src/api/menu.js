@@ -5,17 +5,21 @@ const URL_PREFIX = '/times-ec-tob-mall/admin/menu'
 let getPermListByLoginUrl = '/times-ec-tob-mall/admin/role/getPermListByLogin'
 
 // 获取菜单
-export const getPermListByLogin = () => {
-  return fetchApi(getPermListByLoginUrl, {}, 'GET')
-}
-
 /**
  * 【管理端】加载所有菜单列表树(用于菜单列表)
  * @param {Object} params 入参 参数名称 参数说明 请求类型 是否必须
  * @param {string} params.menuName		菜单名称	string
  */
 export const getMenuTreeData = params =>
-  fetchApi(`${URL_PREFIX}/menuTreeData`, params, 'GET')
+  fetchApi(`${URL_PREFIX}/menuTreeData`, params, 'POST')
+
+/**
+ * 【管理端】根据用户ID查询权限
+ * @param {Object} params 入参 参数名称 参数说明 请求类型 是否必须
+ * @param {string} params.menuName		菜单名称	string
+ */
+export const getMenuTreeDataByUserId = params =>
+fetchApi(`${URL_PREFIX}/selectPermsByUserId`, params, 'POST')
 
 /**
  * 菜单新增/编辑
