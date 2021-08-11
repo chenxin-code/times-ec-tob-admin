@@ -1,8 +1,8 @@
 import { fetchApi } from '@/utils/ajax'
 
 const { VUE_APP_BASE_ERP_API } = process.env
-const URL_PREFIX = VUE_APP_BASE_ERP_API + '/times-ec-erp/admin/menu'
-let getPermListByLoginUrl = VUE_APP_BASE_ERP_API + '/times-ec-erp/admin/role/getPermListByLogin'
+const URL_PREFIX = '/times-ec-tob-mall/admin/menu'
+let getPermListByLoginUrl = '/times-ec-tob-mall/admin/role/getPermListByLogin'
 
 // 获取菜单
 export const getPermListByLogin = () => {
