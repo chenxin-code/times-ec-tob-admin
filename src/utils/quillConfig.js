@@ -5,6 +5,11 @@ import Quill from 'quill'
 import { container, ImageExtend, QuillWatch } from './quill-image-module'
 Quill.register('modules/ImageExtend', ImageExtend)
 
+
+// import Quill from 'quill'
+// import QuillImageDropAndPaste from 'quill-image-drop-and-paste'
+// Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste)
+
 // /*富文本编辑图片上传配置*/
 // const uploadConfig = {
 //   action: 'common.uploadfile.single', // 必填参数 图片上传地址
