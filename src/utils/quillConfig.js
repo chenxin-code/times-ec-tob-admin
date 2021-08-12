@@ -72,7 +72,7 @@ export default {
       // change: (xhr, formData) => {
       //   formData.append('example', 'test')
       // },
-      action: URL.ADMINOPERATOR.upload,
+      // action: URL.ADMINOPERATOR.upload,
       //新增的回调函数
       upload: function(self) {
         return new Promise((resolve, reject) => {
