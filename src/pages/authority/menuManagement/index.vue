@@ -189,6 +189,7 @@ export default {
               if (res.code == 200) {
                 that.$message.info(`删除成功`)
                 that.initData()
+                that.$store.dispatch('GET_MENU_LIST')
               } else {
                 that.$message.error(`删除失败`)
               }

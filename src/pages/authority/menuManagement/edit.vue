@@ -224,6 +224,7 @@ export default {
     // 添加/修改
     onSubmit() {
       this.loadingSubmit = true
+      let that = this
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           this.$api[this.openType === 'add' ? 'getMenuSave' : 'getMenuUpdata'](
@@ -232,6 +233,7 @@ export default {
             .then(res => {
               this.$router.go(-1)
               this.$message.info(`提交成功`)
+              that.$store.dispatch('GET_MENU_LIST')
             })
             .finally(() => {
               this.loadingSubmit = false

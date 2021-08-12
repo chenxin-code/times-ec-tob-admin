@@ -103,7 +103,7 @@ export default [
         name: 'role',
         menuKey: 'role',
         meta: {
-            menu: '/role',
+            menu: '/authority/role',
             authKeys: [''],
             bread: [{ path: '/authority/role', name: '角色管理' }],
             keepAlive: false
@@ -115,13 +115,10 @@ export default [
         name: 'assignRole',
         menuKey: 'assignRole',
         meta: {
-            menu: '/assignRole',
+            menu: '/authority/assignRole',
             authKeys: [''],
             bread: [
-                {
-                    path: '/authority',
-                    name: '权限管理',
-                },
+                { path: '/authority',name: '权限管理'},
                 { path: '/authority/role', name: '角色管理' },
                 { path: '/authority/assignRole', name:'角色分配' }],
             keepAlive: false
