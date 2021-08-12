@@ -34,9 +34,15 @@ import Print from 'vue-print-nb'
 Vue.use(Print)
 // 基础组件的自动化全局注册。全局注册的行为必须在根 Vue 实例 (通过 new Vue) 创建之前发生
 import './components/common/common.js'
+
+// 引入api
+import api from './api'
+Vue.prototype.$api = api
+
 // 引入lodash
 import lodash from 'lodash'
 Vue.prototype._ = lodash
+
 //底部的公共返回保存按鈕
 import FormSubmitButton from './components/FormSubmitButton/index.js'
 Vue.use(FormSubmitButton)

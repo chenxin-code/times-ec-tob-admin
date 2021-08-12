@@ -43,12 +43,14 @@ const store = new Vuex.Store({
     },
     SET_MENUS_LIST(state, menus) {
       menus.unshift({
-        id: '',
-        permCode: '',
-        permIcon: null,
-        permName: '首页',
-        permType: 'HOME',
-        permUrl: '/home',
+        menuName: '首页',
+        menuType:'HOME',
+        orderNum:0,
+        parentId:0,
+        parentName: null,
+        perms:'HOME',
+        url:'/home',
+        icon: "@/assets/img/menu/icon_supplier.png"
       })
       state.menus = menus
     },

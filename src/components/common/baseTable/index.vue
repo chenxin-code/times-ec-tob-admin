@@ -21,8 +21,8 @@
         </template>
       </a-table>
     </baseModule>
-    <!-- 分页 v-if="total > 0" -->
-    <baseModule class="container-table-module">
+    <!-- 分页  -->
+    <baseModule v-if="total > 0" class="container-table-module">
       <a-pagination
         :total="total"
         :show-total="total => `共 ${total} 条`"
