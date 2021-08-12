@@ -53,7 +53,7 @@ export const getMenuUpdata = data =>
  * @param {number} params.id		number	 	query
  */
 export const getMenuModel = params =>
-  fetchApi(`${URL_PREFIX}/getModel`, params, 'GET')
+  fetchApi(`${URL_PREFIX}/getModel/${params.id}`,{},'POST')
 
 /**
  * 删除菜单
@@ -61,7 +61,7 @@ export const getMenuModel = params =>
  * @param {number} params.id		number	 	query
  */
 export const getMenuDelete = params =>
-  fetchApi(`${URL_PREFIX}/delete`, params, 'GET')
+  fetchApi(`${URL_PREFIX}/delete/${params.id}`, {}, 'POST')
 
 /**
  * 菜单启用/停用
@@ -69,4 +69,4 @@ export const getMenuDelete = params =>
  * @param {number} params.id		number	 	query
  */
 export const getMenuUpdateState = params =>
-  fetchApi(`${URL_PREFIX}/updateState`, params, 'GET')
+  fetchApi(`${URL_PREFIX}/updateState/${params.id}`, {}, 'POST')

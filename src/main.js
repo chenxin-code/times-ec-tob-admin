@@ -34,9 +34,15 @@ import Print from 'vue-print-nb'
 Vue.use(Print)
 // 基础组件的自动化全局注册。全局注册的行为必须在根 Vue 实例 (通过 new Vue) 创建之前发生
 import './components/common/common.js'
+
+// 引入api
+import api from './api'
+Vue.prototype.$api = api
+
 // 引入lodash
 import lodash from 'lodash'
 Vue.prototype._ = lodash
+
 //底部的公共返回保存按鈕
 import FormSubmitButton from './components/FormSubmitButton/index.js'
 Vue.use(FormSubmitButton)
@@ -48,14 +54,22 @@ console.log(window.location)
 Vue.config.productionTip = false
 Vue.use(Antd)
 
-import * as directives from './directive'//import directive fn
+import * as directives from './directive' //import directive fn
 
 Object.keys(directives).forEach(key => {
   Vue.directive(key, directives[key])
 })
 
-new Vue({
-  router,
-  store,
-  render: h => h(App),
-}).$mount('#app')
+//挂载异步函数
+async function fn() {
+  try {
+    await store.dispatch('EXCHANGE_TOKEN')
+  } catch (error) {}
+  new Vue({
+    router,
+    store,
+    render: h => h(App),
+  }).$mount('#app')
+}
+
+fn()

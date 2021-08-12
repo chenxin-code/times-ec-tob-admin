@@ -129,9 +129,9 @@ export default {
   created() {
     this.openType = this.$route.params.type
     console.log(this.openType, 'this.openType')
-    // this.getTree()
+    this.getTree()
     if (this.$route.params.type !== 'add') {
-      //   this.initDetail()
+      this.initDetail()
     }
   },
   methods: {

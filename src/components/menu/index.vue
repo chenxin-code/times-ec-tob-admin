@@ -8,44 +8,81 @@
     @openChange="checkKeys"
   >
     <template v-for="menu in menus">
-      <template v-if="menu.children">
-        <a-sub-menu :key="menu.permCode">
+      <template v-if="menu.children && menu.children.length > 0">
+        <a-sub-menu :key="menu.url">
           <span slot="title"
-            ><img :src="menu.permIcon" class="menu-icon" /><span
-              class="menu-title"
-              >{{ menu.permName }}</span
-            ></span
+            ><img v-if="menu.icon" :src="menu.icon" class="menu-icon" />
+
+            <span class="menu-title" :key="menu.url">{{
+              menu.menuName
+            }}</span></span
           >
           <template v-for="menuChildren in menu.children">
-            <template>
+            <template
+              v-if="menuChildren.children && menuChildren.children.length > 0"
+            >
+              <a-sub-menu :key="menuChildren.url">
+                <span slot="title"
+                  ><img
+                    v-if="menuChildren.icon"
+                    :src="menuChildren.icon"
+                    class="menu-icon"
+                  />
+                  <span class="menu-title" :key="menuChildren.url">
+                    {{ menuChildren.menuName }}</span
+                  ></span
+                >
+                <template v-for="menuCh in menuChildren.children">
+                  <a-menu-item
+                    :key="menuCh.url"
+                    @click="onClickMenuChid(menuCh.url)"
+                  >
+                    <img
+                      v-if="menuCh.icon"
+                      :src="menuCh.icon"
+                      class="menu-icon"
+                    />{{ menuCh.menuName }}
+                  </a-menu-item>
+                </template>
+              </a-sub-menu>
+            </template>
+            <template v-else>
               <a-menu-item
-                :key="menuChildren.permUrl"
-                @click="onClickMenuChid(menuChildren.permUrl)"
+                :key="menuChildren.url"
+                @click="onClickMenuChid(menuChildren.url)"
               >
-                {{ menuChildren.permName }}
+                <img
+                  v-if="menuChildren.icon"
+                  :src="menuChildren.icon"
+                  class="menu-icon"
+                />
+                {{ menuChildren.menuName }}
               </a-menu-item>
             </template>
           </template>
         </a-sub-menu>
       </template>
       <template v-else>
-        <a-menu-item :key="menu.permUrl" @click="onClickMenu(menu.permUrl)">
-          <span
-            ><img :src="menu.permIcon" class="menu-icon" /><span
-              class="menu-title"
-              >{{ menu.permName }}</span
-            ></span
-          >
-        </a-menu-item>
+        <template>
+          <a-menu-item :key="menu.url" @click="onClickMenu(menu.url)">
+            <span
+              ><img v-if="menu.icon" :src="menu.icon" class="menu-icon" /><span
+                class="menu-title"
+                >{{ menu.menuName }}</span
+              ></span
+            >
+          </a-menu-item>
+        </template>
       </template>
     </template>
   </a-menu>
 </template>
 
 <script>
+import api from '@/api'
+import { mapState } from 'vuex'
 import MENU_ROUTES from '../../config/menu'
 import { hasRangeAuthorityWithoutProject } from '@/utils/authority'
-import { mapState } from 'vuex'
 
 export default {
   name: 'Menu',
@@ -54,7 +91,7 @@ export default {
   },
   data() {
     return {
-      menus: [],
+      // menus: [],
       openKeys: [
         this.$route.path.split('/')[2] ? this.$route.path.split('/')[2] : '',
       ],
@@ -62,17 +99,18 @@ export default {
       collapsed: false,
     }
   },
-  //   computed: mapState(['menus']),
-  watch: {
-    $route: 'setMenus',
-  },
+  computed: mapState(['menus']),
+  watch: {},
   created() {
-    this.setMenus()
+    console.log(this.menus, 'menus')
   },
   methods: {
     checkKeys(openKeys) {
       this.openKeys = openKeys
       this.$forceUpdate()
+    },
+    onClickMenuChid(path) {
+      this.$router.push({ path: path })
     },
     onClickMenuChid(path) {
       this.$router.push({ path: path })
@@ -87,22 +125,23 @@ export default {
     },
     setMenus() {
       const pathname = this.$route.path
-      const matchedMenu = MENU_ROUTES.find(x => x.permUrl === pathname) || {
+      const matchedMenu = MENU_ROUTES.find(x => x.path === pathname) || {
         group: '',
       }
       let filteredMenus = []
       const groupMenus = MENU_ROUTES.filter(x => x.group === matchedMenu.group)
+
       if (groupMenus.length > 0) {
         filteredMenus = groupMenus
       } else {
         if (pathname.split('/').length > 0) {
           const pathParams = pathname.split('/')
-          console.log(MENU_ROUTES)
+          // console.log(MENU_ROUTES)
           const newMatchedMenu = MENU_ROUTES.find(x =>
             x.hasChild
               ? x.hasChild ===
                 (pathParams[1] === 'advertise' ? pathParams[1] : pathParams[1])
-              : x.permUrl ===
+              : x.path ===
                 '/' +
                   (pathParams[1] === 'user' ||
                   pathParams[1] === 'advertise' ||
@@ -115,7 +154,7 @@ export default {
           // const newMatchedMenu = MENU_ROUTES.find(x =>
           // x.path ===
           //   ("/" + ((pathParams[1] === "user" || pathParams[1] === "advertise") ? pathParams[1] + "/" + pathParams[2] : pathParams[1])));
-
+          // console.log('newMatchedMenu',newMatchedMenu)
           if (newMatchedMenu) {
             const newGroupMenus = MENU_ROUTES.filter(
               x => x.group === newMatchedMenu.group
@@ -124,32 +163,13 @@ export default {
           }
         }
       }
-      //正式环境隐藏对应菜单 暂时
-      const { ENV } = process.env
-      if (ENV == 'production') {
-        filteredMenus = filteredMenus.filter(item => {
-          return ['account', 'supplier'].indexOf(item.permCode) < 0
-        })
-      }
-      // debugger
       this.rootPath = pathname
       this.menus = filteredMenus
-      //打印menus
-      const menus = this.$store.state.menus
-      console.log('filteredMenus--->', filteredMenus, menus)
     },
   },
 }
 </script>
 <style>
-.ant-layout-sider-children {
-  overflow: hidden;
-}
-.menuslis {
-  height: 90%;
-  width: 100%;
-  overflow-y: auto;
-}
 .menu-icon {
   display: inline-block;
   width: 14px;

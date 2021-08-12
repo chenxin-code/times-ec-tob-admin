@@ -121,7 +121,7 @@ export default {
     //左边的checkbox配置
     const rowSelection = {
       onChange: this.leftTableChange,
-      // selectedRowKeys: this.selectedLeft,
+      selectedRowKeys: this.selectedLeft,
     }
     //右边的checkbox配置
     const rowSelectionRight = {
@@ -173,32 +173,7 @@ export default {
         id: 3,
       },
     ]
-    this.tableDataed = [
-      //   {
-      //     empName: '用户名称',
-      //     phone: '13560086925',
-      //     company: '广州时代公司单',
-      //     parment: '销售部',
-      //     key: 1,
-      //     id: 1,
-      //   },
-      //   {
-      //     empName: '用户名称',
-      //     phone: '13560086925',
-      //     company: '广州时代公司单',
-      //     parment: '销售部',
-      //     key: 2,
-      //     id: 2,
-      //   },
-      //   {
-      //     empName: '用户名称',
-      //     phone: '13560086925',
-      //     company: '广州时代公司单',
-      //     parment: '销售部',
-      //     key: 3,
-      //     id: 3,
-      //   },
-    ]
+    this.tableDataed = []
   },
   methods: {
     // 手机号搜索用户
@@ -293,53 +268,49 @@ export default {
     },
     //左边数据移除到右边
     toRight() {
-      let { leftSelect, tableData, tableDataed, selectedRowKeys } = this
+      let { leftSelect, tableData, tableDataed, selectedLeft } = this
       if (leftSelect.length > 0) {
         this.tableDataed = tableDataed.concat(leftSelect)
-        let newArray = tableData
         if (leftSelect.length == tableData.length) {
+          this.selectReset()
           return (this.tableData = [])
         }
-        leftSelect.map((item, index) => {
-          let findIndex = newArray.findIndex(items => {
-            return items.id == item.id
-          })
-          if (findIndex !== -1) {
-            newArray.splice(findIndex, 1)
-          }
-        })
-        this.tableData = newArray
-        //选项置空
-        this.leftSelect = []
-        this.rightSelect = []
-        this.selectedLeft = []
-        this.selectedRight = []
+        this.tabelData = this.commDeletFn(leftSelect, tableData)
       }
     },
     //右边数据移除到左边
     toLeft() {
-      let { rightSelect, tableData, tableDataed } = this
+      let { rightSelect, tableData, tableDataed, selectedRight } = this
       if (rightSelect.length > 0) {
         this.tableData = tableData.concat(rightSelect)
-        let newArray = tableDataed
         if (rightSelect.length == tableDataed.length) {
+          this.selectReset()
           return (this.tableDataed = [])
         }
-        rightSelect.map((item, index) => {
-          let findIndex = newArray.findIndex(items => {
-            return items.id == item.id
-          })
-          if (findIndex !== -1) {
-            newArray.splice(findIndex, 1)
-          }
-        })
-        this.tableDataed = newArray
-        //选项置空
-        this.leftSelect = []
-        this.rightSelect = []
-        this.selectedLeft = []
-        this.selectedRight = []
+        this.tableDataed = this.commDeletFn(rightSelect, tableDataed)
       }
+    },
+    //公共移除方法
+    commDeletFn(arr, Arr) {
+      let newArray = Arr
+      arr.map((item, index) => {
+        let findIndex = newArray.findIndex(items => {
+          return items.id == item.id
+        })
+        if (findIndex !== -1) {
+          newArray.splice(findIndex, 1)
+        }
+      })
+      //选项置空
+      this.selectReset()
+      return newArray
+    },
+    //选项置空
+    selectReset() {
+      this.leftSelect = []
+      this.rightSelect = []
+      this.selectedLeft = []
+      this.selectedRight = []
     },
   },
 }
