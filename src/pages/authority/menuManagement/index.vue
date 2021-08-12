@@ -12,7 +12,6 @@
       :columns="columns"
       :tableData="tableData"
       :loading="tableLoading"
-      @onShowSizeChange="onShowSizeChange"
     >
       <template slot="menuType" slot-scope="{ props }">
         {{ ['未定义', '菜单', '按钮'][props.menuType] }}
@@ -114,29 +113,7 @@ export default {
     },
   },
   created() {
-    // this.initData();
-    this.tableData = [
-      {
-        id: 'menuMangement',
-        key: 'menuMangement',
-        menuName: '供应商管理',
-        perms: '1',
-        orderNum: 1,
-        visible: 1,
-        menuType: 1,
-        url: '/menuMangement',
-      },
-      {
-        id: 'menu',
-        key: 'menu',
-        menuName: '菜单管理',
-        perms: '2',
-        orderNum: 1,
-        visible: 1,
-        menuType: 1,
-        url: '/menu',
-      },
-    ]
+    this.initData()
   },
   methods: {
     // 初始化树数据
@@ -208,18 +185,18 @@ export default {
           that.tableLoading = true
           that.$api
             .getMenuDelete({ id: props.id })
-            .then(() => {
-              that.$message.info(`删除成功`)
-              that.initData()
+            .then(res => {
+              if (res.code == 200) {
+                that.$message.info(`删除成功`)
+                that.initData()
+              } else {
+                that.$message.error(`删除失败`)
+              }
             })
             .finally(() => (that.tableLoading = false))
         },
         onCancel() {},
       })
-    },
-    //分页操作
-    onShowSizeChange(current, page) {
-      console.log(current, page, 'page')
     },
   },
 }
