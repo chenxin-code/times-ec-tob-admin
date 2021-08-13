@@ -15,10 +15,17 @@
                 <span v-html="menuTypeParse(scope.menuType)"></span>
               </div>
             </template>
+            <template slot="aaaaa" slot-scope="scope">
+              <a-checkbox-group
+                  :options="['1', '2', '3']"
+                  :default-value="['1']"
+                  @change="onChange" />
+            </template>
           </a-table>
         </a-col>
       </a-row>
     </div>
+    <FormSubmitButton :isShow="true" @submit="save()" />
   </div>
 </template>
 
@@ -55,8 +62,8 @@ export default {
         },
         {
           title: '权限',
-          dataIndex: 'aaaaa',
           key: 'aaaaa',
+          scopedSlots: {customRender: 'aaaaa'},
         },
       ],
       tableLoading: false,
@@ -77,6 +84,9 @@ export default {
     },
   },
   methods: {
+    onChange(checkedValues) {
+      console.log('checked = ', checkedValues);
+    },
     delChild(data) {
       for (let i = 0; i < data.length; i++) {
         if (data[i].children.length === 0) {
@@ -86,10 +96,13 @@ export default {
         }
       }
     },
+    save() {
+
+    },
   },
   mounted() {
     this.tableLoading = true;
-    api.roleMenuTreeData({roleId: 1}).then(resp => {
+    api.roleMenuTreeData({roleId: this.$route.params.id}).then(resp => {
       if (resp.code === 200) {
         this.tableData = resp.data.menus.map(item => {
           return {
