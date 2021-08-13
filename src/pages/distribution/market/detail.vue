@@ -165,10 +165,7 @@
         >返回</a-button
       >
     </div> -->
-    <FormSubmitButton
-      :isShow="true"
-      :isShowSubmit="false"
-    />
+    <FormSubmitButton :isShow="true" :isShowSubmit="false" />
   </div>
 </template>
 
@@ -331,6 +328,7 @@ export default {
 }
 #distributorAudit {
   height: 100%;
+  background: #fff;
   overflow: hidden;
   .content-footer {
     display: flex;

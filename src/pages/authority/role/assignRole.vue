@@ -9,22 +9,54 @@
                 <div class="topwrap row space-between-center">
                   <span class="topname">搜索用户：</span>
                   <div class="row end-center">
-                    <a-input
+                    <!-- <a-input
                       v-model="searchData.phone"
                       type="tel"
                       max-length.number="11"
                       placeholder="输入手机号查询"
-                      style="width:50%"
+                      style="width:80%"
                     />
                     <a-button
                       class="searchButton"
                       type="primary"
                       @click="searchByPhone"
                       >查询</a-button
+                    > -->
+                    <a-form
+                      :form="modelForm"
+                      @submit="searchByPhone"
+                      class="row center"
                     >
+                      <a-form-item>
+                        <a-input
+                          v-decorator="[
+                            'phone',
+                            {
+                              rules: [
+                                { required: true, message: '请输入手机号查询' },
+                                {
+                                  pattern: /^1[3456789]\d{9}$/,
+                                  message: '格式不对',
+                                },
+                              ],
+                              initialValue: modelForm.phone,
+                            },
+                          ]"
+                          placeholder="请输入手机号"
+                        />
+                      </a-form-item>
+                      <a-button
+                        type="primary"
+                        html-type="submit"
+                        :loading="searchPhoneLoading"
+                        class="searchButton"
+                      >
+                        查询
+                      </a-button>
+                    </a-form>
                   </div>
                 </div>
-                <div class="">
+                <div>
                   <a-table
                     :columns="tableColumns"
                     :data-source="tableData"
@@ -36,9 +68,12 @@
                     :loading="tableLoading"
                     :pagination="false"
                   >
-                    <template slot="operation" slot-scope="record">
+                    <template slot="empName" slot-scope="text, record">
                       <div class="editable-row-operations">
-                        <a @click="add(record)">添加</a>
+                        {{ record.empName }}&nbsp;&nbsp;
+                        {{ record.mobilePhone }}&nbsp;&nbsp;
+                        {{ record.companyName }}&nbsp;&nbsp;
+                        {{ record.departName }}
                       </div>
                     </template>
                   </a-table>
@@ -56,23 +91,28 @@
                 <div class="topwrap row">
                   <span class="topname">已添加</span>
                 </div>
-                <a-table
-                  :columns="tableColumnsed"
-                  :row-key="(r, i) => i"
-                  :data-source="tableDataed"
-                  :scroll="{ y: 600 }"
-                  :pagination="false"
-                  :loading="tableLoadinged"
-                  :row-selection="{
-                    ...rowSelectionRight,
-                    selectedRowKeys: selectedRight,
-                  }"
-                  ><template slot="operation" slot-scope="record">
-                    <div class="editable-row-operations">
-                      <a @click="del(record)">删除</a>
-                    </div>
-                  </template>
-                </a-table>
+                <div>
+                  <a-table
+                    :columns="tableColumnsed"
+                    :row-key="(r, i) => i"
+                    :data-source="tableDataed"
+                    :scroll="{ y: 600 }"
+                    :pagination="false"
+                    :loading="tableLoadinged"
+                    :row-selection="{
+                      ...rowSelectionRight,
+                      selectedRowKeys: selectedRight,
+                    }"
+                    ><template slot="empName" slot-scope="text, record">
+                      <div class="editable-row-operations">
+                        {{ record.empName }}&nbsp;&nbsp;
+                        {{ record.mobilePhone }}&nbsp;&nbsp;
+                        {{ record.companyName }}&nbsp;&nbsp;
+                        {{ record.departName }}
+                      </div>
+                    </template>
+                  </a-table>
+                </div>
               </div>
             </div>
           </a-form-model>
@@ -98,6 +138,7 @@ export default {
         key: 'empName',
         align: 'center',
         ellipsis: true,
+        scopedSlots: { customRender: 'empName' },
       },
     ]
     let tableColumnsed = [
@@ -107,6 +148,7 @@ export default {
         key: 'empName',
         align: 'center',
         ellipsis: true,
+        scopedSlots: { customRender: 'empName' },
       },
     ]
     let pageData = {
@@ -143,57 +185,47 @@ export default {
       rightSelect: [],
       selectedLeft: [],
       selectedRight: [],
+      modelForm: this.$form.createForm(this, { name: 'form' }),
+      searchPhoneLoading: false,
     }
   },
   mounted() {
     // this.getHasAddList()
-    this.tableData = [
-      {
-        empName: '用户名称0',
-        phone: '13560086925',
-        company: '广州时代公司单',
-        parment: '销售部',
-        key: 1,
-        id: 1,
-      },
-      {
-        empName: '用户名称1',
-        phone: '13560086925',
-        company: '广州时代公司单',
-        parment: '销售部',
-        key: 2,
-        id: 2,
-      },
-      {
-        empName: '用户名称2',
-        phone: '13560086925',
-        company: '广州时代公司单',
-        parment: '销售部',
-        key: 3,
-        id: 3,
-      },
-    ]
-    this.tableDataed = []
   },
   methods: {
     // 手机号搜索用户
-    async searchByPhone() {
-      let params = {
-        phone: this.searchData.phone,
-      }
-      this.tableLoading = true
+    async searchByPhone(e) {
+      e.preventDefault()
+      let userPhone = this.modelForm.getFieldsValue().phone
       let reg = /^1[3456789]\d{9}$/
-      try {
-        if (reg.test(this.searchData.phone)) {
-          let res = await api.operatorGetUnifyEmployeeInfoByPhone(params)
-          if (res.code == 200) {
-            this.tableData = [res.data]
-          }
-        } else {
-        }
-      } finally {
-        this.tableLoading = false
+      if (!reg.test(userPhone)) {
+        return (this.searchPhoneLoading = false)
       }
+      this.searchPhoneLoading = true
+      api
+        .setAddAccountByPhone({ phone: userPhone })
+        .then(res => {
+          if (res.code == 200) {
+            if (res.data) {
+              let { data } = res
+              let employ = []
+              data.employeeOrganizationVOs.map(item => {
+                item.empName = data.empName
+                item.key = data.empName
+                item.mobilePhone = data.mobilePhone
+                item.userId = data.userId
+                item.id = data.id
+                item.empId = data.empId
+                employ.push(item)
+              })
+              console.log(employ, 'employ')
+              this.tableData = employ
+            }
+          }
+        })
+        .finally(err => {
+          this.searchPhoneLoading = false
+        })
     },
     // 添加
     async add(row) {
@@ -331,13 +363,19 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+  align-items: start;
+}
+.center {
   align-items: center;
 }
 .column {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: start;
+}
+.flex {
+  flex: 1;
 }
 .space-between-center {
   justify-content: space-between;
@@ -356,7 +394,6 @@ export default {
 }
 .main-box {
   height: 100%;
-  padding: 20px;
 }
 .topwrap {
   padding: 20px;

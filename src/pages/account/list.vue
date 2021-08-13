@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex;">
+  <div style="display: flex;background:#fff;">
     <div style="width: 20%;overflow: auto;">
       <companyTree @onSelect="onSelect" />
     </div>
@@ -66,7 +66,9 @@
                   "
                   >编辑</a-button
                 >
-                 <a-button type="link" @click="updatePwd(scope.loginName)">修改密码</a-button>
+                <a-button type="link" @click="updatePwd(scope.loginName)"
+                  >修改密码</a-button
+                >
                 <a-button type="link" @click="goDel(scope.loginName)"
                   >删除</a-button
                 >

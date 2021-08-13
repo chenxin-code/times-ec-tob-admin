@@ -1,5 +1,5 @@
 <template>
-  <div id="member-info" class="list-box">
+  <div id="member-info" class="list-box" style="background:#fff;height:100%;">
     <div class="search-list">
       <div class="search-list-item">
         <span class="label-text">供应商名称：</span>
@@ -130,7 +130,7 @@ export default {
   },
   created() {
     const timer1 = setTimeout(() => {
-      this.scrollY = document.body.clientHeight - 370 + 'px'
+      this.scrollY = document.body.clientHeight - 270 + 'px'
     }, 0)
     this.$once('hook:beforeDestroy', () => {
       clearTimeout(timer1)
