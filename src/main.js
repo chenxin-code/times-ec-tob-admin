@@ -54,14 +54,22 @@ console.log(window.location)
 Vue.config.productionTip = false
 Vue.use(Antd)
 
-import * as directives from './directive'//import directive fn
+import * as directives from './directive' //import directive fn
 
 Object.keys(directives).forEach(key => {
   Vue.directive(key, directives[key])
 })
 
-new Vue({
-  router,
-  store,
-  render: h => h(App),
-}).$mount('#app')
+//挂载异步函数
+async function fn() {
+  try {
+    await store.dispatch('EXCHANGE_TOKEN')
+  } catch (error) {}
+  new Vue({
+    router,
+    store,
+    render: h => h(App),
+  }).$mount('#app')
+}
+
+fn()
