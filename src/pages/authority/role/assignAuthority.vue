@@ -41,29 +41,24 @@ import api from './../../../api'
 export default {
   data() {
     return {
-      tableColumn: [
-        {field: 'menuName', title: '菜单', treeNode: true},
-        {field: 'menuType', title: '类型'},
-        {field: 'aaaaa', title: '权限'},
-      ],
       tableData: [],
       columns: [
         {
           title: '菜单',
           dataIndex: 'menuName',
           key: 'menuName',
-          width: 300,
-          fixed: 'left',
         },
         {
           title: '类型',
           key: 'menuType',
           scopedSlots: {customRender: 'menuType'},
+          align: 'center',
         },
         {
           title: '权限',
           key: 'aaaaa',
           scopedSlots: {customRender: 'aaaaa'},
+          align: 'center',
         },
       ],
       tableLoading: false,
