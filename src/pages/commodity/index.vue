@@ -337,7 +337,7 @@ export default {
       this.treeData.unshift({ categoryCode: '', name: '全部' })
     })
     setTimeout(
-      () => (this.scrollY = document.body.clientHeight - 310 + 'px'),
+      () => (this.scrollY = document.body.clientHeight - 355 + 'px'),
       0
     )
   },
@@ -434,6 +434,7 @@ export default {
 .commodity {
   padding: 20px;
   height: 100%;
+  background: #fff;
 }
 .ant-form {
   padding: 6px;

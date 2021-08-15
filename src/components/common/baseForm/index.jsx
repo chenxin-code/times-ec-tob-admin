@@ -205,7 +205,7 @@ const FormList = {
       >
         <a-row gutter={24}>
           {this.formList.map((item, index) => {
-            const { align, labelCol, wrapperCol, ...others } = item
+            const { align, labelCol, wrapperCol,labelAlign, ...others } = item
             return (
                 <a-col  span={this.formList.length % 3 === 1 ? 6 : this.rowSpan}>
                     <a-form-item
@@ -214,6 +214,7 @@ const FormList = {
                         align={align}
                         labelCol={labelCol}
                         wrapperCol={wrapperCol}
+                        labelAlign={labelAlign}
                         style={{'margin-bottom':0}}
                         >
                         {this.generateItem(others)}

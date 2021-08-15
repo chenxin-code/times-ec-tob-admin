@@ -1,7 +1,7 @@
 import { fetchApi } from '@/utils/ajax'
 const URL_PREFIX = '/times-ec-tob-mall/admin/operator'
 
-//账
+//角色管理
 /**
  * 【管理端】分页查询账号列表
  * @param {Object} params 入参 参数名称 参数说明 请求类型 是否必须
@@ -44,5 +44,5 @@ export const getAccountListData = params => fetchApi(`${URL_PREFIX}/getListByPag
  * @param {Object} params 入参 参数名称 参数说明 请求类型 是否必须
  * @param {string} params.id		用户ID	string
  */
-  export const setAccountUpdateStatus = params => fetchApi(`${URL_PREFIX}/updateStatus`, params, 'POST')
+  export const setAccountUpdateStatus = params => fetchApi(`${URL_PREFIX}/updateStatus`, params, 'GET')
 

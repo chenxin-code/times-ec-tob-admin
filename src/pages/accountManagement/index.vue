@@ -1,5 +1,5 @@
 <template>
-  <div class="container-module">
+  <div class="column container-modules">
     <baseModule class="search-form">
       <baseForm
         ref="form"
@@ -12,7 +12,7 @@
         addText="新增"
       ></baseForm>
     </baseModule>
-    <div>
+    <div class="flex content-box">
       <baseTable
         :columns="columns"
         :tableData="dataList"
@@ -20,23 +20,24 @@
         :pageSize="pageData.pageSize"
         :current="pageData.current"
         :loading="tableLoading"
+        :scrollY="scrollY"
         @onShowSizeChange="onShowSizeChange"
       >
         <template slot="operation" slot-scope="{ props }">
           <div class="editable-row-operations">
-            <template v-if="props.userState == 'DISABLED'">
+            <template v-if="props.userState == 0">
               <a-button
                 class="a-buttom-reset-link"
-                @click="showModal('启用', props)"
+                @click="UpdateStatus(props, 1, '启用')"
                 type="link"
                 >启用</a-button
               >
               <a-divider type="vertical" />
             </template>
-            <template v-if="props.userState == 'NORMAL'">
+            <template v-if="props.userState == 1">
               <a-button
                 class="a-buttom-reset-link"
-                @click="showModal('禁用', props)"
+                @click="UpdateStatus(props, 0, '禁用')"
                 type="link"
                 >禁用</a-button
               >
@@ -45,7 +46,7 @@
             <template>
               <a-button
                 class="a-buttom-reset-link"
-                @click="showModal('删除', props)"
+                @click="del(props, '删除')"
                 type="link"
                 >删除</a-button
               >
@@ -234,9 +235,13 @@ export default {
       formItemLayout,
       searchPhoneLoading: false,
       toAssignRole: {},
+      scrollY: 100,
     }
   },
   mounted() {
+    setTimeout(() => {
+      this.scrollY = document.body.clientHeight - 350
+    }, 0)
     let params = {
       pageNum: this.pageData.pageNum, // 第几页
       pageSize: this.pageData.pageSize, // 每页多少条
@@ -324,43 +329,29 @@ export default {
         },
       })
     },
-    // 弹窗确定
-    handleOk() {
-      switch (this.type) {
-        case '删除':
-          this.del(this.row)
-          break
-        case '启用':
-          this.enable(this.row)
-          break
-        case '禁用':
-          this.disable(this.row)
-          break
-      }
-    },
     // 删除
-    del(row) {
+    del(row, type) {
       try {
         let params = {
             id: row.id,
           },
           that = this
         this.$confirm({
-          title: `您确认要删除"${row.menuName}"的信息吗?`,
+          title: `您确认要${type}"${row.name}"的信息吗?`,
           content: '',
           centered: true,
           onOk() {
             api.setdelAccount(params).then(res => {
               if (res.code == 200) {
-                that.$message.info(`删除成功`)
+                that.$message.info(`${type}成功`)
                 let params = {
                   pageNum: that.pageData.pageNum, // 第几页
                   pageSize: that.pageData.pageSize, // 每页多少条
-                  ...this.searchData,
+                  ...that.searchData,
                 }
                 that.getData(params)
               } else {
-                that.$message.error(`删除失败`)
+                that.$message.error(`${type}失败`)
               }
             })
           },
@@ -370,125 +361,40 @@ export default {
         this.loadingSubmit = false
       }
     },
-    // 启用
-    enable(row) {
+    //启用/禁用用户的的账号
+    UpdateStatus(row, state, type) {
+      let that = this
       try {
         let params = {
           id: row.id,
-          state: 1,
+          state: state,
         }
         this.$confirm({
-          title: `您确认要启用"${row.menuName}"账号吗?`,
+          title: `您确认要${type}"${row.name}"的账号吗?`,
           centered: true,
           onOk() {
             api
               .setAccountUpdateStatus(params)
               .then(res => {
                 if (res.code == 200) {
-                  that.$message.info(`启用成功`)
+                  that.$message.info(`${type}成功`)
                   let params = {
                     pageNum: that.pageData.pageNum, // 第几页
                     pageSize: that.pageData.pageSize, // 每页多少条
-                    ...this.searchData,
+                    ...that.searchData,
                   }
                   that.getData(params)
                 } else {
-                  that.$message.error(`启用失败`)
+                  that.$message.error(`${type}失败`)
                 }
               })
-              .finally(err => {
-                this.loadingSubmit = false
-              })
+              .finally(err => {})
           },
           onCancel() {},
         })
       } finally {
         this.loadingSubmit = false
       }
-    },
-    // 禁用
-    async disable(row) {
-      try {
-        let params = {
-          id: row.id,
-          state: 0,
-        }
-        this.$confirm({
-          title: `您确认要禁用"${row.menuName}"账号吗?`,
-          centered: true,
-          onOk() {
-            api
-              .setAccountUpdateStatus(params)
-              .then(res => {
-                if (res.code == 200) {
-                  that.$message.info(`禁用成功`)
-                  let params = {
-                    pageNum: that.pageData.pageNum, // 第几页
-                    pageSize: that.pageData.pageSize, // 每页多少条
-                    ...this.searchData,
-                  }
-                  that.getData(params)
-                } else {
-                  that.$message.error(`禁用失败`)
-                }
-              })
-              .finally(err => {
-                this.loadingSubmit = false
-              })
-          },
-          onCancel() {},
-        })
-      } finally {
-        this.loadingSubmit = false
-      }
-    },
-    // 弹窗取消
-    handleCancel() {
-      this.modalVisible = false
-    },
-    // 显示弹窗
-    showModal(type, row) {
-      this.type = type
-      this.row = row
-      this.modalVisible = true
-    },
-    // 打开权限窗口
-    showAuthorityModal(row) {
-      this.modalVisibleAuthority = true
-      this.row = row
-      let params = {
-        roleId: row.id,
-      }
-      api.getPermListByRole(params).then(res => {
-        res.data.permList.map(item => {
-          this.checkedKeys.push(item.id)
-        })
-      })
-    },
-    // 权限确认
-    async handleOkAuthority() {
-      try {
-        let params = {
-          roleId: this.row.id,
-          permIdList: this.checkedKeys,
-        }
-        let res = await api.roleSaveRolePermRel(params)
-        if (res.code == 200) {
-          this.$message.success('分配成功')
-          this.handleCancelAuthority()
-          let params = {
-            pageNum: this.pageData.pageNum, // 第几页
-            pageSize: this.pageData.pageSize, // 每页多少条
-            roleName: this.searchData.roleName, // 角色名称
-          }
-          this.getData(params)
-        }
-      } finally {
-      }
-    },
-    // 分配权限窗口关闭
-    handleCancelAuthority() {
-      this.modalVisibleAuthority = false
     },
     // 分配用户
     assignUsers(row) {
@@ -514,7 +420,6 @@ export default {
             this.modelForm.name = res.data.empName
             let employeeOrganizationVOs = res.data.employeeOrganizationVOs[0]
             this.toAssignRole = { ...employeeOrganizationVOs }
-            console.log(this.toAssignRole, 'this.toAssignRole ')
           }
         })
         .finally(err => {
@@ -545,13 +450,35 @@ export default {
     },
     //添加用户关闭弹窗
     handleCancelAdd() {
-      //   this.modelForm = { name: '', phone: '' }
+      this.modelForm.name = ''
       this.toAssignRole = {}
     },
   },
 }
 </script>
 <style lang="less" scoped>
+.column {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+}
+.flex {
+  flex: 1;
+}
+.container-modules {
+  height: 100%;
+  width: 100%;
+}
+.search-form {
+  width: 100%;
+  margin-bottom: 10px;
+}
+.content-box {
+  width: 100%;
+  background: #fff;
+}
+
 .tree-box {
   height: 300px;
   overflow: auto;

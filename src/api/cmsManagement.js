@@ -42,3 +42,8 @@ export const updateSellingById = data => fetchApi('/times-ec-tob-mall/admin/prod
 
 //商品品类管理
 export const getCategoryTree = data => fetchApi('/times-ec-tob-mall/admin/product/getCategoryTree', data, 'GET');
+
+//新增角色菜单信息
+export const insertRoleMenu = data => fetchApi('/times-ec-tob-mall/admin/role/insertRoleMenu', data, 'POST');
+//加载角色菜单列表树(用于角色分配菜单权限)
+export const roleMenuTreeData = data => fetchApi('/times-ec-tob-mall/admin/menu/roleMenuTreeData', data, 'GET');

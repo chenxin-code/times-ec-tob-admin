@@ -1,6 +1,6 @@
 <template>
-  <div class="container-module">
-    <baseModule>
+  <div class="container-modules column">
+    <baseModule class="search-form">
       <a-button
         class="a-buttom-reset"
         type="primary"
@@ -8,40 +8,43 @@
         >添加</a-button
       >
     </baseModule>
-    <baseTable
-      :columns="columns"
-      :tableData="tableData"
-      :loading="tableLoading"
-    >
-      <template slot="menuType" slot-scope="{ props }">
-        {{ ['未定义', '菜单', '按钮'][props.menuType] }}
-      </template>
-      <template slot="visible" slot-scope="{ props }">
-        {{ ['已启用', '已停用'][props.visible] }}
-      </template>
-      <template slot="operation" slot-scope="{ props }">
-        <div class="editable-row-operations">
-          <a-button
-            class="a-buttom-reset-link"
-            type="link"
-            @click="onDetails('edit', props)"
-            >编辑</a-button
-          >
-          <a-button
-            class="a-buttom-reset-link"
-            type="link"
-            @click="onChangeStatus(props)"
-            >{{ ['停用', '启用'][props.visible] }}</a-button
-          >
-          <a-button
-            class="a-buttom-reset-link"
-            type="link"
-            @click="onDelete(props)"
-            >删除</a-button
-          >
-        </div>
-      </template>
-    </baseTable>
+    <div class="flex content-box">
+      <baseTable
+        :columns="columns"
+        :tableData="tableData"
+        :loading="tableLoading"
+        :scrollY="scrollY"
+      >
+        <template slot="menuType" slot-scope="{ props }">
+          {{ ['未定义', '菜单', '按钮'][props.menuType] }}
+        </template>
+        <template slot="visible" slot-scope="{ props }">
+          {{ ['已启用', '已停用'][props.visible] }}
+        </template>
+        <template slot="operation" slot-scope="{ props }">
+          <div class="editable-row-operations">
+            <a-button
+              class="a-buttom-reset-link"
+              type="link"
+              @click="onDetails('edit', props)"
+              >编辑</a-button
+            >
+            <a-button
+              class="a-buttom-reset-link"
+              type="link"
+              @click="onChangeStatus(props)"
+              >{{ ['停用', '启用'][props.visible] }}</a-button
+            >
+            <a-button
+              class="a-buttom-reset-link"
+              type="link"
+              @click="onDelete(props)"
+              >删除</a-button
+            >
+          </div>
+        </template>
+      </baseTable>
+    </div>
   </div>
 </template>
 <script>
@@ -96,12 +99,14 @@ export default {
           key: 'operation',
           scopedSlots: { customRender: 'operation' },
           width: 200,
+          align: 'center',
           fixed: 'right',
         },
       ],
       tableData: [],
       tableLoading: false,
       isShowSort: false,
+      scrollY: 100,
     }
   },
   watch: {
@@ -114,6 +119,9 @@ export default {
   },
   created() {
     this.initData()
+    setTimeout(() => {
+      this.scrollY = document.body.clientHeight - 230
+    }, 0)
   },
   methods: {
     // 初始化树数据
@@ -202,3 +210,25 @@ export default {
   },
 }
 </script>
+<style lang="less" scoped>
+.column {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+}
+.flex {
+  flex: 1;
+}
+.container-modules {
+  height: 100%;
+}
+.search-form {
+  width: 100%;
+  margin-bottom: 10px;
+}
+.content-box {
+  width: 100%;
+  background: #fff;
+}
+</style>
