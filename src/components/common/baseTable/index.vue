@@ -1,5 +1,5 @@
 <template>
-  <div class="container-table">
+  <div class="container-table" style="height:100%;">
     <!-- 表格 -->
     <baseModule>
       <a-table
@@ -56,6 +56,10 @@ export default {
     tableData: {
       type: Array,
       default: () => [],
+    },
+    scrollY: {
+      type: Number,
+      default: 400,
     },
     tableConfig: {
       type: Object,
@@ -122,12 +126,16 @@ export default {
         _this.tableY = `${document.documentElement.clientHeight -
           _this.$refs.aTable.$el.offsetTop -
           (_this.total > 0 ? 140 : 85)}px`
+        console.log(_this.tableY, '_this.tableY ')
       }, 0)
     },
   },
 }
 </script>
 <style lang="less" scoped>
+.container-table {
+  height: 100%;
+}
 .container-table-module {
   margin-bottom: 0;
   /deep/ .ant-pagination {

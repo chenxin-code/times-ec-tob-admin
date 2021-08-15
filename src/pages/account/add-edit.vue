@@ -1,6 +1,6 @@
 <template>
-  <div style="height: 100%;">
-     <div
+  <div style="height: 100%;background:#fff;">
+    <div
       class="content-main"
       style="height: calc(100% - 100px);margin-top: 12px;padding:20px 60px 20px 20px;"
     >
@@ -45,7 +45,10 @@
           </a-select>
         </a-form-model-item>
         <a-form-model-item label="密码" prop="password" v-if="!isDisable">
-          <a-input-password v-model="thisForm.password" autocomplete="new-password" />
+          <a-input-password
+            v-model="thisForm.password"
+            autocomplete="new-password"
+          />
         </a-form-model-item>
         <a-form-model-item
           label="确认密码"
@@ -65,7 +68,7 @@
         </a-form-model-item>
       </a-form-model>
     </div>
-   <!--  <div class="btns">
+    <!--  <div class="btns">
       <a-button
         class="item-btn"
         :loading="btnloading"
@@ -75,7 +78,7 @@
       >
       <a-button class="item-btn" @click="$router.back()">返回</a-button>
     </div> -->
-    <FormSubmitButton :isShow="true" @submit="addEdit"/>
+    <FormSubmitButton :isShow="true" @submit="addEdit" />
     <a-modal
       title="选择所属企业"
       :visible="visible"

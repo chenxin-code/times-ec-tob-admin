@@ -1,5 +1,5 @@
 <template>
-  <div class="container-module">
+  <div class="container-module column" style="height:100%;">
     <baseModule class="search-form">
       <baseForm
         ref="form"
@@ -12,7 +12,7 @@
         addText="新增"
       ></baseForm>
     </baseModule>
-    <div>
+    <div class="flex content-box">
       <baseTable
         :columns="columns"
         :tableData="dataList"
@@ -20,6 +20,7 @@
         :pageSize="pageData.pageSize"
         :current="pageData.current"
         :loading="tableLoading"
+        :scrollY="scrollY"
         @onShowSizeChange="onShowSizeChange"
       >
         <template slot="operation" slot-scope="{ props }">
@@ -34,7 +35,7 @@
               <a-divider type="vertical" />
               <a-button
                 class="a-buttom-reset-link"
-                @click="showModal('删除', props)"
+                @click="del(props, '删除')"
                 type="link"
                 >删除</a-button
               >
@@ -43,7 +44,7 @@
               <a-divider type="vertical" />
               <a-button
                 class="a-buttom-reset-link"
-                @click="showModal('启用', props)"
+                @click="UpdateStatus(props, 1, '启用')"
                 type="link"
                 >启用</a-button
               >
@@ -52,7 +53,7 @@
               <a-divider type="vertical" />
               <a-button
                 class="a-buttom-reset-link"
-                @click="showModal('禁用', props)"
+                @click="UpdateStatus(props, 0, '禁用')"
                 type="link"
                 >禁用</a-button
               >
@@ -80,14 +81,6 @@
       </baseTable>
     </div>
     <a-modal
-      :title="type"
-      :visible="modalVisible"
-      @ok="handleOk"
-      @cancel="handleCancel"
-    >
-      <span>您确定要“{{ type }}”吗？</span>
-    </a-modal>
-    <a-modal
       v-model="modelVisibleAdd"
       :title="`${title}角色`"
       @ok="handleAdd"
@@ -105,7 +98,7 @@
                 'roleName',
                 {
                   rules: rules,
-                  initialValue: roleName,
+                  initialValue: selectRoleData.roleName,
                 },
               ]"
               placeholder="请输入角色名称"
@@ -127,6 +120,7 @@ export default {
         name: 'roleName',
         placeholder: '请输入角色名称',
         wrapperCol: { span: 18 },
+        labelAlign: 'left',
       },
       {
         label: '手机号码',
@@ -134,6 +128,7 @@ export default {
         name: 'rolePhone',
         placeholder: '请输入手机号',
         wrapperCol: { span: 18 },
+        labelAlign: 'left',
         rules: [
           { required: false, message: '请输入手机号' },
           { pattern: /^1[3456789]\d{9}$/, message: '格式不对' },
@@ -194,9 +189,6 @@ export default {
       columns,
       pageData,
       dataList: [],
-      searchData: {
-        roleName: undefined,
-      },
       tableLoading: false,
       modalVisible: false, // 弹窗显示隐藏
       modalVisibleAuthority: false, // 分配权限弹窗显示隐藏
@@ -212,39 +204,24 @@ export default {
       rules: [{ required: true, message: '请输入角色名称' }],
       roleName: '',
       title: '新增',
+      scrollY: 100,
+      searchData: {},
+      selectRoleData: {
+        roleName: '',
+      },
     }
   },
   mounted() {
     let params = {
       pageNum: this.pageData.pageNum, // 第几页
       pageSize: this.pageData.pageSize, // 每页多少条
-      roleName: this.searchData.roleName, // 角色名称
+      ...this.searchData, // 角色名称跟手机号
     }
+    setTimeout(() => {
+      this.scrollY = document.body.clientHeight - 155
+    }, 0)
     // 角色列表
-    // this.getData(params)
-    this.dataList = [
-      {
-        roleName: '角色名称',
-        creatTime: '13560086925',
-        status: 1,
-        key: 1,
-        id: 1,
-      },
-      {
-        roleName: '用户名名称',
-        creatTime: '13560086925',
-        status: 0,
-        key: 2,
-        id: 2,
-      },
-      {
-        roleName: '用户名名称',
-        creatTime: '13560086925',
-        status: 1,
-        key: 3,
-        id: 3,
-      },
-    ]
+    this.getData(params)
     // 权限列表
     // this.getPermissionList()
   },
@@ -255,7 +232,7 @@ export default {
       let params = {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
-        roleName: this.searchData.roleName, // 角色名称
+        ...this.searchData, // 角色名称跟手机号
       }
       this.getData(params)
     },
@@ -269,9 +246,11 @@ export default {
         }
       }
       try {
-        let res = await api.roleGetListByPager(params)
-        this.dataList = res.data.records
-        this.pageData.total = Number(res.data.total)
+        let res = await api.getRoleListData(params)
+        if (res.code == 200) {
+          this.dataList = res.data.records
+          this.pageData.total = Number(res.data.total)
+        }
       } finally {
         this.tableLoading = false
       }
@@ -284,7 +263,7 @@ export default {
       let params = {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
-        roleName: this.searchData.roleName, // 角色名称
+        ...this.searchData, // 角色名称
       }
       this.getData(params)
     },
@@ -309,102 +288,120 @@ export default {
     onAdd() {
       this.title = '新增'
       this.modelVisibleAdd = true
+      this.selectRoleData = {
+        roleName: '',
+      }
     },
     // 编辑
     edit(row) {
       this.title = '编辑'
       this.modelVisibleAdd = true
-      this.roleName = row.roleName
-    },
-    // 弹窗确定
-    handleOk() {
-      switch (this.type) {
-        case '删除':
-          this.del(this.row)
-          break
-        case '启用':
-          this.enable(this.row)
-          break
-        case '禁用':
-          this.disable(this.row)
-          break
-      }
+      this.selectRoleData = row
     },
     // 删除
-    async del(row) {
+    del(row, type) {
       try {
         let params = {
-          id: row.id,
-        }
-        let res = await api.roleDelete(params)
-        if (res.code == 200) {
-          this.handleCancel()
-          this.$message.success('删除成功')
-          let params = {
-            pageNum: this.pageData.pageNum, // 第几页
-            pageSize: this.pageData.pageSize, // 每页多少条
-            roleName: this.searchData.roleName, // 角色名称
-          }
-          this.getData(params)
-        }
+            id: row.id,
+          },
+          that = this
+        this.$confirm({
+          title: `您确认要${type}"${row.name}"的信息吗?`,
+          content: '',
+          centered: true,
+          onOk() {
+            api.setRoleDelete(params).then(res => {
+              if (res.code == 200) {
+                that.$message.info(`${type}成功`)
+                let params = {
+                  pageNum: that.pageData.pageNum, // 第几页
+                  pageSize: that.pageData.pageSize, // 每页多少条
+                  ...that.searchData,
+                }
+                that.getData(params)
+              } else {
+                that.$message.error(`${type}失败`)
+              }
+            })
+          },
+          onCancel() {},
+        })
       } finally {
         this.loadingSubmit = false
       }
     },
-    // 启用
-    async enable(row) {
+    //添加,编辑角色信息
+    handleAdd(e) {
+      e.preventDefault()
+      let _this = this,
+        { title } = this
+      this.modelForm.validateFields((err, values) => {
+        if (!err) {
+          return new Promise((resolve, reject) => {
+            let param = values
+            if (title == '编辑') {
+              param = Object.assign(values, _this.selectRoleData)
+            }
+            api[title == '编辑' ? 'setRoleUpate' : 'setRoleUpate'](param).then(
+              res => {
+                if (res.code == 200) {
+                  _this.$message.info(`${title}成功`)
+                  _this.handleCancelAdd()
+                  let params = {
+                    pageNum: _this.pageData.pageNum, // 第几页
+                    pageSize: _this.pageData.pageSize, // 每页多少条
+                    ..._this.searchData,
+                  }
+                  _this.getData(params)
+                }
+              }
+            )
+            this.modelVisibleAdd = false
+          })
+        }
+      })
+    },
+    //添加用户取消
+    handleCancelAdd() {
+      this.modelVisibleAdd = false
+      this.modelForm.resetFields()
+    },
+    //启用/禁用用户的的账号
+    UpdateStatus(row, state, type) {
+      let that = this
       try {
         let params = {
           id: row.id,
-          state: 1,
+          state: state,
         }
-        let res = await api.roleUpdate(params)
-        if (res.code == 200) {
-          this.handleCancel()
-          this.$message.success('启用成功')
-          let params = {
-            pageNum: this.pageData.pageNum, // 第几页
-            pageSize: this.pageData.pageSize, // 每页多少条
-            roleName: this.searchData.roleName, // 角色名称
-          }
-          this.getData(params)
-        }
+        this.$confirm({
+          title: `您确认要${type}"${row.name}"的账号吗?`,
+          centered: true,
+          onOk() {
+            api
+              .setAccountUpdateStatus(params)
+              .then(res => {
+                if (res.code == 200) {
+                  that.$message.info(`${type}成功`)
+                  let params = {
+                    pageNum: that.pageData.pageNum, // 第几页
+                    pageSize: that.pageData.pageSize, // 每页多少条
+                    ...that.searchData,
+                  }
+                  that.getData(params)
+                } else {
+                  that.$message.error(`${type}失败`)
+                }
+              })
+              .finally(err => {})
+          },
+          onCancel() {},
+        })
       } finally {
         this.loadingSubmit = false
       }
     },
-    // 禁用
-    async disable(row) {
-      try {
-        let params = {
-          id: row.id,
-          state: 0,
-        }
-        let res = await api.roleUpdate(params)
-        if (res.code == 200) {
-          this.handleCancel()
-          this.$message.success('禁用成功')
-          let params = {
-            pageNum: this.pageData.pageNum, // 第几页
-            pageSize: this.pageData.pageSize, // 每页多少条
-            roleName: this.searchData.roleName, // 角色名称
-          }
-          this.getData(params)
-        }
-      } finally {
-        this.loadingSubmit = false
-      }
-    },
-    // 弹窗取消
-    handleCancel() {
-      this.modalVisible = false
-    },
-    // 显示弹窗
-    showModal(type, row) {
-      this.type = type
-      this.row = row
-      this.modalVisible = true
-    },
+
     //分配权限
     assignAuthority(row) {
       this.$router.push({
@@ -428,7 +425,7 @@ export default {
           let params = {
             pageNum: this.pageData.pageNum, // 第几页
             pageSize: this.pageData.pageSize, // 每页多少条
-            roleName: this.searchData.roleName, // 角色名称
+            ...this.searchData,
           }
           this.getData(params)
         }
@@ -448,29 +445,33 @@ export default {
         },
       })
     },
-    //添加用户
-    handleAdd(e) {
-      e.preventDefault()
-      this.modelForm.validateFields((err, values) => {
-        if (!err) {
-          return new Promise((resolve, reject) => {
-            this.onSubmit(values)
-            this.modelVisibleAdd = false
-          })
-        }
-      })
-    },
-    onSubmit(values) {
-      console.log(values)
-    },
-    //添加用户取消
-    handleCancelAdd() {
-      this.modelForm.resetFields()
-    },
   },
 }
 </script>
 <style lang="less" scoped>
+.column {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+}
+.flex {
+  flex: 1;
+}
+.container-module {
+  width: 100%;
+}
+.search-form {
+  margin-bottom: 10px;
+}
+.content-box {
+  background: #fff;
+  width: 100%;
+  height: 100%;
+}
+.basetable {
+  height: 100%;
+}
 .tree-box {
   height: 300px;
   overflow: auto;

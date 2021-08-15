@@ -366,7 +366,7 @@ export default {
     this.getList()
     // this.supplierlis()
     const timer1 = setTimeout(() => {
-      this.scrollY = document.body.clientHeight - 310 + 'px'
+      this.scrollY = document.body.clientHeight - 320 + 'px'
     }, 0)
     this.$once('hook:beforeDestroy', () => {
       clearTimeout(timer1)
@@ -514,6 +514,7 @@ export default {
 .shelve {
   padding: 20px;
   height: 100%;
+  background: #fff;
 }
 .ant-form {
   /deep/ .ant-form-item-control-wrapper {
