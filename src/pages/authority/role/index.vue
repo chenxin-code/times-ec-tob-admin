@@ -16,13 +16,16 @@
       <baseTable
         :columns="columns"
         :tableData="dataList"
-        :total="pageData.total"
         :pageSize="pageData.pageSize"
         :current="pageData.current"
         :loading="tableLoading"
         :scrollY="scrollY"
+        :total="pageData.total"
         @onShowSizeChange="onShowSizeChange"
       >
+        <template slot="state" slot-scope="{ props }">
+          {{ props.state == 1 ? '已禁用' : '已启用' }}
+        </template>
         <template slot="operation" slot-scope="{ props }">
           <div class="editable-row-operations">
             <a-button
@@ -49,7 +52,7 @@
                 >启用</a-button
               >
             </template>
-            <template v-if="props.status == 1">
+            <template v-if="props.state == 1">
               <a-divider type="vertical" />
               <a-button
                 class="a-buttom-reset-link"
@@ -115,25 +118,25 @@ export default {
   data() {
     let formList = [
       {
-        label: '用户姓名',
+        label: '角色姓名',
         type: 'input',
         name: 'roleName',
         placeholder: '请输入角色名称',
         wrapperCol: { span: 18 },
         labelAlign: 'left',
       },
-      {
-        label: '手机号码',
-        type: 'input',
-        name: 'rolePhone',
-        placeholder: '请输入手机号',
-        wrapperCol: { span: 18 },
-        labelAlign: 'left',
-        rules: [
-          { required: false, message: '请输入手机号' },
-          { pattern: /^1[3456789]\d{9}$/, message: '格式不对' },
-        ],
-      },
+      //   {
+      //     label: '手机号码',
+      //     type: 'input',
+      //     name: 'rolePhone',
+      //     placeholder: '请输入手机号',
+      //     wrapperCol: { span: 18 },
+      //     labelAlign: 'left',
+      //     rules: [
+      //       { required: false, message: '请输入手机号' },
+      //       { pattern: /^1[3456789]\d{9}$/, message: '格式不对' },
+      //     ],
+      //   },
       {
         type: 'button',
         buttonName: '查询',
@@ -154,14 +157,15 @@ export default {
       },
       {
         title: '状态',
-        dataIndex: 'status',
+        dataIndex: 'state',
         key: 2,
         width: 100,
         ellipsis: false,
+        scopedSlots: { customRender: 'state' },
       },
       {
         title: '创建时间',
-        dataIndex: 'creatTime',
+        dataIndex: 'createTime',
         key: 3,
         width: 200,
         ellipsis: false,
@@ -169,7 +173,7 @@ export default {
       {
         title: '操作',
         fixed: 'right',
-        width: 300,
+        // width: 300,
         key: 4,
         scopedSlots: { customRender: 'operation' },
       },
@@ -208,6 +212,7 @@ export default {
       searchData: {},
       selectRoleData: {
         roleName: '',
+        state: 0,
       },
     }
   },
@@ -218,7 +223,7 @@ export default {
       ...this.searchData, // 角色名称跟手机号
     }
     setTimeout(() => {
-      this.scrollY = document.body.clientHeight - 155
+      this.scrollY = document.body.clientHeight - 230
     }, 0)
     // 角色列表
     this.getData(params)
@@ -290,6 +295,7 @@ export default {
       this.modelVisibleAdd = true
       this.selectRoleData = {
         roleName: '',
+        state: 0,
       }
     },
     // 编辑
@@ -306,7 +312,7 @@ export default {
           },
           that = this
         this.$confirm({
-          title: `您确认要${type}"${row.name}"的信息吗?`,
+          title: `您确认要${type}"${row.roleName}"的信息吗?`,
           content: '',
           centered: true,
           onOk() {
@@ -338,11 +344,15 @@ export default {
       this.modelForm.validateFields((err, values) => {
         if (!err) {
           return new Promise((resolve, reject) => {
-            let param = values
+            let param = Object.assign(values, { state: 0 })
             if (title == '编辑') {
-              param = Object.assign(values, _this.selectRoleData)
+              param = Object.assign(values, {
+                state: _this.selectRoleData.state,
+                id: _this.selectRoleData.id,
+                roleCode: _this.selectRoleData.roleCode,
+              })
             }
-            api[title == '编辑' ? 'setRoleUpate' : 'setRoleUpate'](param).then(
+            api[title == '编辑' ? 'setRoleUpate' : 'setRoleSave'](param).then(
               res => {
                 if (res.code == 200) {
                   _this.$message.info(`${title}成功`)
@@ -372,14 +382,16 @@ export default {
       try {
         let params = {
           id: row.id,
+          roleCode: row.roleCode,
+          roleName: row.roleName,
           state: state,
         }
         this.$confirm({
-          title: `您确认要${type}"${row.name}"的账号吗?`,
+          title: `您确认要${type}"${row.roleName}"的账号吗?`,
           centered: true,
           onOk() {
             api
-              .setAccountUpdateStatus(params)
+              .setRoleUpate(params)
               .then(res => {
                 if (res.code == 200) {
                   that.$message.info(`${type}成功`)
@@ -401,7 +413,6 @@ export default {
         this.loadingSubmit = false
       }
     },
-
     //分配权限
     assignAuthority(row) {
       this.$router.push({

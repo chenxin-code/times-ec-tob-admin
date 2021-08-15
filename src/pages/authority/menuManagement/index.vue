@@ -16,7 +16,7 @@
         :scrollY="scrollY"
       >
         <template slot="menuType" slot-scope="{ props }">
-          {{ ['未定义', '菜单', '按钮'][props.menuType] }}
+          {{ ['未定义', '菜单', '按钮', '页面'][props.menuType] }}
         </template>
         <template slot="visible" slot-scope="{ props }">
           {{ ['已启用', '已停用'][props.visible] }}

@@ -20,6 +20,6 @@ export default {
   overflow-x: hidden;
   //   margin-bottom: 10px;
   background: #fff;
-  padding: 10px;
+  padding: 15px;
 }
 </style>

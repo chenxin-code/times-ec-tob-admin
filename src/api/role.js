@@ -10,7 +10,7 @@ const URL_PREFIX = '/times-ec-tob-mall/admin/role'
  * @param {string} params.pageNum		    页码	string
  * @param {string} params.pageSize		    每页记录数	string
  */
-export const getRoleListData = params => fetchApi(`${URL_PREFIX}/getRoleList`, params, 'POST')
+export const getRoleListData = params => fetchApi(`${URL_PREFIX}/getListByPager`, params, 'POST')
 /**
  * 【管理端】修改角色信息
  * @param {Object} params 入参 参数名称 参数说明 请求类型 是否必须
@@ -40,4 +40,11 @@ export const setRoleSave = params => fetchApi(`${URL_PREFIX}/save`, params, 'POS
  * @param {Object} params 入参 参数名称 参数说明 请求类型 是否必须
  * @param {string} params.userId		 用户ID	string
  */
-export const selectNoAssociateRolesByUserId = params => fetchApi(`${URL_PREFIX}/selectNoAssociateRolesByUserId`, params, 'GET')
+export const getNoAssociateRolesByUserId = params => fetchApi(`${URL_PREFIX}/selectNoAssociateRolesByUserId`, params, 'GET')
+
+/**
+ * 【管理端】根据用户ID获取角色列表
+ * @param {Object} params 入参 参数名称 参数说明 请求类型 是否必须
+ * @param {string} params.userId		 用户ID	string
+ */
+ export const getAssociateRolesByUserId = params => fetchApi(`${URL_PREFIX}/selectRolesByUserId`, params, 'GET')

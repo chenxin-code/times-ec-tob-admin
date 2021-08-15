@@ -4,7 +4,7 @@
       <template slot="content">
         <div class="content-main" ref="content_main">
           <div class="main-box row space-between-start">
-            <div class="lefttab column">
+            <div class="lefttab mr column">
               <div class="topwrap row space-between-center">
                 <span class="topname">角色</span>
               </div>
@@ -15,19 +15,19 @@
                   :loading="tableLoading"
                   :pagination="false"
                 >
-                  <template slot="empName" slot-scope="text, record">
+                  <template slot="operation" slot-scope="record">
                     <!-- :scroll="{ y: 600 }" -->
-                    <div class="editable-row-operations">
-                      {{ record.empName }}&nbsp;&nbsp;
-                      {{ record.mobilePhone }}&nbsp;&nbsp;
-                      {{ record.companyName }}&nbsp;&nbsp;
-                      {{ record.departName }}
+                    <div
+                      class="editable-row-operations"
+                      @click="addRole(record)"
+                    >
+                      <a>添加</a>
                     </div>
                   </template>
                 </a-table>
               </div>
             </div>
-            <div class="lefttab column">
+            <div class="lefttab ml column">
               <div class="topwrap row">
                 <span class="topname">已添加角色</span>
               </div>
@@ -38,13 +38,13 @@
                   :data-source="tableDataed"
                   :pagination="false"
                   :loading="tableLoadinged"
-                  ><template slot="empName" slot-scope="text, record">
+                  ><template slot="operation" slot-scope="record">
                     <!-- :scroll="{ y: 600 }" -->
-                    <div class="editable-row-operations">
-                      {{ record.empName }}&nbsp;&nbsp;
-                      {{ record.mobilePhone }}&nbsp;&nbsp;
-                      {{ record.companyName }}&nbsp;&nbsp;
-                      {{ record.departName }}
+                    <div
+                      class="editable-row-operations"
+                      @click="delRole(record)"
+                    >
+                      <a>删除</a>
                     </div>
                   </template>
                 </a-table>
@@ -54,7 +54,9 @@
         </div>
       </template>
       <template slot="footer">
-        <a-button class="a-buttom-reset" type="primary">保存</a-button>
+        <a-button class="a-buttom-reset" type="primary" @click="saveRole"
+          >保存</a-button
+        >
         <a-button class="a-buttom-reset" type="default" @click="$router.go(-1)"
           >返回</a-button
         >
@@ -124,74 +126,72 @@ export default {
   mounted() {
     // this.getHasAddList()
     console.log(this.$route.params.id, 'this.$route.params.id')
-    // this.getNoAssignRole({ userId: this.$route.params.id })
+    this.getNoAssignRole({ userId: this.$route.params.id })
+    this.getAssignRole({ userId: this.$route.params.id })
   },
   methods: {
     // 添加
-    async add(row) {
-      this.tableLoading = true
-      let params = {
-        name: row.empName,
-        originalEmpId: row.empId || 0,
-        originalId: row.userId,
-        phone: row.mobilePhone,
-        roleId: this.$route.params.id,
-        userName: row.userName,
-      }
-      try {
-        let res = await api.operatorSave(params)
-        if (res.code == 200) {
-          this.$message.success('添加成功')
-          this.pageData.current = 1
-          this.pageData.pageNum = 1
-          this.getHasAddList()
+    async addRole(row) {
+      let tableData = this.tableData
+      this.tableDataed.push(row)
+      tableData.map((item, index) => {
+        if (item.id == row.id) {
+          tableData.splice(index, 1)
         }
-      } finally {
-        this.tableLoading = false
-      }
+      })
+      this.tableData = tableData
     },
     // 删除
-    async del(row) {
-      this.tableLoadinged = true
-      let params = {
-        roleId: this.$route.params.id,
-        userId: row.id,
-      }
-      try {
-        let res = await api.operatorDelete(params)
-        if (res.code == 200) {
-          this.pageData.current = 1
-          this.pageData.pageNum = 1
-          this.getHasAddList()
+    async delRole(row) {
+      let tableDataed = this.tableDataed
+      this.tableData.push(row)
+      tableDataed.map((item, index) => {
+        if (item.id == row.id) {
+          tableDataed.splice(index, 1)
         }
-      } finally {
-        this.tableLoadinged = false
-      }
+      })
+      this.tableDataed = tableDataed
     },
-    // 获取角色列表数据
-    async getHasAddList(params) {
-      this.tableLoadinged = true
-      if (!params) {
-        params = {
-          pageNum: this.pageData.pageNum, // 第几页
-          pageSize: this.pageData.pageSize, // 每页多少条
-          roleId: this.$route.params.id, // roleId
-        }
-      }
-      try {
-        let res = await api.operatorGetListByPager(params)
-        if (res.code == 200) {
-          this.tableDataed = res.data.records
-          this.pageData.total = Number(res.data.total)
-        }
-      } finally {
-        this.tableLoadinged = false
-      }
-    },
-
     //获取还没关联的角色
     getNoAssignRole(param) {
-      api.selectNoAssociateRolesByUserId(param).then(res => {})
+      api.getNoAssociateRolesByUserId(param).then(res => {
+        if (res.code == 200) {
+          res.data.map(item => {
+            item.key = item.id
+          })
+          this.tableData = res.data
+        }
+      })
+    },
+    //获取关联的角色
+    getAssignRole(param) {
+      api.getAssociateRolesByUserId(param).then(res => {
+        if (res.code == 200) {
+          res.data.map(item => {
+            item.key = item.id
+          })
+          this.tableDataed = res.data
+        }
+      })
+    },
+    //批量保存已添加的角色
+    saveRole() {
+      let roleIds = []
+      this.tableDataed.map(item => {
+        roleIds.push(item.id)
+      })
+      console.log(roleIds, 'roleIds')
+      let params = {
+        roleIds: roleIds,
+        userId: this.$route.params.id,
+      }
+      api.batchAssociateRole(params).then(res => {
+        if (res.code == 200) {
+          this.$message.success(`保存成功`)
+          this.getNoAssignRole({ userId: this.$route.params.id })
+          this.getAssignRole({ userId: this.$route.params.id })
+        }
+      })
     },
   },
 }
@@ -247,9 +247,14 @@ export default {
 
 .lefttab {
   width: 50%;
-  float: left;
-  margin: 10px;
-  //   min-height: 400px;
+  //   float: left;
+  margin: 15px;
+}
+.lefttab.mr {
+  margin-right: 7.5px;
+}
+.lefttab.ml {
+  margin-left: 7.5px;
 }
 .table_box {
   border: 1px solid rgb(236, 234, 234);

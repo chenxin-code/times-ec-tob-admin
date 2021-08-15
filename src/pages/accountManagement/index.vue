@@ -1,6 +1,6 @@
 <template>
   <div class="column container-modules">
-    <baseModule class="search-form">
+    <baseModule class="search-form end-center">
       <baseForm
         ref="form"
         rowCol="3"
@@ -249,8 +249,6 @@ export default {
     }
     // 角色列表
     this.getData(params)
-    // 权限列表
-    // this.getPermissionList()
   },
   methods: {
     // 查询
@@ -333,7 +331,8 @@ export default {
     del(row, type) {
       try {
         let params = {
-            id: row.id,
+            userId: row.id,
+            roleId: '',
           },
           that = this
         this.$confirm({
@@ -417,9 +416,11 @@ export default {
         .setAddAccountByPhone({ phone: userPhone })
         .then(res => {
           if (res.code == 200) {
-            this.modelForm.name = res.data.empName
-            let employeeOrganizationVOs = res.data.employeeOrganizationVOs[0]
-            this.toAssignRole = { ...employeeOrganizationVOs }
+            if (res.data) {
+              this.modelForm.name = res.data.empName
+              let employeeOrganizationVOs = res.data.employeeOrganizationVOs[0]
+              this.toAssignRole = { ...employeeOrganizationVOs }
+            }
           }
         })
         .finally(err => {
@@ -465,6 +466,10 @@ export default {
 }
 .flex {
   flex: 1;
+}
+.end-center {
+  justify-content: flex-end;
+  align-items: center;
 }
 .container-modules {
   height: 100%;

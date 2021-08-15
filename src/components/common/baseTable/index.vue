@@ -126,7 +126,13 @@ export default {
         _this.tableY = `${document.documentElement.clientHeight -
           _this.$refs.aTable.$el.offsetTop -
           (_this.total > 0 ? 140 : 85)}px`
-        console.log(_this.tableY, '_this.tableY ')
+        console.log(
+          this.scrollY,
+          document.documentElement.clientHeight,
+          _this.$refs.aTable.$el.offsetTop,
+          _this.tableY,
+          '_this.tableY '
+        )
       }, 0)
     },
   },
