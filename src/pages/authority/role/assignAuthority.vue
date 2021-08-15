@@ -15,11 +15,11 @@
                 <span v-html="menuTypeParse(scope.menuType)"></span>
               </div>
             </template>
-            <template slot="aaaaa" slot-scope="scope">
+            <template slot="menuIds" slot-scope="scope">
               <a-checkbox-group
-                  :options="['1', '2', '3']"
-                  :default-value="['1']"
-                  @change="onChange" />
+                  :options="['']"
+                  :checked="checkMenu(scope.id)"
+                  @change="onChange(scope.id)"/>
             </template>
           </a-table>
         </a-col>
@@ -30,17 +30,12 @@
 </template>
 
 <script>
-/*
-*
-* 保存：角色权限管理接口服务--【管理端】新增角色菜单信息--/times-ec-tob-mall/admin/role/insertRoleMenu
-查詢：菜单接口服务--【管理端】加载角色菜单列表树(用于角色分配菜单权限)--/times-ec-tob-mall/admin/menu/roleMenuTreeData
-*
-* */
-import api from './../../../api'
+import api from './../../../api';
 
 export default {
   data() {
     return {
+      checkedMenuIds: [],
       tableData: [],
       columns: [
         {
@@ -56,8 +51,8 @@ export default {
         },
         {
           title: '权限',
-          key: 'aaaaa',
-          scopedSlots: {customRender: 'aaaaa'},
+          key: 'menuIds',
+          scopedSlots: {customRender: 'menuIds'},
           align: 'center',
         },
       ],
@@ -79,8 +74,17 @@ export default {
     },
   },
   methods: {
-    onChange(checkedValues) {
-      console.log('checked = ', checkedValues);
+    checkMenu(id){
+      return this.checkedMenuIds.indexOf(id) !== -1;
+    },
+    onChange(id) {
+      let index = this.checkedMenuIds.indexOf(id);
+      if(index === -1){
+        this.checkedMenuIds.push(id);
+      }else{
+        delete this.checkedMenuIds[index];
+      }
+      console.log(this.checkedMenuIds);
     },
     delChild(data) {
       for (let i = 0; i < data.length; i++) {
@@ -92,7 +96,15 @@ export default {
       }
     },
     save() {
-
+      api.insertRoleMenu({
+        roleId: this.$route.params.id,
+        menuIds: this.checkedMenuIds,
+      }).then(resp => {
+        if (resp.code === 200) {
+          this.$message.success('保存成功');
+          this.$router.back();
+        }
+      })
     },
   },
   mounted() {
@@ -105,6 +117,7 @@ export default {
           }
         })
         this.delChild(this.tableData);
+        this.checkedMenuIds = resp.data.menuCheckedIds;
       }
     }).finally(() => {
       this.tableLoading = false;
