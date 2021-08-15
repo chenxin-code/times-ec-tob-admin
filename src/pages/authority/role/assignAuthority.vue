@@ -16,10 +16,7 @@
               </div>
             </template>
             <template slot="menuIds" slot-scope="scope">
-              <a-checkbox-group
-                  :options="['']"
-                  :checked="checkMenu(scope.id)"
-                  @change="onChange(scope.id)"/>
+              <a-checkbox :checked="checkMenu(scope.id)" @change="onChange(scope.id)"/>
             </template>
           </a-table>
         </a-col>
@@ -31,7 +28,6 @@
 
 <script>
 import api from './../../../api';
-
 export default {
   data() {
     return {
@@ -84,7 +80,6 @@ export default {
       }else{
         delete this.checkedMenuIds[index];
       }
-      console.log(this.checkedMenuIds);
     },
     delChild(data) {
       for (let i = 0; i < data.length; i++) {
@@ -96,20 +91,23 @@ export default {
       }
     },
     save() {
+      this.tableLoading = true;
       api.insertRoleMenu({
-        roleId: this.$route.params.id,
+        roleId: this.$route.query.id,
         menuIds: this.checkedMenuIds,
       }).then(resp => {
         if (resp.code === 200) {
           this.$message.success('保存成功');
           this.$router.back();
         }
-      })
+      }).finally(() => {
+        this.tableLoading = false;
+      });
     },
   },
   mounted() {
     this.tableLoading = true;
-    api.roleMenuTreeData({roleId: this.$route.params.id}).then(resp => {
+    api.roleMenuTreeData({roleId: this.$route.query.id}).then(resp => {
       if (resp.code === 200) {
         this.tableData = resp.data.menus.map(item => {
           return {
@@ -121,7 +119,7 @@ export default {
       }
     }).finally(() => {
       this.tableLoading = false;
-    })
+    });
   },
 }
 </script>
