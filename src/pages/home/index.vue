@@ -3,7 +3,7 @@
     <div class="img-box">
       <div>
         <h1 class="text">欢迎进入TOB商城</h1>
-        <img :src="imgUrl" />
+        <img :src="imgUrl" class="img" />
       </div>
     </div>
   </div>
@@ -37,6 +37,9 @@ export default {
     height: 100%;
     padding-top: 50px;
     justify-content: center;
+  }
+  .img {
+    max-width: 100%;
   }
 }
 </style>

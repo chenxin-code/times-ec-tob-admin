@@ -43,7 +43,7 @@ export default {
   name: 'baseTable',
   data() {
     return {
-      tableY: 400,
+      tableY: 100,
       currents: 1,
       pageSizes: 10,
     }

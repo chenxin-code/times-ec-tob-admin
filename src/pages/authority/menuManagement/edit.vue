@@ -46,9 +46,9 @@
                     <a-radio :value="1">
                       菜单
                     </a-radio>
-                    <a-radio :value="2">
-                      页面
-                    </a-radio>
+                    <!-- <a-radio :value="2">
+                      按钮
+                    </a-radio> -->
                   </a-radio-group>
                 </a-form-model-item>
               </a-col>
