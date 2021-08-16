@@ -1,11 +1,17 @@
 <template>
-  <div class="container-module">
+  <div class="container-module" :style="{ height: `${height}` }">
     <slot></slot>
   </div>
 </template>
 <script>
 export default {
   name: 'baseModule',
+  props: {
+    height: {
+      type: String,
+      default: '',
+    },
+  },
 }
 </script>
 <style lang="less" scoped>
@@ -14,6 +20,6 @@ export default {
   overflow-x: hidden;
   //   margin-bottom: 10px;
   background: #fff;
-  padding: 10px;
+  padding: 15px;
 }
 </style>

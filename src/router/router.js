@@ -87,7 +87,7 @@ async function addDynamicMenuAndRoutes() {
     return
   }
   // 这个是请求menuList的方法, 返回的是用户权限菜单menuList
-  await store.dispatch('EXCHANGE_TOKEN')
+  // await store.dispatch('EXCHANGE_TOKEN')
   store.commit('menuRouteLoaded', true)
   const dynamicRoutes = addDynamicRoutes(res.data)
   router.options.routes[0].children = router.options.routes[0].children.concat(

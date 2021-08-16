@@ -58,6 +58,10 @@ const FormList = {
     addText:{
         type: String,
         default:'添加'
+    },
+    labelAlign:{
+        type: String,
+        default:'right'
     }
   },
   data() {
@@ -95,7 +99,7 @@ const FormList = {
         initialValue,
         ...others
       } = attrs,
-      {style,addbutton,addText} = this;
+      {style,addbutton,addText,labelAlign} = this;
       switch (type) {
         case "input":
           return (
@@ -205,7 +209,7 @@ const FormList = {
       >
         <a-row gutter={24}>
           {this.formList.map((item, index) => {
-            const { align, labelCol, wrapperCol, ...others } = item
+            const { align, labelCol, wrapperCol,labelAlign, ...others } = item
             return (
                 <a-col  span={this.formList.length % 3 === 1 ? 6 : this.rowSpan}>
                     <a-form-item
@@ -214,6 +218,7 @@ const FormList = {
                         align={align}
                         labelCol={labelCol}
                         wrapperCol={wrapperCol}
+                        labelAlign={labelAlign}
                         style={{'margin-bottom':0}}
                         >
                         {this.generateItem(others)}

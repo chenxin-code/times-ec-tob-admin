@@ -3,32 +3,56 @@
     <baseLayout :header="false">
       <template slot="content">
         <div class="content-main" ref="content_main">
-          <a-form-model :label-col="{ span: 3 }" :wrapper-col="{ span: 18 }">
+          <div class="content-box">
             <div class="main-box row space-between-start">
-              <div class="lefttab column">
+              <div class="lefttab mr column">
                 <div class="topwrap row space-between-center">
-                  <span class="topname">搜索用户：</span>
+                  <span class="topname">用户：</span>
                   <div class="row end-center">
-                    <a-input
-                      v-model="searchData.phone"
-                      type="tel"
-                      max-length.number="11"
-                      placeholder="输入手机号查询"
-                      style="width:50%"
-                    />
-                    <a-button
-                      class="searchButton"
-                      type="primary"
-                      @click="searchByPhone"
-                      >查询</a-button
+                    <a-form
+                      :form="modelForm"
+                      @submit="searchByPhone"
+                      class="row center"
                     >
+                      <a-form-item>
+                        <a-input
+                          v-decorator="[
+                            'phone',
+                            {
+                              rules: [
+                                {
+                                  required: false,
+                                  message: '请输入手机号查询',
+                                },
+                                {
+                                  pattern: /^1[3456789]\d{9}$/,
+                                  message: '格式不对',
+                                },
+                              ],
+                              initialValue: modelForm.phone,
+                            },
+                          ]"
+                          placeholder="请输入手机号"
+                        />
+                      </a-form-item>
+                      <a-button
+                        type="primary"
+                        html-type="submit"
+                        :loading="searchPhoneLoading"
+                        class="searchButton"
+                      >
+                        查询
+                      </a-button>
+                    </a-form>
                   </div>
                 </div>
-                <div class="">
+                <div>
                   <a-table
+                    ref="aTable"
                     :columns="tableColumns"
                     :data-source="tableData"
-                    :scroll="{ y: 600 }"
+                    :scroll="{ y: scrollY }"
+                    :row-key="(r, i) => r.id"
                     :row-selection="{
                       ...rowSelection,
                       selectedRowKeys: selectedLeft,
@@ -36,15 +60,18 @@
                     :loading="tableLoading"
                     :pagination="false"
                   >
-                    <template slot="operation" slot-scope="record">
+                    <template slot="name" slot-scope="text, record">
                       <div class="editable-row-operations">
-                        <a @click="add(record)">添加</a>
+                        {{ record.name }}&nbsp;&nbsp;
+                        {{ record.phone }}&nbsp;&nbsp;
+                        {{ record.companyName }}&nbsp;&nbsp;
+                        {{ record.departName }}
                       </div>
                     </template>
                   </a-table>
                 </div>
               </div>
-              <div class="column operationButton">
+              <div class="column center operationButton">
                 <a-button type="default" class="iconbutton" @click="toRight">
                   <a-icon type="right" />
                 </a-button>
@@ -52,34 +79,41 @@
                   <a-icon type="left" />
                 </a-button>
               </div>
-              <div class="lefttab column">
+              <div class="lefttab ml column">
                 <div class="topwrap row">
                   <span class="topname">已添加</span>
                 </div>
-                <a-table
-                  :columns="tableColumnsed"
-                  :row-key="(r, i) => i"
-                  :data-source="tableDataed"
-                  :scroll="{ y: 600 }"
-                  :pagination="false"
-                  :loading="tableLoadinged"
-                  :row-selection="{
-                    ...rowSelectionRight,
-                    selectedRowKeys: selectedRight,
-                  }"
-                  ><template slot="operation" slot-scope="record">
-                    <div class="editable-row-operations">
-                      <a @click="del(record)">删除</a>
-                    </div>
-                  </template>
-                </a-table>
+                <div>
+                  <a-table
+                    :columns="tableColumnsed"
+                    :row-key="(r, i) => r.id"
+                    :data-source="tableDataed"
+                    :scroll="{ y: scrollY }"
+                    :pagination="false"
+                    :loading="tableLoadinged"
+                    :row-selection="{
+                      ...rowSelectionRight,
+                      selectedRowKeys: selectedRight,
+                    }"
+                    ><template slot="name" slot-scope="text, record">
+                      <div class="editable-row-operations">
+                        {{ record.name }}&nbsp;&nbsp;
+                        {{ record.phone }}&nbsp;&nbsp;
+                        {{ record.companyName }}&nbsp;&nbsp;
+                        {{ record.departName }}
+                      </div>
+                    </template>
+                  </a-table>
+                </div>
               </div>
             </div>
-          </a-form-model>
+          </div>
         </div>
       </template>
       <template slot="footer">
-        <a-button class="a-buttom-reset" type="primary">保存</a-button>
+        <a-button class="a-buttom-reset" type="primary" @click="saveAccount"
+          >保存</a-button
+        >
         <a-button class="a-buttom-reset" type="default" @click="$router.go(-1)"
           >返回</a-button
         >
@@ -94,19 +128,21 @@ export default {
     let tableColumns = [
       {
         title: '用户名称',
-        dataIndex: 'empName',
-        key: 'empName',
+        dataIndex: 'name',
+        key: 'name',
         align: 'center',
         ellipsis: true,
+        scopedSlots: { customRender: 'name' },
       },
     ]
     let tableColumnsed = [
       {
         title: '用户名称',
-        dataIndex: 'empName',
-        key: 'empName',
+        dataIndex: 'name',
+        key: 'name',
         align: 'center',
         ellipsis: true,
+        scopedSlots: { customRender: 'name' },
       },
     ]
     let pageData = {
@@ -143,118 +179,127 @@ export default {
       rightSelect: [],
       selectedLeft: [],
       selectedRight: [],
+      modelForm: this.$form.createForm(this, { name: 'form' }),
+      searchPhoneLoading: false,
+      scrollY: 400,
     }
   },
   mounted() {
-    // this.getHasAddList()
-    this.tableData = [
-      {
-        empName: '用户名称0',
-        phone: '13560086925',
-        company: '广州时代公司单',
-        parment: '销售部',
-        key: 1,
-        id: 1,
-      },
-      {
-        empName: '用户名称1',
-        phone: '13560086925',
-        company: '广州时代公司单',
-        parment: '销售部',
-        key: 2,
-        id: 2,
-      },
-      {
-        empName: '用户名称2',
-        phone: '13560086925',
-        company: '广州时代公司单',
-        parment: '销售部',
-        key: 3,
-        id: 3,
-      },
-    ]
-    this.tableDataed = []
+    this.getHasAddList()
+    setTimeout(() => {
+      this.scrollY = document.body.clientHeight - 230
+    }, 0)
   },
   methods: {
     // 手机号搜索用户
-    async searchByPhone() {
-      let params = {
-        phone: this.searchData.phone,
-      }
-      this.tableLoading = true
-      let reg = /^1[3456789]\d{9}$/
-      try {
-        if (reg.test(this.searchData.phone)) {
-          let res = await api.operatorGetUnifyEmployeeInfoByPhone(params)
-          if (res.code == 200) {
-            this.tableData = [res.data]
-          }
+    async searchByPhone(e) {
+      e.preventDefault()
+      this.searchPhoneLoading = true
+      this.modelForm.validateFields((err, values) => {
+        if (!err) {
+          api
+            .setAddAccountByPhone(values)
+            .then(res => {
+              if (res.code == 200) {
+                if (res.data) {
+                  let { data } = res
+                  let employ = []
+                  data.employeeOrganizationVOs.map(item => {
+                    item.name = data.empName
+                    item.phone = data.mobilePhone
+                    item.id = data.userId
+                    item.roleId = this.$route.params.id
+                    item.roleCode = ''
+                    item.userName = data.userName
+                    employ.push(item)
+                  })
+                  this.tableData = employ
+                }
+              }
+            })
+            .finally(err => {
+              this.searchPhoneLoading = false
+            })
         } else {
+          this.searchPhoneLoading = false
         }
-      } finally {
-        this.tableLoading = false
-      }
+      })
     },
-    // 添加
-    async add(row) {
-      this.tableLoading = true
-      let params = {
-        name: row.empName,
-        originalEmpId: row.empId || 0,
-        originalId: row.userId,
-        phone: row.mobilePhone,
-        roleId: this.$route.params.id,
-        userName: row.userName,
-      }
-      try {
-        let res = await api.operatorSave(params)
-        if (res.code == 200) {
-          this.$message.success('添加成功')
-          this.pageData.current = 1
-          this.pageData.pageNum = 1
-          this.getHasAddList()
-        }
-      } finally {
-        this.tableLoading = false
-      }
-    },
-    // 删除
-    async del(row) {
+    // 获取已添加的用户
+    async getHasAddList() {
       this.tableLoadinged = true
       let params = {
-        roleId: this.$route.params.id,
-        userId: row.id,
+        pageNum: this.pageData.pageNum, // 第几页
+        pageSize: this.pageData.pageSize, // 每页多少条
+        roleId: this.$route.params.id, // roleId
       }
       try {
-        let res = await api.operatorDelete(params)
+        let res = await api.getAccountListData(params)
         if (res.code == 200) {
-          this.pageData.current = 1
-          this.pageData.pageNum = 1
-          this.getHasAddList()
+          let { records, total } = res.data
+          let userId = []
+          if (records.length > 0) {
+            records.map(item => {
+              records.key = item.id
+              userId.push(item.id)
+            })
+          }
+          this.tableDataed = records
+          this.pageData.total = Number(total)
+          params.userIds = userId.join(',')
+          await this.getNoAddList(params)
         }
       } finally {
         this.tableLoadinged = false
       }
     },
-    // 获取角色列表数据
-    async getHasAddList(params) {
-      this.tableLoadinged = true
-      if (!params) {
+    // 获取未添加的用户
+    async getNoAddList(params) {
+      let resp = await api.getAccountListData(params)
+      if (resp.code == 200) {
+        let { records } = resp.data
+        if (records.length > 0) {
+          records.map(item => {
+            records.key = item.id
+          })
+          this.tableData = records
+        }
+      }
+    },
+    //保存已添加用户
+    saveAccount() {
+      let { tableDataed } = this
+      let list = [],
         params = {
-          pageNum: this.pageData.pageNum, // 第几页
-          pageSize: this.pageData.pageSize, // 每页多少条
-          roleId: this.$route.params.id, // roleId
+          roleId: this.$route.params.id,
+          userList: [],
         }
+      if (tableDataed.length > 0) {
+        tableDataed.map(item => {
+          list.push({
+            // companyId: item.companyId,
+            // departId: item.departId,
+            companyName: item.companyName,
+            departName: item.departName,
+            originalId: item.id,
+            originalEmpId: item.id,
+            name: item.name,
+            phone: item.phone,
+            userName: item.name,
+          })
+        })
+        params.userList = list
       }
-      try {
-        let res = await api.operatorGetListByPager(params)
+      api.batchSaveList(params).then(res => {
         if (res.code == 200) {
-          this.tableDataed = res.data.records
-          this.pageData.total = Number(res.data.total)
+          let param = {
+            pageNum: this.pageData.pageNum, // 第几页
+            pageSize: this.pageData.pageSize, // 每页多少条
+            roleId: this.$route.params.id, // roleId
+          }
+          this.getHasAddList(param)
         }
-      } finally {
-        this.tableLoadinged = false
-      }
+      })
     },
     //左边checkbox选择
     leftTableChange(selectedRowKeys, selectedRows) {
@@ -331,13 +376,19 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+  align-items: flex-start;
+}
+.center {
   align-items: center;
 }
 .column {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+}
+.flex {
+  flex: 1;
 }
 .space-between-center {
   justify-content: space-between;
@@ -345,7 +396,7 @@ export default {
 }
 .space-between-start {
   justify-content: space-between;
-  align-items: start;
+  align-items: flex-start;
 }
 .end-center {
   justify-content: flex-end;
@@ -354,24 +405,33 @@ export default {
 .ant-form {
   height: 100%;
 }
-.main-box {
+.content-box {
   height: 100%;
-  padding: 20px;
+}
+.main-box {
+  position: relative;
+  height: 100%;
 }
 .topwrap {
-  padding: 20px;
+  padding: 15px;
   width: 100%;
 }
 .operationButton {
   height: 100%;
+  padding: 15px 0;
 }
 .lefttab {
-  width: 45%;
+  width: 50%;
   float: left;
-  margin: 10px;
+  margin: 15px;
   border: 1px solid rgb(236, 234, 234);
-  //   min-height: 400px;
 }
+// .lefttab.mr {
+//   margin-right: 7.5px;
+// }
+// .lefttab.ml {
+//   margin-left: 7.5px;
+// }
 .searchButton {
   margin-left: 10px;
 }

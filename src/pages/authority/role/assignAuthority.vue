@@ -1,425 +1,215 @@
 <template>
-  <div style="height: 100%;background: #fff;">
-    <div id="neighborhoodLife">
-      <div class="content-main" ref="content_main">
-        <a-row style="padding:20px;height:100%;">
-          <a-col flex:auto>
-            <!-- :row-selection="rowSelection" -->
-            <a-table
-              :columns="tableColumns"
-              :row-key="(r, i) => i"
-              :data-source="tableData"
-              :scroll="{ y: 400 }"
-              :pagination="false"
-              :loading="tableLoading"
-              style="margin-top:8px;"
-            >
-              <template slot="roleName" slot-scope="operation">
-                <div class="editable-row-operations">
-                  <a-tag>{{ operation.roleName }}</a-tag>
-                </div>
-              </template>
-              <template slot="operation" slot-scope="operation">
-                <div
-                  v-if="
-                    operation.roleCode != 'ADMIN' &&
-                      operation.roleCode != 'SUPPER_ADMIN'
-                  "
-                  class="editable-row-operations"
-                >
-                  <a @click="toEdit(operation)">权限设置</a>
-                </div>
-              </template>
-            </a-table>
-            <a-pagination
-              :total="total"
-              :show-total="total => `共 ${total} 条`"
-              show-quick-jumper
-              show-size-changer
-              v-model="current"
-              :default-current="current"
-              :page-size.sync="pageSize"
-              :pageSizeOptions="['10', '20', '50', '100']"
-              @change="onShowSizeChange"
-              @showSizeChange="onShowSizeChange"
-              style="margin-top:30px;width:100%;text-align: right;"
-            />
-          </a-col>
-        </a-row>
-      </div>
+  <!-- <div id="neighborhoodLife" style="height:100%;background:#fff">
+    <div class="content-main" ref="content_main">
+      <a-row style="padding: 15px;height: 100%;">
+        <a-col>
+          <a-table
+            :columns="columns"
+            :data-source="tableData"
+            :loading="tableLoading"
+            row-key="id"
+            :indentSize="35"
+            :pagination="false"
+          >
+            <template slot="menuType" slot-scope="scope">
+              <div class="editable-row-operations">
+                <span v-html="menuTypeParse(scope.menuType)"></span>
+              </div>
+            </template>
+            <template slot="menuIds" slot-scope="scope">
+              <a-checkbox
+                :checked="checkMenu(scope.id)"
+                @change="onChange(scope.id)"
+              />
+            </template>
+          </a-table>
+        </a-col>
+      </a-row>
     </div>
-    <a-modal
-      title="权限设置"
-      :visible="showModal"
-      :confirm-loading="confirmLoading"
-      @ok="handleOk"
-      @cancel="handleCancel"
-    >
-      <template>
-        <div class="limit-items">
-          <div class="limit-item">
-            <h4>菜单</h4>
-            <a-checkbox-group
-              v-model="defaultCheckedList"
-              :options="plainOptions"
-              :disabled="
-                selectOperation.roleCode == 'OPERATOR_OFFICIAL' ? true : false
-              "
-              @change="onChange3"
-            />
+    <FormSubmitButton :isShow="true" @submit="save()" />
+  </div> -->
+  <div id="neighborhoodLife" class="neighborhoodLife">
+    <baseLayout :header="false">
+      <template slot="content">
+        <div class="content-box" ref="content_main">
+          <div class="content-box">
+            <baseTable
+              :columns="columns"
+              :tableData="tableData"
+              :pageSize="pageData.pageSize"
+              :current="pageData.current"
+              :loading="tableLoading"
+              :total="pageData.total"
+            >
+              <!-- :scrollY="scrollY" -->
+              <template slot="menuType" slot-scope="{ props }">
+                <div class="editable-row-operations">
+                  <span v-html="menuTypeParse(props.menuType)"></span>
+                </div>
+              </template>
+              <template slot="menuIds" slot-scope="scope">
+                <a-checkbox
+                  :checked="checkMenu(scope.id)"
+                  @change="onChange(scope.id)"
+                />
+              </template>
+            </baseTable>
           </div>
         </div>
       </template>
-    </a-modal>
+      <template slot="footer">
+        <a-button class="a-buttom-reset" type="primary">保存</a-button>
+        <a-button class="a-buttom-reset" type="default" @click="$router.go(-1)"
+          >返回</a-button
+        >
+      </template>
+    </baseLayout>
   </div>
 </template>
 
 <script>
 import api from '@/api'
-import { mapState } from 'vuex'
-import message from 'ant-design-vue/es/message'
 export default {
-  name: 'distributor',
-  components: {},
-  data: () => ({
-    tabKey: '1',
-    tableRefresh: false,
-    pageRefresh: true,
-
-    showModal: false,
-    selectOperation: {}, //权限设置选中项
-    plainOptions: [],
-    plainOptions1: [],
-    plainOptions2: [],
-    plainOptions3: [],
-
-    checkedList1: [],
-    checkedList2: [],
-    checkedList3: [],
-    defaultCheckedList: [],
-    defaultCheckedList1: [],
-    defaultCheckedList2: [],
-    defaultCheckedList3: [],
-    confirmLoading: false,
-
-    //表格高度
-    scrollY: 100,
-    //表头数据
-    tableColumns: [
-      {
-        title: '菜单',
-        key: 'roleName',
-        scopedSlots: { customRender: 'roleName' },
-        width: 150,
-        ellipsis: true,
-      },
-      {
-        title: '类型',
-        key: 'type',
-        scopedSlots: { customRender: 'roleName' },
-        width: 150,
-        ellipsis: true,
-      },
-      {
-        title: '权限',
-        key: 'operation',
-        scopedSlots: { customRender: 'operation' }, //这个应该是插槽的东西
-        width: 120,
-        fixed: 'right',
-      },
-    ],
-    //列表数据
-    tableData: [
-      {
-        roleName: '商品管理',
-        type: '页面',
-        key: 1,
-        id: 1,
-      },
-      {
-        roleName: '商品管理',
-        type: '页面',
-        key: 2,
-        id: 2,
-      },
-      {
-        roleName: '商品管理',
-        type: '页面',
-        key: 3,
-        id: 3,
-      },
-    ],
-    tableLoading: false,
-    //分页
-    total: 0,
-    pageSize: 10,
-    current: 1,
-    data: [],
-    tableRefresh: false,
-    pageRefresh: true,
-  }),
-  beforeRouteLeave(to, from, next) {
-    if (to.name === 'addHcmUser' || to.name === 'authorizeHcmUser') {
-      this.tableRefresh = true
-      this.pageRefresh = false
-    } else {
-      this.pageRefresh = true
+  data() {
+    let pageData = {
+      total: 0,
+      current: 1,
+      pageNum: 1,
+      pageSize: 10,
     }
-    next()
-  },
-
-  computed: {
-    rowSelection() {
-      return {
-        onChange: (selectedRowKeys, selectedRows) => {
-          // console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+    return {
+      checkedMenuIds: [],
+      tableData: [],
+      columns: [
+        {
+          title: '菜单',
+          dataIndex: 'menuName',
+          key: 'menuName',
+          width: 300,
         },
-        getCheckboxProps: record => ({
-          props: {
-            disabled: record.name === 'Disabled User', // Column configuration not to be checked
-            name: record.name,
-          },
-        }),
-      }
-    },
-    ...mapState(['Case_Access_erp_Token']),
-  },
-  watch: {
-    Case_Access_erp_Token(newVal, oldVal) {
-      if (this.pageRefresh) {
-        this.tableData = []
-        this.tableLoading = false
-        this.total = 0
-        this.pageSize = 10
-        this.current = 1
-        this.data = []
-        this.tableRefresh = false
-        this.pageRefresh = true
-        this.getRoleList()
-        this.getPermissionList()
-      } else if (this.tableRefresh) {
-        this.getRoleList()
-        this.getPermissionList()
-      }
-    },
-  },
-  mounted: function() {
-    if (!this.Case_Access_erp_Token) return
-    if (this.pageRefresh) {
-      //   this.tableData = []
-      this.tableLoading = false
-      this.total = 0
-      this.pageSize = 10
-      this.current = 1
-      this.data = []
-      this.tableRefresh = false
-      this.pageRefresh = true
-      // this.getRoleList();
-      // this.getPermissionList();
-    } else if (this.tableRefresh) {
-      // this.getRoleList();
-      // this.getPermissionList();
+        {
+          title: '类型',
+          key: 'menuType',
+          scopedSlots: { customRender: 'menuType' },
+          align: 'center',
+          width: 100,
+        },
+        {
+          title: '权限',
+          key: 'menuIds',
+          scopedSlots: { customRender: 'menuIds' },
+          align: 'center',
+          fixed: 'right',
+        },
+      ],
+      pageData,
+      tableLoading: false,
+      menuTypes: {
+        1: '菜单',
+        2: '页面',
+      },
     }
   },
-
+  components: {},
+  computed: {
+    menuTypeParse() {
+      return param => {
+        if (param === 1) {
+          return '菜单'
+        } else if (param === 2) {
+          return '页面'
+        } else {
+          return ''
+        }
+      }
+    },
+  },
   methods: {
-    toEdit(operation) {
-      this.selectOperation = operation
-      this.getPermListByRole()
-      this.showModal = true
+    checkMenu(id) {
+      return this.checkedMenuIds.indexOf(id) !== -1
     },
-    // 0.2弹窗
-    handleOk() {
-      this.showModal = false
-      this.showSecondModal = true
-      // let permIdList = [...this.defaultCheckedList1, ...this.defaultCheckedList2, ...this.defaultCheckedList3]
-      let permIdList = this.defaultCheckedList
-      this.saveRolePermRel(permIdList)
-    },
-    handleCancel() {
-      this.showModal = false
-    },
-    /** 多选的方法 **/
-    onChange3(checkedValues) {
-      this.checkedList3 = checkedValues
-    },
-    // 分页
-    onShowSizeChange(current, pageSize) {
-      this.current = current
-      this.pageSize = pageSize
-      this.getRoleList()
-    },
-    //根据角色查询用户权限
-    getPermListByRole() {
-      this.tableLoading = true
-      const para = {
-        roleId: this.selectOperation.id,
+    onChange(id) {
+      let index = this.checkedMenuIds.indexOf(id)
+      if (index === -1) {
+        this.checkedMenuIds.push(id)
+      } else {
+        delete this.checkedMenuIds[index]
       }
+    },
+    delChild(data) {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].children.length === 0) {
+          delete data[i].children
+        } else {
+          this.delChild(data[i].children)
+        }
+      }
+    },
+    save() {
+      this.tableLoading = true
       api
-        .getPermListByRole(para)
-        .then(res => {
-          if (res.code === 200) {
-            this.permList = res.data.permList
-            let defaultCheckedList1 = []
-            let defaultCheckedList2 = []
-            let defaultCheckedList3 = []
-            let permList = JSON.parse(JSON.stringify(res.data.permList))
-            permList.forEach(item => {
-              this.defaultCheckedList.push(item.id)
-              this.plainOptions1.forEach(its1 => {
-                if (item.id == its1.id) {
-                  defaultCheckedList1.push(item.id)
-                }
-              })
-              this.plainOptions2.forEach(its2 => {
-                if (item.id == its2.id) {
-                  defaultCheckedList2.push(item.id)
-                }
-              })
-              this.plainOptions3.forEach(its3 => {
-                if (item.id == its3.id) {
-                  defaultCheckedList3.push(item.id)
-                }
-              })
-            })
-            this.defaultCheckedList1 = defaultCheckedList1
-            this.defaultCheckedList2 = defaultCheckedList2
-            this.defaultCheckedList3 = defaultCheckedList3
+        .insertRoleMenu({
+          roleId: this.$route.query.id,
+          menuIds: this.checkedMenuIds,
+        })
+        .then(resp => {
+          if (resp.code === 200) {
+            this.$message.success('保存成功')
+            this.$router.back()
           }
         })
         .finally(() => {
           this.tableLoading = false
         })
     },
-    //保存角色权限关系
-    saveRolePermRel(permIdList) {
-      this.tableLoading = true
-      const para = {
-        roleId: this.selectOperation.id,
-        permIdList: permIdList,
-      }
-      api
-        .saveRolePermRel(para)
-        .then(res => {
-          if (res.code === 200) {
-            message.success(res.message)
-          }
-        })
-        .finally(() => {
-          this.tableLoading = false
-        })
-    },
-
-    //账号-分页查询角色列表
-    getRoleList() {
-      this.tableLoading = true
-      const para = {
-        pageNum: this.current,
-        pageSize: this.pageSize,
-      }
-      api
-        .getRoleList(para)
-        .then(res => {
-          if (res.code === 200) {
-            this.tableData = res.data.records
-            this.total = res.data.total * 1
-          }
-        })
-        .finally(() => {
-          this.tableLoading = false
-        })
-    },
-    //分页查询可编辑权限列表
-    getPermissionList() {
-      this.tableLoading = true
-      const para = {
-        pageNum: 1,
-        pageSize: 9999,
-      }
-      api
-        .getPermissionList(para)
-        .then(res => {
-          if (res.code === 200) {
-            res.data.records.forEach(item => {
-              item['label'] = item.permName
-              item['value'] = item.id
-            })
-            this.plainOptions = res.data.records
-            const plainOptions1 = res.data.records.filter(
-              x => x.permType === 'PUBLISH'
-            )
-            const plainOptions2 = res.data.records.filter(
-              x => x.permType === 'READ'
-            )
-            const plainOptions3 = res.data.records.filter(
-              x => x.permType === 'MANAGEMENT'
-            )
-            // this.plainOptions1 = JSON.parse(JSON.stringify(plainOptions1));
-            this.plainOptions1 = plainOptions1
-            this.plainOptions2 = plainOptions2
-            this.plainOptions3 = plainOptions3
-          }
-        })
-        .finally(() => {
-          this.tableLoading = false
-        })
-    },
+  },
+  mounted() {
+    this.tableLoading = true
+    api
+      .roleMenuTreeData({ roleId: this.$route.query.id })
+      .then(resp => {
+        if (resp.code === 200) {
+          this.tableData = resp.data.menus.map(item => {
+            return {
+              ...item,
+            }
+          })
+          this.delChild(this.tableData)
+          this.checkedMenuIds = resp.data.menuCheckedIds
+        }
+      })
+      .finally(() => {
+        this.tableLoading = false
+      })
   },
 }
 </script>
 
 <style lang="less" scoped>
-.ant-input-search .ant-input-suffix {
-  right: 18px;
-}
-.ant-tabs,
-.ant-tabs .ant-tabs-top-content,
-.ant-tabs .ant-tabs-bottom-content {
-  height: 100%;
-}
-.ant-tabs .ant-tabs-top-content > .ant-tabs-tabpane,
-.ant-tabs .ant-tabs-bottom-content > .ant-tabs-tabpane {
-  transition: none;
-}
-.ant-tabs .ant-tabs-top-content.ant-tabs-content-animated,
-.ant-tabs .ant-tabs-bottom-content.ant-tabs-content-animated {
-  transition: none;
-}
-.ant-tag {
-  width: 176px;
-  height: 32px;
-  line-height: 32px;
-  border-radius: 4px;
-  color: #999999;
-  font-size: 14px;
-}
-.limit-items {
-  box-sizing: border-box;
-  width: 100%;
-  display: flex;
-  align-items: flex-start;
-  height: 240px;
-  overflow-y: auto;
-  .limit-item {
-    box-sizing: border-box;
-    width: 33.3%;
-    height: 100%;
-    padding-left: 20px;
-    border-right: 1px solid #eeeeee;
-  }
-  .limit-item:first-child {
-    padding-left: 0;
-  }
-  .limit-item:last-child {
-    border-right: none;
-  }
-}
-/deep/ .ant-checkbox-group {
+.column {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
-/deep/ .ant-checkbox-group-item {
-  color: #333333;
-  margin: 8px 0;
+.flex {
+  flex: 1;
+}
+.container-module {
+  width: 100%;
+}
+.neighborhoodLife {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+}
+.content-box {
+  background: #fff;
+  width: 100%;
+  height: 100%;
+}
+.a-buttom-reset {
+  margin-left: 15px;
+  margin-bottom: 10px;
 }
 </style>

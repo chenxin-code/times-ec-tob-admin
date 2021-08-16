@@ -50,7 +50,8 @@ const store = new Vuex.Store({
         parentName: null,
         perms:'HOME',
         url:'/home',
-        icon: "@/assets/img/menu/icon_supplier.png"
+        icon: ""
+        // @/assets/img/menu/icon_supplier.png
       })
       state.menus = menus
     },

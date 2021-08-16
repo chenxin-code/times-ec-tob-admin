@@ -1,5 +1,5 @@
 <template>
-  <div id="neighborhoodLife">
+  <div id="neighborhoodLife" style="background:#fff;height:100%;">
     <!-- <div class="content-main" ref="content_main">
       <a-row style="padding: 20px;height: 100%;">
         <a-col>
@@ -87,7 +87,7 @@ export default {
         if (resp.code === 200) {
           this.categoryData = resp.data.map(item => {
             return {
-              ...item,       
+              ...item,
             }
           })
           console.log(this.categoryData)

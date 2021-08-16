@@ -1,76 +1,65 @@
 <template>
   <div class="container-edit">
-    <baseLayout>
+    <baseLayout :header="false">
       <template slot="content">
         <div class="content-main" ref="content_main">
-          <a-form-model
-            :label-col="{ span: 3 }"
-            :wrapper-col="{ span: 18 }"
-            style="padding:30px 10px;"
-          >
-            <div class="lefttab">
-              <div class="topwrap">
-                <span class="topname">搜索用户：</span>
-                <a-input
-                  v-model="searchData.phone"
-                  type="tel"
-                  max-length.number="11"
-                  placeholder="输入手机号查询"
-                  style="width:50%"
-                />
-                <a-button type="primary" @click="searchByPhone">查询</a-button>
+          <div class="main-box row space-between-start">
+            <div class="lefttab mr column">
+              <div class="topwrap row space-between-center">
+                <span class="topname">角色</span>
               </div>
-              <a-table
-                :columns="tableColumns"
-                :row-key="(r, i) => i"
-                :data-source="tableData"
-                :scroll="{ x: 600, y: 500 }"
-                :pagination="false"
-                :loading="tableLoading"
-                style="margin-top: 8px"
-                ><template slot="operation" slot-scope="record">
-                  <div class="editable-row-operations">
-                    <a @click="add(record)">添加</a>
-                  </div>
-                </template>
-              </a-table>
-            </div>
-            <div class="lefttab">
-              <div class="topwrap">
-                <span class="topname">角色已添加</span>
+              <div class="flex table_box">
+                <a-table
+                  :columns="tableColumns"
+                  :data-source="tableData"
+                  :loading="tableLoading"
+                  :pagination="false"
+                >
+                  <template slot="operation" slot-scope="record">
+                    <!-- :scroll="{ y: 600 }" -->
+                    <div
+                      class="editable-row-operations"
+                      @click="addRole(record)"
+                    >
+                      <a>添加</a>
+                    </div>
+                  </template>
+                </a-table>
               </div>
-              <a-table
-                :columns="tableColumnsed"
-                :row-key="(r, i) => i"
-                :data-source="tableDataed"
-                :scroll="{ x: 600, y: 500 }"
-                :pagination="false"
-                :loading="tableLoadinged"
-                style="margin-top: 8px"
-                ><template slot="operation" slot-scope="record">
-                  <div class="editable-row-operations">
-                    <a @click="del(record)">删除</a>
-                  </div>
-                </template>
-              </a-table>
-              <a-pagination
-                size="small"
-                :total="pageData.total"
-                :show-total="total => `共 ${total} 条`"
-                v-model="pageData.current"
-                :default-current="pageData.current"
-                :page-size.sync="pageData.pageSize"
-                :pageSizeOptions="['10', '20', '50', '100']"
-                @change="onShowSizeChangeed"
-                @showSizeChange="onShowSizeChangeed"
-                style="margin-top: 30px; width: 40%; text-align: left;"
-              />
             </div>
-          </a-form-model>
+            <div class="lefttab ml column">
+              <div class="topwrap row">
+                <span class="topname">已添加角色</span>
+              </div>
+              <div class="flex table_box">
+                <a-table
+                  :columns="tableColumnsed"
+                  :row-key="(r, i) => i"
+                  :data-source="tableDataed"
+                  :pagination="false"
+                  :loading="tableLoadinged"
+                  ><template slot="operation" slot-scope="record">
+                    <!-- :scroll="{ y: 600 }" -->
+                    <div
+                      class="editable-row-operations"
+                      @click="delRole(record)"
+                    >
+                      <a>删除</a>
+                    </div>
+                  </template>
+                </a-table>
+              </div>
+            </div>
+          </div>
         </div>
       </template>
       <template slot="footer">
-        <a-button class="a-buttom-reset" type="primary">保存</a-button>
+        <a-button class="a-buttom-reset" type="primary" @click="saveRole"
+          >保存</a-button
+        >
+        <a-button class="a-buttom-reset" type="default" @click="$router.go(-1)"
+          >返回</a-button
+        >
       </template>
     </baseLayout>
   </div>
@@ -81,64 +70,36 @@ export default {
   data() {
     let tableColumns = [
       {
-        title: '序号',
-        customRender: (text, record, index) => `${index + 1}`,
-        width: 80,
+        title: '角色名称',
+        dataIndex: 'roleName',
+        key: 'roleName',
+        ellipsis: true,
         align: 'center',
       },
-      {
-        title: '角色',
-        dataIndex: 'empName',
-        key: 'empName',
-        ellipsis: true,
-      },
-      {
-        title: '手机号',
-        dataIndex: 'mobilePhone',
-        key: 'mobilePhone',
-        width: 120,
-        ellipsis: true,
-      },
-      // {
-      //   title: "公司",
-      //   dataIndex: "companyName",
-      //   key: "companyName",
-      //   width: 120,
-      //   ellipsis: true,
-      // },
-      // {
-      //   title: "部门",
-      //   dataIndex: "departmentName",
-      //   key: "departmentName",
-      //   ellipsis: true,
-      // },
       {
         title: '操作',
         key: 'operation',
         scopedSlots: { customRender: 'operation' },
-        // width: 260,
+        width: '100px',
+        align: 'center',
         fixed: 'right',
       },
     ]
     let tableColumnsed = [
       {
-        title: '序号',
-        customRender: (text, record, index) => `${index + 1}`,
-        width: 60,
-        align: 'center',
-      },
-      {
-        title: '角色',
+        title: '角色名称',
         dataIndex: 'roleName',
         key: 'roleName',
         // width: 120,
         ellipsis: true,
+        align: 'center',
       },
       {
         title: '操作',
         key: 'operation',
         scopedSlots: { customRender: 'operation' },
-        width: 60,
+        align: 'center',
+        width: '100px',
         fixed: 'right',
       },
     ]
@@ -164,95 +125,109 @@ export default {
   },
   mounted() {
     // this.getHasAddList()
+    console.log(this.$route.params.id, 'this.$route.params.id')
+    this.getNoAssignRole({ userId: this.$route.params.id })
+    this.getAssignRole({ userId: this.$route.params.id })
   },
   methods: {
-    // 手机号搜索用户
-    async searchByPhone() {
-      let params = {
-        phone: this.searchData.phone,
-      }
-      this.tableLoading = true
-
-      try {
-        let res = await api.operatorGetUnifyEmployeeInfoByPhone(params)
-        if (res.code == 200) {
-          this.tableData = [res.data]
-        }
-      } finally {
-        this.tableLoading = false
-      }
-    },
     // 添加
-    async add(row) {
-      this.tableLoading = true
-      let params = {
-        name: row.empName,
-        originalEmpId: row.empId || 0,
-        originalId: row.userId,
-        phone: row.mobilePhone,
-        roleId: this.$route.params.id,
-        userName: row.userName,
-      }
-      try {
-        let res = await api.operatorSave(params)
-        if (res.code == 200) {
-          this.$message.success('添加成功')
-          this.pageData.current = 1
-          this.pageData.pageNum = 1
-          this.getHasAddList()
+    async addRole(row) {
+      let tableData = this.tableData
+      this.tableDataed.push(row)
+      tableData.map((item, index) => {
+        if (item.id == row.id) {
+          tableData.splice(index, 1)
         }
-      } finally {
-        this.tableLoading = false
-      }
+      })
+      this.tableData = tableData
     },
     // 删除
-    async del(row) {
-      this.tableLoadinged = true
+    async delRole(row) {
+      let tableDataed = this.tableDataed
+      this.tableData.push(row)
+      tableDataed.map((item, index) => {
+        if (item.id == row.id) {
+          tableDataed.splice(index, 1)
+        }
+      })
+      this.tableDataed = tableDataed
+    },
+    //获取还没关联的角色
+    getNoAssignRole(param) {
+      api.getNoAssociateRolesByUserId(param).then(res => {
+        if (res.code == 200) {
+          res.data.map(item => {
+            item.key = item.id
+          })
+          this.tableData = res.data
+        }
+      })
+    },
+    //获取关联的角色
+    getAssignRole(param) {
+      api.getAssociateRolesByUserId(param).then(res => {
+        if (res.code == 200) {
+          res.data.map(item => {
+            item.key = item.id
+          })
+          this.tableDataed = res.data
+        }
+      })
+    },
+    //批量保存已添加的角色
+    saveRole() {
+      let roleIds = []
+      this.tableDataed.map(item => {
+        roleIds.push(item.id)
+      })
+      console.log(roleIds, 'roleIds')
       let params = {
-        roleId: this.$route.params.id,
-        userId: row.id,
+        roleIds: roleIds,
+        userId: this.$route.params.id,
       }
-      try {
-        let res = await api.operatorDelete(params)
+      api.batchAssociateRole(params).then(res => {
         if (res.code == 200) {
-          this.pageData.current = 1
-          this.pageData.pageNum = 1
-          this.getHasAddList()
+          this.$message.success(`保存成功`)
+          this.getNoAssignRole({ userId: this.$route.params.id })
+          this.getAssignRole({ userId: this.$route.params.id })
         }
-      } finally {
-        this.tableLoadinged = false
-      }
-    },
-    // 获取角色列表数据
-    async getHasAddList(params) {
-      this.tableLoadinged = true
-      if (!params) {
-        params = {
-          pageNum: this.pageData.pageNum, // 第几页
-          pageSize: this.pageData.pageSize, // 每页多少条
-          roleId: this.$route.params.id, // roleId
-        }
-      }
-      try {
-        let res = await api.operatorGetListByPager(params)
-        if (res.code == 200) {
-          this.tableDataed = res.data.records
-          this.pageData.total = Number(res.data.total)
-        }
-      } finally {
-        this.tableLoadinged = false
-      }
-    },
-    // 分页
-    onShowSizeChangeed(current, pageSize) {
-      this.pageData.current = current
-      this.pageData.pageSize = pageSize
-      this.getHasAddList()
+      })
     },
   },
 }
 </script>
 <style lang="less" scoped>
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.center {
+  align-items: center;
+}
+.column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+.flex {
+  flex: 1;
+}
+.space-between-center {
+  justify-content: space-between;
+  align-items: center;
+}
+.space-between-start {
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.end-center {
+  justify-content: flex-end;
+  align-items: center;
+}
+
 .container-edit {
   position: relative;
   height: 100%;
@@ -264,17 +239,25 @@ export default {
   margin-left: 15px;
   margin-bottom: 10px;
 }
-.topname {
-  margin: 80px 15% 80px 15px;
-  clear: both;
-  line-height: 30px;
+.topwrap {
+  padding: 10px 16px;
+  background: #f2f2f2;
+  width: 100%;
 }
+
 .lefttab {
-  width: 45%;
-  padding: 10px;
-  float: left;
-  margin: 10px;
+  width: 50%;
+  //   float: left;
+  margin: 15px;
+}
+.lefttab.mr {
+  margin-right: 7.5px;
+}
+.lefttab.ml {
+  margin-left: 7.5px;
+}
+.table_box {
   border: 1px solid rgb(236, 234, 234);
-  min-height: 400px;
+  border-bottom: none;
 }
 </style>

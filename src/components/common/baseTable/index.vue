@@ -1,7 +1,7 @@
 <template>
-  <div class="container-table">
+  <div class="container-table" style="height:100%;">
     <!-- 表格 -->
-    <baseModule>
+    <baseModule :class="{ 'module-table': total <= 0 }">
       <a-table
         ref="aTable"
         :columns="columns"
@@ -56,6 +56,10 @@ export default {
     tableData: {
       type: Array,
       default: () => [],
+    },
+    scrollY: {
+      type: Number,
+      default: 400,
     },
     tableConfig: {
       type: Object,
@@ -128,11 +132,18 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.container-table {
+  height: 100%;
+}
 .container-table-module {
   margin-bottom: 0;
   /deep/ .ant-pagination {
     text-align: right;
   }
+}
+.module-table {
+  height: 100%;
+  overflow-y: hidden;
 }
 /deep/.ant-table-tbody > tr > td {
   padding: 8px 10px;

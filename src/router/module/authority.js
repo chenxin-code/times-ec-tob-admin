@@ -29,7 +29,7 @@ export default [
                     path: '/accountManagement',
                     name: '账号管理',
                 },
-                { path: '/accountManagement/assignUsers', name: '分配用户' }],
+                { path: '/accountManagement/assignUsers', name: '关联角色' }],
             keepAlive: false
         },
         component: () => import('@/pages/accountManagement/assignUsers'),
@@ -103,9 +103,12 @@ export default [
         name: 'role',
         menuKey: 'role',
         meta: {
-            menu: '/role',
+            menu: '/authority/role',
             authKeys: [''],
-            bread: [{ path: '/authority/role', name: '角色管理' }],
+            bread: [{
+                path: '/authority',
+                name: '权限管理',
+            },{ path: '/authority/role', name: '角色管理' }],
             keepAlive: false
         },
         component: () => import('@/pages/authority/role/index'),
@@ -115,15 +118,12 @@ export default [
         name: 'assignRole',
         menuKey: 'assignRole',
         meta: {
-            menu: '/assignRole',
+            menu: '/authority/assignRole',
             authKeys: [''],
             bread: [
-                {
-                    path: '/authority',
-                    name: '权限管理',
-                },
+                { path: '/authority',name: '权限管理'},
                 { path: '/authority/role', name: '角色管理' },
-                { path: '/authority/assignRole', name:'角色分配' }],
+                { path: '/authority/assignRole', name:'分配用户' }],
             keepAlive: false
         },
         component: () => import('@/pages/authority/role/assignRole'),
@@ -133,16 +133,12 @@ export default [
         name: 'assignAuthority',
         menuKey: 'assignAuthority',
         meta: {
-            menu: '/assignAuthority',
+            menu: '/authority/assignRole',
             authKeys: [''],
             bread: [
-                {
-                    path: '/authority',
-                    name: '权限管理',
-                },
+                { path: '/authority',name: '权限管理'},
                 { path: '/authority/role', name: '角色管理' },
-                { path: '/authority/assignRole', name:'角色分配' },
-                { path: '/authority/assignAuthority', name:'分配权限' }],
+                { path: '/authority/assignRole', name:'分配权限' }],
             keepAlive: false
         },
         component: () => import('@/pages/authority/role/assignAuthority'),

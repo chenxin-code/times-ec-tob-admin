@@ -46,9 +46,9 @@
                     <a-radio :value="1">
                       菜单
                     </a-radio>
-                    <!-- <a-radio :value="2">
-                      按钮
-                    </a-radio> -->
+                    <a-radio :value="2">
+                      页面
+                    </a-radio>
                   </a-radio-group>
                 </a-form-model-item>
               </a-col>
@@ -58,20 +58,14 @@
                 </a-form-model-item>
               </a-col>
               <a-col :span="24">
-                <a-form-model-item
-                  v-if="form.menuType === 1"
-                  label="菜单地址"
-                  prop="url"
-                >
+                <a-form-model-item label="菜单地址" prop="url">
+                  <!-- v-if="form.menuType === 1" -->
                   <a-input v-model="form.url" placeholder="请输入地址" />
                 </a-form-model-item>
               </a-col>
               <a-col :span="24">
-                <a-form-model-item
-                  v-if="form.menuType === 1"
-                  label="菜单排序"
-                  prop="orderNum"
-                >
+                <a-form-model-item label="菜单排序" prop="orderNum">
+                  <!-- v-if="form.menuType === 1" -->
                   <a-input-number
                     class="input-Width"
                     v-model="form.orderNum"
@@ -117,7 +111,7 @@ export default {
         perms: [{ required: true, message: '编码不能为空' }],
         menuType: [{ required: true, message: '类型必选' }],
         url: [{ required: true, message: '地址不能为空' }],
-        orderNum: [{ required: true, message: '排序不能为空' }],
+        orderNum: [{ required: false, message: '排序不能为空' }],
       },
       treeData: [],
       specificationValue: undefined,
@@ -224,6 +218,7 @@ export default {
     // 添加/修改
     onSubmit() {
       this.loadingSubmit = true
+      let that = this
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           this.$api[this.openType === 'add' ? 'getMenuSave' : 'getMenuUpdata'](
@@ -232,6 +227,7 @@ export default {
             .then(res => {
               this.$router.go(-1)
               this.$message.info(`提交成功`)
+              that.$store.dispatch('GET_MENU_LIST')
             })
             .finally(() => {
               this.loadingSubmit = false

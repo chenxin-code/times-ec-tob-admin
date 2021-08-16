@@ -1,5 +1,5 @@
 <template>
-  <div class="list-box">
+  <div class="list-box" style="background:#fff;height:100%;">
     <div class="tab">
       <a-tabs default-active-key="1" @change="switchover">
         <a-tab-pane key="1" tab="进行中"> </a-tab-pane>

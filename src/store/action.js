@@ -26,14 +26,14 @@ export default {
     const para = {
       originalToken: token,
     }
-    api.loginByOriginalToken(para).then(res => {
+    api.loginByOriginalToken(para).then(async res => {
       if (res.code === 200) {
         let Access_Token = 'Bearer ' + res.data.newToken
         window.localStorage.setItem('Case_Access_Token', Access_Token)
         // window.localStorage.setItem('SmAuthorization', Access_Token)
         context.commit('SET_CASE_TOKEN', Access_Token)
         context.commit('SET_CASE_HEADERS', Access_Token)
-        context.dispatch('GET_MENU_LIST')
+        await context.dispatch('GET_MENU_LIST')
       }
       return Promise.resolve()
     })
@@ -43,9 +43,10 @@ export default {
     try {
       let res = await api.getMenuTreeData()
       console.log(res, '---------')
-    //   const menus = res.data.permList
+      //   const menus = res.data.permList
       const menus = res.data
       context.commit('SET_MENUS_LIST', menus)
     } catch (error) {}
+    return Promise.resolve()
   },
 }
