@@ -423,6 +423,8 @@ export default {
               let employeeOrganizationVOs = res.data.employeeOrganizationVOs[0]
               this.toAssignRole = { ...employeeOrganizationVOs }
             }
+          } else {
+            that.$message.error(res.message)
           }
         })
         .finally(err => {
@@ -439,7 +441,6 @@ export default {
             api
               .setAddAccountSave(this.toAssignRole)
               .then(res => {
-                console.log(res, 'name')
                 if (res.code == 200) {
                   that.modelVisibleAdd = false
                   let params = {
@@ -479,6 +480,7 @@ export default {
   justify-content: flex-end;
   align-items: center;
 }
+
 .container-modules {
   height: 100%;
   width: 100%;

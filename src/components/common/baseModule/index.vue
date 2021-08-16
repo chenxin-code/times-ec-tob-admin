@@ -17,7 +17,7 @@ export default {
 <style lang="less" scoped>
 .container-module {
   max-width: 100%;
-  overflow-x: hidden;
+  //   overflow-x: hidden;
   //   margin-bottom: 10px;
   background: #fff;
   padding: 15px;
