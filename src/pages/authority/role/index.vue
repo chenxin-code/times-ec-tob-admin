@@ -20,11 +20,11 @@
         :current="pageData.current"
         :loading="tableLoading"
         :scrollY="scrollY"
-        :total="pageData.total"
         @onShowSizeChange="onShowSizeChange"
       >
+        <!-- :total="pageData.total" -->
         <template slot="state" slot-scope="{ props }">
-          {{ props.state == 1 ? '已禁用' : '已启用' }}
+          {{ props == 1 ? '已启用' : '已禁用' }}
         </template>
         <template slot="operation" slot-scope="{ props }">
           <div class="editable-row-operations">
@@ -125,18 +125,6 @@ export default {
         wrapperCol: { span: 18 },
         labelAlign: 'left',
       },
-      //   {
-      //     label: '手机号码',
-      //     type: 'input',
-      //     name: 'rolePhone',
-      //     placeholder: '请输入手机号',
-      //     wrapperCol: { span: 18 },
-      //     labelAlign: 'left',
-      //     rules: [
-      //       { required: false, message: '请输入手机号' },
-      //       { pattern: /^1[3456789]\d{9}$/, message: '格式不对' },
-      //     ],
-      //   },
       {
         type: 'button',
         buttonName: '查询',

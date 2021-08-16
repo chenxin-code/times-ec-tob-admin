@@ -111,7 +111,7 @@ export default {
         perms: [{ required: true, message: '编码不能为空' }],
         menuType: [{ required: true, message: '类型必选' }],
         url: [{ required: true, message: '地址不能为空' }],
-        orderNum: [{ required: true, message: '排序不能为空' }],
+        orderNum: [{ required: false, message: '排序不能为空' }],
       },
       treeData: [],
       specificationValue: undefined,

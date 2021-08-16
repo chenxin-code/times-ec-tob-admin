@@ -128,7 +128,7 @@ export default {
     initData() {
       this.tableLoading = true
       this.$api
-        .getMenuTreeData({})
+        .getMenuTreeList({})
         .then(res => {
           this.tableData = this.resetData(res.data)
         })
@@ -176,6 +176,7 @@ export default {
             .then(() => {
               that.$message.info(`${['停用', '启用'][props.visible]}成功`)
               that.initData()
+              that.$store.dispatch('GET_MENU_LIST')
             })
             .finally(() => (that.tableLoading = false))
         },

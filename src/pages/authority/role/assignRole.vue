@@ -20,7 +20,10 @@
                             'phone',
                             {
                               rules: [
-                                { required: true, message: '请输入手机号查询' },
+                                {
+                                  required: false,
+                                  message: '请输入手机号查询',
+                                },
                                 {
                                   pattern: /^1[3456789]\d{9}$/,
                                   message: '格式不对',

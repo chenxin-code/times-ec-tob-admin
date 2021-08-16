@@ -146,6 +146,7 @@ export default {
         placeholder: '请输入角色名称',
         // labelCol: { span: 3 },
         wrapperCol: { span: 18 },
+        labelAlign: 'left',
       },
       {
         label: '手机号码',
@@ -153,6 +154,7 @@ export default {
         name: 'phone',
         placeholder: '请输入手机号',
         // labelCol: { span: 3 },
+        labelAlign: 'left',
         wrapperCol: { span: 18 },
         rules: [
           { required: false, message: '请输入手机号' },
@@ -440,6 +442,12 @@ export default {
                 console.log(res, 'name')
                 if (res.code == 200) {
                   that.modelVisibleAdd = false
+                  let params = {
+                    pageNum: that.pageData.pageNum, // 第几页
+                    pageSize: that.pageData.pageSize, // 每页多少条
+                    ...that.searchData,
+                  }
+                  that.getData(params)
                 }
               })
               .catch(error => {
