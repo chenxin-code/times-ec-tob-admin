@@ -128,7 +128,7 @@ export default {
     initData() {
       this.tableLoading = true
       this.$api
-        .getMenuTreeData({})
+        .getMenuTreeList({})
         .then(res => {
           this.tableData = this.resetData(res.data)
         })

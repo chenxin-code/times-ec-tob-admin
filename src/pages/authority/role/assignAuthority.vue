@@ -17,7 +17,10 @@
               </div>
             </template>
             <template slot="menuIds" slot-scope="scope">
-              <a-checkbox :checked="checkMenu(scope.id)" @change="onChange(scope.id)"/>
+              <a-checkbox
+                :checked="checkMenu(scope.id)"
+                @change="onChange(scope.id)"
+              />
             </template>
           </a-table>
         </a-col>
@@ -38,11 +41,10 @@
               :loading="tableLoading"
               :total="pageData.total"
             >
-              <!-- :scrollY="scrollY" -->
-              <template slot="menuType" slot-scope="record">
+              :scrollY="scrollY"
+              <template slot="menuType" slot-scope="{ props }">
                 <div class="editable-row-operations">
-                  <span v-html="menuTypeParse(scope.menuType)"></span>
-                  <!-- <span>{{ record.menuType == 1 ? '' : '菜单' }}</span> -->
+                  <span v-html="menuTypeParse(props.menuType)"></span>
                 </div>
               </template>
               <template slot="menuIds" slot-scope="scope">
@@ -83,12 +85,14 @@ export default {
           title: '菜单',
           dataIndex: 'menuName',
           key: 'menuName',
+          width: 300,
         },
         {
           title: '类型',
           key: 'menuType',
           scopedSlots: { customRender: 'menuType' },
           align: 'center',
+          width: 100,
         },
         {
           title: '权限',
@@ -100,6 +104,10 @@ export default {
       ],
       pageData,
       tableLoading: false,
+      menuTypes: {
+        1: '菜单',
+        2: '页面',
+      },
     }
   },
   components: {},

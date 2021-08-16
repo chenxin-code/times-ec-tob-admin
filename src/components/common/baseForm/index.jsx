@@ -58,6 +58,10 @@ const FormList = {
     addText:{
         type: String,
         default:'添加'
+    },
+    labelAlign:{
+        type: String,
+        default:'right'
     }
   },
   data() {
@@ -95,7 +99,7 @@ const FormList = {
         initialValue,
         ...others
       } = attrs,
-      {style,addbutton,addText} = this;
+      {style,addbutton,addText,labelAlign} = this;
       switch (type) {
         case "input":
           return (
