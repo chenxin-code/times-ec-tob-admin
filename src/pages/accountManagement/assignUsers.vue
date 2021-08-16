@@ -201,7 +201,7 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: start;
+  align-items: flex-start;
 }
 .center {
   align-items: center;
@@ -210,7 +210,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: start;
+  align-items: flex-start;
 }
 .flex {
   flex: 1;
@@ -221,7 +221,7 @@ export default {
 }
 .space-between-start {
   justify-content: space-between;
-  align-items: start;
+  align-items: flex-start;
 }
 .end-center {
   justify-content: flex-end;
