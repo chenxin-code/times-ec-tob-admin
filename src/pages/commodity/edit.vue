@@ -1,11 +1,11 @@
 <template>
-  <div style="height: 100%;margin-bottom: 0px;">
+  <div style="height: 100%;margin-bottom: 0px;background:#fff;overflow-y:auto;">
     <div class="content-header">
       {{ $route.params.typ === '1' ? '查看' : '编辑' }}商品基础信息
     </div>
     <div
       class="content-main"
-      style="height: 100%;margin-top: 12px;padding:20px 60px 60px 20px;"
+      style="margin-top: 12px;padding:20px 60px 60px 20px;"
     >
       <a-form
         :form="form"
