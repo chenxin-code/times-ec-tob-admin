@@ -10,16 +10,15 @@
 </template>
 
 <script>
-  export default {
-    name: 'Home',
-    data() {
-      return {
-        imgUrl: require("@/assets/img/home/welcome.png")
-      };
-    },
-    methods: {
+export default {
+  name: 'Home',
+  data() {
+    return {
+      imgUrl: require('@/assets/img/home/welcome.png'),
     }
-  }
+  },
+  methods: {},
+}
 </script>
 
 <style lang="less" rel="stylesheet/stylus" scoped>

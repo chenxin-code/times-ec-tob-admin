@@ -41,7 +41,7 @@
               :loading="tableLoading"
               :total="pageData.total"
             >
-              :scrollY="scrollY"
+              <!-- :scrollY="scrollY" -->
               <template slot="menuType" slot-scope="{ props }">
                 <div class="editable-row-operations">
                   <span v-html="menuTypeParse(props.menuType)"></span>

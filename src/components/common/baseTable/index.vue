@@ -1,7 +1,7 @@
 <template>
   <div class="container-table" style="height:100%;">
     <!-- 表格 -->
-    <baseModule>
+    <baseModule class="module-table">
       <a-table
         ref="aTable"
         :columns="columns"
@@ -126,13 +126,6 @@ export default {
         _this.tableY = `${document.documentElement.clientHeight -
           _this.$refs.aTable.$el.offsetTop -
           (_this.total > 0 ? 140 : 85)}px`
-        console.log(
-          this.scrollY,
-          document.documentElement.clientHeight,
-          _this.$refs.aTable.$el.offsetTop,
-          _this.tableY,
-          '_this.tableY '
-        )
       }, 0)
     },
   },
@@ -147,6 +140,10 @@ export default {
   /deep/ .ant-pagination {
     text-align: right;
   }
+}
+.module-table {
+  height: 100%;
+  overflow-y: hidden;
 }
 /deep/.ant-table-tbody > tr > td {
   padding: 8px 10px;

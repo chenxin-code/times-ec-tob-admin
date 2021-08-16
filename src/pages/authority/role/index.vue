@@ -20,9 +20,9 @@
         :current="pageData.current"
         :loading="tableLoading"
         :scrollY="scrollY"
-        :total="pageData.total"
         @onShowSizeChange="onShowSizeChange"
       >
+        <!-- :total="pageData.total" -->
         <template slot="state" slot-scope="{ props }">
           {{ props.state == 1 ? '已禁用' : '已启用' }}
         </template>
