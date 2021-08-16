@@ -1,7 +1,7 @@
 <template>
   <div class="container-table" style="height:100%;">
     <!-- 表格 -->
-    <baseModule class="module-table">
+    <baseModule :class="{ 'module-table': total <= 0 }">
       <a-table
         ref="aTable"
         :columns="columns"

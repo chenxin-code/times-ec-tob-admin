@@ -442,6 +442,12 @@ export default {
                 console.log(res, 'name')
                 if (res.code == 200) {
                   that.modelVisibleAdd = false
+                  let params = {
+                    pageNum: that.pageData.pageNum, // 第几页
+                    pageSize: that.pageData.pageSize, // 每页多少条
+                    ...that.searchData,
+                  }
+                  that.getData(params)
                 }
               })
               .catch(error => {
