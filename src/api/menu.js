@@ -6,7 +6,7 @@ let getPermListByLoginUrl = '/times-ec-tob-mall/admin/role/getPermListByLogin'
 
 // 获取菜单
 /**
- * 【管理端】加载所有菜单列表树(用于菜单列表)
+ * 【管理端】加载菜单列表树(用于左测菜单显示)
  * @param {Object} params 入参 参数名称 参数说明 请求类型 是否必须
  */
  export const getMenuTreeData = params =>
@@ -19,6 +19,13 @@ let getPermListByLoginUrl = '/times-ec-tob-mall/admin/role/getPermListByLogin'
 export const getMenuTreeList = params =>
   fetchApi(`${URL_PREFIX}/menuTreeData`, params, 'POST')
 
+/**
+ *【管理端】加载角色菜单列表树(用于角色分配菜单权限)
+ * @param {Object} params 入参 参数名称 参数说明 请求类型 是否必须
+ * @param {string} params.roleId		菜单名称	string
+ */
+export const roleMenuTreeData = params =>
+  fetchApi(`${URL_PREFIX}/roleMenuTreeData/${params.roleId}`,{},'GET')
 /**
  * 【管理端】根据用户ID查询权限
  * @param {Object} params 入参 参数名称 参数说明 请求类型 是否必须
