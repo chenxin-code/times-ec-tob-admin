@@ -26,7 +26,7 @@ let router = new Router({
     {
       path: '/',
       redirect: {
-        name: 'company',
+        name: 'home',
       },
       name: 'home',
       menuKey: 'home',
