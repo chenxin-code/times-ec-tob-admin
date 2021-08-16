@@ -2,7 +2,7 @@
   <div class="home">
     <div class="img-box">
       <div>
-        <h1 class="text">欢迎进入案场erp</h1>
+        <h1 class="text">欢迎进入TOB商城</h1>
         <img :src="imgUrl" />
       </div>
     </div>
