@@ -58,20 +58,14 @@
                 </a-form-model-item>
               </a-col>
               <a-col :span="24">
-                <a-form-model-item
-                  v-if="form.menuType === 1"
-                  label="菜单地址"
-                  prop="url"
-                >
+                <a-form-model-item label="菜单地址" prop="url">
+                  <!-- v-if="form.menuType === 1" -->
                   <a-input v-model="form.url" placeholder="请输入地址" />
                 </a-form-model-item>
               </a-col>
               <a-col :span="24">
-                <a-form-model-item
-                  v-if="form.menuType === 1"
-                  label="菜单排序"
-                  prop="orderNum"
-                >
+                <a-form-model-item label="菜单排序" prop="orderNum">
+                  <!-- v-if="form.menuType === 1" -->
                   <a-input-number
                     class="input-Width"
                     v-model="form.orderNum"
