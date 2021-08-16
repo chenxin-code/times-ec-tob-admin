@@ -137,10 +137,12 @@ export default {
     // 递归删除空的children
     resetData(data) {
       _.forEach(data, element => {
-        if (element.children.length <= 0) {
-          delete element.children
-        } else {
-          this.resetData(element.children)
+        if (element.children) {
+          if (element.children.length <= 0) {
+            delete element.children
+          } else {
+            this.resetData(element.children)
+          }
         }
       })
       return data

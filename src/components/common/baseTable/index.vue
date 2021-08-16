@@ -142,8 +142,9 @@ export default {
   }
 }
 .module-table {
-  height: 100%;
+  height: calc(100%);
   overflow-y: hidden;
+  box-sizing: border-box;
 }
 /deep/.ant-table-tbody > tr > td {
   padding: 8px 10px;

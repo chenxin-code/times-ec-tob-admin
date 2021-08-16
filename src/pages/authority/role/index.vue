@@ -404,8 +404,9 @@ export default {
     //分配权限
     assignAuthority(row) {
       this.$router.push({
-        path: '/authority/assignAuthority',
-        query: {
+        // path: '/authority/assignAuthority',
+        name: 'assignAuthority',
+        params: {
           id: row.id,
         },
       })

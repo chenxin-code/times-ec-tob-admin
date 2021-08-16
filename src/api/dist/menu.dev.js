@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getMenuUpdateState = exports.getMenuDelete = exports.getMenuModel = exports.getMenuUpdata = exports.getMenuSave = exports.getMenuTreeDataByUserId = exports.getMenuTreeList = exports.getMenuTreeData = void 0;
+exports.getMenuUpdateState = exports.getMenuDelete = exports.getMenuModel = exports.getMenuUpdata = exports.getMenuSave = exports.getMenuTreeDataByUserId = exports.roleMenuTreeData = exports.getMenuTreeList = exports.getMenuTreeData = void 0;
 
 var _ajax = require("@/utils/ajax");
 
@@ -12,7 +12,7 @@ var URL_PREFIX = '/times-ec-tob-mall/admin/menu';
 var getPermListByLoginUrl = '/times-ec-tob-mall/admin/role/getPermListByLogin'; // 获取菜单
 
 /**
- * 【管理端】加载所有菜单列表树(用于菜单列表)
+ * 【管理端】加载菜单列表树(用于左测菜单显示)
  * @param {Object} params 入参 参数名称 参数说明 请求类型 是否必须
  */
 
@@ -32,13 +32,25 @@ var getMenuTreeList = function getMenuTreeList(params) {
   return (0, _ajax.fetchApi)("".concat(URL_PREFIX, "/menuTreeData"), params, 'POST');
 };
 /**
+ *【管理端】加载角色菜单列表树(用于角色分配菜单权限)
+ * @param {Object} params 入参 参数名称 参数说明 请求类型 是否必须
+ * @param {string} params.roleId		菜单名称	string
+ */
+
+
+exports.getMenuTreeList = getMenuTreeList;
+
+var roleMenuTreeData = function roleMenuTreeData(params) {
+  return (0, _ajax.fetchApi)("".concat(URL_PREFIX, "/roleMenuTreeData/").concat(params.roleId), {}, 'GET');
+};
+/**
  * 【管理端】根据用户ID查询权限
  * @param {Object} params 入参 参数名称 参数说明 请求类型 是否必须
  * @param {string} params.menuName		菜单名称	string
  */
 
 
-exports.getMenuTreeList = getMenuTreeList;
+exports.roleMenuTreeData = roleMenuTreeData;
 
 var getMenuTreeDataByUserId = function getMenuTreeDataByUserId(params) {
   return (0, _ajax.fetchApi)("".concat(URL_PREFIX, "/selectPermsByUserId"), params, 'POST');

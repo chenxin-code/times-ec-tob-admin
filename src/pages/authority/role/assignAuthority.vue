@@ -41,24 +41,32 @@
               :loading="tableLoading"
               :total="pageData.total"
             >
-              <!-- :scrollY="scrollY" -->
               <template slot="menuType" slot-scope="{ props }">
                 <div class="editable-row-operations">
                   <span v-html="menuTypeParse(props.menuType)"></span>
                 </div>
               </template>
-              <template slot="menuIds" slot-scope="scope">
-                <a-checkbox
-                  :checked="checkMenu(scope.id)"
-                  @change="onChange(scope.id)"
-                />
+              <template slot="buttonChildren" slot-scope="{ props }">
+                <a-checkbox-group @change="onChange" v-model="defaultData">
+                  <template v-for="item in props.buttonChildren">
+                    <a-checkbox
+                      :key="item.id"
+                      :value="item.id"
+                      :checked="item.possessOrNot == 1 ? true : false"
+                    >
+                      {{ item.menuName }}
+                    </a-checkbox>
+                  </template>
+                </a-checkbox-group>
               </template>
             </baseTable>
           </div>
         </div>
       </template>
       <template slot="footer">
-        <a-button class="a-buttom-reset" type="primary">保存</a-button>
+        <a-button class="a-buttom-reset" type="primary" @click="save"
+          >保存</a-button
+        >
         <a-button class="a-buttom-reset" type="default" @click="$router.go(-1)"
           >返回</a-button
         >
@@ -96,9 +104,10 @@ export default {
         },
         {
           title: '权限',
-          key: 'menuIds',
-          scopedSlots: { customRender: 'menuIds' },
-          align: 'center',
+          key: 'buttonChildren',
+          scopedSlots: { customRender: 'buttonChildren' },
+          align: 'left',
+          width: '240px',
           fixed: 'right',
         },
       ],
@@ -108,6 +117,8 @@ export default {
         1: '菜单',
         2: '页面',
       },
+      checkChange: [],
+      defaultData: [],
     }
   },
   components: {},
@@ -125,16 +136,29 @@ export default {
     },
   },
   methods: {
-    checkMenu(id) {
-      return this.checkedMenuIds.indexOf(id) !== -1
+    getRoleList() {
+      api
+        .roleMenuTreeData({ roleId: this.$route.params.id })
+        .then(resp => {
+          if (resp.code === 200) {
+            let tableData = []
+            this.tableData = resp.data.map(item => {
+              return {
+                ...item,
+              }
+            })
+            tableData = this.tableData
+            this.delChild(this.tableData)
+            this.mapTableData(tableData)
+          }
+        })
+        .finally(() => {
+          this.tableLoading = false
+        })
     },
-    onChange(id) {
-      let index = this.checkedMenuIds.indexOf(id)
-      if (index === -1) {
-        this.checkedMenuIds.push(id)
-      } else {
-        delete this.checkedMenuIds[index]
-      }
+    onChange(value) {
+      console.log(value, 'change')
+      this.checkChange = value
     },
     delChild(data) {
       for (let i = 0; i < data.length; i++) {
@@ -145,16 +169,42 @@ export default {
         }
       }
     },
+    //默认选中的递归
+    mapTableData(data) {
+      this.mapButtonCHhild(data)
+    },
+    //默认选中的递归
+    mapButtonCHhild(data) {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].buttonChildren.length === 0) {
+          if (data[i].children && data[i].children.length > 0) {
+            this.mapButtonCHhild(data[i].children)
+          }
+        } else {
+          data[i].defalutbutton = []
+          data[i].buttonChildren.map(item => {
+            if (item.possessOrNot == 1) {
+              this.defaultData.push(item.id)
+            }
+          })
+          if (data[i].children && data[i].children.length > 0) {
+            this.mapButtonCHhild(data[i].children)
+          }
+        }
+      }
+    },
+    //保存选中的权限
     save() {
       this.tableLoading = true
       api
         .insertRoleMenu({
-          roleId: this.$route.query.id,
-          menuIds: this.checkedMenuIds,
+          roleId: this.$route.params.id,
+          menuIds: this.checkChange,
         })
         .then(resp => {
           if (resp.code === 200) {
             this.$message.success('保存成功')
+            // this.this.getRoleList();
             this.$router.back()
           }
         })
@@ -165,22 +215,7 @@ export default {
   },
   mounted() {
     this.tableLoading = true
-    api
-      .roleMenuTreeData({ roleId: this.$route.query.id })
-      .then(resp => {
-        if (resp.code === 200) {
-          this.tableData = resp.data.menus.map(item => {
-            return {
-              ...item,
-            }
-          })
-          this.delChild(this.tableData)
-          this.checkedMenuIds = resp.data.menuCheckedIds
-        }
-      })
-      .finally(() => {
-        this.tableLoading = false
-      })
+    this.getRoleList()
   },
 }
 </script>
@@ -211,5 +246,10 @@ export default {
 .a-buttom-reset {
   margin-left: 15px;
   margin-bottom: 10px;
+}
+/deep/ .ant-checkbox-wrapper + .ant-checkbox-wrapper {
+  padding: 0 3px 5px 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 </style>
