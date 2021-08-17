@@ -315,8 +315,6 @@ export default {
                   ...that.searchData,
                 }
                 that.getData(params)
-              } else {
-                that.$message.error(`${type}失败`)
               }
             })
           },
@@ -391,8 +389,6 @@ export default {
                     ...that.searchData,
                   }
                   that.getData(params)
-                } else {
-                  that.$message.error(`${type}失败`)
                 }
               })
               .finally(err => {})

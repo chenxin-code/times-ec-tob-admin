@@ -46,7 +46,7 @@
                     </a-form>
                   </div>
                 </div>
-                <div>
+                <div class="flex">
                   <a-table
                     ref="aTable"
                     :columns="tableColumns"
@@ -62,6 +62,7 @@
                   >
                     <template slot="name" slot-scope="text, record">
                       <div class="editable-row-operations">
+                        <span></span>
                         {{ record.name }}&nbsp;&nbsp;
                         {{ record.phone }}&nbsp;&nbsp;
                         {{ record.companyName }}&nbsp;&nbsp;
@@ -80,10 +81,10 @@
                 </a-button>
               </div>
               <div class="lefttab ml column">
-                <div class="topwrap row">
+                <div class="topwrap row start center">
                   <span class="topname">已添加</span>
                 </div>
-                <div>
+                <div class="flex">
                   <a-table
                     :columns="tableColumnsed"
                     :row-key="(r, i) => r.id"
@@ -149,7 +150,7 @@ export default {
       total: 0, // 总条数
       current: 1,
       pageNum: 1,
-      pageSize: 10,
+      pageSize: 100,
     }
     let searchData = {
       phone: undefined, // 手机号
@@ -187,7 +188,7 @@ export default {
   mounted() {
     this.getHasAddList()
     setTimeout(() => {
-      this.scrollY = document.body.clientHeight - 230
+      this.scrollY = document.body.clientHeight - 250
     }, 0)
   },
   methods: {
@@ -207,9 +208,10 @@ export default {
                   data.employeeOrganizationVOs.map(item => {
                     item.name = data.empName
                     item.phone = data.mobilePhone
-                    item.id = data.userId
+                    item.id = data.id
                     item.roleId = this.$route.params.id
-                    item.roleCode = ''
+                    item.roleCode = item.roleCode
+                    item.userId = item.userId
                     item.userName = data.userName
                     employ.push(item)
                   })
@@ -247,6 +249,8 @@ export default {
           this.tableDataed = records
           this.pageData.total = Number(total)
           params.userIds = userId.join(',')
+          delete params.roleId
+          console.log(params, 'params')
           await this.getNoAddList(params)
         }
       } finally {
@@ -282,7 +286,7 @@ export default {
             companyName: item.companyName,
             departName: item.departName,
             originalId: item.id,
-            originalEmpId: item.id,
+            originalEmpId: item.userId,
             name: item.name,
             phone: item.phone,
             userName: item.name,
@@ -415,6 +419,7 @@ export default {
 .topwrap {
   padding: 15px;
   width: 100%;
+  height: 70px;
 }
 .operationButton {
   height: 100%;
@@ -422,9 +427,11 @@ export default {
 }
 .lefttab {
   width: 50%;
-  float: left;
+  //   float: left;
   margin: 15px;
   border: 1px solid rgb(236, 234, 234);
+  height: 98%;
+  box-sizing: border-box;
 }
 // .lefttab.mr {
 //   margin-right: 7.5px;

@@ -34,6 +34,8 @@ export default {
         context.commit('SET_CASE_TOKEN', Access_Token)
         context.commit('SET_CASE_HEADERS', Access_Token)
         await context.dispatch('GET_MENU_LIST')
+      }else {
+        returnBaseCms();
       }
       return Promise.resolve()
     })

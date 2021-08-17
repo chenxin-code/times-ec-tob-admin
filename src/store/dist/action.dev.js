@@ -51,7 +51,7 @@ var _default = {
                   switch (_context.prev = _context.next) {
                     case 0:
                       if (!(res.code === 200)) {
-                        _context.next = 7;
+                        _context.next = 9;
                         break;
                       }
 
@@ -64,9 +64,16 @@ var _default = {
                       return regeneratorRuntime.awrap(context.dispatch('GET_MENU_LIST'));
 
                     case 7:
+                      _context.next = 10;
+                      break;
+
+                    case 9:
+                      (0, _util.returnBaseCms)();
+
+                    case 10:
                       return _context.abrupt("return", Promise.resolve());
 
-                    case 8:
+                    case 11:
                     case "end":
                       return _context.stop();
                   }

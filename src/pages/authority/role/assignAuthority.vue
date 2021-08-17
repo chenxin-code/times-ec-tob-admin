@@ -46,9 +46,19 @@
                   <span v-html="menuTypeParse(props.menuType)"></span>
                 </div>
               </template>
-              <template slot="buttonChildren" slot-scope="{ props }">
-                <a-checkbox-group @change="onChange" v-model="defaultData">
-                  <template v-for="item in props.buttonChildren">
+              <template
+                slot="buttonChildren"
+                slot-scope="{ props, text, index }"
+              >
+                <a-checkbox-group
+                  v-model="props.defalutbutton"
+                  @change="
+                    e => {
+                      onChange(e, props, index)
+                    }
+                  "
+                >
+                  <template v-for="(item, ids) in props.buttonChildren">
                     <a-checkbox
                       :key="item.id"
                       :value="item.id"
@@ -118,7 +128,6 @@ export default {
         2: '页面',
       },
       checkChange: [],
-      defaultData: [],
     }
   },
   components: {},
@@ -150,15 +159,42 @@ export default {
             tableData = this.tableData
             this.delChild(this.tableData)
             this.mapTableData(tableData)
+            console.log(this.tableData, this.checkChange, 'tableData')
           }
         })
         .finally(() => {
           this.tableLoading = false
         })
     },
-    onChange(value) {
-      console.log(value, 'change')
-      this.checkChange = value
+    //是否选中权限操作
+    onChange(value, props, index) {
+      let { checkChange } = this
+      props.buttonChildren.map(item => {
+        if (value.length == 0) {
+          item.possessOrNot = 0
+          this.checkChangeFn(checkChange, item)
+        } else {
+          value.map(items => {
+            if (item.id == items) {
+              item.possessOrNot = 1
+              checkChange.push(items)
+            } else {
+              item.possessOrNot = 0
+              this.checkChangeFn(checkChange, item)
+            }
+          })
+        }
+      })
+      this.checkChange = checkChange
+    },
+    //删除没选中的权限
+    checkChangeFn(checkChange, item) {
+      let findIndex = checkChange.findIndex(check => {
+        return check == item.id
+      })
+      if (findIndex !== -1) {
+        checkChange.splice(findIndex, 1)
+      }
     },
     delChild(data) {
       for (let i = 0; i < data.length; i++) {
@@ -184,7 +220,8 @@ export default {
           data[i].defalutbutton = []
           data[i].buttonChildren.map(item => {
             if (item.possessOrNot == 1) {
-              this.defaultData.push(item.id)
+              data[i].defalutbutton.push(item.id)
+              this.checkChange.push(item.id)
             }
           })
           if (data[i].children && data[i].children.length > 0) {
@@ -204,7 +241,6 @@ export default {
         .then(resp => {
           if (resp.code === 200) {
             this.$message.success('保存成功')
-            // this.this.getRoleList();
             this.$router.back()
           }
         })

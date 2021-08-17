@@ -32,6 +32,9 @@ export const getRoleListData = params => fetchApi(`${URL_PREFIX}/getListByPager`
  * @param {string} params.id		    角色ID	string
  * @param {string} params.roleCode		角色编码	string
  * @param {string} params.roleCode		角色名称	string
+ * @param {string} params.originalId		原始ID	string
+ * @param {string} params.originalEmpId		原始员工ID	string
+ * 
  */
 export const setRoleSave = params => fetchApi(`${URL_PREFIX}/save`, params, 'POST')
 
