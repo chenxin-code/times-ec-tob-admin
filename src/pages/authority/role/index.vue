@@ -29,7 +29,7 @@
         </template>
         <template slot="operation" slot-scope="{ props }">
           <div class="editable-row-operations">
-            <template v-if="props.id != 111">
+            <template v-if="props.id != '111' && props.state == 0">
               <a-button
                 v-if="props.id != 111"
                 class="a-buttom-reset-link"
@@ -39,7 +39,7 @@
               >
               <a-divider type="vertical" />
             </template>
-            <template v-if="props.id != 111">
+            <template v-if="props.id != '111' && props.state == 0">
               <a-button
                 class="a-buttom-reset-link"
                 @click="del(props, '删除')"
@@ -165,7 +165,7 @@ export default {
         title: '操作',
         fixed: 'right',
         width: 450,
-        align: 'center',
+        align: 'left',
         key: 4,
         scopedSlots: { customRender: 'operation' },
       },
