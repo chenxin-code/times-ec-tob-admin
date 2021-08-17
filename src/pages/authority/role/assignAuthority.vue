@@ -95,6 +95,7 @@ export default {
     return {
       checkedMenuIds: [],
       tableData: [],
+      tableDatas: [],
       columns: [
         {
           title: '菜单',
@@ -125,6 +126,7 @@ export default {
         2: '页面',
       },
       checkChange: [],
+      checkChanges: [],
     }
   },
   components: {},
@@ -166,23 +168,32 @@ export default {
     //是否选中权限操作
     onChange(value, props, index) {
       let { checkChange } = this
+      console.log(value, props, props.id, 'value')
       props.buttonChildren.map(item => {
         if (value.length == 0) {
           item.possessOrNot = 0
-          this.checkChangeFn(checkChange, item)
+          //   this.checkChangeFn(checkChange, item)
         } else {
           value.map(items => {
             if (item.id == items) {
               item.possessOrNot = 1
-              checkChange.push(items)
+              //   checkChange.push(item.id)
             } else {
               item.possessOrNot = 0
-              this.checkChangeFn(checkChange, item)
+              //   this.checkChangeFn(checkChange, item)
             }
           })
         }
       })
-      this.checkChange = checkChange
+      //   this.checkChange = checkChange
+      //   this.checkChange = this.unique(this.checkChange)
+      this.tableDatas = this.tableData
+      console.log(this.tableData, 'this.checkChange')
+      this.mapButtonCHhilds(this.tableData)
+    },
+    unique(arr, val) {
+      const res = new Map()
+      return arr.filter(item => !res.has(item) && res.set(item, 1))
     },
     //删除没选中的权限
     checkChangeFn(checkChange, item) {
@@ -218,7 +229,7 @@ export default {
           data[i].buttonChildren.map(item => {
             if (item.possessOrNot == 1) {
               data[i].defalutbutton.push(item.id)
-              this.checkChange.push(item.id)
+              //   this.checkChange.push(item.id)
             }
           })
           if (data[i].children && data[i].children.length > 0) {
@@ -227,13 +238,39 @@ export default {
         }
       }
     },
+    //默认选中的递归
+    mapButtonCHhilds(data) {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].defalutbutton && data[i].defalutbutton.length == 0) {
+          if (data[i].children && data[i].children.length > 0) {
+            this.mapButtonCHhild(data[i].children)
+          }
+        } else {
+          if (data[i].defalutbutton) {
+            data[i].defalutbutton.map(item => {
+              this.checkChanges.push(item)
+            })
+          }
+
+          if (data[i].children && data[i].children.length > 0) {
+            this.mapButtonCHhild(data[i].children)
+          }
+        }
+      }
+    },
+    unique(arr, val) {
+      const res = new Map()
+      return arr.filter(item => !res.has(item) && res.set(item, 1))
+    },
     //保存选中的权限
     save() {
-      this.tableLoading = true
+      ;(this.tableLoading = true), (this.checkChange = [])
+      let data = this.tableDatas
+      let checkChange = this.unique(this.checkChanges)
       api
         .insertRoleMenu({
           roleId: this.$route.params.id,
-          menuIds: this.checkChange,
+          menuIds: checkChange,
         })
         .then(resp => {
           if (resp.code === 200) {
