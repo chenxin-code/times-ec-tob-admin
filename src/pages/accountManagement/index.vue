@@ -4,6 +4,7 @@
       <baseForm
         ref="form"
         rowCol="3"
+        lableColForm="4"
         :formList="formList"
         :onSubmit="onSearch"
         :addbutton="true"
@@ -203,6 +204,7 @@ export default {
       {
         title: '操作',
         fixed: 'right',
+        align: 'center',
         width: 280,
         scopedSlots: { customRender: 'operation' },
       },
@@ -261,7 +263,6 @@ export default {
         pageSize: this.pageData.pageSize, // 每页多少条
         ...searchData,
       }
-      console.log(params, 'onSearch')
       this.getData(params)
     },
     // 获取账户列表数据
@@ -442,6 +443,7 @@ export default {
               .setAddAccountSave(this.toAssignRole)
               .then(res => {
                 if (res.code == 200) {
+                  that.$message.info('保存成功')
                   that.modelVisibleAdd = false
                   let params = {
                     pageNum: that.pageData.pageNum, // 第几页
@@ -449,10 +451,15 @@ export default {
                     ...that.searchData,
                   }
                   that.getData(params)
+                  that.modelForm.name = ''
+                  that.toAssignRole = {}
+                } else {
+                  that.$message.info(res.message)
                 }
               })
               .catch(error => {
-                this.onSearch()
+                that.$message.info(error)
+                // this.onSearch()
               })
           })
         }

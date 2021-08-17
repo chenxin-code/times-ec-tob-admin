@@ -106,8 +106,8 @@ export default {
           title: '权限',
           key: 'buttonChildren',
           scopedSlots: { customRender: 'buttonChildren' },
-          align: 'left',
-          width: '240px',
+          align: 'center',
+          //   width: '240px',
           fixed: 'right',
         },
       ],
@@ -248,7 +248,7 @@ export default {
   margin-bottom: 10px;
 }
 /deep/ .ant-checkbox-wrapper + .ant-checkbox-wrapper {
-  padding: 0 3px 5px 0;
+  padding: 0 5px 0 0;
   margin: 0;
   box-sizing: border-box;
 }
