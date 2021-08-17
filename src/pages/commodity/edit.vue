@@ -64,6 +64,13 @@
                 placeholder="请输入SKU外部编码"
               />
             </a-form-item>
+            <a-form-item label="协议编码">
+              <a-input
+                :disabled="disbliend"
+                v-decorator="['skuProtocolCode']"
+                placeholder="请输入协议编码"
+              />
+            </a-form-item>
             <a-form-item label="商品状态">
               <a-select
                 :disabled="disbliend"
@@ -507,6 +514,7 @@ export default {
             (this.isTieredPricing = data.isTieredPricing), //价格类型
             this.form.setFieldsValue({
               skuOutsideCode: data.skuOutsideCode, //商品sku自编码
+              skuProtocolCode: data.skuProtocolCode, //协议编码
               categoryId: data.categoryName, //所属类目id
               taxCategoryCode: data.taxCategoryCode, //税收分类编码
               skuName: data.skuName, //sku名称
