@@ -57,7 +57,7 @@
               >
               <a-divider type="vertical" />
             </template>
-            <template v-if="props.state == 1">
+            <template v-if="props.state == 1 && props.id != 111">
               <a-button
                 class="a-buttom-reset-link"
                 @click="UpdateStatus(props, 0, '禁用')"
