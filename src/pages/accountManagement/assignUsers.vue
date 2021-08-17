@@ -14,9 +14,10 @@
                   :data-source="tableData"
                   :loading="tableLoading"
                   :pagination="false"
+                  :scroll="{ y: scrollY }"
                 >
                   <template slot="operation" slot-scope="record">
-                    <!-- :scroll="{ y: 600 }" -->
+                    <!--  -->
                     <div
                       class="editable-row-operations"
                       @click="addRole(record)"
@@ -38,8 +39,8 @@
                   :data-source="tableDataed"
                   :pagination="false"
                   :loading="tableLoadinged"
+                  :scroll="{ y: scrollY }"
                   ><template slot="operation" slot-scope="record">
-                    <!-- :scroll="{ y: 600 }" -->
                     <div
                       class="editable-row-operations"
                       @click="delRole(record)"
@@ -121,11 +122,15 @@ export default {
       tableDataed: [],
       tableLoading: false,
       tableLoadinged: false,
+      scrollY: 400,
     }
   },
   mounted() {
     this.getNoAssignRole({ userId: this.$route.params.id })
     this.getAssignRole({ userId: this.$route.params.id })
+    setTimeout(() => {
+      this.scrollY = document.body.clientHeight - 250
+    }, 0)
   },
   methods: {
     // 添加
@@ -237,6 +242,9 @@ export default {
   margin-left: 15px;
   margin-bottom: 10px;
 }
+.main-box {
+  height: 100%;
+}
 .topwrap {
   padding: 10px 16px;
   background: #f2f2f2;
@@ -247,6 +255,8 @@ export default {
   width: 50%;
   //   float: left;
   margin: 15px;
+  height: 98%;
+  border-bottom: 1px solid #f2f2f2;
 }
 .lefttab.mr {
   margin-right: 7.5px;

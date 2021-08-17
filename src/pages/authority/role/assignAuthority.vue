@@ -46,10 +46,7 @@
                   <span v-html="menuTypeParse(props.menuType)"></span>
                 </div>
               </template>
-              <template
-                slot="buttonChildren"
-                slot-scope="{ props, text, index }"
-              >
+              <template slot="buttonChildren" slot-scope="{ props, index }">
                 <a-checkbox-group
                   v-model="props.defalutbutton"
                   @change="
@@ -58,7 +55,7 @@
                     }
                   "
                 >
-                  <template v-for="(item, ids) in props.buttonChildren">
+                  <template v-for="item in props.buttonChildren">
                     <a-checkbox
                       :key="item.id"
                       :value="item.id"
