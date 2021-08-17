@@ -37,12 +37,14 @@
               @click="onChangeStatus(props)"
               >{{ ['停用', '启用'][props.visible] }}</a-button
             >
-            <a-button
-              class="a-buttom-reset-link"
-              type="link"
-              @click="onDelete(props)"
-              >删除</a-button
-            >
+            <template v-if="props.visible == 1">
+              <a-button
+                class="a-buttom-reset-link"
+                type="link"
+                @click="onDelete(props)"
+                >删除</a-button
+              >
+            </template>
           </div>
         </template>
       </baseTable>
@@ -192,7 +194,7 @@ export default {
       const that = this
       this.$confirm({
         title: `您确认要删除"${props.menuName}"菜单吗?`,
-        content: '', // h => <div style="color:red;">如有子菜单也会一并删除!</div>
+        content: h => <div style="color:red;">如有子菜单不可删除!</div>,
         centered: true,
         onOk() {
           that.tableLoading = true
