@@ -422,7 +422,11 @@ export default {
             if (res.data) {
               this.modelForm.name = res.data.empName
               let employeeOrganizationVOs = res.data.employeeOrganizationVOs[0]
-              this.toAssignRole = { ...employeeOrganizationVOs }
+              let idData = {
+                originalId: res.data.id,
+                originalEmpId: res.data.userId,
+              }
+              this.toAssignRole = { ...employeeOrganizationVOs, ...idData }
             }
           } else {
             that.$message.error(res.message)
@@ -453,14 +457,9 @@ export default {
                   that.getData(params)
                   that.modelForm.name = ''
                   that.toAssignRole = {}
-                } else {
-                  that.$message.info(res.message)
                 }
               })
-              .catch(error => {
-                that.$message.info(error)
-                // this.onSearch()
-              })
+              .catch(error => {})
           })
         }
       })
