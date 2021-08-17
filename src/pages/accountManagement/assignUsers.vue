@@ -124,8 +124,6 @@ export default {
     }
   },
   mounted() {
-    // this.getHasAddList()
-    console.log(this.$route.params.id, 'this.$route.params.id')
     this.getNoAssignRole({ userId: this.$route.params.id })
     this.getAssignRole({ userId: this.$route.params.id })
   },

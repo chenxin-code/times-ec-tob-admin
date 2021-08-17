@@ -35,6 +35,10 @@ const FormList = {
       type: [Number, String],
       default: 3
     },
+    lableColForm: {
+        type: [Number, String],
+        default:6
+    },
     formSetting: {
       type: Object,
       default: () => ({})
@@ -197,16 +201,18 @@ const FormList = {
         this.$emit('onAdd');
     }
   },
+
   render() {
+    // wrapperCol={{ span: 18 }}
     return (
       <a-form
         form={this.form}
         autoComplete="off"
-        labelCol={{ span: 6 }}
-        wrapperCol={{ span: 18 }}
+        labelCol={{ span:this.lableColForm }}
         {...this.formSetting}
         onSubmit={this.handleSubmit}
       >
+        
         <a-row gutter={24}>
           {this.formList.map((item, index) => {
             const { align, labelCol, wrapperCol,labelAlign, ...others } = item

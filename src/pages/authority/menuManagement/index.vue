@@ -23,24 +23,28 @@
         </template>
         <template slot="operation" slot-scope="{ props }">
           <div class="editable-row-operations">
-            <a-button
-              class="a-buttom-reset-link"
-              type="link"
-              @click="onDetails('edit', props)"
-              >编辑</a-button
-            >
+            <template v-if="props.visible == 1">
+              <a-button
+                class="a-buttom-reset-link"
+                type="link"
+                @click="onDetails('edit', props)"
+                >编辑</a-button
+              >
+            </template>
             <a-button
               class="a-buttom-reset-link"
               type="link"
               @click="onChangeStatus(props)"
               >{{ ['停用', '启用'][props.visible] }}</a-button
             >
-            <a-button
-              class="a-buttom-reset-link"
-              type="link"
-              @click="onDelete(props)"
-              >删除</a-button
-            >
+            <template v-if="props.visible == 1">
+              <a-button
+                class="a-buttom-reset-link"
+                type="link"
+                @click="onDelete(props)"
+                >删除</a-button
+              >
+            </template>
           </div>
         </template>
       </baseTable>
@@ -98,7 +102,7 @@ export default {
           title: '操作',
           key: 'operation',
           scopedSlots: { customRender: 'operation' },
-          width: 200,
+          width: 220,
           align: 'center',
           fixed: 'right',
         },
@@ -190,7 +194,7 @@ export default {
       const that = this
       this.$confirm({
         title: `您确认要删除"${props.menuName}"菜单吗?`,
-        content: h => <div style="color:red;">如有子菜单也会一并删除!</div>,
+        content: h => <div style="color:red;">如有子菜单不可删除!</div>,
         centered: true,
         onOk() {
           that.tableLoading = true
@@ -201,8 +205,6 @@ export default {
                 that.$message.info(`删除成功`)
                 that.initData()
                 that.$store.dispatch('GET_MENU_LIST')
-              } else {
-                that.$message.error(`删除失败`)
               }
             })
             .finally(() => (that.tableLoading = false))

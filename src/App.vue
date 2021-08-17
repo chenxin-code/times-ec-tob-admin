@@ -16,7 +16,7 @@ import message from 'ant-design-vue/es/message'
 import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN'
 import moment from 'moment'
 import 'moment/locale/zh-cn'
-import { getQueryString } from '@/utils/util'
+import { getQueryString, returnBaseCms } from '@/utils/util'
 
 moment.locale('zh-cn')
 
@@ -57,6 +57,8 @@ export default {
           if (res.code === 200) {
             let Access_Token = 'Bearer ' + res.data.newToken
             window.localStorage.setItem('Case_Access_Token', Access_Token)
+          } else {
+            returnBaseCms()
           }
         })
         .finally(() => {
