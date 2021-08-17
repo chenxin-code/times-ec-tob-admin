@@ -4,6 +4,7 @@
       <baseForm
         ref="form"
         rowCol="3"
+        lableColForm="4"
         :formList="formList"
         :onSubmit="onSearch"
         :addbutton="true"
@@ -28,50 +29,53 @@
         </template>
         <template slot="operation" slot-scope="{ props }">
           <div class="editable-row-operations">
-            <a-button
-              class="a-buttom-reset-link"
-              @click="edit(props)"
-              type="link"
-              >编辑</a-button
-            >
-            <template>
+            <template v-if="props.id != 111">
+              <a-button
+                v-if="props.id != 111"
+                class="a-buttom-reset-link"
+                @click="edit(props)"
+                type="link"
+                >编辑</a-button
+              >
               <a-divider type="vertical" />
+            </template>
+            <template v-if="props.id != 111">
               <a-button
                 class="a-buttom-reset-link"
                 @click="del(props, '删除')"
                 type="link"
                 >删除</a-button
               >
+              <a-divider type="vertical" />
             </template>
             <template v-if="props.state == 0">
-              <a-divider type="vertical" />
               <a-button
                 class="a-buttom-reset-link"
                 @click="UpdateStatus(props, 1, '启用')"
                 type="link"
                 >启用</a-button
               >
+              <a-divider type="vertical" />
             </template>
             <template v-if="props.state == 1">
-              <a-divider type="vertical" />
               <a-button
                 class="a-buttom-reset-link"
                 @click="UpdateStatus(props, 0, '禁用')"
                 type="link"
                 >禁用</a-button
               >
+              <a-divider type="vertical" />
             </template>
             <template>
-              <a-divider type="vertical" />
               <a-button
                 class="a-buttom-reset-link"
                 @click="assignAuthority(props)"
                 type="link"
                 >分配权限</a-button
               >
+              <a-divider type="vertical" />
             </template>
             <template>
-              <a-divider type="vertical" />
               <a-button
                 class="a-buttom-reset-link"
                 @click="assignUsers(props)"
@@ -122,16 +126,15 @@ export default {
         type: 'input',
         name: 'roleName',
         placeholder: '请输入角色名称',
-        wrapperCol: { span: 18 },
         labelAlign: 'left',
+        wrapperCol: { span: 18 },
       },
       {
         type: 'button',
         buttonName: '查询',
         htmlType: 'submit',
-        align: 'left',
+        labelAlign: 'left',
         class: 'a-buttom-reset',
-        labelCol: { span: 0 },
         wrapperCol: { span: 24 },
       },
     ]
@@ -140,14 +143,14 @@ export default {
         title: '角色名称',
         dataIndex: 'roleName',
         key: 1,
-        width: 200,
+        // width: 200,
         ellipsis: true,
       },
       {
         title: '状态',
         dataIndex: 'state',
         key: 2,
-        width: 100,
+        // width: 100,
         ellipsis: false,
         scopedSlots: { customRender: 'state' },
       },
@@ -155,13 +158,14 @@ export default {
         title: '创建时间',
         dataIndex: 'createTime',
         key: 3,
-        width: 200,
+        // width: 200,
         ellipsis: false,
       },
       {
         title: '操作',
         fixed: 'right',
-        // width: 300,
+        width: 450,
+        align: 'center',
         key: 4,
         scopedSlots: { customRender: 'operation' },
       },
@@ -215,8 +219,6 @@ export default {
     }, 0)
     // 角色列表
     this.getData(params)
-    // 权限列表
-    // this.getPermissionList()
   },
   methods: {
     // 查询
