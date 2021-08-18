@@ -196,8 +196,28 @@ export default {
     async searchByPhone(e) {
       e.preventDefault()
       this.searchPhoneLoading = true
+      let tableData = this.tableData,
+        tableDataed = this.tableDataed
+      let has = true,
+        hass = true
       this.modelForm.validateFields((err, values) => {
         if (!err) {
+          console.log(values)
+          tableData.map(element => {
+            if (element.phone == values.phone) {
+              has = false
+            }
+          })
+          tableDataed.map(element => {
+            if (element.phone == values.phone) {
+              hass = false
+            }
+          })
+          if (!has || !hass) {
+            this.searchPhoneLoading = false
+            return this.$message.info('该员工已存在')
+          }
+
           api
             .setAddAccountByPhone(values)
             .then(res => {
@@ -210,11 +230,11 @@ export default {
                     item.phone = data.mobilePhone
                     item.id = data.id
                     item.roleId = this.$route.params.id
-                    item.userId = data.id
+                    item.userId = data.userId
                     item.userName = data.userName
                     employ.push(item)
+                    this.tableData = employ
                   })
-                  this.tableData = employ
                 }
               }
             })
@@ -284,8 +304,8 @@ export default {
             // departId: item.departId,
             companyName: item.companyName,
             departName: item.departName,
-            originalId: item.userId,
-            originalEmpId: item.id,
+            originalId: item.id,
+            originalEmpId: item.userId,
             name: item.name,
             phone: item.phone,
             userName: item.name,
