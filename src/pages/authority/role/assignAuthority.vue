@@ -153,6 +153,7 @@ export default {
             tableData = this.tableData
             this.delChild(this.tableData)
             this.mapTableData(tableData)
+            this.tableDatas = [...this.tableData]
           }
         })
         .finally(() => {
@@ -191,6 +192,7 @@ export default {
       })
       //赋值
       this.checkChange = [...checkChanges]
+      this.tableDatas = [...this.tableData]
     },
     //去重
     unique(arr, val) {
@@ -244,13 +246,38 @@ export default {
         }
       }
     },
+    //默认递归选中父级Id
+    mapTableDataForId(data, list) {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].defalutbutton && data[i].defalutbutton.length <= 0) {
+          if (data[i].children && data[i].children.length > 0) {
+            this.mapTableDataForId(data[i].children, list)
+          }
+        } else {
+          if (data[i].defalutbutton) {
+            if (data[i].parentId != '0') {
+              list.push(data[i].parentId)
+            }
+            list.push(data[i].id)
+          }
+          if (data[i].children && data[i].children.length > 0) {
+            this.mapTableDataForId(data[i].children, list)
+          }
+        }
+      }
+      return list
+    },
     //保存选中的权限
     save() {
+      //获取父级的id
+      let ParentId = []
+      ParentId = this.mapTableDataForId(this.tableDatas, ParentId)
+      ParentId = this.unique([...ParentId])
       this.tableLoading = true
       api
         .insertRoleMenu({
           roleId: this.$route.params.id,
-          menuIds: this.checkChange,
+          menuIds: this.checkChange.concat(ParentId), //选中的权限拼接父级的id
         })
         .then(resp => {
           if (resp.code === 200) {
