@@ -167,28 +167,37 @@ export default {
     },
     //是否选中权限操作
     onChange(value, props, index) {
-      let { checkChange } = this
+      let { defalutCheck } = this
+      let checkChangeHard = [...defalutCheck]
       console.log(value, props, props.id, 'value')
       props.buttonChildren.map(item => {
         if (value.length == 0) {
           item.possessOrNot = 0
-          //   this.checkChangeFn(checkChange, item)
         } else {
           value.map(items => {
             if (item.id == items) {
               item.possessOrNot = 1
-              //   checkChange.push(item.id)
             } else {
               item.possessOrNot = 0
-              //   this.checkChangeFn(checkChange, item)
             }
           })
         }
       })
-      let checkChangess = checkChange.concat(value)
+      let checkChangess = checkChangeHard.concat(value)
       let checkChanges = this.unique(checkChangess)
-      this.defalutCheck = checkChanges
-      console.log(this.defalutCheck, checkChanges, 'checkChanges')
+      //筛选出来没有勾选
+      let unCheckList = props.buttonChildren.filter(item => {
+        return value.indexOf(item.id) < 0
+      })
+      unCheckList = unCheckList.map(item => {
+        return item.id
+      })
+      checkChanges = checkChanges.filter(item => {
+        return unCheckList.indexOf(item) < 0
+      })
+      //赋值
+      this.defalutCheck = [...checkChanges]
+      console.log(this.defalutCheck, checkChanges, 'checkChanges', value)
     },
     unique(arr, val) {
       const res = new Map()
@@ -214,7 +223,10 @@ export default {
     },
     //默认选中的递归
     mapTableData(data) {
+      //定义一个递归函数
       this.mapButtonCHhild(data)
+      //浅拷贝数组变量
+      this.defalutCheck = [...this.checkChange]
     },
     //默认选中的递归
     mapButtonCHhild(data) {
@@ -264,7 +276,6 @@ export default {
     //保存选中的权限
     save() {
       this.tableLoading = true
-      //   this.checkChange = this.defalutCheck
       console.log(this.defalutCheck, this.checkChange, 'save')
       api
         .insertRoleMenu({
