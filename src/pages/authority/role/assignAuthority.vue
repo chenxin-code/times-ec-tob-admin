@@ -170,6 +170,7 @@ export default {
       let { checkChange } = this
       let checkChangeHard = [...checkChange]
       console.log(value, props, props.id, 'value')
+      //该处代码冗余比较多会遍历5次无效处理数据 
       props.buttonChildren.map(item => {
         if (value.length == 0) {
           item.possessOrNot = 0
@@ -183,6 +184,7 @@ export default {
           })
         }
       })
+      //默认全部插入数据
       let checkChangess = checkChangeHard.concat(value)
       let checkChanges = this.unique(checkChangess)
       //筛选出来没有勾选
