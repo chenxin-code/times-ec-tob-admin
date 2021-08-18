@@ -4,7 +4,6 @@
 			<a-button
 				v-if="isShowSubmit"
 				type="primary"
-				size="large"
 				style="width: 120px;"
 				:loading="loading"
 				@click="onSubmit()"
@@ -12,7 +11,6 @@
 			>
 			<a-button
 				v-if="isShowCancel"
-				size="large"
 				type="primary"
 				style="width: 120px;"
 				@click="onBack()"
