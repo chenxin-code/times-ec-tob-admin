@@ -168,28 +168,43 @@ export default {
     //是否选中权限操作
     onChange(value, props, index) {
       let { checkChange } = this
-      console.log(value, props, props.id, 'value')
       props.buttonChildren.map(item => {
         if (value.length == 0) {
           item.possessOrNot = 0
-          //   this.checkChangeFn(checkChange, item)
         } else {
           value.map(items => {
             if (item.id == items) {
               item.possessOrNot = 1
-              //   checkChange.push(item.id)
             } else {
               item.possessOrNot = 0
-              //   this.checkChangeFn(checkChange, item)
             }
           })
         }
       })
-      let checkChangess = checkChange.concat(value)
-      let checkChanges = this.unique(checkChangess)
-      this.defalutCheck = checkChanges
-      console.log(this.defalutCheck, checkChanges, 'checkChanges')
+      checkChange = checkChange.concat(value)
+      checkChange = this.unique(checkChange)
+      this.checkChange = checkChange
+      let currentData = [],
+        currentNoCheck = []
+      props.buttonChildren.map(item => {
+        currentData.push(item.id)
+      })
+      if (value.length > 0) {
+        let newArray = currentData
+        value.map((item, index) => {
+          currentNoCheck = this.checkChangeFn(newArray, item)
+        })
+      } else {
+        currentNoCheck = currentData
+      }
+
+      if (currentNoCheck.length > 0) {
+        currentNoCheck.map((item, index) => {
+          this.checkChange = this.checkChangeFn(checkChange, item)
+        })
+      }
     },
+    //去重
     unique(arr, val) {
       const res = new Map()
       return arr.filter(item => !res.has(item) && res.set(item, 1))
@@ -197,11 +212,12 @@ export default {
     //删除没选中的权限
     checkChangeFn(checkChange, item) {
       let findIndex = checkChange.findIndex(check => {
-        return check == item.id
+        return check == item
       })
       if (findIndex !== -1) {
         checkChange.splice(findIndex, 1)
       }
+      return checkChange
     },
     delChild(data) {
       for (let i = 0; i < data.length; i++) {
@@ -237,39 +253,13 @@ export default {
         }
       }
     },
-    //默认选中的递归
-    mapButtonCHhilds(data) {
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].defalutbutton && data[i].defalutbutton.length == 0) {
-          if (data[i].children && data[i].children.length > 0) {
-            this.mapButtonCHhild(data[i].children)
-          }
-        } else {
-          if (data[i].defalutbutton) {
-            data[i].defalutbutton.map(item => {
-              this.checkChanges.push(item)
-            })
-          }
-
-          if (data[i].children && data[i].children.length > 0) {
-            this.mapButtonCHhild(data[i].children)
-          }
-        }
-      }
-    },
-    unique(arr, val) {
-      const res = new Map()
-      return arr.filter(item => !res.has(item) && res.set(item, 1))
-    },
     //保存选中的权限
     save() {
       this.tableLoading = true
-      //   this.checkChange = this.defalutCheck
-      console.log(this.defalutCheck, this.checkChange, 'save')
       api
         .insertRoleMenu({
           roleId: this.$route.params.id,
-          menuIds: this.defalutCheck,
+          menuIds: this.checkChange,
         })
         .then(resp => {
           if (resp.code === 200) {
