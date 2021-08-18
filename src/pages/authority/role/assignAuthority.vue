@@ -121,12 +121,7 @@ export default {
       ],
       pageData,
       tableLoading: false,
-      menuTypes: {
-        1: '菜单',
-        2: '页面',
-      },
       checkChange: [],
-      defalutCheck: [],
     }
   },
   components: {},
@@ -158,7 +153,6 @@ export default {
             tableData = this.tableData
             this.delChild(this.tableData)
             this.mapTableData(tableData)
-            console.log(this.tableData, this.checkChange, 'tableData')
           }
         })
         .finally(() => {
@@ -168,6 +162,7 @@ export default {
     //是否选中权限操作
     onChange(value, props, index) {
       let { checkChange } = this
+      let checkChangeHard = [...checkChange]
       props.buttonChildren.map(item => {
         if (value.length == 0) {
           item.possessOrNot = 0
@@ -181,28 +176,21 @@ export default {
           })
         }
       })
-      checkChange = checkChange.concat(value)
-      checkChange = this.unique(checkChange)
-      this.checkChange = checkChange
-      let currentData = [],
-        currentNoCheck = []
-      props.buttonChildren.map(item => {
-        currentData.push(item.id)
+      //默认全部插入数据
+      let checkChangess = checkChangeHard.concat(value)
+      let checkChanges = this.unique(checkChangess)
+      //筛选出来没有勾选
+      let unCheckList = props.buttonChildren.filter(item => {
+        return value.indexOf(item.id) < 0
       })
-      if (value.length > 0) {
-        let newArray = currentData
-        value.map((item, index) => {
-          currentNoCheck = this.checkChangeFn(newArray, item)
-        })
-      } else {
-        currentNoCheck = currentData
-      }
-
-      if (currentNoCheck.length > 0) {
-        currentNoCheck.map((item, index) => {
-          this.checkChange = this.checkChangeFn(checkChange, item)
-        })
-      }
+      unCheckList = unCheckList.map(item => {
+        return item.id
+      })
+      checkChanges = checkChanges.filter(item => {
+        return unCheckList.indexOf(item) < 0
+      })
+      //赋值
+      this.checkChange = [...checkChanges]
     },
     //去重
     unique(arr, val) {
@@ -230,7 +218,10 @@ export default {
     },
     //默认选中的递归
     mapTableData(data) {
+      //定义一个递归函数
       this.mapButtonCHhild(data)
+      //浅拷贝数组变量
+      this.defalutCheck = [...this.checkChange]
     },
     //默认选中的递归
     mapButtonCHhild(data) {
