@@ -76,8 +76,7 @@ router.beforeEach((to, from, next) => {
       store.replaceState(
         Object.assign(
           {},
-          store.state,
-          JSON.parse(sessionStorage.getItem('store'))
+          JSON.parse(sessionStorage.getItem('store'), store.state)
         )
       )
       sessionStorage.setItem('refreshflag', '0')
