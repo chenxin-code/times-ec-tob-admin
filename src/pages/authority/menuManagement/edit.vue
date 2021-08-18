@@ -87,6 +87,9 @@
           :loading="loadingSubmit"
           >提交</a-button
         >
+        <a-button class="a-buttom-reset" type="default" @click="$router.go(-1)"
+          >返回</a-button
+        >
       </template>
     </baseLayout>
   </div>

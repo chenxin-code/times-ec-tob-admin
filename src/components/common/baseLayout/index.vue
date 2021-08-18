@@ -7,6 +7,7 @@
           <slot name="header-tab"></slot>
         </div>
         <a-button
+          v-if="backButton"
           class="a-buttom-reset-link"
           type="link"
           @click="$router.go(-1)"
@@ -40,6 +41,10 @@ export default {
     header: {
       type: Boolean,
       default: true,
+    },
+    backButton: {
+      type: Boolean,
+      default: false,
     },
   },
   computed: {
