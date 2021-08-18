@@ -126,7 +126,7 @@ export default {
         2: '页面',
       },
       checkChange: [],
-      checkChanges: [],
+      defalutCheck: [],
     }
   },
   components: {},
@@ -185,11 +185,10 @@ export default {
           })
         }
       })
-      //   this.checkChange = checkChange
-      //   this.checkChange = this.unique(this.checkChange)
-      this.tableDatas = this.tableData
-      console.log(this.tableData, 'this.checkChange')
-      this.mapButtonCHhilds(this.tableData)
+      let checkChangess = checkChange.concat(value)
+      let checkChanges = this.unique(checkChangess)
+      this.defalutCheck = checkChanges
+      console.log(this.defalutCheck, checkChanges, 'checkChanges')
     },
     unique(arr, val) {
       const res = new Map()
@@ -229,7 +228,7 @@ export default {
           data[i].buttonChildren.map(item => {
             if (item.possessOrNot == 1) {
               data[i].defalutbutton.push(item.id)
-              //   this.checkChange.push(item.id)
+              this.checkChange.push(item.id)
             }
           })
           if (data[i].children && data[i].children.length > 0) {
@@ -264,13 +263,13 @@ export default {
     },
     //保存选中的权限
     save() {
-      ;(this.tableLoading = true), (this.checkChange = [])
-      let data = this.tableDatas
-      let checkChange = this.unique(this.checkChanges)
+      this.tableLoading = true
+      //   this.checkChange = this.defalutCheck
+      console.log(this.defalutCheck, this.checkChange, 'save')
       api
         .insertRoleMenu({
           roleId: this.$route.params.id,
-          menuIds: checkChange,
+          menuIds: this.defalutCheck,
         })
         .then(resp => {
           if (resp.code === 200) {
