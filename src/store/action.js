@@ -11,6 +11,7 @@ export default {
     router.go(-1)
   },
   async EXCHANGE_TOKEN(context) {
+    window.localStorage.setItem('SD_ACCESS_TOKEN', '');
     // 获取token
     let getQueryString = name => {
       var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i')
@@ -34,8 +35,8 @@ export default {
         context.commit('SET_CASE_TOKEN', Access_Token)
         context.commit('SET_CASE_HEADERS', Access_Token)
         await context.dispatch('GET_MENU_LIST')
-      }else {
-        returnBaseCms();
+      } else {
+        returnBaseCms()
       }
       return Promise.resolve()
     })
