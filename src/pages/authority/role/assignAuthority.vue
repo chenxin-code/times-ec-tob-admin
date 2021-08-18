@@ -176,6 +176,7 @@ export default {
           })
         }
       })
+      //默认全部插入数据
       let checkChangess = checkChangeHard.concat(value)
       let checkChanges = this.unique(checkChangess)
       //筛选出来没有勾选
