@@ -121,12 +121,7 @@ export default {
       ],
       pageData,
       tableLoading: false,
-      menuTypes: {
-        1: '菜单',
-        2: '页面',
-      },
       checkChange: [],
-      defalutCheck: [],
     }
   },
   components: {},
@@ -158,7 +153,6 @@ export default {
             tableData = this.tableData
             this.delChild(this.tableData)
             this.mapTableData(tableData)
-            console.log(this.tableData, this.checkChange, 'tableData')
           }
         })
         .finally(() => {
@@ -169,7 +163,6 @@ export default {
     onChange(value, props, index) {
       let { checkChange } = this
       let checkChangeHard = [...checkChange]
-      console.log(value, props, props.id, 'value')
       props.buttonChildren.map(item => {
         if (value.length == 0) {
           item.possessOrNot = 0
@@ -197,7 +190,6 @@ export default {
       })
       //赋值
       this.checkChange = [...checkChanges]
-      console.log(this.checkChange, checkChanges, 'checkChanges', value)
     },
     //去重
     unique(arr, val) {
@@ -254,7 +246,6 @@ export default {
     //保存选中的权限
     save() {
       this.tableLoading = true
-      console.log(this.defalutCheck, this.checkChange, 'save')
       api
         .insertRoleMenu({
           roleId: this.$route.params.id,

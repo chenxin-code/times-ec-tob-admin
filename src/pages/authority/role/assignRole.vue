@@ -210,8 +210,7 @@ export default {
                     item.phone = data.mobilePhone
                     item.id = data.id
                     item.roleId = this.$route.params.id
-                    item.roleCode = item.roleCode
-                    item.userId = item.userId
+                    item.userId = data.id
                     item.userName = data.userName
                     employ.push(item)
                   })
@@ -285,8 +284,8 @@ export default {
             // departId: item.departId,
             companyName: item.companyName,
             departName: item.departName,
-            originalId: item.id,
-            originalEmpId: item.userId,
+            originalId: item.userId,
+            originalEmpId: item.id,
             name: item.name,
             phone: item.phone,
             userName: item.name,
@@ -302,6 +301,7 @@ export default {
             roleId: this.$route.params.id, // roleId
           }
           this.getHasAddList(param)
+          this.selectReset()
         }
       })
     },
