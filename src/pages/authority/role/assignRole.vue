@@ -320,6 +320,7 @@ export default {
             pageSize: this.pageData.pageSize, // 每页多少条
             roleId: this.$route.params.id, // roleId
           }
+          this.$message.success('保存成功')
           this.getHasAddList(param)
           this.selectReset()
         }
