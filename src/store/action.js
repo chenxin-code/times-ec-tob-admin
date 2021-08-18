@@ -48,7 +48,7 @@ export default {
       let res = await api.getMenuTreeData()
       console.log(res, '---------')
       //   const menus = res.data.permList
-      const menus = res.data
+      const menus = res.data || []
       context.commit('SET_MENUS_LIST', menus)
     } catch (error) {}
     return Promise.resolve()
