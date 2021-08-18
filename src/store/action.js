@@ -11,6 +11,7 @@ export default {
     router.go(-1)
   },
   async EXCHANGE_TOKEN(context) {
+    context.commit('SET_CASE_TOKEN', '');
     window.localStorage.setItem('SD_ACCESS_TOKEN', '');
     // 获取token
     let getQueryString = name => {
