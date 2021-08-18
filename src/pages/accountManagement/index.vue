@@ -423,8 +423,8 @@ export default {
               this.modelForm.name = res.data.empName
               let employeeOrganizationVOs = res.data.employeeOrganizationVOs[0]
               let idData = {
-                originalId: res.data.id,
-                originalEmpId: res.data.userId,
+                originalId: res.data.userId,
+                originalEmpId: res.data.id,
               }
               this.toAssignRole = { ...employeeOrganizationVOs, ...idData }
             }
