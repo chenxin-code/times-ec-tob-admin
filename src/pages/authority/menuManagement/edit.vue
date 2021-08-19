@@ -140,7 +140,7 @@ export default {
     },
     // 获取类目树
     getTree() {
-      this.$api.getMenuTreeData({}).then(res => {
+      this.$api.getMenuTreeList({}).then(res => {
         this.treeData = [
           {
             id: 0,
@@ -150,78 +150,17 @@ export default {
         ]
       })
     },
-    // 规格/属性值
-    handleChange(event, type) {
-      if (type === 'SALE_ATTR') {
-        this.specificationValue = event
-      } else {
-        this.attributesValue = event
-      }
-    },
-    // 搜索规格/属性
-    handleSearch(event, type) {
-      let params = {
-        attrName: event, // 属性名称
-        attrType: type, // 属性类型
-        pageNum: 1, // 第几页
-        pageSize: 20, // 每页多少条
-      }
-      this.$api.getProductQueryList(params).then(res => {
-        if (type === 'SALE_ATTR') {
-          this.specificationData = res.data.records
-        } else {
-          this.attributesData = res.data.records
-        }
-      })
-    },
-    // 添加规格/属性
-    addType(type) {
-      if (type === 'SALE_ATTR') {
-        _.forEach(this.specificationData, a => {
-          if (
-            a.id === this.specificationValue &&
-            !_.includes(
-              _.map(_.cloneDeep(this.form.specificationList), a => a.id),
-              this.specificationValue
-            )
-          ) {
-            this.form.specificationList.push({ id: a.id, name: a.attrName })
-          }
-        })
-      } else {
-        _.forEach(this.attributesData, a => {
-          if (
-            a.id === this.attributesValue &&
-            !_.includes(
-              _.map(_.cloneDeep(this.form.attributesList), a => a.id),
-              this.attributesValue
-            )
-          ) {
-            this.form.attributesList.push({ id: a.id, name: a.attrName })
-          }
-        })
-      }
-    },
-    // 删除规格/属性
-    preventDefault(id, type) {
-      if (type === 'SALE_ATTR') {
-        this.$set(
-          this.form,
-          'specificationList',
-          this.form.specificationList.filter(a => a.id !== id)
-        )
-      } else {
-        this.$set(
-          this.form,
-          'attributesList',
-          this.form.attributesList.filter(a => a.id !== id)
-        )
-      }
-    },
     // 添加/修改
     onSubmit() {
       this.loadingSubmit = true
-      let that = this
+      let that = this,
+        { form } = this
+      let froms = {
+        menuName: form.menuName.trim(),
+        perms: form.perms.trim(),
+        url: form.url.trim(),
+      }
+      this.form = Object.assign(this.form, froms)
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           this.$api[this.openType === 'add' ? 'getMenuSave' : 'getMenuUpdata'](

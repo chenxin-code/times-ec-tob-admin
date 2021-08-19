@@ -8,11 +8,11 @@
               <div class="lefttab mr column">
                 <div class="topwrap row space-between-center">
                   <span class="topname">用户：</span>
-                  <div class="row end-center">
+                  <div class="row end-center" style="width:80%">
                     <a-form
                       :form="modelForm"
                       @submit="searchByPhone"
-                      class="row center"
+                      class="row end-center"
                     >
                       <a-form-item>
                         <a-input
@@ -188,7 +188,7 @@ export default {
   mounted() {
     this.getHasAddList()
     setTimeout(() => {
-      this.scrollY = document.body.clientHeight - 250
+      this.scrollY = document.body.clientHeight - 300
     }, 0)
   },
   methods: {
@@ -202,7 +202,7 @@ export default {
         hass = true
       this.modelForm.validateFields((err, values) => {
         if (!err) {
-          console.log(values)
+          values.phone = values.phone.trim()
           tableData.map(element => {
             if (element.phone == values.phone) {
               has = false
@@ -300,8 +300,6 @@ export default {
       if (tableDataed.length > 0) {
         tableDataed.map(item => {
           list.push({
-            // companyId: item.companyId,
-            // departId: item.departId,
             companyName: item.companyName,
             departName: item.departName,
             originalId: item.userId,
@@ -321,6 +319,7 @@ export default {
             roleId: this.$route.params.id, // roleId
           }
           this.$message.success('保存成功')
+          this.$router.back()
           this.getHasAddList(param)
           this.selectReset()
         }
@@ -389,8 +388,12 @@ export default {
 .container-edit {
   position: relative;
   height: 100%;
+  .ant-form {
+    width: 100%;
+  }
   .ant-form-item {
     margin-bottom: 0;
+    width: 80%;
   }
 }
 .a-buttom-reset {
@@ -448,18 +451,12 @@ export default {
 }
 .lefttab {
   width: 50%;
-  //   float: left;
   margin: 15px;
   border: 1px solid rgb(236, 234, 234);
   height: 98%;
   box-sizing: border-box;
+  position: relative;
 }
-// .lefttab.mr {
-//   margin-right: 7.5px;
-// }
-// .lefttab.ml {
-//   margin-left: 7.5px;
-// }
 .searchButton {
   margin-left: 10px;
 }

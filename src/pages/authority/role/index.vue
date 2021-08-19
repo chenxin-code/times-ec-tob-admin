@@ -21,6 +21,7 @@
         :current="pageData.current"
         :loading="tableLoading"
         :scrollY="scrollY"
+        :total="pageData.total"
         @onShowSizeChange="onShowSizeChange"
       >
         <!-- :total="pageData.total" -->
@@ -223,6 +224,7 @@ export default {
   methods: {
     // 查询
     onSearch(searchData) {
+      searchData.roleName = searchData.roleName.trim()
       this.searchData = searchData
       let params = {
         pageNum: this.pageData.pageNum, // 第几页
@@ -332,6 +334,7 @@ export default {
       this.modelForm.validateFields((err, values) => {
         if (!err) {
           return new Promise((resolve, reject) => {
+            values = { ...values, roleName: values.roleName.trim() }
             let param = Object.assign(values, { state: 0 })
             if (title == '编辑') {
               param = Object.assign(values, {
