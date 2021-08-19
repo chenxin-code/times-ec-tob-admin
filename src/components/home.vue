@@ -2,12 +2,11 @@
   <div id="home">
     <a-layout class="container">
       <a-layout-sider
+        class="layout-sider"
         v-model="collapsed"
         collapsible
         :style="{
           overflow: 'auto',
-          height: '93.5vh',
-          boxSizing: 'border-box',
           background: '#22242f',
         }"
       >
@@ -168,6 +167,10 @@ export default {
 
     aside.ant-layout-sider {
       z-index: 2;
+    }
+    .layout-sider {
+      height: calc(100vh - 48px);
+      box-sizing: 'border-box';
     }
     // /deep/.ant-layout-sider-trigger {
     //   padding-bottom: 0;
