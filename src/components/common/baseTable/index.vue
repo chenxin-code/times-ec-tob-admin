@@ -125,7 +125,7 @@ export default {
       setTimeout(function() {
         _this.tableY = `${document.documentElement.clientHeight -
           _this.$refs.aTable.$el.offsetTop -
-          (_this.total > 0 ? 140 : 85)}px`
+          (_this.total > 0 ? 145 : 85)}px`
       }, 0)
     },
   },
