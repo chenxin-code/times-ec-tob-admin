@@ -545,6 +545,7 @@ export default {
                 that.sellingPrice[i].priceAfterTax ||
               that.costPrice[0].costPrice > that.sellingPrice[i].priceBeforeTax
             )
+              this.loading = false
               return this.$message.error('销售价必须大于成本价')
           }
           this.form.validateFields(['sellingPriceList'], { force: true })
