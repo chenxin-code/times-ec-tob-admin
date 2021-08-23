@@ -88,6 +88,8 @@
           <a @click="checkDetails(record)">查看</a>
           <a-divider type="vertical" />
           <a @click="checkDeliveryOrder(record)">查看配送订单</a>
+          <a-divider type="vertical" />
+          <a @click="checkConfirmOrder(record)">确认订单</a>
         </span>
       </a-table>
     </div>
@@ -468,6 +470,30 @@ export default {
         params: {
           saleOrderNo: row.saleOrderNo,
         },
+      })
+    },
+    //确认订单
+    checkConfirmOrder(row) {
+      this.$confirm({
+        title: `您确定要确认该订单吗?`,
+        centered: true,
+        onOk() {
+          //   api
+          //     .setRoleUpate(params)
+          //     .then(res => {
+          //       if (res.code == 200) {
+          //         that.$message.info(`${type}成功`)
+          //         let params = {
+          //           pageNum: that.pageData.pageNum, // 第几页
+          //           pageSize: that.pageData.pageSize, // 每页多少条
+          //           ...that.searchData,
+          //         }
+          //         that.getData(params)
+          //       }
+          //     })
+          // .finally(err => {})
+        },
+        onCancel() {},
       })
     },
     // 获取城市公司

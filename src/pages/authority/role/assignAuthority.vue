@@ -40,6 +40,7 @@
               :current="pageData.current"
               :loading="tableLoading"
               :total="pageData.total"
+              :rowSelection="rowSelection"
             >
               <template slot="menuType" slot-scope="{ props }">
                 <div class="editable-row-operations">
@@ -92,11 +93,32 @@ export default {
       pageNum: 1,
       pageSize: 10,
     }
+    const rowSelection = {
+      onChange: (selectedRowKeys, selectedRows) => {
+        console.log(
+          `selectedRowKeys: ${selectedRowKeys}`,
+          'selectedRows: ',
+          selectedRows
+        )
+      },
+      onSelect: (record, selected, selectedRows) => {
+        console.log(record, selected, selectedRows)
+      },
+      onSelectAll: (selected, selectedRows, changeRows) => {
+        console.log(selected, selectedRows, changeRows)
+      },
+    }
     return {
       checkedMenuIds: [],
       tableData: [],
       tableDatas: [],
       columns: [
+        {
+          title: '访问',
+          dataIndex: 'look',
+          key: 'look',
+          width: 50,
+        },
         {
           title: '菜单',
           dataIndex: 'menuName',
@@ -122,6 +144,7 @@ export default {
       pageData,
       tableLoading: false,
       checkChange: [],
+      rowSelection: rowSelection,
     }
   },
   components: {},

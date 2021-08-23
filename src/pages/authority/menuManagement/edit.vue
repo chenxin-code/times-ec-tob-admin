@@ -13,12 +13,15 @@
           >
             <a-row :gutter="[15, 0]" type="flex">
               <a-col :span="24">
-                <a-form-model-item label="菜单名称" prop="menuName">
-                  <a-input
-                    v-model="form.menuName"
-                    placeholder="请填写菜单名称"
-                    :maxLength="16"
-                  />
+                <a-form-model-item label="菜单类型" prop="menuType">
+                  <a-radio-group name="radioGroup" v-model="form.menuType">
+                    <a-radio :value="1">
+                      菜单/页面
+                    </a-radio>
+                    <a-radio :value="2">
+                      按钮
+                    </a-radio>
+                  </a-radio-group>
                 </a-form-model-item>
               </a-col>
               <a-col :span="24">
@@ -40,32 +43,53 @@
                   </a-tree-select>
                 </a-form-model-item>
               </a-col>
-              <a-col :span="24">
-                <a-form-model-item label="菜单类型" prop="menuType">
-                  <a-radio-group name="radioGroup" v-model="form.menuType">
-                    <a-radio :value="1">
-                      菜单
-                    </a-radio>
-                    <!-- <a-radio :value="2">
-                      按钮
-                    </a-radio> -->
-                  </a-radio-group>
-                </a-form-model-item>
-              </a-col>
-              <a-col :span="24">
-                <a-form-model-item label="菜单编码" prop="perms">
-                  <a-input v-model="form.perms" placeholder="请输入编码" />
-                </a-form-model-item>
-              </a-col>
-              <a-col :span="24">
-                <a-form-model-item label="菜单地址" prop="url">
-                  <!-- v-if="form.menuType === 1" -->
-                  <a-input v-model="form.url" placeholder="请输入地址" />
-                </a-form-model-item>
-              </a-col>
+              <template v-if="form.menuType == 1">
+                <a-col :span="24">
+                  <a-form-model-item label="菜单/页面名称" prop="menuName">
+                    <a-input
+                      v-model="form.menuName"
+                      placeholder="请填写菜单/页面名称"
+                      :maxLength="16"
+                    />
+                  </a-form-model-item>
+                </a-col>
+                <a-col :span="24">
+                  <a-form-model-item label="菜单编码" prop="perms">
+                    <a-input v-model="form.perms" placeholder="请输入编码" />
+                  </a-form-model-item>
+                </a-col>
+                <a-col :span="24">
+                  <a-form-model-item label="菜单地址" prop="url">
+                    <a-input v-model="form.url" placeholder="请输入地址" />
+                  </a-form-model-item>
+                </a-col>
+              </template>
+              <template v-if="form.menuType == 2">
+                <a-col :span="24">
+                  <a-form-model-item label="按钮名称" prop="menuName">
+                    <a-input
+                      v-model="form.menuName"
+                      placeholder="请填写按钮名称"
+                      :maxLength="16"
+                    />
+                  </a-form-model-item>
+                </a-col>
+                <a-col :span="24">
+                  <a-form-model-item label="按钮标识" prop="perms">
+                    <a-input
+                      v-model="form.perms"
+                      placeholder="请输入按钮标识"
+                    />
+                  </a-form-model-item>
+                </a-col>
+                <a-col :span="24">
+                  <a-form-model-item label="按钮地址" prop="url">
+                    <a-input v-model="form.url" placeholder="请输入按钮地址" />
+                  </a-form-model-item>
+                </a-col>
+              </template>
               <a-col :span="24">
                 <a-form-model-item label="菜单排序" prop="orderNum">
-                  <!-- v-if="form.menuType === 1" -->
                   <a-input-number
                     class="input-Width"
                     v-model="form.orderNum"
