@@ -11,6 +11,7 @@
         :pagination="false"
         :loading="loading"
         v-bind="tableConfig"
+        :row-selection="rowSelection"
       >
         <template
           v-for="item in setSlot"
@@ -42,10 +43,26 @@
 export default {
   name: 'baseTable',
   data() {
+    // const rowSelection = {
+    //   onChange: (selectedRowKeys, selectedRows) => {
+    //     console.log(
+    //       `selectedRowKeys: ${selectedRowKeys}`,
+    //       'selectedRows: ',
+    //       selectedRows
+    //     )
+    //   },
+    //   onSelect: (record, selected, selectedRows) => {
+    //     console.log(record, selected, selectedRows)
+    //   },
+    //   onSelectAll: (selected, selectedRows, changeRows) => {
+    //     console.log(selected, selectedRows, changeRows)
+    //   },
+    // }
     return {
       tableY: 100,
       currents: 1,
       pageSizes: 10,
+      //   rowSelection: rowSelection,
     }
   },
   props: {
@@ -62,6 +79,10 @@ export default {
       default: 400,
     },
     tableConfig: {
+      type: Object,
+      default: () => {},
+    },
+    rowSelection: {
       type: Object,
       default: () => {},
     },
