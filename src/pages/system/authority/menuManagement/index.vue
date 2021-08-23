@@ -145,7 +145,7 @@ export default {
     // 递归删除空的children
     resetData(data) {
       _.forEach(data, element => {
-        // element.children = [...element.children, ...element.buttonChildren]
+        element.children = [...element.children, ...element.buttonChildren]
         if (element.children) {
           if (element.children.length <= 0) {
             delete element.children

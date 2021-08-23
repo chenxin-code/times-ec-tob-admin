@@ -1,9 +1,9 @@
 <template>
-  <div style="display: flex;background:#fff;">
-    <div style="width: 20%;overflow: auto;">
+  <div class="account">
+    <div style="width: 20%;height:100%;overflow-y: auto;">
       <companyTree @onSelect="onSelect" />
     </div>
-    <div style="width: 80%;">
+    <div style="width: 80%;height:100%;">
       <a-form-model
         :model="thisForm"
         layout="inline"
@@ -85,7 +85,7 @@
               :pageSizeOptions="['1', '10', '20', '50', '100']"
               @change="onShowSizeChange"
               @showSizeChange="onShowSizeChange"
-              style="margin-top: 30px;width: 100%;text-align: right;"
+              style="margin-top:20px;width: 100%;text-align: right;"
             />
           </a-col>
         </a-row>
@@ -184,8 +184,8 @@
 </template>
 
 <script>
-import api from './../../api'
-import companyTree from './../../components/companyTree'
+import api from '@/api'
+import companyTree from '@/components/companyTree'
 import md5 from 'md5'
 
 export default {
@@ -274,9 +274,10 @@ export default {
     },
   },
   mounted() {
+    console.log(this.$route)
     this.getList()
     setTimeout(
-      () => (this.scrollY = document.body.clientHeight - 350 + 'px'),
+      () => (this.scrollY = document.body.clientHeight - 290 + 'px'),
       0
     )
   },
@@ -405,8 +406,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.account {
+  display: flex;
+  background: #fff;
+  height: 100%;
+  overflow: hidden;
+}
 .ant-form {
-  padding: 20px;
+  padding: 15px 20px 20px 20px;
 
   > div {
     width: 330px;

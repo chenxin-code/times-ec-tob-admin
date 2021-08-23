@@ -1,6 +1,6 @@
 <template>
-  <div style="display: flex;background:#fff">
-    <div style="width:20%;overflow: auto;b">
+  <div class="company">
+    <div style="width:20%;height:100%;overflow: auto;">
       <companyTree @onSelect="onSelect" />
     </div>
     <div style="width: 80%;">
@@ -244,6 +244,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.company {
+  display: flex;
+  background: #fff;
+  height: 100%;
+  overflow: hidden;
+}
 .ant-form {
   padding: 20px;
 
