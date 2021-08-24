@@ -1,33 +1,4 @@
 <template>
-  <!-- <div id="neighborhoodLife" style="height:100%;background:#fff">
-    <div class="content-main" ref="content_main">
-      <a-row style="padding: 15px;height: 100%;">
-        <a-col>
-          <a-table
-            :columns="columns"
-            :data-source="tableData"
-            :loading="tableLoading"
-            row-key="id"
-            :indentSize="35"
-            :pagination="false"
-          >
-            <template slot="menuType" slot-scope="scope">
-              <div class="editable-row-operations">
-                <span v-html="menuTypeParse(scope.menuType)"></span>
-              </div>
-            </template>
-            <template slot="menuIds" slot-scope="scope">
-              <a-checkbox
-                :checked="checkMenu(scope.id)"
-                @change="onChange(scope.id)"
-              />
-            </template>
-          </a-table>
-        </a-col>
-      </a-row>
-    </div>
-    <FormSubmitButton :isShow="true" @submit="save()" />
-  </div> -->
   <div id="neighborhoodLife" class="neighborhoodLife">
     <baseLayout :header="false">
       <template slot="content">
@@ -40,6 +11,7 @@
               :current="pageData.current"
               :loading="tableLoading"
               :total="pageData.total"
+              :rowSelection="{ ...rowSelection, selectedRowKeys: selectedId }"
             >
               <template slot="menuType" slot-scope="{ props }">
                 <div class="editable-row-operations">
@@ -92,11 +64,26 @@ export default {
       pageNum: 1,
       pageSize: 10,
     }
+    const rowSelection = {
+      onChange: this.selectChange,
+      onSelect: (record, selected, selectedRows) => {
+        console.log(record, selected, selectedRows)
+      },
+      onSelectAll: (selected, selectedRows, changeRows) => {
+        console.log(selected, selectedRows, changeRows)
+      },
+    }
     return {
       checkedMenuIds: [],
       tableData: [],
       tableDatas: [],
       columns: [
+        {
+          title: '访问',
+          dataIndex: 'look',
+          key: 'look',
+          width: 50,
+        },
         {
           title: '菜单',
           dataIndex: 'menuName',
@@ -114,14 +101,15 @@ export default {
           title: '权限',
           key: 'buttonChildren',
           scopedSlots: { customRender: 'buttonChildren' },
-          align: 'center',
-          //   width: '240px',
+          align: 'left',
           fixed: 'right',
         },
       ],
       pageData,
       tableLoading: false,
       checkChange: [],
+      rowSelection: rowSelection,
+      selectedId: [],
     }
   },
   components: {},
@@ -212,8 +200,14 @@ export default {
     delChild(data) {
       for (let i = 0; i < data.length; i++) {
         if (data[i].children.length === 0) {
+          if (data[i].possessOrNot == 1) {
+            this.selectedId.push(data[i].id)
+          }
           delete data[i].children
         } else {
+          if (data[i].possessOrNot == 1) {
+            this.selectedId.push(data[i].id)
+          }
           this.delChild(data[i].children)
         }
       }
@@ -245,6 +239,8 @@ export default {
           }
         }
       }
+
+      console.log(this.selectedId, 'this.selectedId')
     },
     //默认递归选中父级Id
     mapTableDataForId(data, list) {
@@ -267,6 +263,10 @@ export default {
       }
       return list
     },
+    selectChange(selectedRowKeys, selectedRows) {
+      this.leftSelect = selectedRows
+      this.selectedId = selectedRowKeys
+    },
     //保存选中的权限
     save() {
       //获取父级的id
@@ -278,6 +278,8 @@ export default {
         .insertRoleMenu({
           roleId: this.$route.params.id,
           menuIds: this.checkChange.concat(ParentId), //选中的权限拼接父级的id
+          parentIds: ParentId, //权限选中的父类id
+          menuParentIds: this.selectedId, //选中的访问页面权限
         })
         .then(resp => {
           if (resp.code === 200) {

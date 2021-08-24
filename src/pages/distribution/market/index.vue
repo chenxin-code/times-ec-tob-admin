@@ -88,6 +88,8 @@
           <a @click="checkDetails(record)">查看</a>
           <a-divider type="vertical" />
           <a @click="checkDeliveryOrder(record)">查看配送订单</a>
+          <a-divider type="vertical" />
+          <a @click="checkConfirmOrder(record)">确认订单</a>
         </span>
       </a-table>
     </div>
@@ -218,7 +220,7 @@ export default {
         title: '操作',
         key: 'operation',
         fixed: 'right',
-        width: 300,
+        width: 350,
         align: 'left',
         scopedSlots: { customRender: 'action' },
         align: 'left',
@@ -468,6 +470,46 @@ export default {
         params: {
           saleOrderNo: row.saleOrderNo,
         },
+      })
+    },
+    //确认订单
+    checkConfirmOrder(row) {
+      let that = this
+      this.$confirm({
+        title: `您确定要确认该订单吗?`,
+        centered: true,
+        onOk() {
+          api
+            .marketOrderConfirmApply({
+              confirmFlag: 1,
+              thirdPurchaseId: row.thirdPurchaseId,
+            })
+            .then(res => {
+              if (res.code == 200) {
+                that.$message.info(`${type}成功`)
+                let params = {
+                  orderState: that.orderState, // 订单状态 进行中 已完成
+                  pageNum: that.pageData.current, // 第几页
+                  pageSize: that.pageData.pageSize, // 每页多少条
+                  saleOrderNo: that.searchData.saleOrderNo, // 订单编号
+                  orderTimeStart:
+                    that.searchData.dateTime.length > 0
+                      ? that.parseDate(that.searchData.dateTime[0])
+                      : '', // 开始时间
+                  orderTimeEnd:
+                    that.searchData.dateTime.length > 0
+                      ? that.parseDate(that.searchData.dateTime[1], true)
+                      : '', // 结束时间
+                  purchaseCompany: that.searchData.purchaseCompany, // 采购公司
+                  receiver: that.searchData.receiver, // 收货人 模糊查询
+                  cityCompany: that.searchData.cityCompany, // 城市公司
+                }
+                that.getData(params)
+              }
+            })
+            .finally(err => {})
+        },
+        onCancel() {},
       })
     },
     // 获取城市公司

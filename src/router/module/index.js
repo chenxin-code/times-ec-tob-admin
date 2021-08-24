@@ -154,7 +154,7 @@ export default [
       bread: [
         {
           path: '/account',
-          name: '账号管理',
+          name: '企业账号管理',
         },
       ],
       // keepAlive: true
@@ -169,7 +169,7 @@ export default [
       menu: '/account',
       authKeys: [''],
       bread: [
-        { path: '/account', name: '账号管理' },
+        { path: '/account', name: '企业账号管理' },
         { path: '/account/add', name: '新建账号' },
       ],
     },
@@ -183,7 +183,7 @@ export default [
       menu: '/account',
       authKeys: [''],
       bread: [
-        { path: '/account', name: '账号管理' },
+        { path: '/account', name: '企业账号管理' },
         { path: '/account/edit', name: '编辑账号' },
       ],
     },

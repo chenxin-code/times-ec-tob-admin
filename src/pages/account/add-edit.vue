@@ -184,6 +184,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.$route)
     if (this.$route.path === '/account/edit') {
       api
         .queryAccountInfo({

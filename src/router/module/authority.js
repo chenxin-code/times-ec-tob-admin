@@ -1,6 +1,22 @@
 // 菜单管理-账号管理-角色管理
 export default [
     {
+        path: '/system',
+        name: 'system',
+        menuKey: 'system',
+        meta: {
+            menu: '/system',
+            authKeys: [''],
+            bread: [
+                {
+                    // path: '/system',
+                    name: '系统管理',
+                },
+            ],
+            keepAlive: false
+        },
+    },
+    {
         path: '/accountManagement',
         name: 'accountManagement',
         menuKey: 'accountManagement',
@@ -15,7 +31,7 @@ export default [
             ],
             keepAlive: false
         },
-        component: () => import('@/pages/accountManagement/index'),
+        component: () => import('@/pages/system/accountManagement/index'),
     },
     {
         path: '/accountManagement/assignUsers',
@@ -32,7 +48,7 @@ export default [
                 { path: '/accountManagement/assignUsers', name: '关联角色' }],
             keepAlive: false
         },
-        component: () => import('@/pages/accountManagement/assignUsers'),
+        component: () => import('@/pages/system/accountManagement/assignUsers'),
     },
     {
         path: '/authority',
@@ -49,8 +65,8 @@ export default [
             ],
             // keepAlive: true
         },
-        component: () => import('@/pages/authority/index'),
-      },
+        component: () => import('@/pages/system/authority/menuManagement/index'),
+    },
     {
       path: '/menuManagement',
       name: 'menuManagement',
@@ -70,7 +86,7 @@ export default [
           ],
           // keepAlive: true
       },
-      component: () => import('@/pages/authority/menuManagement/index'),
+      component: () => import('@/pages/system/authority/menuManagement/index'),
     },
     {
         path: '/menuManagementEdit',
@@ -95,9 +111,8 @@ export default [
             ],
             keepAlive: false
         },
-        component: () => import('@/pages/authority/menuManagement/edit'),
+        component: () => import('@/pages/system/authority/menuManagement/edit'),
     },
-
     {
         path: '/authority/role',
         name: 'role',
@@ -111,7 +126,7 @@ export default [
             },{ path: '/authority/role', name: '角色管理' }],
             keepAlive: false
         },
-        component: () => import('@/pages/authority/role/index'),
+        component: () => import('@/pages/system/authority/role/index'),
     },
     {
         path: '/authority/assignRole',
@@ -126,7 +141,7 @@ export default [
                 { path: '/authority/assignRole', name:'分配用户' }],
             keepAlive: false
         },
-        component: () => import('@/pages/authority/role/assignRole'),
+        component: () => import('@/pages/system/authority/role/assignRole'),
     },
     {
         path: '/authority/assignAuthority',
@@ -141,6 +156,6 @@ export default [
                 { path: '/authority/assignRole', name:'分配权限' }],
             keepAlive: false
         },
-        component: () => import('@/pages/authority/role/assignAuthority'),
+        component: () => import('@/pages/system/authority/role/assignAuthority'),
     },
   ]

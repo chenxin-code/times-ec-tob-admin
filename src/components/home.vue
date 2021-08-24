@@ -1,7 +1,15 @@
 <template>
   <div id="home">
     <a-layout class="container">
-      <a-layout-sider v-model="collapsed" collapsible>
+      <a-layout-sider
+        class="layout-sider"
+        v-model="collapsed"
+        collapsible
+        :style="{
+          overflow: 'auto',
+          background: '#22242f',
+        }"
+      >
         <div class="logo"></div>
         <Menu />
       </a-layout-sider>
@@ -160,7 +168,13 @@ export default {
     aside.ant-layout-sider {
       z-index: 2;
     }
-
+    .layout-sider {
+      height: calc(100vh - 48px);
+      box-sizing: 'border-box';
+    }
+    // /deep/.ant-layout-sider-trigger {
+    //   padding-bottom: 0;
+    // }
     .breadcrumb {
       display: inline-block;
     }

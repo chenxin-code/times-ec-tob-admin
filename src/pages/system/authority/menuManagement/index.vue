@@ -111,6 +111,10 @@ export default {
       tableLoading: false,
       isShowSort: false,
       scrollY: 100,
+      menuData: {
+        1: '菜单',
+        2: '按钮',
+      },
     }
   },
   watch: {
@@ -141,6 +145,7 @@ export default {
     // 递归删除空的children
     resetData(data) {
       _.forEach(data, element => {
+        element.children = [...element.children, ...element.buttonChildren]
         if (element.children) {
           if (element.children.length <= 0) {
             delete element.children
@@ -169,11 +174,14 @@ export default {
     },
     // 启用/禁用
     onChangeStatus(props) {
+      let { menuData } = this
+      console.log(props, 'pros')
       const that = this
       this.$confirm({
-        title: `您确认${['停用', '启用'][props.visible]}“${
-          props.menuName
-        }”该菜单?`,
+        title: `您确认${['停用', '启用'][props.visible]}“${props.menuName}”该${
+          menuData[props.menuType]
+        }?`,
+        // menuData
         centered: true,
         onOk() {
           that.tableLoading = true

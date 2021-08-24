@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%;">
+  <div style="height: 100%;background:#fff;">
     <a-form-model
       :model="thisForm"
       layout="inline"

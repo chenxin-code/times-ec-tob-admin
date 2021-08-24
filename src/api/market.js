@@ -7,6 +7,8 @@ let marketDeliveryOrderListUrl = '/times-ec-tob-mall/admin/delivery/order/list/'
 let marketDeliveryOrderConfirmUrl = '/times-ec-tob-mall/admin/delivery/order/confirm'
 let marketQueryInfoUrl = '/times-ec-tob-mall/admin/delivery/order/queryInfo/'
 
+const URL_PREFIX = '/times-ec-tob-mall/external/purchase'
+
 // 列表
 export const getMarketOrderList = (data) => {
   return fetchApi(marketOrderListUrl, data, 'POST')
@@ -35,3 +37,12 @@ export const marketDeliveryOrderConfirm = (data) => {
 export const marketQueryInfo = (data) => {
   return fetchApi(marketQueryInfoUrl + data.deliveryNo, {}, 'GET')
 }
+//确认订单
+/**
+ *采购单：确认或者取消采购单申请
+ * @param {Object} params 入参 参数名称 参数说明 请求类型 是否必须
+ * @param {string} params.confirmFlag		    确认订单标志，1确认，2取消 	
+ * @param {string} params.thirdPurchaseId		第三方采购单唯一标志	
+ */
+export const marketOrderConfirmApply = params => fetchApi(`${URL_PREFIX}/confirm/apply`, params, 'POST')
+
