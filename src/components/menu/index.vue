@@ -9,11 +9,11 @@
   >
     <template v-for="menu in menus">
       <template v-if="menu.children && menu.children.length > 0">
-        <a-sub-menu :key="menu.url">
+        <a-sub-menu :key="menu.id">
           <span slot="title"
             ><img v-if="menu.icon" :src="menu.icon" class="menu-icon" />
 
-            <span class="menu-title" :key="menu.url">{{
+            <span class="menu-title" :key="menu.id">{{
               menu.menuName
             }}</span></span
           >
@@ -21,20 +21,20 @@
             <template
               v-if="menuChildren.children && menuChildren.children.length > 0"
             >
-              <a-sub-menu :key="menuChildren.url">
+              <a-sub-menu :key="menuChildren.id">
                 <span slot="title"
                   ><img
                     v-if="menuChildren.icon"
                     :src="menuChildren.icon"
                     class="menu-icon"
                   />
-                  <span class="menu-title" :key="menuChildren.url">
+                  <span class="menu-title" :key="menuChildren.id">
                     {{ menuChildren.menuName }}</span
                   ></span
                 >
                 <template v-for="menuCh in menuChildren.children">
                   <a-menu-item
-                    :key="menuCh.url"
+                    :key="menuCh.url != '/#' ? menuCh.url : menuCh.id"
                     @click="onClickMenuChid(menuCh.url)"
                   >
                     <img
@@ -64,7 +64,10 @@
       </template>
       <template v-else>
         <template>
-          <a-menu-item :key="menu.url" @click="onClickMenu(menu.url)">
+          <a-menu-item
+            :key="menu.url != '/#' ? menu.url : menu.id"
+            @click="onClickMenu(menu.url)"
+          >
             <span
               ><img v-if="menu.icon" :src="menu.icon" class="menu-icon" /><span
                 class="menu-title"
