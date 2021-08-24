@@ -102,15 +102,12 @@ export default {
   computed: mapState(['menus']),
   watch: {},
   created() {
-    console.log(this.menus, 'menus')
+    // console.log(this.menus, 'menus')
   },
   methods: {
     checkKeys(openKeys) {
       this.openKeys = openKeys
       this.$forceUpdate()
-    },
-    onClickMenuChid(path) {
-      this.$router.push({ path: path })
     },
     onClickMenuChid(path) {
       this.$router.push({ path: path })

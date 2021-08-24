@@ -1,4 +1,6 @@
 import message from 'ant-design-vue/es/message'
+import store from '@/store'
+
 
 // 获取前后五年的年份
 export function getFiveYears(all) {
@@ -327,4 +329,39 @@ export function importAll(r) {
   })
   //拉平数组维度
   return routerList.flat()
+}
+//批量筛选动态按钮权限
+export function filterAuthority(path){
+    let menus = JSON.parse(sessionStorage.getItem('store')).menus;
+    let buttonChildren=[], list = [];
+    buttonChildren = mapButtonCHhild(menus,path,buttonChildren);
+    buttonChildren.map(item=>{
+        list.push({
+            id:item.id,
+            menuName: item.menuName,
+            menuType:item.menuType,
+            perms:item.perms,
+            possessOrNot:item.possessOrNot,
+            visible: item.visible,
+        })
+    })
+    return list;
+}
+function mapButtonCHhild(data,path,list){
+    data.map((item,index)=>{
+        if(item.children && item.children.length > 0){
+            mapButtonCHhild(item.children,path,list);
+        } else {
+            if(item.url == path){
+                list.push(item.buttonChildren);
+            } 
+        }
+    })
+    return list[0];
+}
+//筛选制动的按钮
+export function filterButton(type,list){
+    list.filter((item,index)=>{
+        return item.perms == type;
+    });
 }

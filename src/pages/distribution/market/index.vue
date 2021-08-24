@@ -17,6 +17,14 @@
         />
       </div>
       <div class="search-list-item">
+        <span class="label-text">平台单号：</span>
+        <a-input
+          placeholder="请输入平台单号"
+          class="iw250"
+          v-model="searchData.saleOrderNo"
+        />
+      </div>
+      <div class="search-list-item">
         <span class="label-text">下单时间：</span>
         <a-range-picker
           class="iw250"
@@ -118,6 +126,13 @@ export default {
         title: '订单编号',
         dataIndex: 'saleOrderNo',
         key: 'saleOrderNo',
+        width: 250,
+        align: 'left',
+      },
+      {
+        title: '平台单号',
+        dataIndex: 'thirdPurchaseId',
+        key: 'thirdPurchaseId',
         width: 250,
         align: 'left',
       },
