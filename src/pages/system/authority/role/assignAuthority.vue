@@ -67,10 +67,10 @@ export default {
     const rowSelection = {
       onChange: this.selectChange,
       onSelect: (record, selected, selectedRows) => {
-        console.log(record, selected, selectedRows)
+        // console.log(record, selected, selectedRows)
       },
       onSelectAll: (selected, selectedRows, changeRows) => {
-        console.log(selected, selectedRows, changeRows)
+        // console.log(selected, selectedRows, changeRows)
       },
     }
     return {
@@ -239,8 +239,6 @@ export default {
           }
         }
       }
-
-      console.log(this.selectedId, 'this.selectedId')
     },
     //默认递归选中父级Id
     mapTableDataForId(data, list) {
