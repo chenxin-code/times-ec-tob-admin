@@ -278,6 +278,7 @@ export default {
         .insertRoleMenu({
           roleId: this.$route.params.id,
           menuIds: this.checkChange.concat(ParentId), //选中的权限拼接父级的id
+          parentIds: ParentId, //权限选中的父类id
           menuParentIds: this.selectedId, //选中的访问页面权限
         })
         .then(resp => {
