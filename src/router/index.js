@@ -11,7 +11,7 @@ const Token = () => import('../pages/login/index')
 
 const Home = () => import('../components/home')
 
-let children = importAll(
+export const asyncRouter = importAll(
   require.context(
     './module',
     true,
@@ -31,7 +31,23 @@ let router = new Router({
       name: 'home',
       menuKey: 'home',
       component: Home,
-      children: [...children],
+      children: [{
+        path: '/home',
+        name: 'home',
+        menuKey: 'home',
+        meta: {
+            menu: '/home',
+            authKeys: [''],
+            bread: [
+                {
+                    path: '/home',
+                    name: '首页',
+                },
+            ],
+            // keepAlive: true
+        },
+        component: () => import('@/pages/home/index'),
+      }],
     },
     {
       path: '/404',
@@ -53,7 +69,6 @@ let router = new Router({
   mode: 'history',
   // mode: "hash",
 })
-
 router.beforeEach((to, from, next) => {
   if (!(to.meta.menu == from.meta.menu) && to.fullPath != '/login') {
     sessionStorage.removeItem('listPageParams')

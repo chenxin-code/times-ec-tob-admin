@@ -104,6 +104,7 @@ export default {
   //   next();
   // },
   created() {
+    console.log(this.$route.meta)
     if (this.useravatar && this.useravatar != 'undefined') {
       this.userImage = this.useravatar
     } else {

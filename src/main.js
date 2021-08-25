@@ -48,7 +48,6 @@ import FormSubmitButton from './components/FormSubmitButton/index.js'
 Vue.use(FormSubmitButton)
 
 Vue.use(Vuex)
-console.log(window.location)
 // Vue.use(VueCookies);
 
 Vue.config.productionTip = false
