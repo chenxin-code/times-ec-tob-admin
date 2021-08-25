@@ -96,8 +96,12 @@
           <a @click="checkDetails(record)">查看</a>
           <a-divider type="vertical" />
           <a @click="checkDeliveryOrder(record)">查看配送订单</a>
-          <a-divider type="vertical" />
-          <a @click="checkConfirmOrder(record)">确认订单</a>
+          <template
+            v-if="record.comfirmFlag == null || record.comfirmFlag == 0"
+          >
+            <a-divider type="vertical" />
+            <a @click="checkConfirmOrder(record)">确认订单</a>
+          </template>
         </span>
       </a-table>
     </div>
