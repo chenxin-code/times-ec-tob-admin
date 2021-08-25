@@ -21,7 +21,7 @@
         <a-input
           placeholder="请输入平台单号"
           class="iw250"
-          v-model="searchData.saleOrderNo"
+          v-model="searchData.thirdPurchaseId"
         />
       </div>
       <div class="search-list-item">
@@ -96,8 +96,12 @@
           <a @click="checkDetails(record)">查看</a>
           <a-divider type="vertical" />
           <a @click="checkDeliveryOrder(record)">查看配送订单</a>
-          <a-divider type="vertical" />
-          <a @click="checkConfirmOrder(record)">确认订单</a>
+          <template
+            v-if="record.comfirmFlag == null || record.comfirmFlag == 0"
+          >
+            <a-divider type="vertical" />
+            <a @click="checkConfirmOrder(record)">确认订单</a>
+          </template>
         </span>
       </a-table>
     </div>
@@ -264,6 +268,7 @@ export default {
         purchaseCompany: '', // 采购公司
         receiver: '', // 收货人 模糊查询
         cityCompany: undefined, // 城市公司
+        thirdPurchaseId: '', //平台单号
       },
       orderState: 'PROCESSING',
       loading: false,
@@ -286,6 +291,7 @@ export default {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         saleOrderNo: this.searchData.saleOrderNo, // 订单编号
+        thirdPurchaseId: this.searchData.thirdPurchaseId, // 平台单号
         orderTimeStart:
           this.searchData.dateTime.length > 0
             ? this.parseDate(this.searchData.dateTime[0])
@@ -360,6 +366,7 @@ export default {
           pageNum: this.pageData.pageNum, // 第几页
           pageSize: this.pageData.pageSize, // 每页多少条
           saleOrderNo: this.searchData.saleOrderNo, // 订单编号
+          thirdPurchaseId: this.searchData.thirdPurchaseId, // 平台单号
           orderTimeStart:
             this.searchData.dateTime.length > 0
               ? this.parseDate(this.searchData.dateTime[0])
@@ -387,6 +394,7 @@ export default {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         saleOrderNo: this.searchData.saleOrderNo, // 订单编号
+        thirdPurchaseId: this.searchData.thirdPurchaseId, // 平台单号
         orderTimeStart:
           this.searchData.dateTime.length > 0
             ? this.parseDate(this.searchData.dateTime[0])
@@ -431,6 +439,7 @@ export default {
         pageNum: this.pageData.current, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         saleOrderNo: this.searchData.saleOrderNo, // 订单编号
+        thirdPurchaseId: this.searchData.thirdPurchaseId, // 平台单号
         orderTimeStart:
           this.searchData.dateTime.length > 0
             ? this.parseDate(this.searchData.dateTime[0])
@@ -454,12 +463,14 @@ export default {
         purchaseCompany: '', // 采购公司
         receiver: '', // 收货人 模糊查询
         cityCompany: undefined, // 城市公司
+        thirdPurchaseId: '',
       }
       let params = {
         orderState: this.orderState, // 订单状态 进行中 已完成
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         saleOrderNo: this.searchData.saleOrderNo, // 订单编号
+        thirdPurchaseId: this.searchData.thirdPurchaseId, // 平台单号
         orderTimeStart: '', // 开始时间
         orderTimeEnd: '', // 结束时间
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
@@ -507,6 +518,7 @@ export default {
                   pageNum: that.pageData.current, // 第几页
                   pageSize: that.pageData.pageSize, // 每页多少条
                   saleOrderNo: that.searchData.saleOrderNo, // 订单编号
+                  thirdPurchaseId: that.searchData.thirdPurchaseId, // 平台单号
                   orderTimeStart:
                     that.searchData.dateTime.length > 0
                       ? that.parseDate(that.searchData.dateTime[0])
@@ -556,6 +568,7 @@ export default {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         saleOrderNo: this.searchData.saleOrderNo, // 订单编号
+        thirdPurchaseId: this.searchData.thirdPurchaseId, // 平台单号
         orderTimeStart:
           this.searchData.dateTime.length > 0
             ? this.parseDate(this.searchData.dateTime[0])
