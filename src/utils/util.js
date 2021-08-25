@@ -331,21 +331,16 @@ export function importAll(r) {
   return routerList.flat()
 }
 //批量筛选动态按钮权限
-export function filterAuthority(path){
+export function filterAuthority(path,type){
     let menus = JSON.parse(sessionStorage.getItem('store')).menus;
     let buttonChildren=[], list = [];
     buttonChildren = mapButtonCHhild(menus,path,buttonChildren);
     buttonChildren.map(item=>{
-        list.push({
-            id:item.id,
-            menuName: item.menuName,
-            menuType:item.menuType,
-            perms:item.perms,
-            possessOrNot:item.possessOrNot,
-            visible: item.visible,
-        })
+        if(item.possessOrNot == 1){
+            list.push(item.perms);
+        }
     })
-    return list;
+    return list.includes(type);
 }
 function mapButtonCHhild(data,path,list){
     data.map((item,index)=>{
@@ -358,10 +353,4 @@ function mapButtonCHhild(data,path,list){
         }
     })
     return list[0];
-}
-//筛选制动的按钮
-export function filterButton(type,list){
-    list.filter((item,index)=>{
-        return item.perms == type;
-    });
 }

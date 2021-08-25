@@ -90,8 +90,18 @@
               style="margin-top: 8px;"
             >
               <span slot="action" slot-scope="scope">
-                <a-button type="link" @click="edit(scope, '1')">查看</a-button>
-                <a-button type="link" @click="edit(scope, '2')">编辑</a-button>
+                <a-button
+                  v-if="$power('query')"
+                  type="link"
+                  @click="edit(scope, '1')"
+                  >查看</a-button
+                >
+                <a-button
+                  v-if="$power('edit')"
+                  type="link"
+                  @click="edit(scope, '2')"
+                  >编辑</a-button
+                >
               </span>
               <template slot="isTieredPricing" slot-scope="scope">
                 {{ scope.isTieredPricing == true ? '是' : '否' }}

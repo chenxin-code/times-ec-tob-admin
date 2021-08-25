@@ -14,6 +14,7 @@
         :tableData="tableData"
         :loading="tableLoading"
         :scrollY="scrollY"
+        :indentSize="15"
       >
         <template slot="menuType" slot-scope="{ props }">
           {{ ['未定义', '菜单', '按钮'][props.menuType] }}
@@ -175,7 +176,6 @@ export default {
     // 启用/禁用
     onChangeStatus(props) {
       let { menuData } = this
-      console.log(props, 'pros')
       const that = this
       this.$confirm({
         title: `您确认${['停用', '启用'][props.visible]}“${props.menuName}”该${

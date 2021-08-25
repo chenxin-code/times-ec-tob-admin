@@ -20,7 +20,6 @@ exports.returnBaseCms = returnBaseCms;
 exports.parseDate = parseDate;
 exports.importAll = importAll;
 exports.filterAuthority = filterAuthority;
-exports.filterButton = filterButton;
 exports.getQueryString = exports.openLink = exports.debounce = void 0;
 
 var _message = _interopRequireDefault(require("ant-design-vue/es/message"));
@@ -419,22 +418,17 @@ function importAll(r) {
 } //批量筛选动态按钮权限
 
 
-function filterAuthority(path) {
+function filterAuthority(path, type) {
   var menus = JSON.parse(sessionStorage.getItem('store')).menus;
   var buttonChildren = [],
       list = [];
   buttonChildren = mapButtonCHhild(menus, path, buttonChildren);
   buttonChildren.map(function (item) {
-    list.push({
-      id: item.id,
-      menuName: item.menuName,
-      menuType: item.menuType,
-      perms: item.perms,
-      possessOrNot: item.possessOrNot,
-      visible: item.visible
-    });
+    if (item.possessOrNot == 1) {
+      list.push(item.perms);
+    }
   });
-  return list;
+  return list.includes(type);
 }
 
 function mapButtonCHhild(data, path, list) {
@@ -448,11 +442,4 @@ function mapButtonCHhild(data, path, list) {
     }
   });
   return list[0];
-} //筛选制动的按钮
-
-
-function filterButton(type, list) {
-  list.filter(function (item, index) {
-    return item.perms == type;
-  });
 }

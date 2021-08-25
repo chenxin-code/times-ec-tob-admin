@@ -91,13 +91,22 @@
         @change="tableChange"
       >
         <span slot="action" slot-scope="text, record">
-          <a @click="applyAfterSale(record)">修改城市公司</a>
-          <a-divider type="vertical" />
-          <a @click="checkDetails(record)">查看</a>
-          <a-divider type="vertical" />
-          <a @click="checkDeliveryOrder(record)">查看配送订单</a>
+          <template v-if="$power('edit')">
+            <a @click="applyAfterSale(record)">修改城市公司</a>
+          </template>
+          <template v-if="$power('query')">
+            <a-divider type="vertical" />
+            <a @click="checkDetails(record)">查看</a>
+          </template>
+          <template v-if="$power('queryOrder')">
+            <a-divider type="vertical" />
+            <a @click="checkDeliveryOrder(record)">查看配送订单</a>
+          </template>
           <template
-            v-if="record.comfirmFlag == null || record.comfirmFlag == 0"
+            v-if="
+              $power('confirm') &&
+                (record.comfirmFlag == null || record.comfirmFlag == 0)
+            "
           >
             <a-divider type="vertical" />
             <a @click="checkConfirmOrder(record)">确认订单</a>

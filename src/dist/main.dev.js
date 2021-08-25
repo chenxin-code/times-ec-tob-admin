@@ -38,6 +38,8 @@ var _lodash = _interopRequireDefault(require("lodash"));
 
 var _index = _interopRequireDefault(require("./components/FormSubmitButton/index.js"));
 
+var _install = _interopRequireDefault(require("@/utils/install.js"));
+
 var directives = _interopRequireWildcard(require("./directive"));
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
@@ -71,11 +73,12 @@ _vue["default"].prototype.$api = _api["default"]; // 引入lodash
 
 _vue["default"].prototype._ = _lodash["default"]; //底部的公共返回保存按鈕
 
-_vue["default"].use(_index["default"]);
+_vue["default"].use(_index["default"]); //全局注入方法
+
+
+_vue["default"].use(_install["default"]);
 
 _vue["default"].use(_vuex["default"]);
-
-console.log(window.location); // Vue.use(VueCookies);
 
 _vue["default"].config.productionTip = false;
 

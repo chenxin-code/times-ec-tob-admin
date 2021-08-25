@@ -137,6 +137,7 @@
 </template>
 <script>
 import api from '@/api'
+import { filterAuthority } from '@/utils/util.js'
 export default {
   data() {
     let formList = [
@@ -243,6 +244,7 @@ export default {
     }
   },
   mounted() {
+    console.log(filterAuthority(this.$route.path))
     setTimeout(() => {
       this.scrollY = document.body.clientHeight - 350
     }, 0)

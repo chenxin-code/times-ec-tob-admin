@@ -37,6 +37,7 @@ export default {
     height: 100%;
     padding-top: 50px;
     justify-content: center;
+    box-sizing: border-box;
   }
   .img {
     max-width: 100%;

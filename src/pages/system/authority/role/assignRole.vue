@@ -385,6 +385,11 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+/deep/.ant-table-thead > tr:first-child > th:first-child :after {
+  content: '访问';
+}
+// .ant-table-selection-column {
+// }
 .container-edit {
   position: relative;
   height: 100%;

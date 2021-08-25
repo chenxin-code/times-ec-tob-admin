@@ -165,7 +165,7 @@ export default {
       {
         title: '操作',
         fixed: 'right',
-        width: 450,
+        // width: 300,
         align: 'left',
         key: 4,
         scopedSlots: { customRender: 'operation' },
@@ -484,5 +484,8 @@ export default {
 }
 /deep/ .ant-transfer-list {
   width: 45%;
+}
+.ant-btn {
+  padding: 0;
 }
 </style>
