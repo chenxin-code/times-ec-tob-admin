@@ -25,6 +25,7 @@
             >重置</a-button
           >
           <a-button
+            v-if="$power('add')"
             class="item-btn"
             @click="$router.push({ path: '/company/add' })"
             type="primary"

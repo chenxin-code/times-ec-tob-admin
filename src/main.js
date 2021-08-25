@@ -47,6 +47,10 @@ Vue.prototype._ = lodash
 import FormSubmitButton from './components/FormSubmitButton/index.js'
 Vue.use(FormSubmitButton)
 
+import Install from '@/utils/install.js'
+Vue.use(Install)
+
+
 Vue.use(Vuex)
 // Vue.use(VueCookies);
 
