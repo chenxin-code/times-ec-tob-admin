@@ -183,7 +183,6 @@ export default {
       this.tableDataed.map(item => {
         roleIds.push(item.id)
       })
-      console.log(roleIds, 'roleIds')
       let params = {
         roleIds: roleIds,
         userId: this.$route.params.id,
@@ -193,6 +192,7 @@ export default {
           this.$message.success(`保存成功`)
           this.getNoAssignRole({ userId: this.$route.params.id })
           this.getAssignRole({ userId: this.$route.params.id })
+          this.$router.back()
         }
       })
     },

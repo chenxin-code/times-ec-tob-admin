@@ -137,7 +137,7 @@
 </template>
 <script>
 import api from '@/api'
-import { filterAuthority } from '@/utils/util.js'
+
 export default {
   data() {
     let formList = [
@@ -244,7 +244,6 @@ export default {
     }
   },
   mounted() {
-    console.log(filterAuthority(this.$route.path))
     setTimeout(() => {
       this.scrollY = document.body.clientHeight - 350
     }, 0)
@@ -448,6 +447,7 @@ export default {
             api
               .setAddAccountSave(this.toAssignRole)
               .then(res => {
+                console.log(res, 'code')
                 if (res.code == 200) {
                   that.$message.info('保存成功')
                   that.modelVisibleAdd = false

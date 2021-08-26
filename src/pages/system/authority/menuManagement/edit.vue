@@ -159,7 +159,9 @@ export default {
     // 获取详情信息
     initDetail() {
       this.$api.getMenuModel({ id: this.$route.params.id }).then(res => {
-        this.form = res.data
+        if (res.code == 200) {
+          this.form = res.data
+        }
       })
     },
     // 获取类目树
@@ -191,9 +193,11 @@ export default {
             this.form
           )
             .then(res => {
-              this.$router.go(-1)
-              this.$message.info(`提交成功`)
-              that.$store.dispatch('GET_MENU_LIST')
+              if (res.code == 200) {
+                this.$router.go(-1)
+                this.$message.info(`提交成功`)
+                that.$store.dispatch('GET_MENU_LIST')
+              }
             })
             .finally(() => {
               this.loadingSubmit = false

@@ -48,7 +48,9 @@
             </template>
             <template v-else>
               <a-menu-item
-                :key="menuChildren.url"
+                :key="
+                  menuChildren.url != '/#' ? menuChildren.url : menuChildren.id
+                "
                 @click="onClickMenuChid(menuChildren.url)"
               >
                 <img

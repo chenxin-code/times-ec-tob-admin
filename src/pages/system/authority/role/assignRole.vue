@@ -319,7 +319,7 @@ export default {
             roleId: this.$route.params.id, // roleId
           }
           this.$message.success('保存成功')
-          this.$router.back()
+          this.$router.go(-1)
           this.getHasAddList(param)
           this.selectReset()
         }
@@ -385,11 +385,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-/deep/.ant-table-thead > tr:first-child > th:first-child :after {
-  content: '访问';
-}
-// .ant-table-selection-column {
-// }
 .container-edit {
   position: relative;
   height: 100%;
