@@ -21,7 +21,7 @@
         <a-input
           placeholder="请输入平台单号"
           class="iw250"
-          v-model="searchData.thirdPurchaseId"
+          v-model="searchData.thirdPurchaseNo"
         />
       </div>
       <div class="search-list-item">
@@ -90,7 +90,7 @@
         :loading="loading"
         @change="tableChange"
       >
-        <span slot="action" slot-scope="text, record">
+        <span slot="operation" slot-scope="text, record">
           <template v-if="$power('edit')">
             <a @click="applyAfterSale(record)">修改城市公司</a>
           </template>
@@ -144,8 +144,8 @@ export default {
       },
       {
         title: '平台单号',
-        dataIndex: 'thirdPurchaseId',
-        key: 'thirdPurchaseId',
+        dataIndex: 'thirdPurchaseNo',
+        key: 'thirdPurchaseNo',
         width: 250,
         align: 'left',
       },
@@ -249,9 +249,8 @@ export default {
         key: 'operation',
         fixed: 'right',
         width: 350,
-        align: 'left',
-        scopedSlots: { customRender: 'action' },
-        align: 'left',
+        align: 'right',
+        scopedSlots: { customRender: 'operation' },
       },
     ]
     let pageData = {
@@ -295,25 +294,7 @@ export default {
   computed: mapState(['Case_Access_Token']),
   watch: {
     Case_Access_Token(newVal, oldVal) {
-      let params = {
-        orderState: this.orderState, // 订单状态 进行中 已完成
-        pageNum: this.pageData.pageNum, // 第几页
-        pageSize: this.pageData.pageSize, // 每页多少条
-        saleOrderNo: this.searchData.saleOrderNo, // 订单编号
-        thirdPurchaseId: this.searchData.thirdPurchaseId, // 平台单号
-        orderTimeStart:
-          this.searchData.dateTime.length > 0
-            ? this.parseDate(this.searchData.dateTime[0])
-            : '', // 开始时间
-        orderTimeEnd:
-          this.searchData.dateTime.length > 0
-            ? this.parseDate(this.searchData.dateTime[1], true)
-            : '', // 结束时间
-        purchaseCompany: this.searchData.purchaseCompany, // 采购公司
-        receiver: this.searchData.receiver, // 收货人 模糊查询
-        cityCompany: this.searchData.cityCompany, // 城市公司
-      }
-      this.getData(params)
+      this.getData()
     },
     orderStatusValue(val) {
       let emptyArr = []
@@ -335,11 +316,28 @@ export default {
   },
   mounted() {
     if (this.Case_Access_Token) {
-      let params = {
+      this.getData()
+      this.getCityCompanyList()
+    }
+  },
+  created() {
+    const timer1 = setTimeout(() => {
+      this.scrollY = document.body.clientHeight - 390 + 'px'
+    }, 0)
+    // this.$once('hook:beforeDestroy', () => {
+    //   clearTimeout(timer1)
+    // })
+  },
+  methods: {
+    // 获取列表数据
+    async getData(params) {
+      this.loading = true
+      params = {
         orderState: this.orderState, // 订单状态 进行中 已完成
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
         saleOrderNo: this.searchData.saleOrderNo, // 订单编号
+        thirdPurchaseNo: this.searchData.thirdPurchaseNo, // 平台单号
         orderTimeStart:
           this.searchData.dateTime.length > 0
             ? this.parseDate(this.searchData.dateTime[0])
@@ -351,43 +349,6 @@ export default {
         purchaseCompany: this.searchData.purchaseCompany, // 采购公司
         receiver: this.searchData.receiver, // 收货人 模糊查询
         cityCompany: this.searchData.cityCompany, // 城市公司
-      }
-      this.getData(params)
-      this.getCityCompanyList()
-    }
-  },
-  created() {
-    const timer1 = setTimeout(() => {
-      this.scrollY = document.body.clientHeight - 390 + 'px'
-    }, 0)
-    this.$once('hook:beforeDestroy', () => {
-      clearTimeout(timer1)
-    })
-    this.handleSearch()
-  },
-  methods: {
-    // 获取列表数据
-    async getData(params) {
-      this.loading = true
-      if (!params) {
-        params = {
-          orderState: this.orderState, // 订单状态 进行中 已完成
-          pageNum: this.pageData.pageNum, // 第几页
-          pageSize: this.pageData.pageSize, // 每页多少条
-          saleOrderNo: this.searchData.saleOrderNo, // 订单编号
-          thirdPurchaseId: this.searchData.thirdPurchaseId, // 平台单号
-          orderTimeStart:
-            this.searchData.dateTime.length > 0
-              ? this.parseDate(this.searchData.dateTime[0])
-              : '', // 开始时间
-          orderTimeEnd:
-            this.searchData.dateTime.length > 0
-              ? this.parseDate(this.searchData.dateTime[1], true)
-              : '', // 结束时间
-          purchaseCompany: this.searchData.purchaseCompany, // 采购公司
-          receiver: this.searchData.receiver, // 收货人 模糊查询
-          cityCompany: this.searchData.cityCompany, // 城市公司
-        }
       }
       try {
         let res = await api.getMarketOrderList(params)
@@ -398,26 +359,8 @@ export default {
       }
     },
     handleSearch() {
-      let params = {
-        orderState: this.orderState, // 订单状态 进行中 已完成
-        pageNum: this.pageData.pageNum, // 第几页
-        pageSize: this.pageData.pageSize, // 每页多少条
-        saleOrderNo: this.searchData.saleOrderNo, // 订单编号
-        thirdPurchaseId: this.searchData.thirdPurchaseId, // 平台单号
-        orderTimeStart:
-          this.searchData.dateTime.length > 0
-            ? this.parseDate(this.searchData.dateTime[0])
-            : '', // 开始时间
-        orderTimeEnd:
-          this.searchData.dateTime.length > 0
-            ? this.parseDate(this.searchData.dateTime[1], true)
-            : '', // 结束时间
-        purchaseCompany: this.searchData.purchaseCompany, // 采购公司
-        receiver: this.searchData.receiver, // 收货人 模糊查询
-        cityCompany: this.searchData.cityCompany, // 城市公司
-      }
       this.pageData.current = 1
-      this.getData(params)
+      this.getData()
     },
     parseDate(date, isEnd) {
       let str = undefined
@@ -437,31 +380,12 @@ export default {
       }
       return str
     },
+    //分页
     tableChange(e) {
       let { pageSize, current } = e
       this.pageData.current = current
       this.pageData.pageSize = pageSize
-      this.pageData.current = e.current * 1
-      this.pageData.total = e.total * 1
-      let params = {
-        orderState: this.orderState, // 订单状态 进行中 已完成
-        pageNum: this.pageData.current, // 第几页
-        pageSize: this.pageData.pageSize, // 每页多少条
-        saleOrderNo: this.searchData.saleOrderNo, // 订单编号
-        thirdPurchaseId: this.searchData.thirdPurchaseId, // 平台单号
-        orderTimeStart:
-          this.searchData.dateTime.length > 0
-            ? this.parseDate(this.searchData.dateTime[0])
-            : '', // 开始时间
-        orderTimeEnd:
-          this.searchData.dateTime.length > 0
-            ? this.parseDate(this.searchData.dateTime[1], true)
-            : '', // 结束时间
-        purchaseCompany: this.searchData.purchaseCompany, // 采购公司
-        receiver: this.searchData.receiver, // 收货人 模糊查询
-        cityCompany: this.searchData.cityCompany, // 城市公司
-      }
-      this.getData(params)
+      this.getData()
     },
     toReset() {
       this.searchData = {
@@ -474,20 +398,8 @@ export default {
         cityCompany: undefined, // 城市公司
         thirdPurchaseId: '',
       }
-      let params = {
-        orderState: this.orderState, // 订单状态 进行中 已完成
-        pageNum: this.pageData.pageNum, // 第几页
-        pageSize: this.pageData.pageSize, // 每页多少条
-        saleOrderNo: this.searchData.saleOrderNo, // 订单编号
-        thirdPurchaseId: this.searchData.thirdPurchaseId, // 平台单号
-        orderTimeStart: '', // 开始时间
-        orderTimeEnd: '', // 结束时间
-        purchaseCompany: this.searchData.purchaseCompany, // 采购公司
-        receiver: this.searchData.receiver, // 收货人 模糊查询
-        cityCompany: this.searchData.cityCompany, // 城市公司
-      }
       this.pageData.current = 1
-      this.getData(params)
+      this.getData()
     },
     // 查看详情
     checkDetails(row) {
@@ -522,25 +434,7 @@ export default {
             .then(res => {
               if (res.code == 200) {
                 that.$message.info(`${type}成功`)
-                let params = {
-                  orderState: that.orderState, // 订单状态 进行中 已完成
-                  pageNum: that.pageData.current, // 第几页
-                  pageSize: that.pageData.pageSize, // 每页多少条
-                  saleOrderNo: that.searchData.saleOrderNo, // 订单编号
-                  thirdPurchaseId: that.searchData.thirdPurchaseId, // 平台单号
-                  orderTimeStart:
-                    that.searchData.dateTime.length > 0
-                      ? that.parseDate(that.searchData.dateTime[0])
-                      : '', // 开始时间
-                  orderTimeEnd:
-                    that.searchData.dateTime.length > 0
-                      ? that.parseDate(that.searchData.dateTime[1], true)
-                      : '', // 结束时间
-                  purchaseCompany: that.searchData.purchaseCompany, // 采购公司
-                  receiver: that.searchData.receiver, // 收货人 模糊查询
-                  cityCompany: that.searchData.cityCompany, // 城市公司
-                }
-                that.getData(params)
+                that.getData()
               }
             })
             .finally(err => {})
@@ -602,4 +496,7 @@ export default {
 
 <style lang="less" scoped>
 @import url('./index.less');
+/deep/.ant-table-tbody > tr {
+  height: 53.6px;
+}
 </style>

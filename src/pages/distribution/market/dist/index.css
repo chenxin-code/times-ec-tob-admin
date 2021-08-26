@@ -1,0 +1,89 @@
+.list-box .iw250 {
+  width: 250px !important;
+}
+.list-box .search-list {
+  padding: 10px 0;
+}
+.list-box .search-list .search-list-item {
+  display: inline-block;
+  margin-bottom: 10px;
+}
+.list-box .search-list .search-list-item .label-text {
+  display: inline-block;
+  width: 100px;
+  text-align: right;
+}
+.list-box .modal-after {
+  padding: 20px 24px;
+  min-height: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+.list-box .modal-after .after-item {
+  margin-bottom: 15px;
+}
+.list-box .modal-after .after-item .title {
+  color: #333;
+}
+.list-box .after-tips {
+  display: flex;
+}
+.list-box .tips-text {
+  position: absolute;
+  right: 5px;
+  bottom: 3px;
+  user-select: none;
+  color: #cfcfcf;
+}
+.list-box .order-table .goods-items + .goods-items {
+  margin-top: 8px;
+}
+.list-box .gi-item {
+  display: flex;
+  width: 300px;
+}
+.list-box .gi-item .gi-pic {
+  height: 80px;
+  width: 80px;
+}
+.list-box .gi-item .gi-pic > img {
+  height: 80px;
+  width: 80px;
+}
+.list-box .gi-item .gi-info {
+  width: 300px;
+  margin-left: 10px;
+  padding: 0px 0 !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center !important;
+}
+.list-box .gi-item .gi-info .title {
+  color: #666;
+  font-size: 14px;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.list-box .gi-item .gi-info .size {
+  max-width: 300px;
+  max-height: 45px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.list-box .goods-items-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.list-box .goods-items-block span {
+  display: block;
+  text-align: left;
+  width: 100%;
+}
+.list-box .goods-detail + .goods-detail {
+  margin-top: 30px;
+}

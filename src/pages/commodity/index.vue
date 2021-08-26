@@ -442,7 +442,7 @@ export default {
 
 <style lang="less" scoped>
 .commodity {
-  padding: 20px;
+  padding: 15px;
   height: 100%;
   background: #fff;
 }
@@ -451,7 +451,7 @@ export default {
 
   /deep/ .ant-form-item-control-wrapper {
     width: 250px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
 
   /deep/ .ant-calendar-picker-input {
