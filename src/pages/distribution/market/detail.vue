@@ -1,171 +1,168 @@
 <template>
-  <div id="distributorAudit">
-    <!-- <div class="content-header">
-      销售单详情
-      <span class="fallback" @click="FALLBACK" style="cursor:pointer">返回</span>
-    </div> -->
-    <div
-      class="content-main"
-      style="padding-bottom:50px; overflow-y: auto;height: calc(100% - 45px);"
-    >
-      <div
-        style="width:100%;display: flex;align-items:center;padding: 20px 20px;"
-      >
-        <div style="width:3px;height:16px;background: #4B7AFB;"></div>
-        <span style="color:#666666;margin-left:5px;">订单基础信息</span>
-      </div>
-      <a-form-model
-        label="inline"
-        :label-col="{ span: 6 }"
-        :wrapper-col="{ span: 18 }"
-        style="padding:0 10px;"
-      >
-        <div class="form-wrop">
-          <div class="form-wrop-item">
-            <a-form-model-item label="订单编号">
-              <span class="info">{{ dataList.saleOrderNo }}</span>
-            </a-form-model-item>
-            <a-form-model-item label="城市公司">
-              <span class="info">{{ dataList.cityCompany }}</span>
-            </a-form-model-item>
-            <a-form-model-item label="账务账套">
-              <span class="info">{{ dataList.financialAccounting }}</span>
-            </a-form-model-item>
-            <a-form-model-item label="下单时间">
-              <span class="info">{{ dataList.orderTime }}</span>
-            </a-form-model-item>
-            <a-form-model-item label="备注">
-              <span class="info">{{ dataList.remark }}</span>
-            </a-form-model-item>
+  <div id="distributorAudit" class="container-edit">
+    <baseLayout :header="false">
+      <template slot="content">
+        <div class="content-main">
+          <div
+            style="width:100%;display: flex;align-items:center;padding: 20px 20px;"
+          >
+            <div style="width:3px;height:16px;background: #4B7AFB;"></div>
+            <span style="color:#666666;margin-left:5px;">订单基础信息</span>
           </div>
-          <div class="form-wrop-item">
-            <a-form-model-item label="项目名称">
-              <span class="info">{{ dataList.projectName }}</span>
-            </a-form-model-item>
+          <a-form-model
+            label="inline"
+            :label-col="{ span: 6 }"
+            :wrapper-col="{ span: 18 }"
+            style="padding:0 10px;"
+          >
+            <div class="form-wrop">
+              <div class="form-wrop-item">
+                <a-form-model-item label="订单编号">
+                  <span class="info">{{ dataList.saleOrderNo }}</span>
+                </a-form-model-item>
+                <a-form-model-item label="城市公司">
+                  <span class="info">{{ dataList.cityCompany }}</span>
+                </a-form-model-item>
+                <a-form-model-item label="账务账套">
+                  <span class="info">{{ dataList.financialAccounting }}</span>
+                </a-form-model-item>
+                <a-form-model-item label="下单时间">
+                  <span class="info">{{ dataList.orderTime }}</span>
+                </a-form-model-item>
+                <a-form-model-item label="备注">
+                  <span class="info">{{ dataList.remark }}</span>
+                </a-form-model-item>
+              </div>
+              <div class="form-wrop-item">
+                <a-form-model-item label="项目名称">
+                  <span class="info">{{ dataList.projectName }}</span>
+                </a-form-model-item>
 
-            <a-form-model-item label="采购公司(出账公司)">
-              <span class="info">{{ dataList.purchaseCompany }}</span>
-            </a-form-model-item>
-            <a-form-model-item label="支付方式">
-              <span class="info">{{
-                dataList.payWay == 'ONLINE' ? '线上' : '线下'
-              }}</span>
-            </a-form-model-item>
+                <a-form-model-item label="采购公司(出账公司)">
+                  <span class="info">{{ dataList.purchaseCompany }}</span>
+                </a-form-model-item>
+                <a-form-model-item label="支付方式">
+                  <span class="info">{{
+                    dataList.payWay == 'ONLINE' ? '线上' : '线下'
+                  }}</span>
+                </a-form-model-item>
 
-            <a-form-model-item label="下单场景">
-              <span class="info">{{ dataList.orderSource }}</span>
-            </a-form-model-item>
-            <a-form-model-item label="创建时间">
-              <span class="info">{{ dataList.createTime }}</span>
-            </a-form-model-item>
+                <a-form-model-item label="下单场景">
+                  <span class="info">{{ dataList.orderSource }}</span>
+                </a-form-model-item>
+                <a-form-model-item label="创建时间">
+                  <span class="info">{{ dataList.createTime }}</span>
+                </a-form-model-item>
+              </div>
+            </div>
+          </a-form-model>
+
+          <div
+            style="width:100%;display: flex;align-items:center;padding: 20px 20px;"
+          >
+            <div style="width:3px;height:16px;background: #4B7AFB;"></div>
+            <span style="color:#666666;margin-left:5px;">订单价格</span>
           </div>
+          <a-form-model
+            :label-col="{ span: 6 }"
+            :wrapper-col="{ span: 18 }"
+            style="padding:0 10px;"
+          >
+            <div class="form-wrop">
+              <div class="form-wrop-item">
+                <a-form-model-item label="税前订单总额">
+                  <span class="info">{{ dataList.totalPretaxAmount }}</span>
+                </a-form-model-item>
+                <a-form-model-item label="税前优惠价">
+                  <span class="info">{{
+                    dataList.totalPretaxReducedAmount
+                  }}</span>
+                </a-form-model-item>
+              </div>
+              <div class="form-wrop-item">
+                <a-form-model-item label="税后订单总额">
+                  <span class="info">{{ dataList.totalAmount }}</span>
+                </a-form-model-item>
+                <a-form-model-item label="税后优惠价">
+                  <span class="info">{{ dataList.totalReducedAmount }}</span>
+                </a-form-model-item>
+              </div>
+            </div>
+          </a-form-model>
+
+          <div
+            style="width:100%;display: flex;align-items:center;padding: 20px 20px;"
+          >
+            <div style="width:3px;height:16px;background: #4B7AFB;"></div>
+            <span style="color:#666666;margin-left:5px;">收货信息</span>
+          </div>
+          <a-form-model
+            :label-col="{ span: 6 }"
+            :wrapper-col="{ span: 18 }"
+            style="padding:0 10px;"
+          >
+            <div class="form-wrop">
+              <div class="form-wrop-item">
+                <a-form-model-item label="收货人">
+                  <span class="info">{{
+                    dataList.addressDto ? dataList.addressDto.receiverName : ''
+                  }}</span>
+                </a-form-model-item>
+                <a-form-model-item label="收货地址">
+                  <span class="info">{{
+                    dataList.addressDto ? dataList.addressDto.provinceName : ''
+                  }}</span>
+                  <span class="info">{{
+                    dataList.addressDto ? dataList.addressDto.cityName : ''
+                  }}</span>
+                  <span class="info">{{
+                    dataList.addressDto ? dataList.addressDto.districtName : ''
+                  }}</span>
+                </a-form-model-item>
+                <a-form-model-item label="详细地址">
+                  <span class="info">{{
+                    dataList.addressDto ? dataList.addressDto.detailAddress : ''
+                  }}</span>
+                </a-form-model-item>
+              </div>
+              <div class="form-wrop-item">
+                <a-form-model-item label="收货人电话">
+                  <span class="info">{{
+                    dataList.addressDto ? dataList.addressDto.receiverPhone : ''
+                  }}</span>
+                </a-form-model-item>
+              </div>
+            </div>
+          </a-form-model>
+          <div
+            style="width:100%;display: flex;align-items:center;padding: 20px 20px;"
+          >
+            <div style="width:3px;height:16px;background: #4B7AFB;"></div>
+            <span style="color:#666666;margin-left:5px;">商品信息</span>
+          </div>
+          <a-table
+            :columns="tableColumns"
+            :row-key="(r, i) => i"
+            :data-source="dataList.itemList"
+            :scroll="{ x: 1600 }"
+            :pagination="false"
+            style="margin-top:8px;"
+          >
+            <template slot="itemSpecs" slot-scope="text">
+              {{ getValue(text) }}
+            </template>
+          </a-table>
         </div>
-      </a-form-model>
-
-      <div
-        style="width:100%;display: flex;align-items:center;padding: 20px 20px;"
-      >
-        <div style="width:3px;height:16px;background: #4B7AFB;"></div>
-        <span style="color:#666666;margin-left:5px;">订单价格</span>
-      </div>
-      <a-form-model
-        :label-col="{ span: 6 }"
-        :wrapper-col="{ span: 18 }"
-        style="padding:0 10px;"
-      >
-        <div class="form-wrop">
-          <div class="form-wrop-item">
-            <a-form-model-item label="税前订单总额">
-              <span class="info">{{ dataList.totalPretaxAmount }}</span>
-            </a-form-model-item>
-            <a-form-model-item label="税前优惠价">
-              <span class="info">{{ dataList.totalPretaxReducedAmount }}</span>
-            </a-form-model-item>
-          </div>
-          <div class="form-wrop-item">
-            <a-form-model-item label="税后订单总额">
-              <span class="info">{{ dataList.totalAmount }}</span>
-            </a-form-model-item>
-            <a-form-model-item label="税后优惠价">
-              <span class="info">{{ dataList.totalReducedAmount }}</span>
-            </a-form-model-item>
-          </div>
-        </div>
-      </a-form-model>
-
-      <div
-        style="width:100%;display: flex;align-items:center;padding: 20px 20px;"
-      >
-        <div style="width:3px;height:16px;background: #4B7AFB;"></div>
-        <span style="color:#666666;margin-left:5px;">收货信息</span>
-      </div>
-      <a-form-model
-        :label-col="{ span: 6 }"
-        :wrapper-col="{ span: 18 }"
-        style="padding:0 10px;"
-      >
-        <div class="form-wrop">
-          <div class="form-wrop-item">
-            <a-form-model-item label="收货人">
-              <span class="info">{{
-                dataList.addressDto ? dataList.addressDto.receiverName : ''
-              }}</span>
-            </a-form-model-item>
-            <a-form-model-item label="收货地址">
-              <span class="info">{{
-                dataList.addressDto ? dataList.addressDto.provinceName : ''
-              }}</span>
-              <span class="info">{{
-                dataList.addressDto ? dataList.addressDto.cityName : ''
-              }}</span>
-              <span class="info">{{
-                dataList.addressDto ? dataList.addressDto.districtName : ''
-              }}</span>
-            </a-form-model-item>
-            <a-form-model-item label="详细地址">
-              <span class="info">{{
-                dataList.addressDto ? dataList.addressDto.detailAddress : ''
-              }}</span>
-            </a-form-model-item>
-          </div>
-          <div class="form-wrop-item">
-            <a-form-model-item label="收货人电话">
-              <span class="info">{{
-                dataList.addressDto ? dataList.addressDto.receiverPhone : ''
-              }}</span>
-            </a-form-model-item>
-          </div>
-        </div>
-      </a-form-model>
-      <div
-        style="width:100%;display: flex;align-items:center;padding: 20px 20px;"
-      >
-        <div style="width:3px;height:16px;background: #4B7AFB;"></div>
-        <span style="color:#666666;margin-left:5px;">商品信息</span>
-      </div>
-      <a-table
-        :columns="tableColumns"
-        :row-key="(r, i) => i"
-        :data-source="dataList.itemList"
-        :scroll="{ x: 1600 }"
-        :pagination="false"
-        style="margin-top:8px;"
-      >
-        <template slot="itemSpecs" slot-scope="text">
-          {{ getValue(text) }}
-        </template>
-      </a-table>
-    </div>
-    <!-- <div class="content-footer">
-      <a-button
-        type="primary"
-        size="large"
-        style="width: 120px; margin-right: 10px;"
-        @click="FALLBACK"
-        >返回</a-button
-      >
-    </div> -->
-    <FormSubmitButton :isShow="true" :isShowSubmit="false" />
+      </template>
+      <template slot="footer">
+        <!-- <a-button class="a-buttom-reset" type="primary" @click="saveRole"
+          >保存</a-button
+        > -->
+        <a-button class="a-buttom-reset" type="default" @click="$router.go(-1)"
+          >返回</a-button
+        >
+      </template>
+    </baseLayout>
   </div>
 </template>
 
@@ -282,8 +279,9 @@ export default {
           key: 'remark',
           dataIndex: 'remark',
           width: 200,
+          fixed: 'right',
           ellipsis: true,
-          align: 'left',
+          align: 'center',
         },
       ],
     }
@@ -311,6 +309,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.container-edit {
+  position: relative;
+  height: 100%;
+  .content-main {
+    overflow-y: auto;
+    height: calc(100% - 30px);
+  }
+}
 .form-wrop {
   display: flex;
   justify-content: space-around;
