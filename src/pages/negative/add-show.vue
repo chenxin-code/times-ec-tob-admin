@@ -1,329 +1,338 @@
 <template>
-  <div style="background:#fff;">
-    <!--  <div class="btns">
-      <a-button class="item-btn" :loading="btnloading" type="primary" @click="add()"
-                v-if="$route.path === '/negative/add'">保存
-      </a-button>
-      <a-button class="item-btn" @click="$router.back()">返回</a-button>
-    </div> -->
-    <div
-      class="content-main"
-      style="height: calc(100% - 100px);padding:20px 60px 60px 20px;"
-    >
-      <a-form-model
-        :model="thisForm"
-        layout="inline"
-        :rules="rules"
-        ref="thisForm"
-        labelAlign="left"
-      >
-        <div class="common-title">
-          <div class="common-title-content">
-            {{ $route.path === '/negative/add' ? '新增' : '查看' }}负数单
-          </div>
-        </div>
-        <a-form-model-item
-          label="选择销售单"
-          prop="saleOrderNo"
-          v-if="$route.path === '/negative/add'"
-        >
-          <a-select
-            show-search
-            :value="thisForm.saleOrderNo"
-            placeholder="搜索销售单编号"
-            :default-active-first-option="false"
-            :show-arrow="false"
-            :filter-option="false"
-            :not-found-content="null"
-            @search="handleSearch"
-            @change="handleChange"
-            style="width: 250px;"
+  <div style="height:100%;width:100%;">
+    <baseLayout :header="false">
+      <template slot="content">
+        <div class="content-main" style="">
+          <a-form-model
+            :model="thisForm"
+            layout="inline"
+            :rules="rules"
+            ref="thisForm"
+            labelAlign="left"
           >
-            <a-select-option
-              v-for="(item, index) in orderNoList"
-              :value="item"
-              :key="index"
+            <div class="common-title">
+              <div class="common-title-content">
+                {{ $route.path === '/negative/add' ? '新增' : '查看' }}负数单
+              </div>
+            </div>
+            <a-form-model-item
+              label="选择销售单"
+              prop="saleOrderNo"
+              v-if="$route.path === '/negative/add'"
             >
-              {{ item }}
-            </a-select-option>
-          </a-select>
-        </a-form-model-item>
-        <a-form-model-item
-          label="销售单号"
-          v-if="$route.path === '/negative/show'"
-          >{{ saleOrderNo }}</a-form-model-item
-        >
-        <a-form-model-item
-          label="负数单号"
-          v-if="$route.path === '/negative/show'"
-          >{{ $route.query.negativeNo }}</a-form-model-item
-        >
-        <a-form-model-item
-          label="创建人"
-          v-if="$route.path === '/negative/show'"
-          >{{ createUserName }}</a-form-model-item
-        >
-        <a-form-model-item
-          label="创建时间"
-          v-if="$route.path === '/negative/show'"
-          >{{ createTime }}</a-form-model-item
-        >
-        <div class="common-title">
-          <div class="common-title-content">选择商品</div>
+              <a-select
+                show-search
+                :value="thisForm.saleOrderNo"
+                placeholder="搜索销售单编号"
+                :default-active-first-option="false"
+                :show-arrow="false"
+                :filter-option="false"
+                :not-found-content="null"
+                @search="handleSearch"
+                @change="handleChange"
+                style="width: 250px;"
+              >
+                <a-select-option
+                  v-for="(item, index) in orderNoList"
+                  :value="item"
+                  :key="index"
+                >
+                  {{ item }}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+            <a-form-model-item
+              label="销售单号"
+              v-if="$route.path === '/negative/show'"
+              >{{ saleOrderNo }}</a-form-model-item
+            >
+            <a-form-model-item
+              label="负数单号"
+              v-if="$route.path === '/negative/show'"
+              >{{ $route.query.negativeNo }}</a-form-model-item
+            >
+            <a-form-model-item
+              label="创建人"
+              v-if="$route.path === '/negative/show'"
+              >{{ createUserName }}</a-form-model-item
+            >
+            <a-form-model-item
+              label="创建时间"
+              v-if="$route.path === '/negative/show'"
+              >{{ createTime }}</a-form-model-item
+            >
+            <div class="common-title">
+              <div class="common-title-content">选择商品</div>
+            </div>
+            <a-table
+              :row-selection="rowSelection"
+              :columns="columns"
+              :data-source="tableData"
+              :pagination="false"
+              :loading="tableLoading"
+              :rowKey="(r, i) => i"
+              :scroll="{ x: 2500, y: 400 }"
+              v-if="$route.path === '/negative/add'"
+            >
+              <template slot="itemSpecs" slot-scope="scope">
+                <span v-html="itemSpecsParse(scope.itemSpecs)"></span>
+              </template>
+              <template slot="set1" slot-scope="scope">
+                <a-form-model-item>
+                  <a-input
+                    v-model="scope.set1"
+                    @blur="scope.set1 = naturalFormat(scope.set1)"
+                  />
+                </a-form-model-item>
+              </template>
+              <template slot="set2" slot-scope="scope">
+                <a-form-model-item>
+                  <a-input
+                    v-model="scope.set2"
+                    @blur="scope.set2 = amountFormat(scope.set2)"
+                  />
+                </a-form-model-item>
+              </template>
+              <template slot="set3" slot-scope="scope">
+                <a-form-model-item>
+                  <a-input
+                    v-model="scope.set3"
+                    @blur="scope.set3 = amountFormat(scope.set3)"
+                  />
+                </a-form-model-item>
+              </template>
+              <template slot="set4" slot-scope="scope">
+                <a-form-model-item>
+                  <a-input
+                    v-model="scope.set4"
+                    @blur="scope.set4 = amountFormat(scope.set4)"
+                  />
+                </a-form-model-item>
+              </template>
+              <template slot="set5" slot-scope="scope">
+                <a-form-model-item>
+                  <a-input
+                    v-model="scope.set5"
+                    @blur="scope.set5 = amountFormat(scope.set5)"
+                  />
+                </a-form-model-item>
+              </template>
+              <template slot="remark" slot-scope="scope">
+                <a-form-model-item>
+                  <a-input
+                    v-model="scope.remark"
+                    style="width: 200px !important;"
+                  />
+                </a-form-model-item>
+              </template>
+            </a-table>
+            <a-table
+              :columns="columns2"
+              :data-source="tableData2"
+              :pagination="false"
+              :loading="tableLoading2"
+              :rowKey="(r, i) => i"
+              :scroll="{ x: 2500, y: 400 }"
+              v-else-if="$route.path === '/negative/show'"
+            >
+              <template slot="itemSpecs" slot-scope="scope">
+                <span v-html="itemSpecsParse(scope.itemSpecs)"></span>
+              </template>
+              <template slot="itemNumDeduct2" slot-scope="scope">
+                <a-form-model-item>
+                  <a-input v-model="scope.itemNumDeduct" disabled />
+                </a-form-model-item>
+              </template>
+              <template slot="pretaxItemPriceDeduct2" slot-scope="scope">
+                <a-form-model-item>
+                  <a-input v-model="scope.pretaxItemPriceDeduct" disabled />
+                </a-form-model-item>
+              </template>
+              <template slot="itemPriceDeduct2" slot-scope="scope">
+                <a-form-model-item>
+                  <a-input v-model="scope.itemPriceDeduct" disabled />
+                </a-form-model-item>
+              </template>
+              <template slot="pretaxReducedPriceDeduct2" slot-scope="scope">
+                <a-form-model-item>
+                  <a-input v-model="scope.pretaxReducedPriceDeduct" disabled />
+                </a-form-model-item>
+              </template>
+              <template slot="reducedPriceDeduct2" slot-scope="scope">
+                <a-form-model-item>
+                  <a-input v-model="scope.reducedPriceDeduct" disabled />
+                </a-form-model-item>
+              </template>
+              <template slot="remark" slot-scope="scope">
+                <a-form-model-item>
+                  <a-input
+                    v-model="scope.remark"
+                    style="width: 200px !important;"
+                    disabled
+                  />
+                </a-form-model-item>
+              </template>
+            </a-table>
+            <div class="common-title">
+              <div class="common-title-content">销售单总价</div>
+            </div>
+            <div style="display: flex">
+              <div style="flex: 1">
+                <a-form-model-item label="税前销售总价">{{
+                  totalPretaxItemPrice
+                }}</a-form-model-item>
+                <a-form-model-item label="税后销售总价">{{
+                  totalAmount
+                }}</a-form-model-item>
+                <a-form-model-item label="税前优惠总价">{{
+                  totalPretaxReducedPrice
+                }}</a-form-model-item>
+                <a-form-model-item label="税后优惠总价">{{
+                  totalReducedPrice
+                }}</a-form-model-item>
+              </div>
+              <div style="flex: 1">
+                <a-form-model-item
+                  label="已扣税前销售总价"
+                  v-if="$route.path === '/negative/add'"
+                  >{{ pretaxItemPriceDeduct }}</a-form-model-item
+                >
+                <a-form-model-item
+                  label="已扣税后销售总价"
+                  v-if="$route.path === '/negative/add'"
+                  >{{ itemPriceDeduct }}</a-form-model-item
+                >
+                <a-form-model-item
+                  label="已扣税前优惠总价"
+                  v-if="$route.path === '/negative/add'"
+                  >{{ pretaxReducedPriceDeduct }}</a-form-model-item
+                >
+                <a-form-model-item
+                  label="已扣税后优惠总价"
+                  v-if="$route.path === '/negative/add'"
+                  >{{ reducedPriceDeduct }}</a-form-model-item
+                >
+                <a-form-model-item
+                  label="已扣税前销售总价"
+                  v-if="$route.path === '/negative/show'"
+                  >{{ totalPretaxItemPriceDeduct }}</a-form-model-item
+                >
+                <a-form-model-item
+                  label="已扣税后销售总价"
+                  v-if="$route.path === '/negative/show'"
+                  >{{ totalAmountDeduct }}</a-form-model-item
+                >
+                <a-form-model-item
+                  label="已扣税前优惠总价"
+                  v-if="$route.path === '/negative/show'"
+                  >{{ totalPretaxReducedPriceDeduct }}</a-form-model-item
+                >
+                <a-form-model-item
+                  label="已扣税后优惠总价"
+                  v-if="$route.path === '/negative/show'"
+                  >{{ totalReducedPriceDeduct }}</a-form-model-item
+                >
+              </div>
+            </div>
+            <a-form-model-item
+              label="税前扣减销售总价"
+              v-if="$route.path === '/negative/add'"
+            >
+              <a-input
+                v-model="totalPretaxItemPriceDeduct"
+                @blur="
+                  totalPretaxItemPriceDeduct = amountFormat(
+                    totalPretaxItemPriceDeduct
+                  )
+                "
+                :disabled="!disInput"
+              />
+            </a-form-model-item>
+            <a-form-model-item
+              label="税后扣减销售总价"
+              v-if="$route.path === '/negative/add'"
+            >
+              <a-input
+                v-model="totalAmountDeduct"
+                @blur="totalAmountDeduct = amountFormat(totalAmountDeduct)"
+                :disabled="!disInput"
+              />
+            </a-form-model-item>
+            <a-form-model-item
+              label="税前扣减优惠总价"
+              v-if="$route.path === '/negative/add'"
+            >
+              <a-input
+                v-model="totalPretaxReducedPriceDeduct"
+                @blur="
+                  totalPretaxReducedPriceDeduct = amountFormat(
+                    totalPretaxReducedPriceDeduct
+                  )
+                "
+                :disabled="!disInput"
+              />
+            </a-form-model-item>
+            <a-form-model-item
+              label="税后扣减优惠总价"
+              v-if="$route.path === '/negative/add'"
+            >
+              <a-input
+                v-model="totalReducedPriceDeduct"
+                @blur="
+                  totalReducedPriceDeduct = amountFormat(
+                    totalReducedPriceDeduct
+                  )
+                "
+                :disabled="!disInput"
+              />
+            </a-form-model-item>
+            <a-form-model-item
+              label="税前扣减销售总价"
+              v-if="$route.path === '/negative/show'"
+            >
+              <a-input v-model="pretaxItemPriceDeduct" disabled />
+            </a-form-model-item>
+            <a-form-model-item
+              label="税后扣减销售总价"
+              v-if="$route.path === '/negative/show'"
+            >
+              <a-input v-model="itemPriceDeduct" disabled />
+            </a-form-model-item>
+            <a-form-model-item
+              label="税前扣减优惠总价"
+              v-if="$route.path === '/negative/show'"
+            >
+              <a-input v-model="pretaxReducedPriceDeduct" disabled />
+            </a-form-model-item>
+            <a-form-model-item
+              label="税后扣减优惠总价"
+              v-if="$route.path === '/negative/show'"
+            >
+              <a-input v-model="reducedPriceDeduct" disabled />
+            </a-form-model-item>
+            <a-form-model-item label="备注">
+              <a-textarea
+                v-model="remark"
+                style="width: 280px;"
+                :disabled="$route.path === '/negative/show'"
+              />
+            </a-form-model-item>
+          </a-form-model>
         </div>
-        <a-table
-          :row-selection="rowSelection"
-          :columns="columns"
-          :data-source="tableData"
-          :pagination="false"
-          :loading="tableLoading"
-          :rowKey="(r, i) => i"
-          :scroll="{ x: 2500, y: 400 }"
+      </template>
+      <template slot="footer">
+        <a-button
           v-if="$route.path === '/negative/add'"
+          class="a-buttom-reset"
+          type="primary"
+          @click="add"
+          >保存</a-button
         >
-          <template slot="itemSpecs" slot-scope="scope">
-            <span v-html="itemSpecsParse(scope.itemSpecs)"></span>
-          </template>
-          <template slot="set1" slot-scope="scope">
-            <a-form-model-item>
-              <a-input
-                v-model="scope.set1"
-                @blur="scope.set1 = naturalFormat(scope.set1)"
-              />
-            </a-form-model-item>
-          </template>
-          <template slot="set2" slot-scope="scope">
-            <a-form-model-item>
-              <a-input
-                v-model="scope.set2"
-                @blur="scope.set2 = amountFormat(scope.set2)"
-              />
-            </a-form-model-item>
-          </template>
-          <template slot="set3" slot-scope="scope">
-            <a-form-model-item>
-              <a-input
-                v-model="scope.set3"
-                @blur="scope.set3 = amountFormat(scope.set3)"
-              />
-            </a-form-model-item>
-          </template>
-          <template slot="set4" slot-scope="scope">
-            <a-form-model-item>
-              <a-input
-                v-model="scope.set4"
-                @blur="scope.set4 = amountFormat(scope.set4)"
-              />
-            </a-form-model-item>
-          </template>
-          <template slot="set5" slot-scope="scope">
-            <a-form-model-item>
-              <a-input
-                v-model="scope.set5"
-                @blur="scope.set5 = amountFormat(scope.set5)"
-              />
-            </a-form-model-item>
-          </template>
-          <template slot="remark" slot-scope="scope">
-            <a-form-model-item>
-              <a-input
-                v-model="scope.remark"
-                style="width: 200px !important;"
-              />
-            </a-form-model-item>
-          </template>
-        </a-table>
-        <a-table
-          :columns="columns2"
-          :data-source="tableData2"
-          :pagination="false"
-          :loading="tableLoading2"
-          :rowKey="(r, i) => i"
-          :scroll="{ x: 2500, y: 400 }"
-          v-else-if="$route.path === '/negative/show'"
+        <a-button class="a-buttom-reset" type="default" @click="$router.go(-1)"
+          >返回</a-button
         >
-          <template slot="itemSpecs" slot-scope="scope">
-            <span v-html="itemSpecsParse(scope.itemSpecs)"></span>
-          </template>
-          <template slot="itemNumDeduct2" slot-scope="scope">
-            <a-form-model-item>
-              <a-input v-model="scope.itemNumDeduct" disabled />
-            </a-form-model-item>
-          </template>
-          <template slot="pretaxItemPriceDeduct2" slot-scope="scope">
-            <a-form-model-item>
-              <a-input v-model="scope.pretaxItemPriceDeduct" disabled />
-            </a-form-model-item>
-          </template>
-          <template slot="itemPriceDeduct2" slot-scope="scope">
-            <a-form-model-item>
-              <a-input v-model="scope.itemPriceDeduct" disabled />
-            </a-form-model-item>
-          </template>
-          <template slot="pretaxReducedPriceDeduct2" slot-scope="scope">
-            <a-form-model-item>
-              <a-input v-model="scope.pretaxReducedPriceDeduct" disabled />
-            </a-form-model-item>
-          </template>
-          <template slot="reducedPriceDeduct2" slot-scope="scope">
-            <a-form-model-item>
-              <a-input v-model="scope.reducedPriceDeduct" disabled />
-            </a-form-model-item>
-          </template>
-          <template slot="remark" slot-scope="scope">
-            <a-form-model-item>
-              <a-input
-                v-model="scope.remark"
-                style="width: 200px !important;"
-                disabled
-              />
-            </a-form-model-item>
-          </template>
-        </a-table>
-        <div class="common-title">
-          <div class="common-title-content">销售单总价</div>
-        </div>
-        <div style="display: flex">
-          <div style="flex: 1">
-            <a-form-model-item label="税前销售总价">{{
-              totalPretaxItemPrice
-            }}</a-form-model-item>
-            <a-form-model-item label="税后销售总价">{{
-              totalAmount
-            }}</a-form-model-item>
-            <a-form-model-item label="税前优惠总价">{{
-              totalPretaxReducedPrice
-            }}</a-form-model-item>
-            <a-form-model-item label="税后优惠总价">{{
-              totalReducedPrice
-            }}</a-form-model-item>
-          </div>
-          <div style="flex: 1">
-            <a-form-model-item
-              label="已扣税前销售总价"
-              v-if="$route.path === '/negative/add'"
-              >{{ pretaxItemPriceDeduct }}</a-form-model-item
-            >
-            <a-form-model-item
-              label="已扣税后销售总价"
-              v-if="$route.path === '/negative/add'"
-              >{{ itemPriceDeduct }}</a-form-model-item
-            >
-            <a-form-model-item
-              label="已扣税前优惠总价"
-              v-if="$route.path === '/negative/add'"
-              >{{ pretaxReducedPriceDeduct }}</a-form-model-item
-            >
-            <a-form-model-item
-              label="已扣税后优惠总价"
-              v-if="$route.path === '/negative/add'"
-              >{{ reducedPriceDeduct }}</a-form-model-item
-            >
-            <a-form-model-item
-              label="已扣税前销售总价"
-              v-if="$route.path === '/negative/show'"
-              >{{ totalPretaxItemPriceDeduct }}</a-form-model-item
-            >
-            <a-form-model-item
-              label="已扣税后销售总价"
-              v-if="$route.path === '/negative/show'"
-              >{{ totalAmountDeduct }}</a-form-model-item
-            >
-            <a-form-model-item
-              label="已扣税前优惠总价"
-              v-if="$route.path === '/negative/show'"
-              >{{ totalPretaxReducedPriceDeduct }}</a-form-model-item
-            >
-            <a-form-model-item
-              label="已扣税后优惠总价"
-              v-if="$route.path === '/negative/show'"
-              >{{ totalReducedPriceDeduct }}</a-form-model-item
-            >
-          </div>
-        </div>
-        <a-form-model-item
-          label="税前扣减销售总价"
-          v-if="$route.path === '/negative/add'"
-        >
-          <a-input
-            v-model="totalPretaxItemPriceDeduct"
-            @blur="
-              totalPretaxItemPriceDeduct = amountFormat(
-                totalPretaxItemPriceDeduct
-              )
-            "
-            :disabled="!disInput"
-          />
-        </a-form-model-item>
-        <a-form-model-item
-          label="税后扣减销售总价"
-          v-if="$route.path === '/negative/add'"
-        >
-          <a-input
-            v-model="totalAmountDeduct"
-            @blur="totalAmountDeduct = amountFormat(totalAmountDeduct)"
-            :disabled="!disInput"
-          />
-        </a-form-model-item>
-        <a-form-model-item
-          label="税前扣减优惠总价"
-          v-if="$route.path === '/negative/add'"
-        >
-          <a-input
-            v-model="totalPretaxReducedPriceDeduct"
-            @blur="
-              totalPretaxReducedPriceDeduct = amountFormat(
-                totalPretaxReducedPriceDeduct
-              )
-            "
-            :disabled="!disInput"
-          />
-        </a-form-model-item>
-        <a-form-model-item
-          label="税后扣减优惠总价"
-          v-if="$route.path === '/negative/add'"
-        >
-          <a-input
-            v-model="totalReducedPriceDeduct"
-            @blur="
-              totalReducedPriceDeduct = amountFormat(totalReducedPriceDeduct)
-            "
-            :disabled="!disInput"
-          />
-        </a-form-model-item>
-        <a-form-model-item
-          label="税前扣减销售总价"
-          v-if="$route.path === '/negative/show'"
-        >
-          <a-input v-model="pretaxItemPriceDeduct" disabled />
-        </a-form-model-item>
-        <a-form-model-item
-          label="税后扣减销售总价"
-          v-if="$route.path === '/negative/show'"
-        >
-          <a-input v-model="itemPriceDeduct" disabled />
-        </a-form-model-item>
-        <a-form-model-item
-          label="税前扣减优惠总价"
-          v-if="$route.path === '/negative/show'"
-        >
-          <a-input v-model="pretaxReducedPriceDeduct" disabled />
-        </a-form-model-item>
-        <a-form-model-item
-          label="税后扣减优惠总价"
-          v-if="$route.path === '/negative/show'"
-        >
-          <a-input v-model="reducedPriceDeduct" disabled />
-        </a-form-model-item>
-        <a-form-model-item label="备注">
-          <a-textarea
-            v-model="remark"
-            style="width: 280px;"
-            :disabled="$route.path === '/negative/show'"
-          />
-        </a-form-model-item>
-      </a-form-model>
-    </div>
+      </template>
+    </baseLayout>
     <a-modal
       :centered="true"
       v-model="showErrorTable"
@@ -356,11 +365,6 @@
         >
       </template>
     </a-modal>
-    <FormSubmitButton
-      :isShow="true"
-      :isShowSubmit="$route.path === '/negative/add'"
-      @submit="add()"
-    />
   </div>
 </template>
 
@@ -1035,9 +1039,10 @@ export default {
 <style lang="less" scoped>
 .ant-form {
   padding: 20px;
-
+  box-sizing: border-box;
   .ant-form-item {
-    width: 600px;
+    // width: 600px;
+    width: 50%;
     margin: 10px 0 10px 50px;
   }
 

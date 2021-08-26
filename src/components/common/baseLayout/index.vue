@@ -87,6 +87,9 @@ export default {
   padding: 0 15px;
   text-align: right;
   z-index: 1;
+  /deep/.a-buttom-reset {
+    margin-left: 15px;
+  }
 }
 .base-layout-content {
   overflow-y: auto;
