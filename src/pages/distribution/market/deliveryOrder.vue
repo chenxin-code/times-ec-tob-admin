@@ -77,6 +77,7 @@
               <div class="item-title">配送凭证：</div>
               <img
                 v-for="item in dataListDetail.deliveryProofImgList"
+                :key="item"
                 :src="item"
                 @click="seeImgItem(item)"
               />
@@ -96,6 +97,7 @@
             >
               <div class="item-title">签收凭证：</div>
               <img
+                :key="item"
                 v-for="item in dataListDetail.receiverProofImgList"
                 :src="item"
                 @click="seeImgItem(item)"

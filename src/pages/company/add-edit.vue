@@ -1,140 +1,152 @@
 <template>
-  <div style="background:#fff">
-    <!-- <div class="btns">
-      <a-button
-        class="item-btn"
-        :loading="btnloading"
-        type="primary"
-        @click="addEdit()"
-        >保存</a-button
-      >
-      <a-button class="item-btn" @click="$router.back()">返回</a-button>
-    </div> -->
-    <div
-      class="content-main"
-      style="height: calc(100% - 100px);margin-top: 12px;padding:20px 60px 120px 20px;"
-    >
-      <a-form-model
-        :model="thisForm"
-        layout="inline"
-        :rules="rules"
-        ref="thisForm"
-        labelAlign="left"
-      >
-        <div class="common-title">
-          <div class="common-title-content">企业基本信息</div>
-        </div>
-        <a-form-model-item label="是否顶级企业">
-          <a-switch v-model="isTop" />
-        </a-form-model-item>
-        <div style="display: flex">
-          <div style="flex: 1">
-            <a-form-model-item label="企业名称" prop="enterpriseName">
-              <a-input v-model="thisForm.enterpriseName" />
+  <div style="height:100%;">
+    <baseLayout :header="false">
+      <template slot="content">
+        <div class="content-main">
+          <a-form-model
+            :model="thisForm"
+            layout="inline"
+            :rules="rules"
+            ref="thisForm"
+            labelAlign="left"
+            style="padding:20px;"
+          >
+            <div class="common-title">
+              <div class="common-title-content">企业基本信息</div>
+            </div>
+            <a-form-model-item label="是否顶级企业">
+              <a-switch v-model="isTop" />
             </a-form-model-item>
-          </div>
-          <div style="flex: 1">
-            <a-form-model-item
-              label="选择父级企业"
-              prop="parentName"
-              v-if="!isTop"
-            >
-              <div
-                :class="`companySelect ${showRedBorder && 'border-red'}`"
-                @click="visible = true"
-              >
-                {{ parentName }}
+            <div style="display: flex">
+              <div style="flex: 1">
+                <a-form-model-item label="企业名称" prop="enterpriseName">
+                  <a-input v-model="thisForm.enterpriseName" />
+                </a-form-model-item>
               </div>
-              <p v-show="showRedBorder" class="companySelectTip">
-                请选择父级企业
-              </p>
+              <div style="flex: 1">
+                <a-form-model-item
+                  label="选择父级企业"
+                  prop="parentName"
+                  v-if="!isTop"
+                >
+                  <div
+                    :class="`companySelect ${showRedBorder && 'border-red'}`"
+                    @click="visible = true"
+                  >
+                    {{ parentName }}
+                  </div>
+                  <p v-show="showRedBorder" class="companySelectTip">
+                    请选择父级企业
+                  </p>
+                </a-form-model-item>
+              </div>
+            </div>
+            <div style="display: flex">
+              <div style="flex: 1">
+                <a-form-model-item label="企业编码" prop="enterpriseCode">
+                  <a-input v-model="thisForm.enterpriseCode" />
+                </a-form-model-item>
+              </div>
+              <div style="flex: 1">
+                <a-form-model-item label="企业人数" prop="employeeNum">
+                  <a-input v-model="thisForm.employeeNum" />
+                </a-form-model-item>
+              </div>
+            </div>
+            <div class="common-title">
+              <div class="common-title-content">企业信息</div>
+            </div>
+            <div style="display: flex">
+              <div style="flex: 1">
+                <a-form-model-item label="经营范围" prop="businessScope">
+                  <a-input v-model="thisForm.businessScope" />
+                </a-form-model-item>
+              </div>
+              <div style="flex: 1">
+                <a-form-model-item label="信用等级" prop="creditLevel">
+                  <a-input v-model="thisForm.creditLevel" />
+                </a-form-model-item>
+              </div>
+            </div>
+            <a-form-model-item label="所在地区" class="one-line">
+              <a-cascader
+                :options="areaData"
+                :show-search="{ filter }"
+                :default-value="defaultValue"
+                placeholder="选择省市区"
+                :fieldNames="{
+                  label: 'cityName',
+                  value: 'cityCode',
+                  children: 'list',
+                }"
+                @change="onChange"
+                v-if="showCascader"
+              />
             </a-form-model-item>
-          </div>
+            <a-form-model-item
+              label="通讯地址"
+              class="one-line"
+              prop="mailAddress"
+            >
+              <a-textarea v-model="thisForm.mailAddress" />
+            </a-form-model-item>
+            <a-form-model-item
+              label="公司地址"
+              class="one-line"
+              prop="detailAddress"
+            >
+              <a-textarea v-model="thisForm.detailAddress" />
+            </a-form-model-item>
+            <a-form-model-item label="备注" class="one-line" prop="remark">
+              <a-textarea v-model="thisForm.remark" />
+            </a-form-model-item>
+            <div class="common-title">
+              <div class="common-title-content">联系方式</div>
+            </div>
+            <div style="display: flex">
+              <div style="flex: 1">
+                <a-form-model-item label="企业电话" prop="enterprisePhone">
+                  <a-input v-model="thisForm.enterprisePhone" />
+                </a-form-model-item>
+              </div>
+              <div style="flex: 1">
+                <a-form-model-item label="电子邮箱" prop="eMail">
+                  <a-input v-model="thisForm.eMail" />
+                </a-form-model-item>
+              </div>
+            </div>
+            <div style="display: flex">
+              <div style="flex: 1">
+                <a-form-model-item label="联系人" prop="concatPerson">
+                  <a-input v-model="thisForm.concatPerson" />
+                </a-form-model-item>
+              </div>
+              <div style="flex: 1">
+                <a-form-model-item label="联系电话" prop="concatPhone">
+                  <a-input v-model="thisForm.concatPhone" />
+                </a-form-model-item>
+              </div>
+            </div>
+          </a-form-model>
         </div>
-        <div style="display: flex">
-          <div style="flex: 1">
-            <a-form-model-item label="企业编码" prop="enterpriseCode">
-              <a-input v-model="thisForm.enterpriseCode" />
-            </a-form-model-item>
-          </div>
-          <div style="flex: 1">
-            <a-form-model-item label="企业人数" prop="employeeNum">
-              <a-input v-model="thisForm.employeeNum" />
-            </a-form-model-item>
-          </div>
-        </div>
-        <div class="common-title">
-          <div class="common-title-content">企业信息</div>
-        </div>
-        <div style="display: flex">
-          <div style="flex: 1">
-            <a-form-model-item label="经营范围" prop="businessScope">
-              <a-input v-model="thisForm.businessScope" />
-            </a-form-model-item>
-          </div>
-          <div style="flex: 1">
-            <a-form-model-item label="信用等级" prop="creditLevel">
-              <a-input v-model="thisForm.creditLevel" />
-            </a-form-model-item>
-          </div>
-        </div>
-        <a-form-model-item label="所在地区" class="one-line">
-          <a-cascader
-            :options="areaData"
-            :show-search="{ filter }"
-            :default-value="defaultValue"
-            placeholder="选择省市区"
-            :fieldNames="{
-              label: 'cityName',
-              value: 'cityCode',
-              children: 'list',
-            }"
-            @change="onChange"
-            v-if="showCascader"
-          />
-        </a-form-model-item>
-        <a-form-model-item label="通讯地址" class="one-line" prop="mailAddress">
-          <a-textarea v-model="thisForm.mailAddress" />
-        </a-form-model-item>
-        <a-form-model-item
-          label="公司地址"
-          class="one-line"
-          prop="detailAddress"
+      </template>
+      <template slot="footer">
+        <a-button
+          class="a-buttom-reset"
+          type="primary"
+          style="margin-left:15px;"
+          @click="addEdit"
+          >保存</a-button
         >
-          <a-textarea v-model="thisForm.detailAddress" />
-        </a-form-model-item>
-        <a-form-model-item label="备注" class="one-line" prop="remark">
-          <a-textarea v-model="thisForm.remark" />
-        </a-form-model-item>
-        <div class="common-title">
-          <div class="common-title-content">联系方式</div>
-        </div>
-        <div style="display: flex">
-          <div style="flex: 1">
-            <a-form-model-item label="企业电话" prop="enterprisePhone">
-              <a-input v-model="thisForm.enterprisePhone" />
-            </a-form-model-item>
-          </div>
-          <div style="flex: 1">
-            <a-form-model-item label="电子邮箱" prop="eMail">
-              <a-input v-model="thisForm.eMail" />
-            </a-form-model-item>
-          </div>
-        </div>
-        <div style="display: flex">
-          <div style="flex: 1">
-            <a-form-model-item label="联系人" prop="concatPerson">
-              <a-input v-model="thisForm.concatPerson" />
-            </a-form-model-item>
-          </div>
-          <div style="flex: 1">
-            <a-form-model-item label="联系电话" prop="concatPhone">
-              <a-input v-model="thisForm.concatPhone" />
-            </a-form-model-item>
-          </div>
-        </div>
-      </a-form-model>
-    </div>
+        <a-button
+          class="a-buttom-reset"
+          type="default"
+          style="margin-left:15px;"
+          @click="$router.go(-1)"
+          >返回</a-button
+        >
+      </template>
+    </baseLayout>
     <a-modal
       title="选择父级企业"
       :visible="visible"
@@ -144,7 +156,6 @@
     >
       <companyTree @onSelect="onSelect" />
     </a-modal>
-    <FormSubmitButton :isShow="true" @submit="addEdit" />
   </div>
 </template>
 
@@ -400,8 +411,6 @@ export default {
 
 <style lang="less" scoped>
 .ant-form {
-  //padding: 20px;
-
   .ant-form-item {
     width: 350px;
     display: flex;
