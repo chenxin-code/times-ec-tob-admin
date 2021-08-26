@@ -697,6 +697,9 @@ export default {
     margin-right: 12px;
   }
 }
+.a-buttom-reset {
+  margin-left: 15px;
+}
 /deep/.quill-editor .ql-container {
   height: 320px;
 }
