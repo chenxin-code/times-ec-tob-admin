@@ -1,39 +1,40 @@
 <template>
-  <div id="distributorAudit" style="background:#fff;height:100%;">
-    <div
-      class="content-main"
-      style="overflow-y: auto;height: calc(100% - 45px);"
-    >
-      <div
-        style="width:100%;display: flex;align-items:center;padding: 20px 20px;"
-      >
-        <div style="width:3px;height:16px;background: #4B7AFB;"></div>
-        <span style="color:#666666;margin-left:5px;">配送单</span>
-      </div>
-      <a-table
-        :columns="columns1"
-        :row-key="(r, i) => i"
-        :data-source="dataList"
-        :scroll="{ x: 1600 }"
-        :pagination="false"
-        style="margin-top:8px;"
-      >
-        <span slot="action" slot-scope="scope">
-          <a-button type="link" @click="look(scope)">查看</a-button>
-          <a-button
-            type="link"
-            v-if="scope.approveStatus === 0"
-            @click="sign(scope)"
-            >签收</a-button
+  <div id="distributorAudit" style="height:100%;">
+    <baseLayout :header="false">
+      <template slot="content">
+        <div class="content-main">
+          <div
+            style="width:100%;display: flex;align-items:center;padding: 20px 20px;"
           >
-        </span>
-      </a-table>
-    </div>
-    <!-- <div class="content-footer">
-     <a-button type="primary" size="large" style="width: 120px; margin-right: 10px;" @click="FALLBACK">返回</a-button>
-    </div> -->
-    <FormSubmitButton :isShow="true" :isShowSubmit="false" />
-    <!--lookModal-->
+            <div style="width:3px;height:16px;background: #4B7AFB;"></div>
+            <span style="color:#666666;margin-left:5px;">配送单</span>
+          </div>
+          <a-table
+            :columns="columns1"
+            :row-key="(r, i) => i"
+            :data-source="dataList"
+            :scroll="{ x: 1600 }"
+            :pagination="false"
+            style="margin-top:8px;"
+          >
+            <span slot="action" slot-scope="scope">
+              <a-button type="link" @click="look(scope)">查看</a-button>
+              <a-button
+                type="link"
+                v-if="scope.approveStatus === 0"
+                @click="sign(scope)"
+                >签收</a-button
+              >
+            </span>
+          </a-table>
+        </div>
+      </template>
+      <template slot="footer">
+        <a-button class="a-buttom-reset" type="default" @click="$router.go(-1)"
+          >返回</a-button
+        >
+      </template>
+    </baseLayout>
     <a-modal
       v-model="lookModal"
       title=""
@@ -116,7 +117,6 @@
         </div>
       </template>
     </a-modal>
-    <!--signModal-->
     <a-modal
       v-model="signModal"
       title=""
