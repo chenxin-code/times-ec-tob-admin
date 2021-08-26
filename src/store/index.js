@@ -54,6 +54,7 @@ const store = new Vuex.Store({
         // @/assets/img/menu/icon_supplier.png
       })
       state.menus = menus
+      sessionStorage.setItem('store', JSON.stringify(state))
     },
   },
   menuRouteLoaded(state, Loaded) {
