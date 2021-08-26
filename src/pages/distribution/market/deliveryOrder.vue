@@ -285,8 +285,8 @@ export default {
         },
         {
           title: '备注',
-          key: 'remark',
-          dataIndex: 'remark',
+          key: 'receiveRemark',
+          dataIndex: 'receiveRemark',
           ellipsis: true,
           align: 'left',
         },
@@ -415,7 +415,7 @@ export default {
         params.itemList.push({
           deliveryItemId: item.id,
           num: item.hand1 ? item.hand1 : 0,
-          remark: item.hand2,
+          receiveRemark: item.hand2,
         });
       });
       api.marketDeliveryOrderConfirm(params).then(res => {
