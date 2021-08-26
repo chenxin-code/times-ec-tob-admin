@@ -32,6 +32,7 @@
             >重置</a-button
           >
           <a-button
+            v-if="$power('add')"
             class="item-btn"
             @click="$router.push({ path: '/account/add' })"
             type="primary"
@@ -57,6 +58,7 @@
               </template>
               <span slot="action" slot-scope="scope">
                 <a-button
+                  v-if="$power('edit')"
                   type="link"
                   @click="
                     $router.push({
@@ -66,10 +68,16 @@
                   "
                   >编辑</a-button
                 >
-                <a-button type="link" @click="updatePwd(scope.loginName)"
+                <a-button
+                  v-if="$power('password')"
+                  type="link"
+                  @click="updatePwd(scope.loginName)"
                   >修改密码</a-button
                 >
-                <a-button type="link" @click="goDel(scope.loginName)"
+                <a-button
+                  v-if="$power('delete')"
+                  type="link"
+                  @click="goDel(scope.loginName)"
                   >删除</a-button
                 >
               </span>

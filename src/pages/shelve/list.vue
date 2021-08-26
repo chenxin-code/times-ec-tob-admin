@@ -90,20 +90,22 @@
         <a-button class="item-btn" type="primary" @click="onReset()"
           >重置</a-button
         >
-        <a-button
-          class="item-btn"
-          @click="piliang('on')"
-          :loading="piliangLoading"
-          type="primary"
-          >批量上架</a-button
-        >
-        <a-button
-          class="item-btn"
-          @click="piliang('off')"
-          :loading="piliangLoading"
-          type="primary"
-          >批量下架</a-button
-        >
+        <template v-if="$power('batch_on_off')">
+          <a-button
+            class="item-btn"
+            @click="piliang('on')"
+            :loading="piliangLoading"
+            type="primary"
+            >批量上架</a-button
+          >
+          <a-button
+            class="item-btn"
+            @click="piliang('off')"
+            :loading="piliangLoading"
+            type="primary"
+            >批量下架</a-button
+          >
+        </template>
       </a-form-model-item>
     </a-form-model>
     <div id="neighborhoodLife">
@@ -125,6 +127,7 @@
             >
               <span slot="action" slot-scope="scope">
                 <a-button
+                  v-if="$power('query')"
                   type="link"
                   @click="
                     $router.push({
@@ -134,15 +137,17 @@
                   "
                   >查看详情</a-button
                 >
-                <a-button
-                  v-if="!scope.selling"
-                  type="link"
-                  @click="updates(scope)"
-                  >上架</a-button
-                >
-                <a-button v-else type="link" @click="updates(scope)"
-                  >下架</a-button
-                >
+                <template v-if="$power('on_off')">
+                  <a-button
+                    v-if="!scope.selling"
+                    type="link"
+                    @click="updates(scope)"
+                    >上架</a-button
+                  >
+                  <a-button v-else type="link" @click="updates(scope)"
+                    >下架</a-button
+                  >
+                </template>
               </span>
 
               <template slot="costPrice" slot-scope="scope">

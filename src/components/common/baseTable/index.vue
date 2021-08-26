@@ -12,6 +12,7 @@
         :loading="loading"
         v-bind="tableConfig"
         :row-selection="rowSelection"
+        :indentSize="indentSize"
       >
         <template
           v-for="item in setSlot"
@@ -85,6 +86,10 @@ export default {
     rowSelection: {
       type: Object,
       default: () => {},
+    },
+    indentSize: {
+      type: Number,
+      default: 0,
     },
     loading: {
       type: Boolean,

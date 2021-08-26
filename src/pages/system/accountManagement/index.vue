@@ -137,6 +137,7 @@
 </template>
 <script>
 import api from '@/api'
+
 export default {
   data() {
     let formList = [
@@ -446,6 +447,7 @@ export default {
             api
               .setAddAccountSave(this.toAssignRole)
               .then(res => {
+                console.log(res, 'code')
                 if (res.code == 200) {
                   that.$message.info('保存成功')
                   that.modelVisibleAdd = false

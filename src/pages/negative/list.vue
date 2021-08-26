@@ -17,6 +17,7 @@
           >重置</a-button
         >
         <a-button
+          v-if="$power('add')"
           class="item-btn"
           @click="$router.push({ path: '/negative/add' })"
           type="primary"
@@ -38,6 +39,7 @@
             >
               <span slot="action" slot-scope="scope">
                 <a-button
+                  v-if="$power('query')"
                   type="link"
                   @click="
                     $router.push({
@@ -47,7 +49,10 @@
                   "
                   >查看详情</a-button
                 >
-                <a-button type="link" @click="goDel(scope.negativeNo)"
+                <a-button
+                  v-if="$power('delete')"
+                  type="link"
+                  @click="goDel(scope.negativeNo)"
                   >删除</a-button
                 >
               </span>

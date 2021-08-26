@@ -11,7 +11,12 @@
               :current="pageData.current"
               :loading="tableLoading"
               :total="pageData.total"
-              :rowSelection="{ ...rowSelection, selectedRowKeys: selectedId }"
+              :indentSize="15"
+              :rowSelection="{
+                ...rowSelection,
+                selectedRowKeys: selectedId,
+                columnWidth: 80,
+              }"
             >
               <template slot="menuType" slot-scope="{ props }">
                 <div class="editable-row-operations">
@@ -67,10 +72,10 @@ export default {
     const rowSelection = {
       onChange: this.selectChange,
       onSelect: (record, selected, selectedRows) => {
-        console.log(record, selected, selectedRows)
+        // console.log(record, selected, selectedRows)
       },
       onSelectAll: (selected, selectedRows, changeRows) => {
-        console.log(selected, selectedRows, changeRows)
+        // console.log(selected, selectedRows, changeRows)
       },
     }
     return {
@@ -78,12 +83,12 @@ export default {
       tableData: [],
       tableDatas: [],
       columns: [
-        {
-          title: '访问',
-          dataIndex: 'look',
-          key: 'look',
-          width: 50,
-        },
+        // {
+        //   title: '访问',
+        //   dataIndex: 'look',
+        //   key: 'look',
+        //   width: 50,
+        // },
         {
           title: '菜单',
           dataIndex: 'menuName',
@@ -239,8 +244,6 @@ export default {
           }
         }
       }
-
-      console.log(this.selectedId, 'this.selectedId')
     },
     //默认递归选中父级Id
     mapTableDataForId(data, list) {
@@ -300,6 +303,16 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/.ant-table-thead > tr:first-child > th:first-child:after {
+  content: ' 访问';
+}
+/deep/.ant-table-thead > tr > th.ant-table-selection-column,
+/deep/.ant-table-tbody > tr > td.ant-table-selection-column {
+  text-align: left;
+}
+/deep/.ant-table-thead > tr:first-child > th:last-child:after {
+  content: '';
+}
 .column {
   display: flex;
   flex-direction: column;

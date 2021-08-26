@@ -47,9 +47,12 @@ Vue.prototype._ = lodash
 import FormSubmitButton from './components/FormSubmitButton/index.js'
 Vue.use(FormSubmitButton)
 
+//全局注入方法
+import Install from '@/utils/install.js'
+Vue.use(Install)
+
+
 Vue.use(Vuex)
-console.log(window.location)
-// Vue.use(VueCookies);
 
 Vue.config.productionTip = false
 Vue.use(Antd)

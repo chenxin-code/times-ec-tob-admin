@@ -14,6 +14,7 @@
         :tableData="tableData"
         :loading="tableLoading"
         :scrollY="scrollY"
+        :indentSize="15"
       >
         <template slot="menuType" slot-scope="{ props }">
           {{ ['未定义', '菜单', '按钮'][props.menuType] }}
@@ -138,7 +139,9 @@ export default {
       this.$api
         .getMenuTreeList({})
         .then(res => {
-          this.tableData = this.resetData(res.data)
+          if (res.code == 200) {
+            this.tableData = this.resetData(res.data)
+          }
         })
         .finally(() => (this.tableLoading = false))
     },
@@ -175,7 +178,6 @@ export default {
     // 启用/禁用
     onChangeStatus(props) {
       let { menuData } = this
-      console.log(props, 'pros')
       const that = this
       this.$confirm({
         title: `您确认${['停用', '启用'][props.visible]}“${props.menuName}”该${
@@ -187,10 +189,12 @@ export default {
           that.tableLoading = true
           that.$api
             .getMenuUpdateState({ id: props.id })
-            .then(() => {
-              that.$message.info(`${['停用', '启用'][props.visible]}成功`)
-              that.initData()
-              that.$store.dispatch('GET_MENU_LIST')
+            .then(res => {
+              if (res.code == 200) {
+                that.$message.info(`${['停用', '启用'][props.visible]}成功`)
+                that.initData()
+                that.$store.dispatch('GET_MENU_LIST')
+              }
             })
             .finally(() => (that.tableLoading = false))
         },

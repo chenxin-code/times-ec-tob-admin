@@ -7,7 +7,7 @@ let marketDeliveryOrderListUrl = '/times-ec-tob-mall/admin/delivery/order/list/'
 let marketDeliveryOrderConfirmUrl = '/times-ec-tob-mall/admin/delivery/order/confirm'
 let marketQueryInfoUrl = '/times-ec-tob-mall/admin/delivery/order/queryInfo/'
 
-const URL_PREFIX = '/times-ec-tob-mall/external/purchase'
+const URL_PREFIX = '/times-ec-tob-mall/admin/purchase'
 
 // 列表
 export const getMarketOrderList = (data) => {
@@ -45,4 +45,3 @@ export const marketQueryInfo = (data) => {
  * @param {string} params.thirdPurchaseId		第三方采购单唯一标志	
  */
 export const marketOrderConfirmApply = params => fetchApi(`${URL_PREFIX}/confirm/apply`, params, 'POST')
-

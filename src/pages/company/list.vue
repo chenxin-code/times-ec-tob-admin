@@ -25,6 +25,7 @@
             >重置</a-button
           >
           <a-button
+            v-if="$power('add')"
             class="item-btn"
             @click="$router.push({ path: '/company/add' })"
             type="primary"
@@ -49,6 +50,7 @@
             </template>
             <span slot="action" slot-scope="scope">
               <a-button
+                v-if="$power('edit')"
                 type="link"
                 @click="
                   $router.push({
@@ -59,6 +61,7 @@
                 >编辑</a-button
               >
               <a-button
+                v-if="$power('token')"
                 type="link"
                 @click="showToken(scope.accountNumber, scope.password)"
                 >查看token</a-button
@@ -113,6 +116,7 @@
 <script>
 import api from './../../api'
 import companyTree from './../../components/companyTree'
+import { filterAuthority } from '@/utils/util.js'
 export default {
   components: { companyTree },
   data() {
@@ -202,13 +206,11 @@ export default {
       this.getList()
     },
     showToken(accountNumber, password) {
-      console.log(accountNumber, password)
       this.accountNumber = accountNumber
       this.password = password
       this.showTokenModal = true
     },
     onSelect(id, enterpriseName) {
-      console.log(id, enterpriseName)
       this.parentId = id
       this.current = 1
       this.pageSize = 10

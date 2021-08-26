@@ -224,7 +224,7 @@ export default {
     .content {
       height: calc(100% - 90px);
       margin: 10px 10px;
-      //   background: #fff;
+        background: #fff;
       overflow: auto;
       // overflow-y: scroll;
 

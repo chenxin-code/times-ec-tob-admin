@@ -90,8 +90,18 @@
               style="margin-top: 8px;"
             >
               <span slot="action" slot-scope="scope">
-                <a-button type="link" @click="edit(scope, '1')">查看</a-button>
-                <a-button type="link" @click="edit(scope, '2')">编辑</a-button>
+                <a-button
+                  v-if="$power('query')"
+                  type="link"
+                  @click="edit(scope, '1')"
+                  >查看</a-button
+                >
+                <a-button
+                  v-if="$power('edit')"
+                  type="link"
+                  @click="edit(scope, '2')"
+                  >编辑</a-button
+                >
               </span>
               <template slot="isTieredPricing" slot-scope="scope">
                 {{ scope.isTieredPricing == true ? '是' : '否' }}
@@ -432,7 +442,7 @@ export default {
 
 <style lang="less" scoped>
 .commodity {
-  padding: 20px;
+  padding: 15px;
   height: 100%;
   background: #fff;
 }
@@ -441,7 +451,7 @@ export default {
 
   /deep/ .ant-form-item-control-wrapper {
     width: 250px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
 
   /deep/ .ant-calendar-picker-input {
