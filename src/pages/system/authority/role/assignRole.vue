@@ -319,7 +319,7 @@ export default {
             roleId: this.$route.params.id, // roleId
           }
           this.$message.success('保存成功')
-          this.$router.go(-1)
+          this.$router.back()
           this.getHasAddList(param)
           this.selectReset()
         }

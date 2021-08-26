@@ -1,334 +1,343 @@
 <template>
-  <div style="height: 100%;margin-bottom: 0px;background:#fff;overflow-y:auto;">
-    <div class="content-header">
-      {{ $route.params.typ === '1' ? '查看' : '编辑' }}商品基础信息
-    </div>
-    <div
-      class="content-main"
-      style="margin-top: 12px;padding:20px 60px 60px 20px;"
-    >
-      <a-form
-        :form="form"
-        :labelCol="{ style: { width: '200px' } }"
-        :wrapperCol="{ style: { width: '60%' } }"
-        style="width:100%;"
-        autoComplete="off"
-      >
-        <div class="form-box-flex">
-          <div class="form-box">
-            <a-form-item label="SKU名称">
-              <a-input disabled v-decorator="['skuName']" />
-            </a-form-item>
-            <a-form-item label="SKU编码">
-              <a-input disabled v-decorator="['skuCode']" />
-            </a-form-item>
-            <a-form-item label="所属品牌">
-              <a-input
-                :disabled="disbliend"
-                v-decorator="[
-                  'brandName',
-                  { rules: [{ required: true, message: '所属品牌不能为空' }] },
-                ]"
-                placeholder="请输入所属品牌"
-              />
-            </a-form-item>
-            <a-form-item label="供应商">
-              <a-select
-                :disabled="disbliend"
-                show-search
-                placeholder="请选择供应商"
-                option-filter-prop="children"
-                :filter-option="filterOption"
-                @search="handleSearch"
-                @change="handleChange"
-                v-decorator="[
-                  'supplierName',
-                  { rules: [{ required: true, message: '请选择供应商' }] },
-                ]"
-                ><a-select-option
-                  v-for="item in supplierList"
-                  :key="item.id"
-                  :value="
-                    `${item.id}` +
-                      `:${item.supplierName}` +
-                      `:${item.companyId}`
-                  "
-                  >{{ item.supplierName }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-            <a-form-item label="SKU外部编码">
-              <a-input
-                :disabled="disbliend"
-                v-decorator="['skuOutsideCode']"
-                placeholder="请输入SKU外部编码"
-              />
-            </a-form-item>
-            <a-form-item label="协议编码">
-              <a-input
-                :disabled="disbliend"
-                v-decorator="['skuProtocolCode']"
-                placeholder="请输入协议编码"
-              />
-            </a-form-item>
-            <a-form-item label="商品状态">
-              <a-select
-                :disabled="disbliend"
-                v-decorator="[
-                  'selling',
-                  { rules: [{ required: true, message: '商品状态不能为空' }] },
-                ]"
-              >
-                <a-select-option
-                  :value="v.id"
-                  v-for="(v, i) in selectArrstrain"
-                  :key="i"
-                >
-                  {{ v.name }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-            <a-form-item label="商品品类">
-              <a-tree-select
-                :disabled="disbliend"
-                show-search
-                searchPlaceholder
-                treeNodeFilterProp="title"
-                v-decorator="['categoryId']"
-                style="width: 100%"
-                :dropdown-style="{ maxHeight: '300px', overflow: 'auto' }"
-                :tree-data="treeData"
-                :replace-fields="{
-                  children: 'children',
-                  key: 'categoryCode',
-                  value: 'categoryId',
-                  title: 'name',
-                }"
-                @change="onChange"
-                tree-default-expand-all
-              >
-              </a-tree-select>
-            </a-form-item>
-          </div>
-          <div class="form-box">
-            <a-form-item label="SPU名称">
-              <a-input disabled v-decorator="['itemName']" />
-            </a-form-item>
-            <a-form-item label="SPU编码">
-              <a-input disabled v-decorator="['itemCode']" />
-            </a-form-item>
-
-            <a-form-item label="税收分类编码">
-              <a-input disabled v-decorator="['taxCategoryCode']" />
-            </a-form-item>
-            <a-form-item label="税率">
-              <a-input
-                type="number"
-                :disabled="disbliend"
-                v-decorator="[
-                  'taxRate',
-                  {
-                    rules: [
-                      { required: true, message: '税率不能为空' },
-                      {
-                        pattern: /^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/,
-                        message: '税率不正确',
-                      },
-                    ],
-                  },
-                ]"
-                placeholder="请输入税率"
-              />
-            </a-form-item>
-            <a-form-item label="价格类型">
-              <a-select
-                :disabled="disbliend"
-                v-model="isTieredPricing"
-                @change="isTieredPricingchange"
-              >
-                <a-select-option
-                  :value="v.id"
-                  v-for="(v, i) in selectcontact"
-                  :key="i"
-                >
-                  {{ v.name }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-            <a-form-item label="库存">
-              <a-input
-                :disabled="disbliend"
-                v-decorator="[
-                  'stock',
-                  {
-                    rules: [
-                      { required: true, message: '库存不能为空' },
-                      { pattern: /\d/, message: '库存不正确' },
-                    ],
-                  },
-                ]"
-                placeholder="请输入库存"
-                type="number"
-              />
-            </a-form-item>
-          </div>
-        </div>
-      </a-form>
-      <!-- 
-        :label-col="{ span: 5 }"
-         :wrapper-col="{ span: 12 }"
-       -->
-      <a-form
-        :form="form"
-        style="overflow: auto;width:100%;padding-bottom:100px;"
-        autoComplete="off"
-        :labelCol="{ style: { width: '200px' } }"
-        :wrapperCol="{ style: { width: '80%' } }"
-      >
-        <div class="form-box-flex">
-          <div class="form-box">
-            <a-form-item label="PC端商品详情">
-              <quill-editor
-                ref="myTextEditor"
-                @focus="onEditorFocus($event)"
-                class="editorted"
-                v-model="pcItemInfo"
-                :options="editorOption"
-              ></quill-editor>
-            </a-form-item>
-            <a-form-item label="app商品详情">
-              <quill-editor
-                ref="TextEditor"
-                @focus="onEditorFocus($event)"
-                class="editorted"
-                v-model="appItemInfo"
-                :options="editorOption"
-              ></quill-editor>
-            </a-form-item>
-            <a-form-item label="成本价" v-show="costPrice.length > 0">
-              <div class="intpud" v-for="item in costPrice" :key="item.id">
-                <span style="width: 50px;">数量:</span>
-                <a-input
-                  placeholder="请输入"
-                  disabled
-                  :value="item.minNum"
-                  class="cbintpudnum"
-                  type="number"
-                />
-                <span style="width: 70px;">成本价：</span>
-                <a-input
-                  disabled
-                  :value="item.costPrice"
-                  type="number"
-                  class="cbintpudnum"
-                />
-              </div>
-            </a-form-item>
-            <a-form-item label="销售价" v-show="false">
-              <a-input
-                type="hidden"
-                v-decorator="[
-                  'sellingPriceList',
-                  {
-                    rules: [
-                      {
-                        validator: this.sellingPricevalidator,
-                      },
-                    ],
-                  },
-                ]"
-              />
-              <a-input type="hidden" v-decorator="['time']" />
-            </a-form-item>
-            <a-form-item label="销售价" v-show="isTieredPricing == true">
-              <div
-                class="intpud"
-                v-for="(item, index) in sellingPrice"
-                :key="index"
-              >
-                <span class="intNum">
-                  <span style="min-width: 45px;">数量：</span>
-                  <span class="intMinNum">{{ item.minNum }}</span
-                  >~<a-input
+  <div class="container-edit">
+    <baseLayout :backButton="false">
+      <template slot="header">
+        <div>{{ $route.params.typ === '1' ? '查看' : '编辑' }}商品基础信息</div>
+      </template>
+      <template slot="content">
+        <div class="content-main" style="padding:30px 60px 60px 30px;">
+          <a-form
+            :form="form"
+            :labelCol="{ style: { width: '200px' } }"
+            :wrapperCol="{ style: { width: '60%' } }"
+            style="width:100%;"
+            autoComplete="off"
+          >
+            <div class="form-box-flex">
+              <div class="form-box">
+                <a-form-item label="SKU名称">
+                  <a-input disabled v-decorator="['skuName']" />
+                </a-form-item>
+                <a-form-item label="SKU编码">
+                  <a-input disabled v-decorator="['skuCode']" />
+                </a-form-item>
+                <a-form-item label="所属品牌">
+                  <a-input
                     :disabled="disbliend"
-                    placeholder="无穷大"
-                    v-model="item.maxNum"
-                    class="intpudnum"
-                    type="number"
-                    style="flex:1;margin-left:20px;"
+                    v-decorator="[
+                      'brandName',
+                      {
+                        rules: [
+                          { required: true, message: '所属品牌不能为空' },
+                        ],
+                      },
+                    ]"
+                    placeholder="请输入所属品牌"
                   />
-                </span>
-                <span class="spshu">税前销售价:</span>
-                <a-input
-                  placeholder="请输入"
-                  :disabled="disbliend"
-                  v-model="item.priceBeforeTax"
-                  class="intpudnum"
-                  type="number"
-                />
-                <span class="spshu">税后销售价:</span>
-                <a-input
-                  placeholder="请输入"
-                  :disabled="disbliend"
-                  v-model="item.priceAfterTax"
-                  class="intpudnum"
-                  type="number"
-                />
+                </a-form-item>
+                <a-form-item label="供应商">
+                  <a-select
+                    :disabled="disbliend"
+                    show-search
+                    placeholder="请选择供应商"
+                    option-filter-prop="children"
+                    :filter-option="filterOption"
+                    @search="handleSearch"
+                    @change="handleChange"
+                    v-decorator="[
+                      'supplierName',
+                      { rules: [{ required: true, message: '请选择供应商' }] },
+                    ]"
+                    ><a-select-option
+                      v-for="item in supplierList"
+                      :key="item.id"
+                      :value="
+                        `${item.id}` +
+                          `:${item.supplierName}` +
+                          `:${item.companyId}`
+                      "
+                      >{{ item.supplierName }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+                <a-form-item label="SKU外部编码">
+                  <a-input
+                    :disabled="disbliend"
+                    v-decorator="['skuOutsideCode']"
+                    placeholder="请输入SKU外部编码"
+                  />
+                </a-form-item>
+                <a-form-item label="协议编码">
+                  <a-input
+                    :disabled="disbliend"
+                    v-decorator="['skuProtocolCode']"
+                    placeholder="请输入协议编码"
+                  />
+                </a-form-item>
+                <a-form-item label="商品状态">
+                  <a-select
+                    :disabled="disbliend"
+                    v-decorator="[
+                      'selling',
+                      {
+                        rules: [
+                          { required: true, message: '商品状态不能为空' },
+                        ],
+                      },
+                    ]"
+                  >
+                    <a-select-option
+                      :value="v.id"
+                      v-for="(v, i) in selectArrstrain"
+                      :key="i"
+                    >
+                      {{ v.name }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+                <a-form-item label="商品品类">
+                  <a-tree-select
+                    :disabled="disbliend"
+                    show-search
+                    searchPlaceholder
+                    treeNodeFilterProp="title"
+                    v-decorator="['categoryId']"
+                    style="width: 100%"
+                    :dropdown-style="{ maxHeight: '300px', overflow: 'auto' }"
+                    :tree-data="treeData"
+                    :replace-fields="{
+                      children: 'children',
+                      key: 'categoryCode',
+                      value: 'categoryId',
+                      title: 'name',
+                    }"
+                    @change="onChange"
+                    tree-default-expand-all
+                  >
+                  </a-tree-select>
+                </a-form-item>
               </div>
-              <a-button-group class="butdb" v-if="!disbliend">
-                <a-button @click="addlis()" type="primary" size="small">
-                  <a-icon type="plus" />
-                </a-button>
-                <a-button
-                  @click="dellis()"
-                  size="small"
-                  v-if="sellingPrice.length > 1"
-                >
-                  <a-icon type="minus" />
-                </a-button>
-              </a-button-group>
-            </a-form-item>
+              <div class="form-box">
+                <a-form-item label="SPU名称">
+                  <a-input disabled v-decorator="['itemName']" />
+                </a-form-item>
+                <a-form-item label="SPU编码">
+                  <a-input disabled v-decorator="['itemCode']" />
+                </a-form-item>
 
-            <a-form-item label="销售价" v-show="isTieredPricing == false">
-              <div class="intpud">
-                <span class="spshu">税前销售价:</span>
-                <a-input
-                  placeholder="请输入"
-                  :disabled="disbliend"
-                  v-model="sellingPrice[0].priceBeforeTax"
-                  class="intpudnum"
-                  type="number"
-                />
-                <span class="spshu">税后销售价:</span>
-                <a-input
-                  placeholder="请输入"
-                  :disabled="disbliend"
-                  v-model="sellingPrice[0].priceAfterTax"
-                  class="intpudnum"
-                  type="number"
-                />
+                <a-form-item label="税收分类编码">
+                  <a-input disabled v-decorator="['taxCategoryCode']" />
+                </a-form-item>
+                <a-form-item label="税率">
+                  <a-input
+                    type="number"
+                    :disabled="disbliend"
+                    v-decorator="[
+                      'taxRate',
+                      {
+                        rules: [
+                          { required: true, message: '税率不能为空' },
+                          {
+                            pattern: /^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/,
+                            message: '税率不正确',
+                          },
+                        ],
+                      },
+                    ]"
+                    placeholder="请输入税率"
+                  />
+                </a-form-item>
+                <a-form-item label="价格类型">
+                  <a-select
+                    :disabled="disbliend"
+                    v-model="isTieredPricing"
+                    @change="isTieredPricingchange"
+                  >
+                    <a-select-option
+                      :value="v.id"
+                      v-for="(v, i) in selectcontact"
+                      :key="i"
+                    >
+                      {{ v.name }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+                <a-form-item label="库存">
+                  <a-input
+                    :disabled="disbliend"
+                    v-decorator="[
+                      'stock',
+                      {
+                        rules: [
+                          { required: true, message: '库存不能为空' },
+                          { pattern: /\d/, message: '库存不正确' },
+                        ],
+                      },
+                    ]"
+                    placeholder="请输入库存"
+                    type="number"
+                  />
+                </a-form-item>
               </div>
-            </a-form-item>
-          </div>
+            </div>
+          </a-form>
+          <a-form
+            :form="form"
+            style="overflow: auto;width:100%;"
+            autoComplete="off"
+            :labelCol="{ style: { width: '200px' } }"
+            :wrapperCol="{ style: { width: '80%' } }"
+          >
+            <div class="form-box-flex">
+              <div class="form-box">
+                <a-form-item label="PC端商品详情">
+                  <quill-editor
+                    ref="myTextEditor"
+                    @focus="onEditorFocus($event)"
+                    class="editorted"
+                    v-model="pcItemInfo"
+                    :options="editorOption"
+                  ></quill-editor>
+                </a-form-item>
+                <a-form-item label="app商品详情">
+                  <quill-editor
+                    ref="TextEditor"
+                    @focus="onEditorFocus($event)"
+                    class="editorted"
+                    v-model="appItemInfo"
+                    :options="editorOption"
+                  ></quill-editor>
+                </a-form-item>
+                <a-form-item label="成本价" v-show="costPrice.length > 0">
+                  <div class="intpud" v-for="item in costPrice" :key="item.id">
+                    <span style="width: 50px;">数量:</span>
+                    <a-input
+                      placeholder="请输入"
+                      disabled
+                      :value="item.minNum"
+                      class="cbintpudnum"
+                      type="number"
+                    />
+                    <span style="width: 70px;">成本价：</span>
+                    <a-input
+                      disabled
+                      :value="item.costPrice"
+                      type="number"
+                      class="cbintpudnum"
+                    />
+                  </div>
+                </a-form-item>
+                <a-form-item label="销售价" v-show="false">
+                  <a-input
+                    type="hidden"
+                    v-decorator="[
+                      'sellingPriceList',
+                      {
+                        rules: [
+                          {
+                            validator: this.sellingPricevalidator,
+                          },
+                        ],
+                      },
+                    ]"
+                  />
+                  <a-input type="hidden" v-decorator="['time']" />
+                </a-form-item>
+                <a-form-item label="销售价" v-show="isTieredPricing == true">
+                  <div
+                    class="intpud"
+                    v-for="(item, index) in sellingPrice"
+                    :key="index"
+                  >
+                    <span class="intNum">
+                      <span style="min-width: 45px;">数量：</span>
+                      <span class="intMinNum">{{ item.minNum }}</span
+                      >~<a-input
+                        :disabled="disbliend"
+                        placeholder="无穷大"
+                        v-model="item.maxNum"
+                        class="intpudnum"
+                        type="number"
+                        style="flex:1;margin-left:20px;"
+                      />
+                    </span>
+                    <span class="spshu">税前销售价:</span>
+                    <a-input
+                      placeholder="请输入"
+                      :disabled="disbliend"
+                      v-model="item.priceBeforeTax"
+                      class="intpudnum"
+                      type="number"
+                    />
+                    <span class="spshu">税后销售价:</span>
+                    <a-input
+                      placeholder="请输入"
+                      :disabled="disbliend"
+                      v-model="item.priceAfterTax"
+                      class="intpudnum"
+                      type="number"
+                    />
+                  </div>
+                  <a-button-group class="butdb" v-if="!disbliend">
+                    <a-button @click="addlis()" type="primary" size="small">
+                      <a-icon type="plus" />
+                    </a-button>
+                    <a-button
+                      @click="dellis()"
+                      size="small"
+                      v-if="sellingPrice.length > 1"
+                    >
+                      <a-icon type="minus" />
+                    </a-button>
+                  </a-button-group>
+                </a-form-item>
+
+                <a-form-item label="销售价" v-show="isTieredPricing == false">
+                  <div class="intpud">
+                    <span class="spshu">税前销售价:</span>
+                    <a-input
+                      placeholder="请输入"
+                      :disabled="disbliend"
+                      v-model="sellingPrice[0].priceBeforeTax"
+                      class="intpudnum"
+                      type="number"
+                    />
+                    <span class="spshu">税后销售价:</span>
+                    <a-input
+                      placeholder="请输入"
+                      :disabled="disbliend"
+                      v-model="sellingPrice[0].priceAfterTax"
+                      class="intpudnum"
+                      type="number"
+                    />
+                  </div>
+                </a-form-item>
+              </div>
+            </div>
+          </a-form>
         </div>
-      </a-form>
-    </div>
-    <!-- <div class="content-footer" v-if="$route.params.typ === '2'">
-      <a-button
-        type="primary"
-        size="large"
-        style="width: 120px;"
+      </template>
+      <template slot="footer">
+        <a-button
+          v-if="$route.params.typ == '2'"
+          class="a-buttom-reset"
+          type="primary"
+          @click="onSubmit"
+          :loading="loading"
+          >提交</a-button
+        >
+        <a-button class="a-buttom-reset" type="default" @click="$router.go(-1)"
+          >返回</a-button
+        >
+      </template>
+      <!-- <FormSubmitButton
+        :isShow="true"
         :loading="loading"
-        @click="onSubmit()"
-        >保存</a-button
-      >
-    </div> -->
-    <FormSubmitButton
-      :isShow="true"
-      :loading="loading"
-      :isShowSubmit="$route.params.typ === '2'"
-      @submit="onSubmit"
-    />
+        :isShowSubmit="$route.params.typ === '2'"
+        @submit="onSubmit"
+      /> -->
+      <!-- </div> -->
+    </baseLayout>
   </div>
 </template>
 
@@ -546,7 +555,7 @@ export default {
               that.costPrice[0].costPrice > that.sellingPrice[i].priceBeforeTax
             )
               this.loading = false
-              return this.$message.error('销售价必须大于成本价')
+            return this.$message.error('销售价必须大于成本价')
           }
           this.form.validateFields(['sellingPriceList'], { force: true })
         }
@@ -604,14 +613,16 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.container-edit {
+  position: relative;
+  height: 100%;
+}
 .cbintpudnum {
   margin: 0 20px 0 0;
   width: 40%;
-  // width: 300px;
 }
 
 .spshu {
-  // width: 40%;
   min-width: 85px;
   width: 80px;
 }
@@ -619,12 +630,10 @@ export default {
 .intpudnum {
   margin: 0 20px 0 0;
   width: 40%;
-  // width: 300px;
 }
 
 .intpud {
   display: flex;
-  // justify-content: space-around;
   align-items: center;
   position: relative;
 }
@@ -633,26 +642,12 @@ export default {
   float: right;
   margin-bottom: 50px;
   z-index: 0;
-  // position: absolute;
-  // left: 550px;
-  // top: 0px;
 }
 
 .editorted {
   margin: 20px auto;
   overflow: auto;
 }
-
-.content-footer {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-
-  & > *:not(.last-child) {
-    margin-right: 10px;
-  }
-}
-
 .search {
   width: 100%;
   height: 32px;
@@ -673,16 +668,6 @@ export default {
 
   > div {
     width: 48%;
-  }
-}
-
-.content-footer {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-
-  & > *:not(.last-child) {
-    margin-right: 10px;
   }
 }
 
@@ -714,12 +699,5 @@ export default {
 }
 /deep/.quill-editor .ql-container {
   height: 320px;
-}
-.content-floor {
-  background: #fff;
-  width: 100%;
-  bottom: 0px;
-  right: 0px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 </style>
