@@ -105,10 +105,14 @@
               style="margin-top:8px;"
           >
             <template slot="hand1" slot-scope="scope">
-              <a-input v-model="scope.hand1"/>
+              <a-form-model-item>
+                <a-input v-model="scope.hand1" @input="$forceUpdate()" @blur="scope.hand1 = naturalFormat(scope.hand1);$forceUpdate()"/>
+              </a-form-model-item>
             </template>
             <template slot="hand2" slot-scope="scope">
-              <a-input v-model="scope.hand2" style="width: 300px !important;"/>
+              <a-form-model-item>
+                <a-input v-model="scope.hand2" @input="$forceUpdate()" style="width: 300px !important;"/>
+              </a-form-model-item>
             </template>
           </a-table>
         </div>
@@ -188,35 +192,30 @@ export default {
           dataIndex: 'deliveryNo',
           key: 'deliveryNo',
           width: 120,
-          ellipsis: true,
         },
         {
           title: '配送时间',
           dataIndex: 'deliveryTime',
           key: 'deliveryTime',
           width: 120,
-          ellipsis: true,
         },
         {
           title: '签收单号',
           key: 'receiveNo',
           dataIndex: 'receiveNo',
           width: 120,
-          ellipsis: true,
         },
         {
           title: '签收时间',
           dataIndex: 'approveTime',
           key: 'approveTime',
           width: 120,
-          ellipsis: true,
         },
         {
           title: '状态',
           key: 'approveStatus',
           dataIndex: 'approveStatus',
           width: 120,
-          ellipsis: true,
           customRender: (text, record, index) => {
             let str = ''
             switch (record.approveStatus) {
@@ -249,27 +248,24 @@ export default {
           title: '商品名称',
           dataIndex: 'itemName',
           key: 'itemName',
-          ellipsis: true,
           align: 'left',
+          width: 300,
         },
         {
           title: '配送数量',
           key: 'deliveryNum',
           dataIndex: 'deliveryNum',
-          ellipsis: true,
           align: 'left',
         },
         {
           title: '签收数量',
           key: 'receiveNum',
           dataIndex: 'receiveNum',
-          ellipsis: true,
           align: 'left',
         },
         {
           title: '未签收数量',
           width: 250,
-          ellipsis: true,
           scopedSlots: { customRender: 'noReceiveNum' },
           align: 'left',
         },
@@ -277,7 +273,6 @@ export default {
           title: '备注',
           key: 'receiveRemark',
           dataIndex: 'receiveRemark',
-          ellipsis: true,
           align: 'left',
         },
       ],
@@ -286,7 +281,6 @@ export default {
           title: '商品名称',
           dataIndex: 'itemName',
           key: 'itemName',
-          ellipsis: true,
           align: 'left',
           width: 300,
         },
@@ -294,7 +288,6 @@ export default {
           title: '配送数量',
           key: 'deliveryNum',
           dataIndex: 'deliveryNum',
-          ellipsis: true,
           align: 'left',
           width: 150,
         },
@@ -302,7 +295,6 @@ export default {
           title: '签收数量',
           key: 'hand1',
           scopedSlots: { customRender: 'hand1' },
-          ellipsis: true,
           align: 'left',
           width: 150,
         },
@@ -310,7 +302,6 @@ export default {
           title: '备注',
           key: 'hand2',
           scopedSlots: { customRender: 'hand2' },
-          ellipsis: true,
           align: 'left',
           width: 400,
         },
