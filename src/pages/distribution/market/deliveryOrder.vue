@@ -415,7 +415,7 @@ export default {
         params.itemList.push({
           deliveryItemId: item.id,
           num: item.hand1 ? item.hand1 : 0,
-          receiveRemark: item.hand2,
+          remark: item.hand2,
         });
       });
       api.marketDeliveryOrderConfirm(params).then(res => {
