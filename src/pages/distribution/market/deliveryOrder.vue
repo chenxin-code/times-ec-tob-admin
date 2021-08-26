@@ -105,20 +105,10 @@
               style="margin-top:8px;"
           >
             <template slot="hand1" slot-scope="scope">
-              <a-form-model-item>
-                <a-input
-                    v-model="scope.hand1"
-                    @blur="scope.hand1 = naturalFormat(scope.hand1)"
-                />
-              </a-form-model-item>
+              <a-input v-model="scope.hand1"/>
             </template>
             <template slot="hand2" slot-scope="scope">
-              <a-form-model-item>
-                <a-input
-                    v-model="scope.hand2"
-                    style="width: 300px !important;"
-                />
-              </a-form-model-item>
+              <a-input v-model="scope.hand2" style="width: 300px !important;"/>
             </template>
           </a-table>
         </div>
