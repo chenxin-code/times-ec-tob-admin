@@ -216,7 +216,7 @@ export default {
       ...this.searchData, // 角色名称跟手机号
     }
     setTimeout(() => {
-      this.scrollY = document.body.clientHeight - 230
+      this.scrollY = document.body.clientHeight - 220
     }, 0)
     // 角色列表
     this.getData(params)
@@ -407,7 +407,7 @@ export default {
       this.$router.push({
         // path: '/authority/assignAuthority',
         name: 'assignAuthority',
-        params: {
+        query: {
           id: row.id,
         },
       })
@@ -441,7 +441,7 @@ export default {
     assignUsers(row) {
       this.$router.push({
         name: 'assignRole',
-        params: {
+        query: {
           id: row.id,
         },
       })

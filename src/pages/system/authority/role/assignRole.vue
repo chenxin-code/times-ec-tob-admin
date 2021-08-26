@@ -183,6 +183,7 @@ export default {
       modelForm: this.$form.createForm(this, { name: 'form' }),
       searchPhoneLoading: false,
       scrollY: 400,
+      roleId: this.$route.query.id,
     }
   },
   mounted() {
@@ -229,7 +230,7 @@ export default {
                     item.name = data.empName
                     item.phone = data.mobilePhone
                     item.id = data.id
-                    item.roleId = this.$route.params.id
+                    item.roleId = this.roleId
                     item.userId = data.userId
                     item.userName = data.userName
                     employ.push(item)
@@ -252,7 +253,7 @@ export default {
       let params = {
         pageNum: this.pageData.pageNum, // 第几页
         pageSize: this.pageData.pageSize, // 每页多少条
-        roleId: this.$route.params.id, // roleId
+        roleId: this.roleId, // roleId
       }
       try {
         let res = await api.getAccountListData(params)
@@ -269,7 +270,6 @@ export default {
           this.pageData.total = Number(total)
           params.userIds = userId.join(',')
           delete params.roleId
-          console.log(params, 'params')
           await this.getNoAddList(params)
         }
       } finally {
@@ -294,7 +294,7 @@ export default {
       let { tableDataed } = this
       let list = [],
         params = {
-          roleId: this.$route.params.id,
+          roleId: this.roleId,
           userList: [],
         }
       if (tableDataed.length > 0) {
@@ -316,7 +316,7 @@ export default {
           let param = {
             pageNum: this.pageData.pageNum, // 第几页
             pageSize: this.pageData.pageSize, // 每页多少条
-            roleId: this.$route.params.id, // roleId
+            roleId: this.roleId, // roleId
           }
           this.$message.success('保存成功')
           this.$router.back()

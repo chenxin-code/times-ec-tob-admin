@@ -168,7 +168,7 @@ export default {
       }
       this.$router.push({
         name: 'menuManagementEdit',
-        params: {
+        query: {
           type,
           title: title[type], // 内页的标题
           id: props?.id ?? '',
