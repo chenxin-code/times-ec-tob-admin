@@ -83,12 +83,6 @@ export default {
       tableData: [],
       tableDatas: [],
       columns: [
-        // {
-        //   title: '访问',
-        //   dataIndex: 'look',
-        //   key: 'look',
-        //   width: 50,
-        // },
         {
           title: '菜单',
           dataIndex: 'menuName',
@@ -115,6 +109,7 @@ export default {
       checkChange: [],
       rowSelection: rowSelection,
       selectedId: [],
+      roleId: this.$route.query.id,
     }
   },
   components: {},
@@ -124,17 +119,21 @@ export default {
         if (param === 1) {
           return '菜单'
         } else if (param === 2) {
-          return '页面'
+          return '按钮'
         } else {
           return ''
         }
       }
     },
   },
+  mounted() {
+    this.tableLoading = true
+    this.getRoleList()
+  },
   methods: {
     getRoleList() {
       api
-        .roleMenuTreeData({ roleId: this.$route.params.id })
+        .roleMenuTreeData({ roleId: this.roleId })
         .then(resp => {
           if (resp.code === 200) {
             let tableData = []
@@ -279,7 +278,7 @@ export default {
       this.tableLoading = true
       api
         .insertRoleMenu({
-          roleId: this.$route.params.id,
+          roleId: this.roleId,
           menuIds: this.checkChange.concat(ParentId), //选中的权限拼接父级的id
           parentIds: ParentId, //权限选中的父类id
           menuParentIds: this.selectedId, //选中的访问页面权限
@@ -294,10 +293,6 @@ export default {
           this.tableLoading = false
         })
     },
-  },
-  mounted() {
-    this.tableLoading = true
-    this.getRoleList()
   },
 }
 </script>

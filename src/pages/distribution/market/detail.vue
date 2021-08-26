@@ -2,7 +2,7 @@
   <div id="distributorAudit" class="container-edit">
     <baseLayout :header="false">
       <template slot="content">
-        <div class="content-main">
+        <div class="content-main" style="padding:20px;">
           <div
             style="width:100%;display: flex;align-items:center;padding: 20px 20px;"
           >
@@ -155,9 +155,6 @@
         </div>
       </template>
       <template slot="footer">
-        <!-- <a-button class="a-buttom-reset" type="primary" @click="saveRole"
-          >保存</a-button
-        > -->
         <a-button class="a-buttom-reset" type="default" @click="$router.go(-1)"
           >返回</a-button
         >

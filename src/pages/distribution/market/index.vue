@@ -249,7 +249,7 @@ export default {
         key: 'operation',
         fixed: 'right',
         width: 350,
-        align: 'right',
+        align: 'left',
         scopedSlots: { customRender: 'operation' },
       },
     ]
@@ -433,7 +433,7 @@ export default {
             })
             .then(res => {
               if (res.code == 200) {
-                that.$message.info(`${type}成功`)
+                that.$message.info(`订单确认成功`)
                 that.getData()
               }
             })

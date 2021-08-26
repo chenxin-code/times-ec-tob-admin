@@ -399,11 +399,11 @@ export default {
         this.loadingSubmit = false
       }
     },
-    // 分配用户
+    // 关联角色
     assignUsers(row) {
       this.$router.push({
         name: 'assignUsers',
-        params: {
+        query: {
           id: row.id,
         },
       })
@@ -447,7 +447,6 @@ export default {
             api
               .setAddAccountSave(this.toAssignRole)
               .then(res => {
-                console.log(res, 'code')
                 if (res.code == 200) {
                   that.$message.info('保存成功')
                   that.modelVisibleAdd = false

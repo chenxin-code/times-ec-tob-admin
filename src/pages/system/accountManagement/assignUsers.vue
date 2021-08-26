@@ -123,11 +123,12 @@ export default {
       tableLoading: false,
       tableLoadinged: false,
       scrollY: 400,
+      userId: this.$route.query.id,
     }
   },
   mounted() {
-    this.getNoAssignRole({ userId: this.$route.params.id })
-    this.getAssignRole({ userId: this.$route.params.id })
+    this.getNoAssignRole({ userId: this.userId })
+    this.getAssignRole({ userId: this.userId })
     setTimeout(() => {
       this.scrollY = document.body.clientHeight - 250
     }, 0)
@@ -185,13 +186,13 @@ export default {
       })
       let params = {
         roleIds: roleIds,
-        userId: this.$route.params.id,
+        userId: this.this.userId,
       }
       api.batchAssociateRole(params).then(res => {
         if (res.code == 200) {
           this.$message.success(`保存成功`)
-          this.getNoAssignRole({ userId: this.$route.params.id })
-          this.getAssignRole({ userId: this.$route.params.id })
+          this.getNoAssignRole({ userId: this.userId })
+          this.getAssignRole({ userId: this.userId })
           this.$router.back()
         }
       })

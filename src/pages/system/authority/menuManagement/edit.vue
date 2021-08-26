@@ -148,8 +148,7 @@ export default {
     }
   },
   created() {
-    this.openType = this.$route.params.type
-    console.log(this.openType, 'this.openType')
+    this.openType = this.$route.query.type
     this.getTree()
     if (this.$route.params.type !== 'add') {
       this.initDetail()
@@ -158,7 +157,7 @@ export default {
   methods: {
     // 获取详情信息
     initDetail() {
-      this.$api.getMenuModel({ id: this.$route.params.id }).then(res => {
+      this.$api.getMenuModel({ id: this.$route.query.id }).then(res => {
         if (res.code == 200) {
           this.form = res.data
         }
