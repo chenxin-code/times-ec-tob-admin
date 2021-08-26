@@ -106,7 +106,7 @@
           >
             <template slot="hand1" slot-scope="scope">
               <a-form-model-item>
-                <a-input v-model="scope.hand1" @input="$forceUpdate()" @blur="scope.hand1 = naturalFormat(scope.hand1);$forceUpdate()"/>
+                <a-input v-model="scope.hand1" @input="$forceUpdate()" @blur="scope.hand1 = naturalFormat(scope.hand1,scope.deliveryNum);$forceUpdate()"/>
               </a-form-model-item>
             </template>
             <template slot="hand2" slot-scope="scope">
@@ -349,12 +349,18 @@ export default {
         return imageUrl;
       }
     },
-    naturalFormat(val) {
-      if (val) {
-        if (/^([0]|[1-9][0-9]*)$/.test(val)) {
-          return val
+    naturalFormat(hand1,deliveryNum) {
+      if(hand1){
+        if(/^([0]|[1-9][0-9]*)$/.test(hand1)){
+          if(hand1 > deliveryNum){
+            this.$message.error('签收数量不能大于配送数量【' + deliveryNum + '】');
+            return '';
+          }else{
+            return hand1;
+          }
         } else {
-          return ''
+          this.$message.error('签收数量必须是自然数');
+          return '';
         }
       }
     },
