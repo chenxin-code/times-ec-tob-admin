@@ -248,7 +248,6 @@ export default {
     return {
       previewVisible: false,
       imgUrl: '',
-      saleOrderNo: '',
       pageData: {
         pageNum: 1,
         pageSize: 10,
@@ -295,7 +294,7 @@ export default {
           key: 'approveStatus',
           dataIndex: 'approveStatus',
           align: 'center',
-          width: 120,
+          width: 80,
           customRender: (text, record, index) => {
             let str = ''
             switch (record.approveStatus) {
@@ -337,24 +336,27 @@ export default {
           key: 'deliveryNum',
           dataIndex: 'deliveryNum',
           align: 'center',
+          width: 120,
         },
         {
           title: '签收数量',
           key: 'receiveNum',
           dataIndex: 'receiveNum',
           align: 'center',
+          width: 120,
         },
         {
           title: '未签收数量',
-          width: 250,
           scopedSlots: { customRender: 'noReceiveNum' },
           align: 'center',
+          width: 120,
         },
         {
           title: '备注',
           key: 'receiveRemark',
           dataIndex: 'receiveRemark',
           align: 'center',
+          width: 300,
         },
       ],
       signColumns: [
@@ -370,21 +372,21 @@ export default {
           key: 'deliveryNum',
           dataIndex: 'deliveryNum',
           align: 'center',
-          width: 150,
+          width: 120,
         },
         {
           title: '签收数量',
           key: 'hand1',
           scopedSlots: { customRender: 'hand1' },
           align: 'center',
-          width: 150,
+          width: 120,
         },
         {
           title: '备注',
           key: 'hand2',
           scopedSlots: { customRender: 'hand2' },
           align: 'center',
-          width: 400,
+          width: 300,
         },
       ],
       ACTION_BASEURL,
@@ -392,8 +394,7 @@ export default {
       imageUrlArr: [], //图片上传数组
     }
   },
-  created() {
-    this.saleOrderNo = this.$route.params.saleOrderNo;
+  mounted() {
     this.getData();
   },
   methods: {
@@ -446,10 +447,8 @@ export default {
       }
     },
     async getData() {
-      let res = await api.marketDeliveryOrderList({
-        saleOrderNo: this.saleOrderNo,
-      })
-      this.dataList = res.data
+      let res = await api.marketDeliveryOrderList({saleOrderNo: this.$route.query.saleOrderNo});
+      this.dataList = res.data;
     },
     seeImgItem(item) {
       this.imgUrl = item
