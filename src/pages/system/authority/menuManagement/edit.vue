@@ -150,7 +150,7 @@ export default {
   created() {
     this.openType = this.$route.query.type
     this.getTree()
-    if (this.$route.params.type !== 'add') {
+    if (this.$route.query.type !== 'add') {
       this.initDetail()
     }
   },
@@ -158,9 +158,7 @@ export default {
     // 获取详情信息
     initDetail() {
       this.$api.getMenuModel({ id: this.$route.query.id }).then(res => {
-        if (res.code == 200) {
-          this.form = res.data
-        }
+        this.form = res.data
       })
     },
     // 获取类目树
@@ -192,11 +190,9 @@ export default {
             this.form
           )
             .then(res => {
-              if (res.code == 200) {
-                this.$router.go(-1)
-                this.$message.info(`提交成功`)
-                that.$store.dispatch('GET_MENU_LIST')
-              }
+              this.$router.go(-1)
+              this.$message.info(`提交成功`)
+              that.$store.dispatch('GET_MENU_LIST')
             })
             .finally(() => {
               this.loadingSubmit = false
