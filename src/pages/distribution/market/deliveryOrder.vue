@@ -401,6 +401,7 @@ export default {
   methods: {
     // ...mapActions(['FALLBACK']),
     beforeUpload(file) {
+      return true;//暂不限制文件大小
       const isLt2M = file.size / 1024 / 1024 <= 2;
       if (!isLt2M) {
         this.$message.error('文件大小不能超过2MB');
