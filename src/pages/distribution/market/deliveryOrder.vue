@@ -90,7 +90,7 @@
                 v-for="item in lookData.deliveryProofImgList"
                 style="margin-bottom: 10px;"
               >
-                <a :href="item">{{ item }}</a>
+                <a :href="item" download="">{{ item }}</a>
               </p>
             </div>
           </div>
@@ -111,7 +111,7 @@
                 v-for="item in lookData.receiverProofImgList"
                 style="margin-bottom: 10px;"
               >
-                <a :href="item">{{ item }}</a>
+                <a :href="item" download="">{{ item }}</a>
               </p>
             </div>
           </div>
@@ -188,7 +188,7 @@
                 v-for="item in signData.deliveryProofImgList"
                 style="margin-bottom: 10px;"
               >
-                <a :href="item">{{ item }}</a>
+                <a :href="item" download="">{{ item }}</a>
               </p>
             </div>
           </div>
@@ -266,30 +266,35 @@ export default {
           title: '配送单号',
           dataIndex: 'deliveryNo',
           key: 'deliveryNo',
+          align: 'center',
           width: 120,
         },
         {
           title: '配送时间',
           dataIndex: 'deliveryTime',
           key: 'deliveryTime',
+          align: 'center',
           width: 120,
         },
         {
           title: '签收单号',
           key: 'receiveNo',
           dataIndex: 'receiveNo',
+          align: 'center',
           width: 120,
         },
         {
           title: '签收时间',
           dataIndex: 'approveTime',
           key: 'approveTime',
+          align: 'center',
           width: 120,
         },
         {
           title: '状态',
           key: 'approveStatus',
           dataIndex: 'approveStatus',
+          align: 'center',
           width: 120,
           customRender: (text, record, index) => {
             let str = ''
@@ -314,6 +319,7 @@ export default {
           title: '操作',
           key: 'operation',
           fixed: 'right',
+          align: 'center',
           width: 200,
           scopedSlots: { customRender: 'action' },
         },
@@ -323,32 +329,32 @@ export default {
           title: '商品名称',
           dataIndex: 'itemName',
           key: 'itemName',
-          align: 'left',
+          align: 'center',
           width: 300,
         },
         {
           title: '配送数量',
           key: 'deliveryNum',
           dataIndex: 'deliveryNum',
-          align: 'left',
+          align: 'center',
         },
         {
           title: '签收数量',
           key: 'receiveNum',
           dataIndex: 'receiveNum',
-          align: 'left',
+          align: 'center',
         },
         {
           title: '未签收数量',
           width: 250,
           scopedSlots: { customRender: 'noReceiveNum' },
-          align: 'left',
+          align: 'center',
         },
         {
           title: '备注',
           key: 'receiveRemark',
           dataIndex: 'receiveRemark',
-          align: 'left',
+          align: 'center',
         },
       ],
       signColumns: [
@@ -356,28 +362,28 @@ export default {
           title: '商品名称',
           dataIndex: 'itemName',
           key: 'itemName',
-          align: 'left',
+          align: 'center',
           width: 300,
         },
         {
           title: '配送数量',
           key: 'deliveryNum',
           dataIndex: 'deliveryNum',
-          align: 'left',
+          align: 'center',
           width: 150,
         },
         {
           title: '签收数量',
           key: 'hand1',
           scopedSlots: { customRender: 'hand1' },
-          align: 'left',
+          align: 'center',
           width: 150,
         },
         {
           title: '备注',
           key: 'hand2',
           scopedSlots: { customRender: 'hand2' },
-          align: 'left',
+          align: 'center',
           width: 400,
         },
       ],
@@ -387,17 +393,17 @@ export default {
     }
   },
   created() {
-    this.saleOrderNo = this.$route.params.saleOrderNo
-    this.getData()
+    this.saleOrderNo = this.$route.params.saleOrderNo;
+    this.getData();
   },
   methods: {
     // ...mapActions(['FALLBACK']),
     beforeUpload(file) {
-      const isLt2M = file.size / 1024 / 1024 < 2
+      const isLt2M = file.size / 1024 / 1024 <= 2;
       if (!isLt2M) {
-        this.$message.error('File must smaller than 2MB!')
+        this.$message.error('文件大小不能超过2MB');
       }
-      return isLt2M
+      return isLt2M;
     },
     handleChange(info) {
       if (info.file.status === 'uploading') {
