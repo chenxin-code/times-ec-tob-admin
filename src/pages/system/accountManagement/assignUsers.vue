@@ -17,7 +17,6 @@
                   :scroll="{ y: scrollY }"
                 >
                   <template slot="operation" slot-scope="record">
-                    <!--  -->
                     <div
                       class="editable-row-operations"
                       @click="addRole(record)"
@@ -186,7 +185,7 @@ export default {
       })
       let params = {
         roleIds: roleIds,
-        userId: this.this.userId,
+        userId: this.userId,
       }
       api.batchAssociateRole(params).then(res => {
         if (res.code == 200) {

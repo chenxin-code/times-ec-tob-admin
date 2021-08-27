@@ -172,9 +172,9 @@ export default {
       height: calc(100vh - 48px);
       box-sizing: 'border-box';
     }
-    // /deep/.ant-layout-sider-trigger {
-    //   padding-bottom: 0;
-    // }
+    .layout-sider::-webkit-scrollbar {
+      width: 0;
+    }
     .breadcrumb {
       display: inline-block;
     }
@@ -224,7 +224,7 @@ export default {
     .content {
       height: calc(100% - 90px);
       margin: 10px 10px;
-        background: #fff;
+      background: #fff;
       overflow: auto;
       // overflow-y: scroll;
 
