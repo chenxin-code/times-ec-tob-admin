@@ -478,6 +478,13 @@ export default {
       this.signModal = true
     },
     save() {
+      let checkHand1 = this.signData.deliveryItemList.every(item => {
+        return item.hand1;
+      });
+      if(!checkHand1){
+        this.$message.error('请填写签收数量');
+        return;
+      }
       let params = {
         deliveryNo: this.signData.deliveryNo,
         receiverProofImgs: this.imageUrlArr,
