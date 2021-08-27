@@ -81,6 +81,7 @@
                 <a-form-model-item>
                   <a-input
                     v-model="scope.set1"
+                    @input="$forceUpdate()"
                     @blur="scope.set1 = naturalFormat(scope.set1);$forceUpdate()"
                   />
                 </a-form-model-item>
@@ -89,6 +90,7 @@
                 <a-form-model-item>
                   <a-input
                     v-model="scope.set2"
+                    @input="$forceUpdate()"
                     @blur="scope.set2 = amountFormat(scope.set2);$forceUpdate()"
                   />
                 </a-form-model-item>
@@ -97,6 +99,7 @@
                 <a-form-model-item>
                   <a-input
                     v-model="scope.set3"
+                    @input="$forceUpdate()"
                     @blur="scope.set3 = amountFormat(scope.set3);$forceUpdate()"
                   />
                 </a-form-model-item>
@@ -105,6 +108,7 @@
                 <a-form-model-item>
                   <a-input
                     v-model="scope.set4"
+                    @input="$forceUpdate()"
                     @blur="scope.set4 = amountFormat(scope.set4);$forceUpdate()"
                   />
                 </a-form-model-item>
@@ -113,6 +117,7 @@
                 <a-form-model-item>
                   <a-input
                     v-model="scope.set5"
+                    @input="$forceUpdate()"
                     @blur="scope.set5 = amountFormat(scope.set5);$forceUpdate()"
                   />
                 </a-form-model-item>
@@ -121,6 +126,7 @@
                 <a-form-model-item>
                   <a-input
                     v-model="scope.remark"
+                    @input="$forceUpdate()"
                     style="width: 200px !important;"
                   />
                 </a-form-model-item>
@@ -240,6 +246,7 @@
             >
               <a-input
                 v-model="totalPretaxItemPriceDeduct"
+                @input="$forceUpdate()"
                 @blur="
                   totalPretaxItemPriceDeduct = amountFormat(
                     totalPretaxItemPriceDeduct
@@ -254,6 +261,7 @@
             >
               <a-input
                 v-model="totalAmountDeduct"
+                @input="$forceUpdate()"
                 @blur="totalAmountDeduct = amountFormat(totalAmountDeduct);$forceUpdate()"
                 :disabled="!disInput"
               />
@@ -264,6 +272,7 @@
             >
               <a-input
                 v-model="totalPretaxReducedPriceDeduct"
+                @input="$forceUpdate()"
                 @blur="
                   totalPretaxReducedPriceDeduct = amountFormat(
                     totalPretaxReducedPriceDeduct
@@ -278,6 +287,7 @@
             >
               <a-input
                 v-model="totalReducedPriceDeduct"
+                @input="$forceUpdate()"
                 @blur="
                   totalReducedPriceDeduct = amountFormat(
                     totalReducedPriceDeduct
@@ -313,6 +323,7 @@
             <a-form-model-item label="备注">
               <a-textarea
                 v-model="remark"
+                @input="$forceUpdate()"
                 style="width: 280px;"
                 :disabled="$route.path === '/negative/show'"
               />
