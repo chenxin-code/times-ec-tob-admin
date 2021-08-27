@@ -418,7 +418,7 @@ export default {
     checkDeliveryOrder(row) {
       this.$router.push({
         name: 'deliveryOrder',
-        params: {
+        query: {
           saleOrderNo: row.saleOrderNo,
         },
       })
