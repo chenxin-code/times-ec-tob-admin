@@ -167,6 +167,7 @@
               <a-form-model-item>
                 <a-input
                   v-model="scope.hand2"
+                  :maxLength="50"
                   @input="$forceUpdate()"
                   style="width: 300px !important;"
                 />
@@ -205,9 +206,9 @@
             :remove="handleRemove"
             @change="handleChange"
           >
-            <a-button :disabled="imageUrlArr.length >= 5">
+            <a-button :disabled="imageUrlArr.length >= 10">
               <a-icon type="upload" />
-              {{ imageUrlArr.length >= 5 ? '上传数量限制5个' : '上传' }}
+              {{ imageUrlArr.length >= 10 ? '上传数量限制10个' : '上传' }}
             </a-button>
           </a-upload>
         </div>
