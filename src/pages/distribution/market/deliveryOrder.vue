@@ -484,6 +484,10 @@ export default {
         this.$message.error('请填写签收数量');
         return;
       }
+      if(this.imageUrlArr.length === 0){
+        this.$message.error('请上传签收凭证');
+        return;
+      }
       let params = {
         deliveryNo: this.signData.deliveryNo,
         receiverProofImgs: this.imageUrlArr,
