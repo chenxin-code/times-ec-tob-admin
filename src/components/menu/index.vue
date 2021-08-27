@@ -8,64 +8,72 @@
     @openChange="checkKeys"
   >
     <template v-for="menu in menus">
-      <template v-if="menu.children && menu.children.length > 0">
-        <a-sub-menu :key="menu.id">
-          <span slot="title"
-            ><img v-if="menu.icon" :src="menu.icon" class="menu-icon" />
+      <template v-if="menu.menuType != 2">
+        <template v-if="menu.children && menu.children.length > 0">
+          <a-sub-menu :key="menu.id">
+            <span slot="title"
+              ><img v-if="menu.icon" :src="menu.icon" class="menu-icon" />
 
-            <span class="menu-title" :key="menu.id">{{
-              menu.menuName
-            }}</span></span
-          >
-          <template v-for="menuChildren in menu.children">
-            <template
-              v-if="menuChildren.children && menuChildren.children.length > 0"
+              <span class="menu-title" :key="menu.id">{{
+                menu.menuName
+              }}</span></span
             >
-              <a-sub-menu :key="menuChildren.id">
-                <span slot="title"
-                  ><img
-                    v-if="menuChildren.icon"
-                    :src="menuChildren.icon"
-                    class="menu-icon"
-                  />
-                  <span class="menu-title" :key="menuChildren.id">
-                    {{ menuChildren.menuName }}</span
-                  ></span
+            <template v-for="menuChildren in menu.children">
+              <template v-if="menuChildren.menuType != 2">
+                <template
+                  v-if="
+                    menuChildren.children && menuChildren.children.length > 0
+                  "
                 >
-                <template v-for="menuCh in menuChildren.children">
+                  <a-sub-menu :key="menuChildren.id">
+                    <span slot="title"
+                      ><img
+                        v-if="menuChildren.icon"
+                        :src="menuChildren.icon"
+                        class="menu-icon"
+                      />
+                      <span class="menu-title" :key="menuChildren.id">
+                        {{ menuChildren.menuName }}</span
+                      ></span
+                    >
+                    <template v-for="menuCh in menuChildren.children">
+                      <template v-if="menuCh.menuType !== 2">
+                        <a-menu-item
+                          :key="menuCh.url != '/#' ? menuCh.url : menuCh.id"
+                          @click="onClickMenuChid(menuCh.url)"
+                        >
+                          <img
+                            v-if="menuCh.icon"
+                            :src="menuCh.icon"
+                            class="menu-icon"
+                          />{{ menuCh.menuName }}
+                        </a-menu-item></template
+                      >
+                    </template>
+                  </a-sub-menu>
+                </template>
+                <template v-else>
                   <a-menu-item
-                    :key="menuCh.url != '/#' ? menuCh.url : menuCh.id"
-                    @click="onClickMenuChid(menuCh.url)"
+                    :key="
+                      menuChildren.url != '/#'
+                        ? menuChildren.url
+                        : menuChildren.id
+                    "
+                    @click="onClickMenuChid(menuChildren.url)"
                   >
                     <img
-                      v-if="menuCh.icon"
-                      :src="menuCh.icon"
+                      v-if="menuChildren.icon"
+                      :src="menuChildren.icon"
                       class="menu-icon"
-                    />{{ menuCh.menuName }}
+                    />
+                    {{ menuChildren.menuName }}
                   </a-menu-item>
                 </template>
-              </a-sub-menu>
+              </template>
             </template>
-            <template v-else>
-              <a-menu-item
-                :key="
-                  menuChildren.url != '/#' ? menuChildren.url : menuChildren.id
-                "
-                @click="onClickMenuChid(menuChildren.url)"
-              >
-                <img
-                  v-if="menuChildren.icon"
-                  :src="menuChildren.icon"
-                  class="menu-icon"
-                />
-                {{ menuChildren.menuName }}
-              </a-menu-item>
-            </template>
-          </template>
-        </a-sub-menu>
-      </template>
-      <template v-else>
-        <template>
+          </a-sub-menu>
+        </template>
+        <template v-else>
           <a-menu-item
             :key="menu.url != '/#' ? menu.url : menu.id"
             @click="onClickMenu(menu.url)"

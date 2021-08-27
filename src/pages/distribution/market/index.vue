@@ -359,6 +359,7 @@ export default {
       }
     },
     handleSearch() {
+      this.pageData.pageNum = 1
       this.pageData.current = 1
       this.getData()
     },
@@ -382,9 +383,11 @@ export default {
     },
     //分页
     tableChange(e) {
+      console.log(e, 'e')
       let { pageSize, current } = e
-      this.pageData.current = current
+      this.pageData.pageNum = current
       this.pageData.pageSize = pageSize
+      this.pageData.current = current
       this.getData()
     },
     toReset() {
@@ -398,6 +401,7 @@ export default {
         cityCompany: undefined, // 城市公司
         thirdPurchaseId: '',
       }
+      this.pageData.pageNum = 1
       this.pageData.current = 1
       this.getData()
     },
@@ -466,26 +470,9 @@ export default {
         default:
           break
       }
-      let params = {
-        orderState: this.orderState, // 订单状态 进行中 已完成
-        pageNum: this.pageData.pageNum, // 第几页
-        pageSize: this.pageData.pageSize, // 每页多少条
-        saleOrderNo: this.searchData.saleOrderNo, // 订单编号
-        thirdPurchaseId: this.searchData.thirdPurchaseId, // 平台单号
-        orderTimeStart:
-          this.searchData.dateTime.length > 0
-            ? this.parseDate(this.searchData.dateTime[0])
-            : '', // 开始时间
-        orderTimeEnd:
-          this.searchData.dateTime.length > 0
-            ? this.parseDate(this.searchData.dateTime[1], true)
-            : '', // 结束时间
-        purchaseCompany: this.searchData.purchaseCompany, // 采购公司
-        receiver: this.searchData.receiver, // 收货人 模糊查询
-        cityCompany: this.searchData.cityCompany, // 城市公司
-      }
       this.pageData.current = 1
-      this.getData(params)
+      this.pageData.pageNum = 1
+      this.getData()
     },
     changeHandle() {
       this.afterVisible = false
