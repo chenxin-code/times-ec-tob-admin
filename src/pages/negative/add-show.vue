@@ -81,7 +81,8 @@
                 <a-form-model-item>
                   <a-input
                     v-model="scope.set1"
-                    @blur="scope.set1 = naturalFormat(scope.set1)"
+                    @input="$forceUpdate()"
+                    @blur="scope.set1 = naturalFormat(scope.set1);$forceUpdate()"
                   />
                 </a-form-model-item>
               </template>
@@ -89,7 +90,8 @@
                 <a-form-model-item>
                   <a-input
                     v-model="scope.set2"
-                    @blur="scope.set2 = amountFormat(scope.set2)"
+                    @input="$forceUpdate()"
+                    @blur="scope.set2 = amountFormat(scope.set2);$forceUpdate()"
                   />
                 </a-form-model-item>
               </template>
@@ -97,7 +99,8 @@
                 <a-form-model-item>
                   <a-input
                     v-model="scope.set3"
-                    @blur="scope.set3 = amountFormat(scope.set3)"
+                    @input="$forceUpdate()"
+                    @blur="scope.set3 = amountFormat(scope.set3);$forceUpdate()"
                   />
                 </a-form-model-item>
               </template>
@@ -105,7 +108,8 @@
                 <a-form-model-item>
                   <a-input
                     v-model="scope.set4"
-                    @blur="scope.set4 = amountFormat(scope.set4)"
+                    @input="$forceUpdate()"
+                    @blur="scope.set4 = amountFormat(scope.set4);$forceUpdate()"
                   />
                 </a-form-model-item>
               </template>
@@ -113,7 +117,8 @@
                 <a-form-model-item>
                   <a-input
                     v-model="scope.set5"
-                    @blur="scope.set5 = amountFormat(scope.set5)"
+                    @input="$forceUpdate()"
+                    @blur="scope.set5 = amountFormat(scope.set5);$forceUpdate()"
                   />
                 </a-form-model-item>
               </template>
@@ -121,6 +126,7 @@
                 <a-form-model-item>
                   <a-input
                     v-model="scope.remark"
+                    @input="$forceUpdate()"
                     style="width: 200px !important;"
                   />
                 </a-form-model-item>
@@ -240,10 +246,11 @@
             >
               <a-input
                 v-model="totalPretaxItemPriceDeduct"
+                @input="$forceUpdate()"
                 @blur="
                   totalPretaxItemPriceDeduct = amountFormat(
                     totalPretaxItemPriceDeduct
-                  )
+                  );$forceUpdate()
                 "
                 :disabled="!disInput"
               />
@@ -254,7 +261,8 @@
             >
               <a-input
                 v-model="totalAmountDeduct"
-                @blur="totalAmountDeduct = amountFormat(totalAmountDeduct)"
+                @input="$forceUpdate()"
+                @blur="totalAmountDeduct = amountFormat(totalAmountDeduct);$forceUpdate()"
                 :disabled="!disInput"
               />
             </a-form-model-item>
@@ -264,10 +272,11 @@
             >
               <a-input
                 v-model="totalPretaxReducedPriceDeduct"
+                @input="$forceUpdate()"
                 @blur="
                   totalPretaxReducedPriceDeduct = amountFormat(
                     totalPretaxReducedPriceDeduct
-                  )
+                  );$forceUpdate()
                 "
                 :disabled="!disInput"
               />
@@ -278,10 +287,11 @@
             >
               <a-input
                 v-model="totalReducedPriceDeduct"
+                @input="$forceUpdate()"
                 @blur="
                   totalReducedPriceDeduct = amountFormat(
                     totalReducedPriceDeduct
-                  )
+                  );$forceUpdate()
                 "
                 :disabled="!disInput"
               />
@@ -313,6 +323,7 @@
             <a-form-model-item label="备注">
               <a-textarea
                 v-model="remark"
+                @input="$forceUpdate()"
                 style="width: 280px;"
                 :disabled="$route.path === '/negative/show'"
               />
@@ -768,6 +779,7 @@ export default {
         if (/^([0]|[1-9][0-9]*)$/.test(val)) {
           return val
         } else {
+          this.$message.error('设置扣减数量必须是自然数');
           return ''
         }
       }
@@ -781,6 +793,7 @@ export default {
         ) {
           return val
         } else {
+          this.$message.error('价格格式不合法');
           return ''
         }
       }
