@@ -80,9 +80,7 @@ export default {
         title: '操作',
         key: 'operation',
         scopedSlots: { customRender: 'operation' },
-        width: '100px',
         align: 'center',
-        fixed: 'right',
       },
     ]
     let tableColumnsed = [
@@ -99,8 +97,8 @@ export default {
         key: 'operation',
         scopedSlots: { customRender: 'operation' },
         align: 'center',
-        width: '100px',
-        fixed: 'right',
+        // width: '100px',
+        // fixed: 'right',
       },
     ]
     let pageData = {
