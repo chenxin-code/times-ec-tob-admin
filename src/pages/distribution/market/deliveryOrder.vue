@@ -393,6 +393,7 @@ export default {
       ACTION_BASEURL,
       BASEURL, //图片上传路径
       imageUrlArr: [], //图片上传数组
+      disSaveBtn: false,
     }
   },
   mounted() {
@@ -503,12 +504,19 @@ export default {
           remark: item.hand2,
         })
       })
+      if(this.disSaveBtn){
+        return
+      }
+      this.disSaveBtn = true
       api.marketDeliveryOrderConfirm(params).then(res => {
         if (res.code === 200) {
           this.$message.success('签收成功')
+          this.disSaveBtn = false
           this.signModal = false
           this.getData()
         }
+      }).finally(() => {
+        this.disSaveBtn = false
       })
     },
   },
