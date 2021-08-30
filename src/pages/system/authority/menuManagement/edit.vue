@@ -7,14 +7,21 @@
             class="menu-form"
             ref="ruleForm"
             :model="form"
-            :rules="rules"
             :labelCol="{ span: 6 }"
             :wrapperCol="{ span: 12 }"
           >
             <a-row :gutter="[15, 0]" type="flex">
               <a-col :span="24">
-                <a-form-model-item label="菜单类型" prop="menuType">
-                  <a-radio-group name="radioGroup" v-model="form.menuType">
+                <a-form-model-item
+                  label="菜单类型"
+                  prop="menuType"
+                  :rules="[{ required: true, message: '菜单类型不能为空' }]"
+                >
+                  <a-radio-group
+                    name="radioGroup"
+                    v-model="form.menuType"
+                    @change="onChangeType"
+                  >
                     <a-radio :value="1">
                       菜单/页面
                     </a-radio>
@@ -45,7 +52,11 @@
               </a-col>
               <template v-if="form.menuType == 1">
                 <a-col :span="24">
-                  <a-form-model-item label="菜单/页面名称" prop="menuName">
+                  <a-form-model-item
+                    label="菜单/页面名称"
+                    prop="menuName"
+                    :rules="[{ required: true, message: '名称不能为空' }]"
+                  >
                     <a-input
                       v-model="form.menuName"
                       placeholder="请填写菜单/页面名称"
@@ -54,19 +65,31 @@
                   </a-form-model-item>
                 </a-col>
                 <a-col :span="24">
-                  <a-form-model-item label="菜单编码" prop="perms">
+                  <a-form-model-item
+                    label="菜单编码"
+                    prop="perms"
+                    :rules="[{ required: true, message: '编码不能为空' }]"
+                  >
                     <a-input v-model="form.perms" placeholder="请输入编码" />
                   </a-form-model-item>
                 </a-col>
                 <a-col :span="24">
-                  <a-form-model-item label="菜单地址" prop="url">
+                  <a-form-model-item
+                    label="菜单地址"
+                    prop="url"
+                    :rules="[{ required: true, message: '地址不能为空' }]"
+                  >
                     <a-input v-model="form.url" placeholder="请输入地址" />
                   </a-form-model-item>
                 </a-col>
               </template>
               <template v-if="form.menuType == 2">
                 <a-col :span="24">
-                  <a-form-model-item label="按钮名称" prop="menuName">
+                  <a-form-model-item
+                    label="按钮名称"
+                    prop="menuName"
+                    :rules="[{ required: true, message: '名称不能为空' }]"
+                  >
                     <a-input
                       v-model="form.menuName"
                       placeholder="请填写按钮名称"
@@ -75,7 +98,11 @@
                   </a-form-model-item>
                 </a-col>
                 <a-col :span="24">
-                  <a-form-model-item label="按钮标识" prop="perms">
+                  <a-form-model-item
+                    label="按钮标识"
+                    prop="perms"
+                    :rules="[{ required: true, message: '标识不能为空' }]"
+                  >
                     <a-input
                       v-model="form.perms"
                       placeholder="请输入按钮标识"
@@ -83,7 +110,11 @@
                   </a-form-model-item>
                 </a-col>
                 <a-col :span="24">
-                  <a-form-model-item label="按钮地址" prop="url">
+                  <a-form-model-item
+                    label="按钮地址"
+                    prop="url"
+                    :rules="[{ required: true, message: '地址不能为空' }]"
+                  >
                     <a-input v-model="form.url" placeholder="请输入按钮地址" />
                   </a-form-model-item>
                 </a-col>
@@ -134,11 +165,11 @@ export default {
         orderNum: null, // 排序
       },
       rules: {
-        menuName: [{ required: true, message: '菜单名称不能为空' }],
-        perms: [{ required: true, message: '编码不能为空' }],
         menuType: [{ required: true, message: '类型必选' }],
+        menuName: [{ required: true, message: '名称不能为空' }],
+        perms: [{ required: true, message: '编码不能为空' }],
         url: [{ required: true, message: '地址不能为空' }],
-        orderNum: [{ required: false, message: '排序不能为空' }],
+        // orderNum: [{ required: false, message: '排序不能为空' }],
       },
       treeData: [],
       specificationValue: undefined,
@@ -155,6 +186,9 @@ export default {
     }
   },
   methods: {
+    onChangeType(e) {
+      this.$refs.ruleForm.clearValidate()
+    },
     // 获取详情信息
     initDetail() {
       this.$api.getMenuModel({ id: this.$route.query.id }).then(res => {
