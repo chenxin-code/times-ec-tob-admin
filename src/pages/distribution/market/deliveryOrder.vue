@@ -42,6 +42,7 @@
       okText="确定"
       :width="1000"
       :footer="null"
+      :destroyOnClose="true"
       @cancel="lookModal = false"
     >
       <template>
@@ -130,7 +131,8 @@
       title=""
       okText="确定"
       :width="1000"
-      @cancel="signModal = false"
+      :destroyOnClose="true"
+      @cancel="signModalCancel"
     >
       <template>
         <div class="item-list">
@@ -508,6 +510,10 @@ export default {
         this.signModal = true
       }
     },
+    signModalCancel() {
+      this.signModal = false
+      this.imageUrlArr = []
+    },
     save() {
       debounce(() => {
         let checkHand1 = this.signData.deliveryItemList.every(item => {
@@ -538,6 +544,7 @@ export default {
           if (res.code === 200) {
             this.$message.success('签收成功')
             this.signModal = false
+            this.imageUrlArr = []
             this.getData()
           }
         })
