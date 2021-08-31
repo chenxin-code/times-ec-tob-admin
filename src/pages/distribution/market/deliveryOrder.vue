@@ -479,37 +479,39 @@ export default {
       this.signModal = true
     },
     save() {
-      let checkHand1 = this.signData.deliveryItemList.every(item => {
-        return item.hand1;
-      });
-      if(!checkHand1){
-        this.$message.error('请填写签收数量');
-        return;
-      }
-      if(this.imageUrlArr.length === 0){
-        this.$message.error('请上传签收凭证');
-        return;
-      }
-      let params = {
-        deliveryNo: this.signData.deliveryNo,
-        receiverProofImgs: this.imageUrlArr,
-        receiveType: 1,
-        itemList: [],
-      }
-      this.signData.deliveryItemList.forEach(item => {
-        params.itemList.push({
-          deliveryItemId: item.id,
-          num: item.hand1 ? item.hand1 : 0,
-          remark: item.hand2,
-        })
-      })
-      api.marketDeliveryOrderConfirm(params).then(res => {
-        if (res.code === 200) {
-          this.$message.success('签收成功')
-          this.signModal = false
-          this.getData()
+      debounce(() => {
+        let checkHand1 = this.signData.deliveryItemList.every(item => {
+          return item.hand1;
+        });
+        if(!checkHand1){
+          this.$message.error('请填写签收数量');
+          return;
         }
-      })
+        if(this.imageUrlArr.length === 0){
+          this.$message.error('请上传签收凭证');
+          return;
+        }
+        let params = {
+          deliveryNo: this.signData.deliveryNo,
+          receiverProofImgs: this.imageUrlArr,
+          receiveType: 1,
+          itemList: [],
+        }
+        this.signData.deliveryItemList.forEach(item => {
+          params.itemList.push({
+            deliveryItemId: item.id,
+            num: item.hand1 ? item.hand1 : 0,
+            remark: item.hand2,
+          })
+        })
+        api.marketDeliveryOrderConfirm(params).then(res => {
+          if (res.code === 200) {
+            this.$message.success('签收成功')
+            this.signModal = false
+            this.getData()
+          }
+        })
+      }, 500)
     },
   },
 }
