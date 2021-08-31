@@ -7,7 +7,7 @@
         :columns="columns"
         :row-key="(r, i) => r.id"
         :data-source="tableData"
-        :scroll="{ x: 1000, y: tableY }"
+        :scroll="{ x: scrollx, y: tableY }"
         :pagination="false"
         :loading="loading"
         v-bind="tableConfig"
@@ -78,6 +78,10 @@ export default {
     scrollY: {
       type: Number,
       default: 400,
+    },
+    scrollx: {
+      type: [Number, String],
+      default: '',
     },
     tableConfig: {
       type: Object,

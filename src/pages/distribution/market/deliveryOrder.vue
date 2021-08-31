@@ -87,10 +87,13 @@
             >
               <div class="item-title">配送凭证：</div>
               <p
-                v-for="item in lookData.deliveryProofImgList"
+                v-for="(item, index) in lookData.deliveryProofImgList"
+                :key="item"
                 style="margin-bottom: 10px;"
               >
-                <a :href="item" download="">{{ item }}</a>
+                <a :href="item" download="">{{
+                  lookData.deliveryImgList[index]
+                }}</a>
               </p>
             </div>
           </div>
@@ -108,10 +111,13 @@
             >
               <div class="item-title">签收凭证：</div>
               <p
-                v-for="item in lookData.receiverProofImgList"
+                v-for="(item, index) in lookData.receiverProofImgList"
+                :key="item"
                 style="margin-bottom: 10px;"
               >
-                <a :href="item" download="">{{ item }}</a>
+                <a :href="item" download="">{{
+                  lookData.receiverImgList[index]
+                }}</a>
               </p>
             </div>
           </div>
@@ -186,10 +192,13 @@
             >
               <div class="item-title">配送凭证：</div>
               <p
-                v-for="item in signData.deliveryProofImgList"
+                v-for="(item, index) in signData.deliveryProofImgList"
+                :key="item"
                 style="margin-bottom: 10px;"
               >
-                <a :href="item" download="">{{ item }}</a>
+                <a :href="item" download="">{{
+                  signData.deliveryImgList[index]
+                }}</a>
               </p>
             </div>
           </div>
@@ -197,6 +206,7 @@
         <div style="padding: 10px 0;border-top: 1px solid #a1a1a1;">
           <p style="margin-bottom: 15px;">上传签收凭证</p>
           <a-upload
+            list-type="picture"
             :action="BASEURL"
             :headers="{
               Access_Token: Case_Access_Token,
@@ -396,17 +406,17 @@ export default {
     }
   },
   mounted() {
-    this.getData();
+    this.getData()
   },
   methods: {
     // ...mapActions(['FALLBACK']),
     beforeUpload(file) {
-      return true;//暂不限制文件大小
-      const isLt2M = file.size / 1024 / 1024 <= 2;
+      return true //暂不限制文件大小
+      const isLt2M = file.size / 1024 / 1024 <= 2
       if (!isLt2M) {
-        this.$message.error('文件大小不能超过2MB');
+        this.$message.error('文件大小不能超过2MB')
       }
-      return isLt2M;
+      return isLt2M
     },
     handleChange(info) {
       if (info.file.status === 'uploading') {
@@ -416,12 +426,9 @@ export default {
         let imageUrl = this.checkImgStartWithHTTPS(info.file.response.data)
         this.imageUrlArr.push(imageUrl)
       }
-      console.log('imageUrlArr---->', this.imageUrlArr)
     },
     handleRemove(file) {
-      console.log(file.response.data)
       this.imageUrlArr = this.imageUrlArr.filter(x => x !== file.response.data)
-      console.log('imageUrlArr---->', this.imageUrlArr)
     },
     checkImgStartWithHTTPS(imageUrl) {
       let res = imageUrl.substring(0, 4)
@@ -449,8 +456,10 @@ export default {
       }
     },
     async getData() {
-      let res = await api.marketDeliveryOrderList({saleOrderNo: this.$route.query.saleOrderNo});
-      this.dataList = res.data;
+      let res = await api.marketDeliveryOrderList({
+        saleOrderNo: this.$route.query.saleOrderNo,
+      })
+      this.dataList = res.data
     },
     seeImgItem(item) {
       this.imgUrl = item
@@ -458,38 +467,59 @@ export default {
     },
     async look(row) {
       let res = await api.marketQueryInfo({ deliveryNo: row.deliveryNo })
-      this.lookData = res.data
-      this.lookModal = true
+      if (res.code == 200) {
+        let deliveryImgList = [],
+          receiverImgList = []
+        if (res.data.deliveryProofImgList.length > 0) {
+          res.data.deliveryProofImgList.map(item => {
+            deliveryImgList.push(item.split('/times-ec-erp/')[1])
+          })
+          res.data.deliveryImgList = deliveryImgList
+        }
+        if (res.data.receiverProofImgList.length > 0) {
+          res.data.receiverProofImgList.map(item => {
+            receiverImgList.push(item.split('/times-ec-tob-mall/')[1])
+          })
+          res.data.receiverImgList = receiverImgList
+        }
+        this.lookData = res.data
+        this.lookModal = true
+      }
     },
     async sign(row) {
       let res = await api.marketQueryInfo({ deliveryNo: row.deliveryNo })
-      this.signData = res.data
-      this.signData.deliveryItemList.forEach((item, index) => {
-        this.signData.deliveryItemList[index] = {
-          ...item,
-          //组装数据格式
-          hand1: null,
-          hand2: null,
+      if (res.code == 200) {
+        let deliveryImgList = []
+        if (res.data.deliveryProofImgList.length > 0) {
+          res.data.deliveryProofImgList.map(item => {
+            deliveryImgList.push(item.split('/times-ec-erp/')[1])
+          })
+          res.data.deliveryImgList = deliveryImgList
         }
-      })
-      console.log(
-        'this.signData.deliveryItemList----------->',
-        this.signData.deliveryItemList
-      )
-      this.signModal = true
+        this.signData = res.data
+        this.signData.deliveryItemList.forEach((item, index) => {
+          this.signData.deliveryItemList[index] = {
+            ...item,
+            //组装数据格式
+            hand1: null,
+            hand2: null,
+          }
+        })
+        this.signModal = true
+      }
     },
     save() {
       debounce(() => {
         let checkHand1 = this.signData.deliveryItemList.every(item => {
-          return item.hand1;
-        });
-        if(!checkHand1){
-          this.$message.error('请填写签收数量');
-          return;
+          return item.hand1
+        })
+        if (!checkHand1) {
+          this.$message.error('请填写签收数量')
+          return
         }
-        if(this.imageUrlArr.length === 0){
-          this.$message.error('请上传签收凭证');
-          return;
+        if (this.imageUrlArr.length === 0) {
+          this.$message.error('请上传签收凭证')
+          return
         }
         let params = {
           deliveryNo: this.signData.deliveryNo,
