@@ -517,7 +517,7 @@ export default {
 
 <style lang="less" scoped>
 .shelve {
-  padding: 15px;
+  padding: 20px;
   height: 100%;
   background: #fff;
 }
