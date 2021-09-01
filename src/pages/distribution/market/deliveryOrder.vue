@@ -163,6 +163,7 @@
               <a-form-model-item>
                 <a-input
                   v-model="scope.hand1"
+                  placeholder="请输入自然数"
                   @input="$forceUpdate()"
                   @blur="
                     scope.hand1 = naturalFormat(scope.hand1, scope.deliveryNum)
@@ -392,7 +393,7 @@ export default {
           key: 'hand1',
           scopedSlots: { customRender: 'hand1' },
           align: 'center',
-          width: 120,
+          width: 150,
         },
         {
           title: '备注',
